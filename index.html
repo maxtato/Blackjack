@@ -131,14 +131,14 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .zone{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:0;position:relative;z-index:1}
 .zlbl{font-size:13px;letter-spacing:.1em;color:#063b37;text-transform:uppercase;margin-bottom:9px;background:linear-gradient(180deg,#fffdf5,#e9f6f2);padding:3px 11px;border-radius:7px;border:2px solid var(--ink);box-shadow:var(--shS);display:inline-flex;align-items:center}
 .zlbl .v{font-size:18px;color:#0a0a0a;margin-left:9px;min-width:18px;text-align:center}
-.hand{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;min-height:84px;align-items:center}
+.hand{display:flex;justify-content:center;flex-wrap:wrap;gap:13px;min-height:108px;align-items:center}
 
 /* ===== CARDS ===== */
-.card{width:54px;height:78px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);color:var(--inkCard);border:3px solid var(--ink);border-radius:8px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:3px 5px 0 rgba(0,0,0,.45);animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife 5s ease-in-out .5s infinite}
+.card{width:72px;height:102px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);color:var(--inkCard);border:3px solid var(--ink);border-radius:9px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:4px 6px 0 rgba(0,0,0,.45);animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife 5s ease-in-out .5s infinite}
 .card.red{color:var(--suitRed)}
 .card .pip{display:flex;align-items:center;justify-content:center}
 .card .corner{position:absolute;display:flex;flex-direction:column;align-items:center;line-height:1;gap:0}
-.card .corner-r{font-family:'Jersey 15',monospace;font-weight:700;font-size:15px}
+.card .corner-r{font-family:'Jersey 15',monospace;font-weight:700;font-size:19px}
 .card .suit{display:block}
 .card .tl{top:5px;left:5px}
 .card .br{bottom:5px;right:5px;transform:rotate(180deg)}
@@ -147,11 +147,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .card.back::before{content:"";position:absolute;inset:3px;border-radius:4px;z-index:1}
 /* dos de carte sélectionnables (comme de vraies cartes) */
 .card.back.cb9::before{background:#b5302e;background-image:repeating-linear-gradient(45deg,rgba(253,243,223,.42) 0 1px,transparent 1px 4px),repeating-linear-gradient(-45deg,rgba(253,243,223,.42) 0 1px,transparent 1px 4px);box-shadow:inset 0 0 0 1px #fdf3df,inset 0 0 0 2px #b5302e,inset 0 0 0 3px #fdf3df}
-.card.back.cb9::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:16px;height:26px;border-radius:50%;z-index:2;background:radial-gradient(circle at 50% 50%,#fdf3df 0 1.5px,transparent 2px),#b5302e;box-shadow:0 0 0 1px #fdf3df,0 0 0 2px #b5302e,0 0 0 3px #fdf3df}
+.card.back.cb9::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:22px;height:34px;border-radius:50%;z-index:2;background:radial-gradient(circle at 50% 50%,#fdf3df 0 2px,transparent 2.5px),#b5302e;box-shadow:0 0 0 1px #fdf3df,0 0 0 3px #b5302e,0 0 0 4px #fdf3df}
 .card.back.cb10::before{background:#26439b;background-image:repeating-linear-gradient(45deg,rgba(240,200,90,.5) 0 1px,transparent 1px 4px),repeating-linear-gradient(-45deg,rgba(240,200,90,.5) 0 1px,transparent 1px 4px);box-shadow:inset 0 0 0 1px #e0b53a,inset 0 0 0 2px #26439b,inset 0 0 0 3px #e0b53a}
 .card.back.cb11{background:#e8c560}
 .card.back.cb11::before{background:#16131f;background-image:repeating-linear-gradient(45deg,rgba(232,197,96,.5) 0 1px,transparent 1px 5px),repeating-linear-gradient(-45deg,rgba(232,197,96,.5) 0 1px,transparent 1px 5px);box-shadow:inset 0 0 0 1px #c9971f,inset 0 0 0 2px #16131f,inset 0 0 0 3px #c9971f}
-.card.back.cb11::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:16px;height:26px;border-radius:50%;z-index:2;background:radial-gradient(circle at 50% 50%,#e8c560 0 1.5px,transparent 2px),#16131f;box-shadow:0 0 0 1px #c9971f,0 0 0 2px #16131f,0 0 0 3px #c9971f}
+.card.back.cb11::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:22px;height:34px;border-radius:50%;z-index:2;background:radial-gradient(circle at 50% 50%,#e8c560 0 2px,transparent 2.5px),#16131f;box-shadow:0 0 0 1px #c9971f,0 0 0 3px #16131f,0 0 0 4px #c9971f}
 .card.back.cb12::before{background:#6e2350;background-image:repeating-linear-gradient(45deg,rgba(253,243,223,.4) 0 1px,transparent 1px 4px),repeating-linear-gradient(-45deg,rgba(253,243,223,.4) 0 1px,transparent 1px 4px);box-shadow:inset 0 0 0 1px #fdf3df,inset 0 0 0 2px #6e2350,inset 0 0 0 3px #fdf3df}
 @keyframes cardLife{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-2px) rotate(.5deg)}}
 /* sélecteur de dos sur l'écran d'accueil */
@@ -328,13 +328,13 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #pBar .pmeta{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:700;color:#fff;text-shadow:1px 1px 0 #000;z-index:1;letter-spacing:.04em}
 #pBar.tick #pFill{animation:pflash .5s linear infinite}
 /* TABLE = simple conteneur (plus de bois) */
-#table{flex:none;display:block;width:100%;max-width:500px;position:relative;padding:8px 6px 16px;border:none;border-radius:0;background:none;overflow:visible;box-shadow:none}
+#table{flex:1;display:flex;flex-direction:column;width:100%;max-width:580px;position:relative;padding:6px 6px 12px;border:none;border-radius:0;background:none;overflow:visible;box-shadow:none}
 #table::before,#table::after{display:none!important}
 /* FELT = tapis teal, bords relevés, légèrement incliné */
-#felt{position:relative;z-index:0;width:100%;min-height:232px;display:flex;background:none;box-shadow:none;transform:none}
+#felt{position:relative;z-index:0;flex:1;width:100%;min-height:232px;display:flex;background:none;box-shadow:none;transform:none}
 #felt::before{display:none}
 /* tapis retiré : cartes directement sur la moquette */
-#feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:space-around;gap:10px;padding:24px 14px 16px;position:relative;z-index:1;transform:none}
+#feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:space-around;gap:10px;padding:14px 14px 12px;position:relative;z-index:1;transform:none}
 /* barre mise/mult : EN DESSOUS du tapis */
 #scorebox{position:relative;left:auto;bottom:auto;z-index:1;display:flex;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;box-shadow:none}
 #scorebox .seg{display:flex;flex-direction:column;align-items:center;padding:5px 12px;gap:1px}
@@ -724,7 +724,7 @@ function cardEl(c,opts={}){
   if(G.pressure>=50&&G.phase==='play')d.classList.add('jit');
   if(opts.flip)d.classList.add('flip');
   if(!opts.dealer&&c.ed)d.classList.add(c.ed);
-  const big=suitSVG(c.s,22),sm=suitSVG(c.s,7);
+  const big=suitSVG(c.s,30),sm=suitSVG(c.s,9);
   const tag=(!opts.dealer&&c.ed)?`<span class="edtag">${c.ed==='foil'?'◇':c.ed==='holo'?'◈':'◆'}</span>`:'';
   d.innerHTML=`<span class="corner tl"><span class="corner-r">${c.r}</span>${sm}</span><span class="pip">${big}</span><span class="corner br"><span class="corner-r">${c.r}</span>${sm}</span>${tag}`;
   return d;
