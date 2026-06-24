@@ -327,12 +327,14 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #pFill{position:absolute;inset:0;width:0;background:linear-gradient(90deg,var(--teal) 0 34%,var(--gold) 34% 60%,var(--orange) 60% 82%,var(--red) 82% 100%);transition:width .35s cubic-bezier(.2,.8,.2,1)}
 #pBar .pmeta{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:700;color:#fff;text-shadow:1px 1px 0 #000;z-index:1;letter-spacing:.04em}
 #pBar.tick #pFill{animation:pflash .5s linear infinite}
-/* TABLE = rebord bois foncé, double rail */
-#table{flex:none;display:block;width:100%;max-width:500px;position:relative;padding:18px;border:none;border-radius:0;clip-path:var(--pc);box-shadow:none;background:#4e3318;background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.18) 0 2px,transparent 2px 20px),repeating-linear-gradient(0deg,rgba(255,225,180,.05) 0 1px,transparent 1px 7px)}
-#table::before{content:"";position:absolute;inset:0;background-image:none;clip-path:var(--pc);box-shadow:inset 0 0 0 3px #6e4a28,inset 0 0 0 6px #3a2511,inset 0 4px 0 rgba(255,220,170,.18),inset 0 -5px 0 rgba(0,0,0,.45);opacity:1;pointer-events:none;z-index:1}
-/* FELT = tapis teal + liseré or à l'intérieur */
-#felt{position:relative;z-index:0;width:100%;min-height:210px;display:flex;flex-direction:column;justify-content:space-around;gap:10px;padding:24px 12px 14px;clip-path:var(--pc);background:#138f86;box-shadow:inset 0 0 0 2px #e8b84a,inset 0 0 0 4px #0c6a63}
+/* TABLE = simple conteneur (plus de bois) */
+#table{flex:none;display:block;width:100%;max-width:500px;position:relative;padding:8px 6px 16px;border:none;border-radius:0;background:none;overflow:visible;box-shadow:none}
+#table::before,#table::after{display:none!important}
+/* FELT = tapis teal, bords relevés, légèrement incliné */
+#felt{position:relative;z-index:0;width:100%;min-height:232px;display:flex;clip-path:var(--pc);background:#138f86;transform:rotate(1.3deg);box-shadow:inset 0 10px 17px rgba(0,0,0,.34),inset 0 -10px 17px rgba(0,0,0,.34),inset 0 3px 0 rgba(255,255,255,.13),inset 0 -3px 0 rgba(0,0,0,.3),7px 11px 0 rgba(0,0,0,.4)}
 #felt::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.14) 2px,transparent 2px);background-size:14px 14px;opacity:.4;pointer-events:none}
+/* contenu redressé : le tapis penche, pas les cartes */
+#feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:space-around;gap:10px;padding:24px 14px 16px;position:relative;z-index:1;transform:rotate(-1.3deg)}
 /* barre mise/mult : EN DESSOUS du tapis */
 #scorebox{position:relative;left:auto;bottom:auto;z-index:1;display:flex;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;box-shadow:none}
 #scorebox .seg{display:flex;flex-direction:column;align-items:center;padding:5px 12px;gap:1px}
@@ -432,16 +434,18 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">FROID</span> · <span id="pPct">0%</span></span></div>
     <div id="table">
       <div id="felt">
-        <div id="feltMark">21</div>
-        <div id="multPop"><div class="burst"></div><span class="m"></span><span class="t"></span></div>
-        <div class="zone">
-          <div class="zlbl">Croupier<span class="v" id="dVal">—</span></div>
-          <div class="hand" id="dHand"></div>
-        </div>
-        <div id="center"><div id="tip"></div></div>
-        <div class="zone">
-          <div class="zlbl">Toi<span class="v" id="pVal">—</span></div>
-          <div class="hand" id="pHand"></div>
+        <div id="feltInner">
+          <div id="feltMark">21</div>
+          <div id="multPop"><div class="burst"></div><span class="m"></span><span class="t"></span></div>
+          <div class="zone">
+            <div class="zlbl">Croupier<span class="v" id="dVal">—</span></div>
+            <div class="hand" id="dHand"></div>
+          </div>
+          <div id="center"><div id="tip"></div></div>
+          <div class="zone">
+            <div class="zlbl">Toi<span class="v" id="pVal">—</span></div>
+            <div class="hand" id="pHand"></div>
+          </div>
         </div>
       </div>
     </div>
