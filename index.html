@@ -339,6 +339,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .chip{border:none;border-radius:0;clip-path:var(--pc);background:var(--panelDk2);box-shadow:none;color:#fff}
 .chip::before{display:none}
 .chip.on{background:var(--gold);color:#3a2a00;box-shadow:none}
+/* texte foncé (boutons or/teal, jeton actif) -> ombre gris clair au lieu de noir */
+.b-gold,.b-teal,.chip.on{text-shadow:1px 1px 0 #dcd6c8}
 /* MENUS / OVERLAYS — blocs sans contour */
 .overlay{background:rgba(10,18,14,.92)}
 .ovpanel{background:var(--panel);border:none;border-radius:0;clip-path:var(--pc);box-shadow:none}
@@ -367,6 +369,12 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #effects .joker img.ic{width:34px;height:48px;object-fit:contain;image-rendering:pixelated;display:block}
 #effects .tarot img.tic{width:34px;height:48px;object-fit:contain;image-rendering:pixelated;display:block}
 .shopico{width:26px;height:26px;object-fit:contain;image-rendering:pixelated;vertical-align:-7px;margin-right:3px}
+.shopItem .shopCard{flex:0 0 auto;width:54px;height:74px;display:flex;align-items:center;justify-content:center;border:2px solid var(--ink);border-radius:7px;box-shadow:3px 4px 0 rgba(0,0,0,.45)}
+.shopItem .shopCard.relic{background:var(--cream)}
+.shopItem .shopCard.tarot{background:var(--grape)}
+.shopItem .shopCard img{width:42px;height:58px;object-fit:contain;image-rendering:pixelated;display:block}
+.shopItem .shopCard span{font-size:28px;line-height:1}
+.shopItem .sInfo{flex:1;text-align:left}
 </style>
 </head>
 <body>
@@ -964,7 +972,8 @@ function renderShop(){
     const tag=isTarot
       ?'<span style="font-size:9px;color:var(--grape)">★ CARTE</span>'
       :'<span style="font-size:9px;color:var(--yellow)">◆ RELIQUE</span>';
-    d.innerHTML=`<div><div class="nm">${ICON[r.id]?`<img class="shopico" src="${ICON[r.id]}" alt="">`:r.ic} ${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
+    const face=ICON[r.id]?`<img src="${ICON[r.id]}" alt="">`:`<span>${r.ic}</span>`;
+    d.innerHTML=`<div class="shopCard ${isTarot?'tarot':'relic'}">${face}</div><div class="sInfo"><div class="nm">${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
     const b=document.createElement('button');b.className='btn '+(isTarot?'b-purple':'b-gold');
     b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=r.cost+' $';
     const slotFull=isTarot?G.consumables.length>=consumableSlots():G.relics.length>=5;
