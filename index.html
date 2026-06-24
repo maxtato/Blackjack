@@ -268,6 +268,86 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 ::-webkit-scrollbar-track{background:transparent}
 
 </style>
+
+<style>
+/* ============ BALATRO SKIN + layout épuré ============ */
+:root{
+  --bg0:#16241f;--bg1:#22382f;--ink:#0c1410;
+  --panel:#3a4a47;--panelHi:#475854;--panelDk:#283531;--panelDk2:#1b2521;
+  --paper:#f4ecd8;--cream:#f4ecd8;--muted:#9fb0a8;
+  --gold:#e8b84a;--yellow:#e8b84a;--orange:#f0a020;--blue:#4a90d9;--blueDk:#2f6cb0;
+  --red:#e0524f;--redDk:#b23330;--teal:#3fb6a8;--tealDk:#1d7d73;--grape:#9a5cd0;--purpleDk:#6a2fb0;--lime:#9be84a;--magenta:#e0524f;
+}
+#bg{background:radial-gradient(130% 100% at 50% 0%,#2c463b,transparent 60%),radial-gradient(120% 90% at 50% 110%,#1a2d26,transparent 60%),linear-gradient(180deg,#22382f,#16241f 82%)}
+#pattern{opacity:.05}
+#vignette{z-index:5;background:radial-gradient(130% 100% at 50% 45%,transparent 55%,rgba(6,12,9,.6) 100%)}#scan{z-index:5}
+#hideStats{position:absolute;left:-9999px;visibility:hidden}
+#slotc,#consumeSlots{display:none}
+#app{display:flex;flex-direction:column;gap:9px;padding:9px;align-items:center}
+#topbar,#effects,#stage,#bottombar{width:100%;max-width:620px;flex-shrink:0}
+/* TOP */
+#topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;background:linear-gradient(180deg,var(--panelHi),var(--panel));border:3px solid var(--ink);border-radius:12px;padding:9px 12px;box-shadow:0 4px 0 var(--ink),inset 0 2px 0 rgba(255,255,255,.12)}
+#topbar .tname{display:flex;flex-direction:column;gap:2px;font-size:16px;font-weight:700;color:var(--paper);text-shadow:1px 1px 0 var(--ink)}
+#topbar .tname .rule{font-size:9px;color:var(--gold);font-weight:400}
+#topbar .tstats{display:flex;gap:8px}
+.stat{display:flex;flex-direction:column;align-items:center;line-height:1;background:var(--panelDk2);border:2px solid var(--ink);border-radius:8px;padding:6px 11px;min-width:66px;box-shadow:inset 0 2px 4px rgba(0,0,0,.45)}
+.stat .lbl{font-size:8px;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
+.stat .v{font-size:19px;font-weight:700;color:var(--gold)}
+.stat.goal .v{color:#fff}
+/* EFFECTS fan */
+#effects{display:flex;justify-content:center;align-items:flex-end;gap:5px;min-height:66px;padding:8px 0 0}
+#relicRow,#consumeRow,#relics,#consumes{display:contents!important}
+#effects .joker{width:42px;height:58px;animation:none!important;box-shadow:3px 4px 0 rgba(0,0,0,.5);transform-origin:bottom center}
+#effects .joker .ic{font-size:18px}#effects .joker .nm{font-size:7px}
+#effects .tarot{width:42px;height:58px;border-radius:7px;flex-direction:column;animation:none!important;box-shadow:3px 4px 0 rgba(0,0,0,.5);transform-origin:bottom center}
+#effects .tarot .tic{font-size:20px}
+/* STAGE */
+#stage{flex:1;display:flex;align-items:stretch;min-height:0}
+#table{flex:1;width:100%;position:relative;padding:32px 12px 14px;min-height:320px}
+#pBar{position:absolute;left:9px;right:9px;top:9px;height:17px;border:2px solid var(--ink);border-radius:9px;overflow:hidden;background:#08130f;z-index:4;box-shadow:inset 0 2px 4px rgba(0,0,0,.6),0 2px 0 rgba(0,0,0,.3)}
+#pFill{position:absolute;inset:0;width:0;border-radius:7px;background:linear-gradient(90deg,var(--teal),var(--lime) 35%,var(--gold) 62%,var(--orange) 82%,var(--red));transition:width .35s cubic-bezier(.2,.8,.2,1)}
+#pBar .pmeta{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:5px;font-size:9px;font-weight:700;color:#fff;text-shadow:1px 1px 0 #000,0 0 3px #000;z-index:1;letter-spacing:.04em}
+#pBar.tick #pFill{animation:pflash .5s linear infinite}
+#scorebox{position:absolute;left:9px;bottom:9px;z-index:4;display:flex;border:2px solid var(--ink);border-radius:9px;overflow:hidden;box-shadow:0 3px 0 var(--ink)}
+#scorebox .seg{display:flex;flex-direction:column;align-items:center;padding:4px 11px;gap:1px}
+#scorebox .seg.chips{background:linear-gradient(180deg,#6fb0ef,var(--blue))}
+#scorebox .seg.mult{background:linear-gradient(180deg,#f08a86,var(--red))}
+#scorebox .k{font-size:7px;color:rgba(255,255,255,.92);letter-spacing:.08em}
+#scorebox .v{font-size:18px;color:#fff;font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
+#scorebox.hot{box-shadow:0 3px 0 var(--ink),0 0 0 2px var(--gold)}
+.zone{position:relative;z-index:1}#center{position:relative;z-index:1}#feltMark{z-index:0}
+/* BOTTOM */
+#bottombar{display:flex;flex-direction:column;gap:9px}
+#betRow{display:flex;align-items:center;gap:10px;justify-content:center;background:none!important;border:none!important;box-shadow:none!important;padding:0!important}
+#betRow .lbl{font-size:10px;letter-spacing:.06em;color:var(--muted)}
+#actions{display:flex;flex-direction:column;gap:9px}
+.actMain{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.actMain .span{grid-column:1/-1}
+.actWide{min-height:54px;display:flex;flex-direction:column;gap:9px}
+/* BALATRO BUTTONS */
+.btn{border-radius:9px;border:3px solid var(--ink);box-shadow:0 5px 0 var(--ink);font-size:15px;padding:12px 8px;text-shadow:1px 1px 0 rgba(0,0,0,.35);overflow:hidden}
+.btn::before{content:"";position:absolute;left:0;right:0;top:0;height:42%;background:linear-gradient(180deg,rgba(255,255,255,.28),transparent);pointer-events:none;display:block}
+.btn:active{transform:translateY(5px);box-shadow:0 0 0 var(--ink)}
+.b-gold{background:linear-gradient(180deg,#f2cf6a,var(--gold) 55%,#b8860f);color:#3a2a00}
+.b-blue{background:linear-gradient(180deg,#6fb0ef,var(--blue) 55%,var(--blueDk))}
+.b-red{background:linear-gradient(180deg,#f08a86,var(--red) 55%,var(--redDk))}
+.b-purple{background:linear-gradient(180deg,#b985e6,var(--grape) 55%,var(--purpleDk))}
+.b-teal{background:linear-gradient(180deg,#6fe0d2,var(--teal) 55%,var(--tealDk));color:#04302d}
+.chip{border-radius:50px;background:linear-gradient(180deg,#33423e,var(--panelDk2));border:3px solid var(--ink)}
+.chip.on{background:linear-gradient(180deg,#f2cf6a,var(--gold) 60%,#b8860f);color:#3a2a00;box-shadow:0 3px 0 var(--ink),0 0 0 2px rgba(232,184,74,.5)}
+/* MENUS / OVERLAYS — Balatro */
+.overlay{background:radial-gradient(120% 100% at 50% 28%,rgba(30,50,42,.86),rgba(8,16,12,.95))}
+.ovpanel{background:linear-gradient(180deg,var(--panelHi),var(--panel) 70%);border:4px solid var(--ink);border-radius:16px;box-shadow:0 7px 0 var(--ink),inset 0 3px 0 rgba(255,255,255,.1)}
+.ovpanel::before{display:none}
+.overlay h1{color:var(--gold);text-shadow:2px 2px 0 var(--red),4px 4px 0 var(--ink)}
+.overlay h1.win{color:var(--gold)}.overlay h1.dead{color:var(--red);text-shadow:2px 2px 0 #000,4px 4px 0 var(--ink)}
+.overlay p{color:var(--muted)}.overlay p b{color:#fff}
+.rules>div{background:var(--panelDk2);border:2px solid var(--ink);border-left:4px solid var(--gold);border-radius:8px}
+.rules .k{color:var(--gold)}.rules .d{color:var(--red)}
+.shopItem{background:linear-gradient(180deg,var(--panelDk),var(--panelDk2));border:3px solid var(--ink);border-radius:11px;box-shadow:0 4px 0 var(--ink)}
+.shopItem .ds{color:var(--muted)}
+.joker{background:linear-gradient(170deg,#fffdf5,#fff7e6 70%)}
+</style>
 </head>
 <body>
 <div id="bg">
@@ -283,56 +363,23 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 
 <div id="shaker">
 <div id="app">
-
-  <!-- SIDEBAR compacte -->
-  <div id="sidebar">
-    <div class="hdr">
-      <div>
-        <h2 id="tableName">Arrière-salle</h2>
-        <div class="rule" id="ruleText"></div>
-      </div>
-      <div class="hdr-r">
-        <div class="kv"><span class="lbl">Objectif</span><span class="v gold">$<span id="goalVal">100</span></span></div>
-        <div class="kv" id="scorePanel"><span class="lbl">Jetons</span><span class="v snow">$<span id="bankBig">50</span></span></div>
-      </div>
+  <header id="topbar">
+    <div class="tname"><span id="tableName">Arrière-salle</span><span class="rule" id="ruleText"></span></div>
+    <div class="tstats">
+      <div class="stat goal"><span class="lbl">OBJECTIF</span><span class="v">$<span id="goalVal">100</span></span></div>
+      <div class="stat bank" id="scorePanel"><span class="lbl">JETONS</span><span class="v">$<span id="bankBig">50</span></span></div>
     </div>
+  </header>
 
-    <div class="scorebox box" id="scorebox">
-      <div class="seg chips"><span class="k">MISE</span><span class="v" id="chipsVal">10</span></div>
-      <div class="x">×</div>
-      <div class="seg mult"><span class="k">MULT</span><span class="v" id="multVal">×1</span></div>
-    </div>
-
-    <div class="pwrap">
-      <div class="prow">
-        <span class="lbl">PRESSION <span class="pp" id="pPct">0%</span></span>
-        <span class="pstate" id="pState">FROID</span>
-      </div>
-      <div class="pbar" id="pBar"><div class="pfill" id="pFill"></div></div>
-    </div>
-
-    <div class="statline">
-      <span>MAINS <b class="blue" id="handsLeft">5</b></span>
-      <span>TABLE <b id="tableNum">1</b>/3</span>
-      <span>MAIN <b class="red" id="handNum">1</b>/<b id="handMax">5</b></span>
-      <span>SABOT <b class="gold" id="shoeCount">208</b></span>
-    </div>
-
-    <div id="sideFoot">
-      <div class="logo">TABLE&nbsp;21</div>
-      <div class="suits"><span class="s0">♠</span><span class="s1">♥</span><span class="s2">♦</span><span class="s3">♣</span></div>
-      <div class="tag">soirée clandestine</div>
-    </div>
+  <div id="effects">
+    <div id="relicRow"><div id="relics"></div></div>
+    <div id="consumeRow"><div id="consumes"></div></div>
+    <span id="slotc"></span><span id="consumeSlots"></span>
   </div>
 
-  <!-- PLAY -->
-  <div id="play">
-    <div id="relicRow">
-      <div id="relics"></div>
-      <div class="slotc" id="slotc">0/5<br>reliques</div>
-    </div>
-
+  <div id="stage">
     <div id="table">
+      <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">FROID</span> · <span id="pPct">0%</span></span></div>
       <div id="feltMark">21</div>
       <div id="multPop"><div class="burst"></div><span class="m"></span><span class="t"></span></div>
       <div class="zone">
@@ -344,15 +391,16 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
         <div class="zlbl">Toi<span class="v" id="pVal">—</span></div>
         <div class="hand" id="pHand"></div>
       </div>
-    </div>
-
-    <div id="dock">
-      <div id="consumeRow"><span class="lbl">CARTES :</span><div id="consumes"></div><span id="consumeSlots">0/2</span></div>
-      <div id="betRow"><span class="lbl">MISE :</span><div id="chips"></div></div>
-      <div id="actions"></div>
+      <div id="scorebox"><span class="seg chips"><b class="k">MISE</b><span class="v" id="chipsVal">10</span></span><span class="seg mult"><b class="k">MULT</b><span class="v" id="multVal">×1</span></span></div>
     </div>
   </div>
 
+  <footer id="bottombar">
+    <div id="betRow"><span class="lbl">MISE</span><div id="chips"></div></div>
+    <div id="actions"></div>
+  </footer>
+
+  <div id="hideStats"><b id="handsLeft"></b><b id="tableNum"></b><b id="handMax"></b><b id="handNum"></b><b id="shoeCount"></b></div>
 </div>
 </div>
 
@@ -662,6 +710,11 @@ function renderTop(){
   $('ruleText').textContent=G.table.ruleText||'';
   $('shoeCount').textContent=G.shoe.length;
 }
+function fanEffects(){
+  const ef=Array.prototype.slice.call(document.querySelectorAll('#effects .joker,#effects .tarot'));
+  const n=ef.length,mid=(n-1)/2;
+  ef.forEach((el,i)=>{const rot=(i-mid)*5;const dy=Math.abs(i-mid)*2.2;el.style.transform=`translateY(${dy.toFixed(1)}px) rotate(${rot.toFixed(1)}deg)`;el.style.zIndex=20-Math.round(Math.abs(i-mid));});
+}
 function renderRelics(){
   const wrap=$('relics');wrap.innerHTML='';
   G.relics.forEach(r=>{
@@ -671,6 +724,7 @@ function renderRelics(){
     wrap.appendChild(d);
   });
   $('slotc').innerHTML=`${G.relics.length}/5<br>reliques`;
+  fanEffects();
 }
 function consumableSlots(){return 2+(hasRelic('portebonheur')?1:0);}
 function renderConsumables(){
@@ -684,6 +738,7 @@ function renderConsumables(){
   });
   $('consumeSlots').textContent=`${G.consumables.length}/${consumableSlots()}`;
   row.style.display=(G.consumables.length||hasRelic('portebonheur'))?'flex':'none';
+  fanEffects();
 }
 function addEditionToHand(ed){
   if(!G.pHand.length)return false;
@@ -722,23 +777,26 @@ function renderChips(){
 }
 function renderActions(){
   const a=$('actions');a.innerHTML='';
-  const add=(label,cls,fn,sub,dis)=>{
+  const main=document.createElement('div');main.className='actMain';
+  const wide=document.createElement('div');wide.className='actWide';
+  a.appendChild(main);a.appendChild(wide);
+  const add=(parent,label,cls,fn,sub,dis)=>{
     const b=document.createElement('button');b.className='btn '+cls;
     b.innerHTML=label+(sub?`<small>${sub}</small>`:'');
-    if(dis)b.disabled=true;else b.onclick=fn;a.appendChild(b);return b;
+    if(dis)b.disabled=true;else b.onclick=fn;parent.appendChild(b);return b;
   };
-  if(G.phase==='bet'){add('MISER & DONNER','b-gold wide',deal,`mise ${G.bet} $`,G.bank<10);return;}
+  if(G.phase==='bet'){add(main,'MISER & DONNER','b-gold span',deal,`mise ${G.bet} $`,G.bank<10);return;}
   if(G.phase==='play'){
     const v=handValue(G.pHand).total;
     if(v>=17&&v<=20){
-      add('TENIR','b-blue',playerStand,'sécurise');
-      add('INSISTER','b-red',()=>{G.insisted=true;playerHit();},'+bonus si survie');
-      add('FORCER LA CHANCE','b-purple wide',forcerChance,'2 cartes, garde la meilleure · pression +++');
+      add(main,'TENIR','b-blue',playerStand,'sécurise');
+      add(main,'INSISTER','b-red',()=>{G.insisted=true;playerHit();},'+bonus si survie');
+      add(wide,'FORCER LA CHANCE','b-purple',forcerChance,'2 cartes, garde la meilleure · pression +++');
     }else{
-      add('TIRER','b-gold',()=>playerHit(),'+1 carte');
-      add('TENIR','b-blue',playerStand,'au croupier');
+      add(main,'TIRER','b-gold',()=>playerHit(),'+1 carte');
+      add(main,'TENIR','b-blue',playerStand,'au croupier');
     }
-    if(hasRelic('lunettes')&&!G.peekUsed)add('LUNETTES','b-teal wide',usePeek,'lis la prochaine carte');
+    if(hasRelic('lunettes')&&!G.peekUsed)add(wide,'LUNETTES','b-teal',usePeek,'lis la prochaine carte');
     return;
   }
 }
