@@ -180,6 +180,29 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg);colo
 #multPop.push .burst{background:var(--teal)}
 .cardslot{transform-origin:center bottom;will-change:transform}
 
+/* ===== ÉDITIONS DE CARTES (Balatro) ===== */
+.card.foil,.card.holo,.card.poly{overflow:hidden}
+.card.foil::before,.card.holo::before,.card.poly::before{content:"";position:absolute;inset:0;border-radius:4px;pointer-events:none;mix-blend-mode:screen}
+.card.foil::before{background:linear-gradient(125deg,transparent 38%,rgba(150,215,255,.95) 50%,transparent 62%);background-size:260% 260%;animation:edSweep 2.4s linear infinite;opacity:.7}
+.card.holo::before{background:linear-gradient(125deg,rgba(255,70,200,.55),rgba(120,120,255,.45) 45%,rgba(255,120,70,.5) 90%);background-size:260% 260%;animation:edSweep 3.1s linear infinite;opacity:.6}
+.card.poly::before{background:linear-gradient(125deg,#ff004c,#ff8a1e,#ffd11a,#8ee61e,#19c3c3,#a24cf0,#ff3ea5);background-size:340% 340%;animation:edPoly 3.4s linear infinite;opacity:.55}
+@keyframes edSweep{0%{background-position:130% 0}100%{background-position:-30% 0}}
+@keyframes edPoly{0%{background-position:0% 50%}100%{background-position:340% 50%}}
+.card .edtag{position:absolute;top:3px;right:4px;font-size:9px;line-height:1;z-index:2;text-shadow:0 0 3px #000,0 0 3px #000}
+
+/* ===== CONSOMMABLES (cartes Tarot) ===== */
+#consumeRow{display:none;align-items:center;gap:8px}
+#consumeRow .lbl{font-size:11px;color:#c9b8ff}
+#consumes{display:flex;gap:6px;flex:1;flex-wrap:wrap}
+#consumeSlots{font-size:10px;color:#c9b8ff;flex:0 0 auto}
+.tarot{flex:0 0 auto;width:40px;height:36px;background:linear-gradient(160deg,#5a31a8,#a24cf0);border:3px solid var(--ink);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:3px 3px 0 var(--ink),inset 0 0 0 1px rgba(255,255,255,.25)}
+.tarot .tic{font-size:18px;line-height:1}
+.tarot:active{transform:translate(3px,3px);box-shadow:none}
+.tarot.flash{animation:tarotUse .4s ease-out}
+@keyframes tarotUse{0%{filter:brightness(2);transform:scale(1.18)}100%{filter:brightness(1);transform:scale(1)}}
+
+#rerollBtn{margin-bottom:12px}
+
 </style>
 </head>
 <body>
@@ -250,6 +273,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg);colo
     </div>
 
     <div id="dock">
+      <div id="consumeRow"><span class="lbl">CARTES :</span><div id="consumes"></div><span id="consumeSlots">0/2</span></div>
       <div id="betRow"><span class="lbl">MISE :</span><div id="chips"></div></div>
       <div id="actions"></div>
     </div>
@@ -268,7 +292,9 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg);colo
       <div>→ Chaque carte tirée <span class="d">chauffe la table</span> (pression).</div>
       <div>→ <span class="k">Tirer fort = MULT qui grimpe.</span> À pression ≥75% tes gains s'embrasent. À 100% la table te force la main.</div>
       <div>→ À 17–20 tu peux <span class="k">FLIRTER</span> : insister, ou forcer la chance.</div>
-      <div>→ Entre les tables : la <span class="k">boutique</span> et ses reliques.</div>
+      <div>→ Certaines cartes brillent : <span class="d">FOIL</span> (+jetons), <span class="d">HOLO</span> (+mult), <span class="d">POLY</span> (×mult).</div>
+      <div>→ Les <span class="k">cartes Tarot</span> sont des pouvoirs à usage unique (refroidir, truquer, transmuter…).</div>
+      <div>→ Entre les tables : la <span class="k">boutique</span>, ses reliques, ses tarots et le bouton <span class="k">RELANCER</span>.</div>
     </div>
     <button class="btn b-gold menu" onclick="startGame()">JOUER</button>
   </div>
@@ -280,6 +306,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg);colo
     <h1 class="win" style="font-size:20px">BOUTIQUE</h1>
     <p>Table franchie. <b id="shopBank">0</b> $ en poche.</p>
     <div class="shopItems" id="shopItems"></div>
+    <button class="btn b-teal" id="rerollBtn" onclick="rerollShop()" style="font-size:13px;padding:9px 11px">RELANCER</button>
     <button class="btn b-blue menu" onclick="leaveShop()">TABLE SUIVANTE →</button>
   </div>
 </div>
@@ -351,13 +378,43 @@ const RELIC_POOL=[
   {id:'as',name:'As truqué',ic:'🂡',desc:'Gagner une main contenant un As → multiplicateur +1.',cost:16},
   {id:'froid',name:'Sang-froid',ic:'🧊',desc:'À pression ≥75% au moment de gagner → multiplicateur +1.',cost:16},
   {id:'compteur',name:'Compteur',ic:'🎯',desc:'Affiche ta probabilité de buster au prochain tirage.',cost:12},
+  {id:'mecene',name:'Mécène',ic:'💵',desc:'+4 jetons au début de chaque main.',cost:15},
+  {id:'usurier',name:'Usurier',ic:'🏦',desc:'Début de main : +1 jeton par tranche de 5 en banque (max +6).',cost:18},
+  {id:'collector',name:'Collectionneur',ic:'🌈',desc:'Les éditions de cartes apparaissent 3× plus souvent.',cost:16},
+  {id:'maitresse',name:'Carte maîtresse',ic:'🎴',desc:'Ta 1ʳᵉ carte de chaque main est FOIL (+jetons bonus).',cost:14},
+  {id:'bruleur',name:'Brûleur',ic:'🔥',desc:'Gagner à pression ≥50% → multiplicateur ×1.5.',cost:17},
+  {id:'portebonheur',name:'Porte-bonheur',ic:'🍀',desc:'+1 emplacement de carte Tarot.',cost:12},
+  {id:'diplomate',name:'Diplomate',ic:'🤝',desc:'Les égalités te paient la moitié de ta mise.',cost:11},
 ];
+
+/* éditions de cartes : foil = jetons bonus, holo = +mult, poly = ×mult */
+const TAROT_POOL=[
+  {id:'etoile',name:"L'Étoile",ic:'❄️',cost:7,desc:'Refroidit la table : pression −45%.',when:'play',
+    use(){G.pressure=Math.max(0,G.pressure-45);renderPressure();renderMult();return'Table refroidie';}},
+  {id:'jugement',name:'Le Jugement',ic:'⚖️',cost:11,desc:'Annule toute la pression (→0%).',when:'play',
+    use(){G.pressure=0;renderPressure();renderMult();return'Pression annulée';}},
+  {id:'soleil',name:'Le Soleil',ic:'☀️',cost:6,desc:'+18 jetons immédiats.',when:'any',
+    use(){G.bank+=18;renderTop();coinBurst(8);return'+18 $';}},
+  {id:'diable',name:'Le Diable',ic:'😈',cost:9,desc:'Rend une de tes cartes POLYCHROME (×1.5 mult).',when:'play',need:'cards',
+    use(){const c=addEditionToHand('poly');return c?('Polychrome : '+c.r+c.s):false;}},
+  {id:'lune',name:'La Lune',ic:'🌙',cost:8,desc:'Rend une de tes cartes HOLOGRAPHIQUE (+1 mult).',when:'play',need:'cards',
+    use(){const c=addEditionToHand('holo');return c?('Holo : '+c.r+c.s):false;}},
+  {id:'etoileD',name:"L'Étoile filante",ic:'✨',cost:7,desc:'Rend une de tes cartes FOIL (+jetons bonus).',when:'play',need:'cards',
+    use(){const c=addEditionToHand('foil');return c?('Foil : '+c.r+c.s):false;}},
+  {id:'pendu',name:'Le Pendu',ic:'🪢',cost:9,desc:'Retire ta dernière carte tirée.',when:'play',need:'extra',
+    use(){const c=G.pHand.pop();renderHands();renderMult();updateBustReadout();renderActions();return'Retiré : '+c.r+c.s;}},
+  {id:'magicien',name:'Le Magicien',ic:'🎩',cost:10,desc:'Ta prochaine carte tirée sera idéale.',when:'play',
+    use(){G.magicNext=true;return'Prochaine carte truquée';}},
+  {id:'roue',name:'La Roue',ic:'🎡',cost:6,desc:'50% : édition aléatoire sur une carte, sinon rien.',when:'play',need:'cards',
+    use(){if(Math.random()<0.5){const ed=['foil','holo','poly'][rndInt(3)];const c=addEditionToHand(ed);return c?('Édition '+ed.toUpperCase()+' !'):false;}return'Raté…';}},
+];
+const ED_NAME={foil:'FOIL',holo:'HOLO',poly:'POLY'};
 
 /* ---------- état ---------- */
 let G={};
 function freshGame(){
   G={bank:50,tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
-     peekUsed:false,relics:[],insisted:false,forced:false,maxPressureReached:0,
+     peekUsed:false,relics:[],consumables:[],magicNext:false,insisted:false,forced:false,maxPressureReached:0,
      phase:'bet',table:TABLES[0]};
 }
 
@@ -368,7 +425,23 @@ function buildShoe(){
   for(let i=s.length-1;i>0;i--){const j=rndInt(i+1);[s[i],s[j]]=[s[j],s[i]];}
   G.shoe=s;
 }
-function draw(){if(G.shoe.length<15)buildShoe();return G.shoe.pop();}
+function maybeEdition(c){
+  if(c.ed)return c;
+  let chance=0.05;if(hasRelic('collector'))chance*=3;
+  if(Math.random()<chance){const r=Math.random();c.ed=r<0.55?'foil':r<0.85?'holo':'poly';}
+  return c;
+}
+function draw(){if(G.shoe.length<15)buildShoe();return maybeEdition(G.shoe.pop());}
+function drawIdeal(){
+  if(G.shoe.length<15)buildShoe();
+  const top=Math.max(0,G.shoe.length-30);let bestIdx=-1,bestVal=-1;
+  for(let i=G.shoe.length-1;i>=top;i--){
+    const t=handValue([...G.pHand,G.shoe[i]]).total;
+    if(t<=21&&t>bestVal){bestVal=t;bestIdx=i;}
+  }
+  if(bestIdx<0)return draw();
+  return maybeEdition(G.shoe.splice(bestIdx,1)[0]);
+}
 function cardBase(r){if(r==='A')return 11;if(r==='K'||r==='Q'||r==='J')return 10;return parseInt(r);}
 function handValue(cards){
   let total=0,aces=0;
@@ -408,7 +481,7 @@ function hasRelic(id){return G.relics.some(r=>r.id===id);}
 /* ---------- multiplicateur (partagé live + résolution) ---------- */
 function computeMult(mode){
   const pv=handValue(G.pHand).total;
-  let mult=1;const lines=[];
+  let mult=1,bonusChips=0;const lines=[];
   const isNatural=(mode==='natural'&&G.pHand.length===2&&pv===21);
   if(isNatural){mult*=1.5;lines.push(['BLACKJACK','×1.5']);}
   if(pv===21&&!isNatural){mult*=3;lines.push(['21 PARFAIT','×3']);}
@@ -416,9 +489,16 @@ function computeMult(mode){
   if(countRank('7')>=2){mult*=1.5;lines.push(['PAIRE DE 7','×1.5']);}
   if(G.insisted){mult*=1.5;lines.push(['INSISTANCE','×1.5']);}
   if(G.pressure>=75){mult*=1.5;lines.push(['PRESSION','×1.5']);}
+  if(hasRelic('bruleur')&&G.pressure>=50){mult*=1.5;lines.push(['🔥 BRÛLEUR','×1.5']);}
+  /* éditions des cartes en main */
+  let foil=0,holo=0,poly=0;
+  for(const c of G.pHand){if(c.ed==='foil')foil++;else if(c.ed==='holo')holo++;else if(c.ed==='poly')poly++;}
+  if(foil){bonusChips+=foil*3;lines.push(['◇ FOIL','+'+(foil*3)+' jet']);}
+  if(holo){mult+=holo;lines.push(['◈ HOLO','+'+holo]);}
+  if(poly){const pm=Math.pow(1.5,poly);mult*=pm;lines.push(['◆ POLY','×'+(Math.round(pm*100)/100)]);}
   if(hasRelic('as')&&G.pHand.some(c=>c.r==='A')){mult+=1;lines.push(['◆ AS TRUQUÉ','+1']);}
   if(hasRelic('froid')&&G.pressure>=75){mult+=1;lines.push(['◆ SANG-FROID','+1']);}
-  return {mult,lines};
+  return {mult,lines,bonusChips};
 }
 function countRank(r){return G.pHand.filter(c=>c.r===r).length;}
 
@@ -444,8 +524,10 @@ function cardEl(c,opts={}){
   if(opts.back){d.classList.add('back');return d;}
   if(c.s==='♥'||c.s==='♦')d.classList.add('red');
   if(G.pressure>=50&&G.phase==='play')d.classList.add('jit');
+  if(!opts.dealer&&c.ed)d.classList.add(c.ed);
   const big=suitSVG(c.s,26),sm=suitSVG(c.s,8);
-  d.innerHTML=`<span class="corner tl"><span class="corner-r">${c.r}</span>${sm}</span><span class="pip">${big}</span><span class="corner br"><span class="corner-r">${c.r}</span>${sm}</span>`;
+  const tag=(!opts.dealer&&c.ed)?`<span class="edtag">${c.ed==='foil'?'◇':c.ed==='holo'?'◈':'◆'}</span>`:'';
+  d.innerHTML=`<span class="corner tl"><span class="corner-r">${c.r}</span>${sm}</span><span class="pip">${big}</span><span class="corner br"><span class="corner-r">${c.r}</span>${sm}</span>${tag}`;
   return d;
 }
 function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0)/4294967296;}
@@ -467,7 +549,7 @@ function renderHands(reveal=false){
   G.dHand.forEach((c,i)=>{
     const hideMute=(G.table.rule==='mute'&&!reveal);
     const hideHole=(i===1&&!reveal&&G.phase!=='done');
-    dh.appendChild(fannedCard(c,i,G.dHand.length,{back:hideMute||hideHole}));
+    dh.appendChild(fannedCard(c,i,G.dHand.length,{back:hideMute||hideHole,dealer:true}));
   });
   G.pHand.forEach((c,i)=>ph.appendChild(fannedCard(c,i,G.pHand.length)));
   $('pVal').textContent=G.pHand.length?handValue(G.pHand).total:'—';
@@ -485,14 +567,14 @@ function renderPressure(){
   droneToPressure(p/100);
 }
 function renderMult(){
-  $('chipsVal').textContent=G.bet;
-  let m=1;
+  let m=1,bonus=0;
   if(G.phase==='play'&&G.pHand.length){
     const mode=(G.pHand.length===2&&handValue(G.pHand).total===21)?'natural':'stand';
-    m=computeMult(mode).mult;
+    const r=computeMult(mode);m=r.mult;bonus=r.bonusChips;
   }
+  $('chipsVal').textContent=bonus?(G.bet+'+'+bonus):G.bet;
   $('multVal').textContent=fmtMult(m);
-  $('scorebox').classList.toggle('hot',m>1);
+  $('scorebox').classList.toggle('hot',m>1||bonus>0);
 }
 function renderTop(){
   $('tableNum').textContent=G.tableIdx+1;
@@ -513,6 +595,44 @@ function renderRelics(){
     wrap.appendChild(d);
   });
   $('slotc').innerHTML=`${G.relics.length}/5<br>reliques`;
+}
+function consumableSlots(){return 2+(hasRelic('portebonheur')?1:0);}
+function renderConsumables(){
+  const row=$('consumeRow'),wrap=$('consumes');wrap.innerHTML='';
+  G.consumables.forEach((t,i)=>{
+    const d=document.createElement('div');d.className='tarot';
+    d.innerHTML=`<span class="tic">${t.ic}</span>`;
+    d.title=`${t.name} — ${t.desc}`;
+    d.onclick=()=>useConsumable(i,d);
+    wrap.appendChild(d);
+  });
+  $('consumeSlots').textContent=`${G.consumables.length}/${consumableSlots()}`;
+  row.style.display=(G.consumables.length||hasRelic('portebonheur'))?'flex':'none';
+}
+function addEditionToHand(ed){
+  if(!G.pHand.length)return false;
+  let pool=G.pHand.map((c,i)=>i).filter(i=>!G.pHand[i].ed);
+  if(!pool.length)pool=G.pHand.map((c,i)=>i);
+  const idx=pool[rndInt(pool.length)];
+  G.pHand[idx].ed=ed;renderHands();renderMult();
+  return G.pHand[idx];
+}
+function useConsumable(i,el){
+  const t=G.consumables[i];if(!t)return;
+  if(t.when==='play'&&G.phase!=='play'){popText('PAS MAINTENANT','utilisable en jeu');return;}
+  if(t.need==='cards'&&!G.pHand.length){popText('PAS DE CARTE','');return;}
+  if(t.need==='extra'&&G.pHand.length<=2){popText('IMPOSSIBLE','garde ≥3 cartes');return;}
+  const res=t.use();
+  if(res===false){popText('IMPOSSIBLE','');return;}
+  if(el)el.classList.add('flash');
+  G.consumables.splice(i,1);sfx.buy();popText(t.name,res);
+  renderConsumables();
+}
+function applyHandIncome(){
+  let inc=0;const parts=[];
+  if(hasRelic('mecene')){inc+=4;parts.push('Mécène +4');}
+  if(hasRelic('usurier')){const u=Math.min(6,Math.floor(G.bank/5));if(u>0){inc+=u;parts.push('Usurier +'+u);}}
+  if(inc>0){G.bank+=inc;renderTop();renderChips();popText('REVENU','+'+inc+' $ · '+parts.join(' · '));}
 }
 function renderChips(){
   const wrap=$('chips');wrap.innerHTML='';
@@ -565,16 +685,18 @@ function updateBustReadout(){
 function deal(){
   audioInit();if(G.bank<10)return;
   G.bank-=G.bet;
-  G.phase='play';G.pressure=0;G.peekUsed=false;G.insisted=false;G.forced=false;G.maxPressureReached=0;
-  G.dHand=[];G.pHand=[];$('tip').textContent='';
+  G.phase='play';G.pressure=0;G.peekUsed=false;G.insisted=false;G.forced=false;G.magicNext=false;G.maxPressureReached=0;
+  G.dHand=[];G.pHand=[];$('tip').textContent='';$('tip').style.color='';
   G.pHand.push(draw());sfx.card();G.dHand.push(draw());
   G.pHand.push(draw());sfx.card();G.dHand.push(draw());
+  if(hasRelic('maitresse')&&!G.pHand[0].ed)G.pHand[0].ed='foil';
   renderAll();renderHands();
   if(handValue(G.pHand).total===21)setTimeout(()=>playerStand(true),520);
 }
 function playerHit(forced){
   if(G.phase!=='play')return;
-  G.pHand.push(draw());sfx.card();if(!forced)shake(8);
+  const c=(G.magicNext&&!forced)?drawIdeal():draw();G.magicNext=false;
+  G.pHand.push(c);sfx.card();if(!forced)shake(8);
   renderHands();$('tip').textContent='';
   addPressure(forced?0:14);updateBustReadout();renderMult();
   const v=handValue(G.pHand).total;
@@ -621,16 +743,19 @@ function resolve(mode){
   else if(pv>dv)outcome='win';else if(pv<dv)outcome='lose';else outcome='push';
 
   let mult=1,lines=[];
-  if(outcome==='win'){const r=computeMult(mode);mult=r.mult;lines=r.lines;}
   const isNat=(mode==='natural'&&G.pHand.length===2&&pv===21);
 
   let gain=0;
   if(outcome==='win'){
-    gain=Math.round(G.bet*mult);G.bank+=G.bet+gain;sfx.win();
-    if(mult>1)sfx.combo();
+    const r=computeMult(mode);mult=r.mult;lines=r.lines;
+    const base=G.bet+r.bonusChips;
+    gain=Math.round(base*mult);G.bank+=G.bet+gain;sfx.win();
+    if(mult>1||r.bonusChips>0)sfx.combo();
     flashScore();showWord('win',gain,mult,isNat);
+    if(lines.length){$('tip').innerHTML=lines.map(l=>l[0]+' '+l[1]).join('  ·  ');$('tip').style.color='var(--gold)';}
   }else if(outcome==='push'){
-    G.bank+=G.bet;gain=0;sfx.push();showWord('push',0,1);
+    let pg=0;if(hasRelic('diplomate')){pg=Math.floor(G.bet*0.5);G.bank+=pg;}
+    G.bank+=G.bet;gain=pg;sfx.push();showWord('push',pg,1);
   }else{
     if(hasRelic('jeton')&&pv===20&&!pBust){const back=Math.floor(G.bet/2);G.bank+=back;gain=-(G.bet-back);}
     else gain=-G.bet;
@@ -648,45 +773,72 @@ function nextHandOrEnd(){
   if(G.hand>=G.table.hands){gameOver('FERMETURE','La table ferme, objectif manqué. Soirée terminée.');return;}
   G.hand++;G.phase='bet';G.dHand=[];G.pHand=[];
   G.bet=Math.min(G.bet,Math.max(10,G.bank));
+  applyHandIncome();
   renderAll();renderHands();
 }
 
 /* ---------- boutique ---------- */
-let shopOffer=[];
+let shopOffer=[],rerollCost=5;
 function openShop(){
-  $('shopBank').textContent=G.bank;
-  const owned=new Set(G.relics.map(r=>r.id));
-  const avail=RELIC_POOL.filter(r=>!owned.has(r.id));
-  shopOffer=[];
-  while(shopOffer.length<Math.min(3,avail.length)){
-    const p=avail[rndInt(avail.length)];if(!shopOffer.includes(p))shopOffer.push(p);
-  }
-  const box=$('shopItems');box.innerHTML='';
-  if(!shopOffer.length)box.innerHTML='<p style="color:var(--muted)">Tu as déjà toutes les reliques.</p>';
-  shopOffer.forEach((r,i)=>{
-    const d=document.createElement('div');d.className='shopItem';
-    d.innerHTML=`<div><div class="nm">${r.ic} ${r.name}</div><div class="ds">${r.desc}</div></div>`;
-    const b=document.createElement('button');b.className='btn b-gold';b.style.cssText='font-size:13px;padding:9px 11px';
-    b.textContent=r.cost+' $';if(G.bank<r.cost)b.disabled=true;
-    b.onclick=()=>buyRelic(i,d,b);d.appendChild(b);box.appendChild(d);
-  });
+  $('shopBank').textContent=G.bank;rerollCost=5;
+  rollShop();
   $('shop').classList.add('show');
 }
-function buyRelic(i,el,btn){
-  const r=shopOffer[i];if(G.bank<r.cost)return;
-  G.bank-=r.cost;G.relics.push(r);sfx.buy();
+function rollShop(){
+  const owned=new Set(G.relics.map(r=>r.id));
+  const relics=RELIC_POOL.filter(r=>!owned.has(r.id)).map(r=>({type:'relic',data:r}));
+  const tarots=TAROT_POOL.map(t=>({type:'tarot',data:t}));
+  const pool=relics.concat(tarots);
+  for(let i=pool.length-1;i>0;i--){const j=rndInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
+  shopOffer=pool.slice(0,Math.min(4,pool.length));
+  renderShop();
+}
+function renderShop(){
+  const box=$('shopItems');box.innerHTML='';
+  if(!shopOffer.length){box.innerHTML='<p style="color:var(--muted)">Rien à acheter ici.</p>';}
+  shopOffer.forEach((it,i)=>{
+    const r=it.data,isTarot=it.type==='tarot';
+    const d=document.createElement('div');d.className='shopItem'+(it.bought?' bought':'');
+    const tag=isTarot
+      ?'<span style="font-size:9px;color:var(--grape)">★ CARTE</span>'
+      :'<span style="font-size:9px;color:var(--yellow)">◆ RELIQUE</span>';
+    d.innerHTML=`<div><div class="nm">${r.ic} ${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
+    const b=document.createElement('button');b.className='btn '+(isTarot?'b-purple':'b-gold');
+    b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=r.cost+' $';
+    const slotFull=isTarot?G.consumables.length>=consumableSlots():G.relics.length>=5;
+    if(it.bought||G.bank<r.cost||slotFull)b.disabled=true;
+    if(slotFull&&!it.bought)b.textContent='PLEIN';
+    b.onclick=()=>buyShopItem(i,d,b);
+    d.appendChild(b);box.appendChild(d);
+  });
+  const rb=$('rerollBtn');if(rb){rb.textContent='RELANCER ('+rerollCost+' $)';rb.disabled=G.bank<rerollCost;}
+}
+function buyShopItem(i,el,btn){
+  const it=shopOffer[i];if(!it||it.bought)return;const r=it.data;
+  if(G.bank<r.cost)return;
+  if(it.type==='tarot'){
+    if(G.consumables.length>=consumableSlots()){popText('SLOTS PLEINS','');return;}
+    G.bank-=r.cost;G.consumables.push(r);
+  }else{
+    if(G.relics.length>=5){popText('RELIQUES PLEINES','5 max');return;}
+    G.bank-=r.cost;G.relics.push(r);
+  }
+  it.bought=true;sfx.buy();
   el.classList.add('bought');btn.disabled=true;btn.textContent='ACQUIS';
   $('shopBank').textContent=G.bank;
-  document.querySelectorAll('#shopItems .btn').forEach((b,j)=>{
-    if(shopOffer[j]&&!G.relics.includes(shopOffer[j]))b.disabled=G.bank<shopOffer[j].cost;
-  });
-  renderRelics();
+  renderRelics();renderConsumables();renderShop();
+}
+function rerollShop(){
+  if(G.bank<rerollCost)return;
+  G.bank-=rerollCost;rerollCost+=2;$('shopBank').textContent=G.bank;sfx.card();
+  rollShop();
 }
 function leaveShop(){
   $('shop').classList.remove('show');G.tableIdx++;
   if(G.tableIdx>=TABLES.length){gameOver('SORTIE LIBRE','Tu as traversé les trois tables avant la fermeture. La nuit est à toi.',true);return;}
   G.table=TABLES[G.tableIdx];G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];
   G.bet=Math.min(G.bet,Math.max(10,G.bank));
+  applyHandIncome();
   renderAll();renderHands();renderPressure();
 }
 
@@ -717,7 +869,7 @@ function showWord(kind,gain,mult,natural,bust){
   if(kind==='win'){
     word=natural?pick(WORDS.bj):(mult>=3?pick(WORDS.jackpot):pick(WORDS.win));
     sub=(mult>1?fmtMult(mult)+'   ':'')+'+'+gain+' $';
-  }else if(kind==='push'){word=pick(WORDS.push);sub='mise rendue';}
+  }else if(kind==='push'){word=pick(WORDS.push);sub=gain>0?('+'+gain+' $'):'mise rendue';}
   else{word=bust?pick(WORDS.bust):pick(WORDS.lose);sub=gain?gain+' $':'';}
   const p=$('multPop');
   p.className=kind+(word.length>7?' long':'');
@@ -780,10 +932,10 @@ function tick(){
 }
 
 /* ---------- rendu global / boot ---------- */
-function renderAll(){renderTop();renderRelics();renderChips();renderActions();renderPressure();renderMult();}
+function renderAll(){renderTop();renderRelics();renderConsumables();renderChips();renderActions();renderPressure();renderMult();}
 function startGame(){
   audioInit();freshGame();buildShoe();
-  $('intro').classList.remove('show');renderAll();renderHands();
+  $('intro').classList.remove('show');applyHandIncome();renderAll();renderHands();
 }
 freshGame();buildShoe();renderAll();renderHands();tick();
 </script>
