@@ -320,15 +320,21 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #effects .tarot{width:42px;height:58px;border-radius:6px;flex-direction:column;animation:cardLife 4.8s ease-in-out infinite;background:var(--grape);box-shadow:3px 4px 0 rgba(0,0,0,.45);transform-origin:bottom center}
 #effects .tarot:nth-child(2n){animation-delay:-2.2s}
 #effects .tarot .tic{font-size:20px}
-/* STAGE — tapis bloc plein */
-#stage{flex:1;display:flex;align-items:stretch;min-height:0}
-#table{flex:1;width:100%;position:relative;padding:32px 12px 14px;min-height:320px;background:#138f86;border:none;border-radius:0;clip-path:var(--pc);box-shadow:none}
-#table::before{opacity:.45}
-#pBar{position:absolute;left:9px;right:9px;top:9px;height:16px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:#0a1c17;z-index:4;box-shadow:none}
+/* STAGE — table bois (rebord double rail + liseré or) ; barres hors du tapis */
+#stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:9px;min-height:0;width:100%;max-width:620px}
+/* barre de pression : AU-DESSUS du tapis */
+#pBar{position:relative;left:auto;right:auto;top:auto;width:100%;max-width:500px;height:20px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:#0a1c17;z-index:1;box-shadow:none}
 #pFill{position:absolute;inset:0;width:0;background:linear-gradient(90deg,var(--teal) 0 34%,var(--gold) 34% 60%,var(--orange) 60% 82%,var(--red) 82% 100%);transition:width .35s cubic-bezier(.2,.8,.2,1)}
 #pBar .pmeta{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:700;color:#fff;text-shadow:1px 1px 0 #000;z-index:1;letter-spacing:.04em}
 #pBar.tick #pFill{animation:pflash .5s linear infinite}
-#scorebox{position:absolute;left:9px;bottom:9px;z-index:4;display:flex;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;box-shadow:none}
+/* TABLE = rebord bois foncé, double rail */
+#table{flex:none;display:block;width:100%;max-width:500px;position:relative;padding:18px;border:none;border-radius:0;clip-path:var(--pc);box-shadow:none;background:#4e3318;background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.18) 0 2px,transparent 2px 20px),repeating-linear-gradient(0deg,rgba(255,225,180,.05) 0 1px,transparent 1px 7px)}
+#table::before{content:"";position:absolute;inset:0;background-image:none;clip-path:var(--pc);box-shadow:inset 0 0 0 3px #6e4a28,inset 0 0 0 6px #3a2511,inset 0 4px 0 rgba(255,220,170,.18),inset 0 -5px 0 rgba(0,0,0,.45);opacity:1;pointer-events:none;z-index:1}
+/* FELT = tapis teal + liseré or à l'intérieur */
+#felt{position:relative;z-index:0;width:100%;min-height:210px;display:flex;flex-direction:column;justify-content:space-around;gap:10px;padding:24px 12px 14px;clip-path:var(--pc);background:#138f86;box-shadow:inset 0 0 0 2px #e8b84a,inset 0 0 0 4px #0c6a63}
+#felt::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.14) 2px,transparent 2px);background-size:14px 14px;opacity:.4;pointer-events:none}
+/* barre mise/mult : EN DESSOUS du tapis */
+#scorebox{position:relative;left:auto;bottom:auto;z-index:1;display:flex;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;box-shadow:none}
 #scorebox .seg{display:flex;flex-direction:column;align-items:center;padding:5px 12px;gap:1px}
 #scorebox .seg.chips{background:var(--blue)}
 #scorebox .seg.mult{background:var(--red)}
@@ -423,21 +429,23 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   </div>
 
   <div id="stage">
+    <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">FROID</span> · <span id="pPct">0%</span></span></div>
     <div id="table">
-      <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">FROID</span> · <span id="pPct">0%</span></span></div>
-      <div id="feltMark">21</div>
-      <div id="multPop"><div class="burst"></div><span class="m"></span><span class="t"></span></div>
-      <div class="zone">
-        <div class="zlbl">Croupier<span class="v" id="dVal">—</span></div>
-        <div class="hand" id="dHand"></div>
+      <div id="felt">
+        <div id="feltMark">21</div>
+        <div id="multPop"><div class="burst"></div><span class="m"></span><span class="t"></span></div>
+        <div class="zone">
+          <div class="zlbl">Croupier<span class="v" id="dVal">—</span></div>
+          <div class="hand" id="dHand"></div>
+        </div>
+        <div id="center"><div id="tip"></div></div>
+        <div class="zone">
+          <div class="zlbl">Toi<span class="v" id="pVal">—</span></div>
+          <div class="hand" id="pHand"></div>
+        </div>
       </div>
-      <div id="center"><div id="tip"></div></div>
-      <div class="zone">
-        <div class="zlbl">Toi<span class="v" id="pVal">—</span></div>
-        <div class="hand" id="pHand"></div>
-      </div>
-      <div id="scorebox"><span class="seg chips"><b class="k">MISE</b><span class="v" id="chipsVal">10</span></span><span class="seg mult"><b class="k">MULT</b><span class="v" id="multVal">×1</span></span></div>
     </div>
+    <div id="scorebox"><span class="seg chips"><b class="k">MISE</b><span class="v" id="chipsVal">10</span></span><span class="seg mult"><b class="k">MULT</b><span class="v" id="multVal">×1</span></span></div>
   </div>
 
   <footer id="bottombar">
