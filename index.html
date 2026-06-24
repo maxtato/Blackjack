@@ -270,14 +270,14 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 </style>
 
 <style>
-/* ============ SKIN FLAT PIXEL — couleurs solides + contours pixel ============ */
+/* ============ SKIN FLAT PIXEL — blocs de couleur, sans contour, coins fins ============ */
 :root{
   --bg0:#16241f;--bg1:#22382f;--ink:#0b120e;
   --panel:#3a4a47;--panelHi:#3a4a47;--panelDk:#283531;--panelDk2:#19231f;
   --paper:#f4ecd8;--cream:#f4ecd8;--muted:#9fb0a8;
   --gold:#e8b84a;--yellow:#e8b84a;--orange:#f0902a;--blue:#3f8bd6;--blueDk:#2f6cb0;
   --red:#e0524f;--redDk:#b23330;--teal:#34b6a8;--tealDk:#1d7d73;--grape:#9a5cd0;--purpleDk:#6a2fb0;--lime:#7ec943;--magenta:#e0524f;
-  --pc:polygon(0 6px,3px 6px,3px 3px,6px 3px,6px 0,calc(100% - 6px) 0,calc(100% - 6px) 3px,calc(100% - 3px) 3px,calc(100% - 3px) 6px,100% 6px,100% calc(100% - 6px),calc(100% - 3px) calc(100% - 6px),calc(100% - 3px) calc(100% - 3px),calc(100% - 6px) calc(100% - 3px),calc(100% - 6px) 100%,6px 100%,6px calc(100% - 3px),3px calc(100% - 3px),3px calc(100% - 6px),0 calc(100% - 6px));
+  --pc:polygon(0 6px,2px 6px,2px 4px,4px 4px,4px 2px,6px 2px,6px 0,calc(100% - 6px) 0,calc(100% - 6px) 2px,calc(100% - 4px) 2px,calc(100% - 4px) 4px,calc(100% - 2px) 4px,calc(100% - 2px) 6px,100% 6px,100% calc(100% - 6px),calc(100% - 2px) calc(100% - 6px),calc(100% - 2px) calc(100% - 4px),calc(100% - 4px) calc(100% - 4px),calc(100% - 4px) calc(100% - 2px),calc(100% - 6px) calc(100% - 2px),calc(100% - 6px) 100%,6px 100%,6px calc(100% - 2px),4px calc(100% - 2px),4px calc(100% - 4px),2px calc(100% - 4px),2px calc(100% - 6px),0 calc(100% - 6px));
 }
 *{image-rendering:pixelated}
 #bg{background:#1a2d26}
@@ -288,40 +288,37 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #app{display:flex;flex-direction:column;gap:9px;padding:9px;align-items:center}
 #topbar,#effects,#stage,#bottombar{width:100%;max-width:620px;flex-shrink:0}
 /* TOP */
-#topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--panel);border:none;border-radius:0;clip-path:var(--pc);box-shadow:inset 0 0 0 3px var(--ink);padding:10px 13px}
+#topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--panel);border:none;border-radius:0;clip-path:var(--pc);box-shadow:none;padding:10px 13px}
 #topbar .tname{display:flex;flex-direction:column;gap:2px;font-size:16px;font-weight:700;color:var(--paper);text-shadow:1px 1px 0 var(--ink)}
 #topbar .tname .rule{font-size:9px;color:var(--gold);font-weight:400}
 #topbar .tstats{display:flex;gap:8px}
-.stat{display:flex;flex-direction:column;align-items:center;line-height:1;background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);box-shadow:inset 0 0 0 3px var(--ink);padding:7px 12px;min-width:66px}
+.stat{display:flex;flex-direction:column;align-items:center;line-height:1;background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);box-shadow:none;padding:7px 12px;min-width:66px}
 .stat .lbl{font-size:8px;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
 .stat .v{font-size:19px;font-weight:700;color:var(--gold)}
 .stat.goal .v{color:#fff}
-/* EFFECTS fan (solides) */
+/* EFFECTS fan (blocs + ombre carte) */
 #effects{display:flex;justify-content:center;align-items:flex-end;gap:5px;min-height:66px;padding:8px 0 0}
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
-#effects .joker{width:42px;height:58px;animation:none!important;background:var(--cream);box-shadow:3px 4px 0 var(--ink);transform-origin:bottom center}
+#effects .joker{width:42px;height:58px;animation:none!important;background:var(--cream);box-shadow:3px 4px 0 rgba(0,0,0,.45);transform-origin:bottom center}
 #effects .joker .ic{font-size:18px}#effects .joker .nm{font-size:7px}
-#effects .tarot{width:42px;height:58px;border-radius:6px;flex-direction:column;animation:none!important;background:var(--grape);box-shadow:3px 4px 0 var(--ink);transform-origin:bottom center}
+#effects .tarot{width:42px;height:58px;border-radius:6px;flex-direction:column;animation:none!important;background:var(--grape);box-shadow:3px 4px 0 rgba(0,0,0,.45);transform-origin:bottom center}
 #effects .tarot .tic{font-size:20px}
-/* STAGE — tapis solide + coins pixel */
+/* STAGE — tapis bloc plein */
 #stage{flex:1;display:flex;align-items:stretch;min-height:0}
-#table{flex:1;width:100%;position:relative;padding:32px 12px 14px;min-height:320px;background:#138f86;border:none;border-radius:0;clip-path:var(--pc);box-shadow:inset 0 0 0 3px var(--ink)}
-#table::before{opacity:.5}
-#pBar{position:absolute;left:9px;right:9px;top:9px;height:17px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:#08130f;z-index:4;box-shadow:inset 0 0 0 2px var(--ink)}
+#table{flex:1;width:100%;position:relative;padding:32px 12px 14px;min-height:320px;background:#138f86;border:none;border-radius:0;clip-path:var(--pc);box-shadow:none}
+#table::before{opacity:.45}
+#pBar{position:absolute;left:9px;right:9px;top:9px;height:16px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:#0a1c17;z-index:4;box-shadow:none}
 #pFill{position:absolute;inset:0;width:0;background:linear-gradient(90deg,var(--teal) 0 34%,var(--gold) 34% 60%,var(--orange) 60% 82%,var(--red) 82% 100%);transition:width .35s cubic-bezier(.2,.8,.2,1)}
 #pBar .pmeta{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:5px;font-size:9px;font-weight:700;color:#fff;text-shadow:1px 1px 0 #000;z-index:1;letter-spacing:.04em}
 #pBar.tick #pFill{animation:pflash .5s linear infinite}
-#scorebox{position:absolute;left:9px;bottom:9px;z-index:4;display:flex;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;box-shadow:inset 0 0 0 2px var(--ink)}
+#scorebox{position:absolute;left:9px;bottom:9px;z-index:4;display:flex;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;box-shadow:none}
 #scorebox .seg{display:flex;flex-direction:column;align-items:center;padding:5px 12px;gap:1px}
 #scorebox .seg.chips{background:var(--blue)}
 #scorebox .seg.mult{background:var(--red)}
 #scorebox .k{font-size:7px;color:rgba(255,255,255,.95);letter-spacing:.08em}
 #scorebox .v{font-size:18px;color:#fff;font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
-#scorebox.hot{box-shadow:inset 0 0 0 2px var(--ink),0 0 0 2px var(--gold)}
-.zone{position:relative;z-index:1}#center{position:relative;z-index:1}#feltMark{z-index:0}
-/* CARTES solides */
-.card{background:var(--cardW)}
-.card.back{background:var(--grape)}
+#scorebox.hot{box-shadow:0 0 0 2px var(--gold)}
+.zone{position:relative;z-index:1}#center{position:relative;z-index:1}#feltMark{display:none}
 /* BOTTOM */
 #bottombar{display:flex;flex-direction:column;gap:9px}
 #betRow{display:flex;align-items:center;gap:10px;justify-content:center;background:none!important;border:none!important;box-shadow:none!important;padding:0!important}
@@ -329,29 +326,29 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #actions{display:flex;flex-direction:column;gap:9px}
 .actMain{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .actMain .span{grid-column:1/-1}
-.actWide{min-height:54px;display:flex;flex-direction:column;gap:9px}
-/* BOUTONS flat + contour pixel */
-.btn{border:none;border-radius:0;clip-path:var(--pc);box-shadow:inset 0 0 0 4px var(--ink),inset 0 -7px 0 rgba(0,0,0,.22);font-size:15px;padding:13px 9px 16px;text-shadow:1px 1px 0 rgba(0,0,0,.32)}
+.actWide{min-height:52px;display:flex;flex-direction:column;gap:9px}
+/* BOUTONS — blocs de couleur, sans contour */
+.btn{border:none;border-radius:0;clip-path:var(--pc);box-shadow:none;font-size:15px;padding:13px 9px;text-shadow:1px 1px 0 rgba(0,0,0,.3)}
 .btn::before{display:none!important}
-.btn:active{transform:translateY(3px);box-shadow:inset 0 0 0 4px var(--ink),inset 0 4px 0 rgba(0,0,0,.25)}
+.btn:active{transform:translateY(2px);filter:brightness(.9)}
 .b-gold{background:var(--gold);color:#3a2a00}
 .b-blue{background:var(--blue)}
 .b-red{background:var(--red)}
 .b-purple{background:var(--grape)}
 .b-teal{background:var(--teal);color:#04302d}
-.chip{border:none;border-radius:0;clip-path:var(--pc);background:var(--panelDk2);box-shadow:inset 0 0 0 3px var(--ink);color:#fff}
+.chip{border:none;border-radius:0;clip-path:var(--pc);background:var(--panelDk2);box-shadow:none;color:#fff}
 .chip::before{display:none}
-.chip.on{background:var(--gold);color:#3a2a00;box-shadow:inset 0 0 0 3px var(--ink)}
-/* MENUS / OVERLAYS flat + contour pixel */
+.chip.on{background:var(--gold);color:#3a2a00;box-shadow:none}
+/* MENUS / OVERLAYS — blocs sans contour */
 .overlay{background:rgba(10,18,14,.92)}
-.ovpanel{background:var(--panel);border:none;border-radius:0;clip-path:var(--pc);box-shadow:inset 0 0 0 4px var(--ink)}
+.ovpanel{background:var(--panel);border:none;border-radius:0;clip-path:var(--pc);box-shadow:none}
 .ovpanel::before{display:none}
 .overlay h1{color:var(--gold);text-shadow:2px 2px 0 var(--red),4px 4px 0 var(--ink)}
 .overlay h1.win{color:var(--gold)}.overlay h1.dead{color:var(--red);text-shadow:2px 2px 0 #000,4px 4px 0 var(--ink)}
 .overlay p{color:var(--muted)}.overlay p b{color:#fff}
-.rules>div{background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);border-left:none;box-shadow:inset 0 0 0 2px var(--ink),inset 4px 0 0 var(--gold)}
+.rules>div{background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);border-left:none;box-shadow:inset 4px 0 0 var(--gold)}
 .rules .k{color:var(--gold)}.rules .d{color:var(--red)}
-.shopItem{background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);box-shadow:inset 0 0 0 3px var(--ink)}
+.shopItem{background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);box-shadow:none}
 .shopItem .ds{color:var(--muted)}
 </style>
 <style>
