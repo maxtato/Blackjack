@@ -329,7 +329,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #pBar.tick #pFill{animation:pflash .5s linear infinite}
 /* TABLE = simple conteneur (plus de bois) */
 #table{flex:none;display:block;width:100%;max-width:500px;position:relative;padding:8px 6px 16px;border:none;border-radius:0;background:none;overflow:visible;box-shadow:none}
-#table::before{display:none}
+#table::before,#table::after{display:none!important}
 /* FELT = tapis teal, bords relevés, légèrement incliné */
 #felt{position:relative;z-index:0;width:100%;min-height:232px;display:flex;clip-path:var(--pc);background:#138f86;transform:rotate(1.3deg);box-shadow:inset 0 10px 17px rgba(0,0,0,.34),inset 0 -10px 17px rgba(0,0,0,.34),inset 0 3px 0 rgba(255,255,255,.13),inset 0 -3px 0 rgba(0,0,0,.3),7px 11px 0 rgba(0,0,0,.4)}
 #felt::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.14) 2px,transparent 2px);background-size:14px 14px;opacity:.4;pointer-events:none}
