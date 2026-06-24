@@ -348,6 +348,17 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .shopItem .ds{color:var(--muted)}
 .joker{background:linear-gradient(170deg,#fffdf5,#fff7e6 70%)}
 </style>
+<style>
+/* ===== retournement de carte + arrivée ===== */
+.card.flip{animation:flipIn .52s cubic-bezier(.25,.85,.35,1) both}
+@keyframes flipIn{
+  0%{transform:perspective(620px) rotateY(90deg) scale(1.05);opacity:.12}
+  50%{transform:perspective(620px) rotateY(-15deg) scale(1.06);opacity:1}
+  78%{transform:perspective(620px) rotateY(7deg) scale(1.01)}
+  100%{transform:perspective(620px) rotateY(0deg) scale(1)}
+}
+@keyframes deal{from{transform:translateY(-34px) rotate(-8deg) scale(.92);opacity:0}60%{opacity:1}to{transform:none;opacity:1}}
+</style>
 </head>
 <body>
 <div id="bg">
@@ -484,7 +495,8 @@ const sfx={
   danger(){blip(80,.32,'sawtooth',.12);},
   buy(){blip(523,.06,'triangle',.08);setTimeout(()=>blip(784,.08,'triangle',.08),60);},
   combo(){blip(660,.05,'square',.07);setTimeout(()=>blip(990,.08,'square',.07),55);},
-  thump(){blip(64,.16,'sine',.13);setTimeout(()=>blip(52,.2,'sine',.1),130);}
+  thump(){blip(64,.16,'sine',.13);setTimeout(()=>blip(52,.2,'sine',.1),130);},
+  flip(){blip(520,.05,'square',.05);setTimeout(()=>blip(380,.07,'square',.05),55);}
 };
 
 /* ---------- données ---------- */
@@ -648,6 +660,7 @@ function cardEl(c,opts={}){
   if(opts.back){d.classList.add('back');return d;}
   if(c.s==='♥'||c.s==='♦')d.classList.add('red');
   if(G.pressure>=50&&G.phase==='play')d.classList.add('jit');
+  if(opts.flip)d.classList.add('flip');
   if(!opts.dealer&&c.ed)d.classList.add(c.ed);
   const big=suitSVG(c.s,22),sm=suitSVG(c.s,7);
   const tag=(!opts.dealer&&c.ed)?`<span class="edtag">${c.ed==='foil'?'◇':c.ed==='holo'?'◈':'◆'}</span>`:'';
@@ -673,7 +686,8 @@ function renderHands(reveal=false){
   G.dHand.forEach((c,i)=>{
     const hideMute=(G.table.rule==='mute'&&!reveal);
     const hideHole=(i===1&&!reveal&&G.phase!=='done');
-    dh.appendChild(fannedCard(c,i,G.dHand.length,{back:hideMute||hideHole,dealer:true}));
+    const flip=G.doFlip&&reveal&&(G.table.rule==='mute'||i===1);
+    dh.appendChild(fannedCard(c,i,G.dHand.length,{back:hideMute||hideHole,dealer:true,flip}));
   });
   G.pHand.forEach((c,i)=>ph.appendChild(fannedCard(c,i,G.pHand.length)));
   $('pVal').textContent=G.pHand.length?handValue(G.pHand).total:'—';
@@ -819,7 +833,7 @@ function updateBustReadout(){
 function deal(){
   audioInit();if(G.bank<10)return;
   G.bank-=G.bet;
-  G.phase='play';G.pressure=0;G.peekUsed=false;G.insisted=false;G.forced=false;G.magicNext=false;G.maxPressureReached=0;
+  G.phase='play';G.pressure=0;G.peekUsed=false;G.insisted=false;G.forced=false;G.magicNext=false;G.maxPressureReached=0;G.revealed=false;G.doFlip=false;
   G.dHand=[];G.pHand=[];$('tip').textContent='';$('tip').style.color='';
   G.pHand.push(draw());sfx.card();G.dHand.push(draw());
   G.pHand.push(draw());sfx.card();G.dHand.push(draw());
@@ -856,7 +870,8 @@ function playerStand(natural){
   G.phase='dealer';$('actions').innerHTML='';dealerPlay(natural);
 }
 function dealerPlay(natural){
-  renderHands(true);
+  if(!G.revealed){G.revealed=true;G.doFlip=true;sfx.flip();}
+  renderHands(true);G.doFlip=false;
   const step=()=>{
     const v=handValue(G.dHand);
     const hitSoft17=(G.maxPressureReached>=25);
@@ -869,7 +884,9 @@ function dealerPlay(natural){
 
 /* ---------- résolution ---------- */
 function resolve(mode){
-  G.phase='done';renderHands(true);
+  G.phase='done';
+  if(!G.revealed){G.revealed=true;G.doFlip=true;sfx.flip();}
+  renderHands(true);G.doFlip=false;
   const pv=handValue(G.pHand).total,dv=handValue(G.dHand).total;
   const pBust=pv>21,dBust=dv>21;
   let outcome;
