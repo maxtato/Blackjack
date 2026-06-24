@@ -280,8 +280,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   --pc:polygon(0 6px,2px 6px,2px 4px,4px 4px,4px 2px,6px 2px,6px 0,calc(100% - 6px) 0,calc(100% - 6px) 2px,calc(100% - 4px) 2px,calc(100% - 4px) 4px,calc(100% - 2px) 4px,calc(100% - 2px) 6px,100% 6px,100% calc(100% - 6px),calc(100% - 2px) calc(100% - 6px),calc(100% - 2px) calc(100% - 4px),calc(100% - 4px) calc(100% - 4px),calc(100% - 4px) calc(100% - 2px),calc(100% - 6px) calc(100% - 2px),calc(100% - 6px) 100%,6px 100%,6px calc(100% - 2px),4px calc(100% - 2px),4px calc(100% - 4px),2px calc(100% - 4px),2px calc(100% - 6px),0 calc(100% - 6px));
 }
 *{image-rendering:pixelated}
-#bg{background:#1a2d26}
-#pattern{opacity:.05}
+#bg{background:#241544}
+#pattern{opacity:.42;animation:none}
 #vignette{display:none}#scan{display:none}
 #hideStats{position:absolute;left:-9999px;visibility:hidden}
 #slotc,#consumeSlots{display:none}
@@ -323,7 +323,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #bottombar{display:flex;flex-direction:column;gap:9px}
 #betRow{display:flex;align-items:center;gap:10px;justify-content:center;background:none!important;border:none!important;box-shadow:none!important;padding:0!important}
 #betRow .lbl{font-size:10px;letter-spacing:.06em;color:var(--muted)}
-#actions{display:flex;flex-direction:column;gap:9px}
+#actions{display:flex;flex-direction:column;gap:9px;min-height:120px}
 .actMain{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .actMain .span{grid-column:1/-1}
 .actWide{min-height:52px;display:flex;flex-direction:column;gap:9px}
