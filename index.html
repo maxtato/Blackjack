@@ -94,8 +94,8 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg);colo
 .card{width:52px;height:74px;background:var(--cardW);color:var(--inkCard);border:3px solid var(--ink);border-radius:7px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:3px 4px 0 rgba(0,0,0,.5);animation:deal .3s cubic-bezier(.2,1.4,.4,1) both}
 .card.red{color:var(--suitRed)}
 .card .pip{display:flex;align-items:center;justify-content:center}
-.card .corner{position:absolute;display:flex;flex-direction:column;align-items:center;line-height:1;gap:1px}
-.card .corner-r{font-family:'Jersey 15',monospace;font-weight:700;font-size:14px}
+.card .corner{position:absolute;display:flex;flex-direction:column;align-items:center;line-height:1;gap:0}
+.card .corner-r{font-family:'Jersey 15',monospace;font-weight:700;font-size:13px}
 .card .suit{display:block}
 .card .tl{top:5px;left:5px}
 .card .br{bottom:5px;right:5px;transform:rotate(180deg)}
@@ -512,7 +512,7 @@ const SUIT_GRID={
  '♠':['0000001000000','0000011100000','0000111110000','0001111111000','0011111111100','0111111111110','1111111111111','1111111111111','1111111111111','0111110111110','0001110111000','0000001000000','0001111111000'],
  '♥':['0011100011100','0111110111110','1111111111111','1111111111111','1111111111111','1111111111111','0111111111110','0011111111100','0001111111000','0000011100000','0000001000000'],
  '♦':['0000001000000','0000011100000','0000111110000','0001111111000','0011111111100','0111111111110','1111111111111','0111111111110','0011111111100','0001111111000','0000111110000','0000011100000','0000001000000'],
- '♣':['00011111000','00111111100','00111111100','00011111000','11011111011','11111111111','11111111111','11111111111','01110101110','00000100000','00011111000']
+ '♣':['0000011100000','0000111110000','0001111111000','0001111111000','1101111111011','1110111110111','1111111111111','1111111111111','0111111111110','0111011101110','0000011100000','0001111111000']
 };
 function suitSVG(suit,wpx){
   const g=SUIT_GRID[suit],w=g[0].length,h=g.length;let r='';
@@ -525,7 +525,7 @@ function cardEl(c,opts={}){
   if(c.s==='♥'||c.s==='♦')d.classList.add('red');
   if(G.pressure>=50&&G.phase==='play')d.classList.add('jit');
   if(!opts.dealer&&c.ed)d.classList.add(c.ed);
-  const big=suitSVG(c.s,26),sm=suitSVG(c.s,8);
+  const big=suitSVG(c.s,22),sm=suitSVG(c.s,7);
   const tag=(!opts.dealer&&c.ed)?`<span class="edtag">${c.ed==='foil'?'◇':c.ed==='holo'?'◈':'◆'}</span>`:'';
   d.innerHTML=`<span class="corner tl"><span class="corner-r">${c.r}</span>${sm}</span><span class="pip">${big}</span><span class="corner br"><span class="corner-r">${c.r}</span>${sm}</span>${tag}`;
   return d;
