@@ -444,9 +444,27 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .howto{text-align:left;font-size:11px;line-height:1.5;color:var(--muted);margin-top:16px;display:flex;flex-direction:column;gap:6px}
 .howto>div{background:var(--panelDk2);clip-path:var(--pc);padding:7px 10px;box-shadow:inset 4px 0 0 var(--gold)}
 .howto .k{color:var(--gold)}.howto .d{color:var(--red)}
-/* titres : pas d'ombre, lettres très légèrement désalignées pour le style */
-.overlay h1,.overlay h1.win,.overlay h1.dead{text-shadow:none}
-.overlay h1 .L{display:inline-block}
+/* aucune ombre de texte nulle part */
+*{text-shadow:none!important}
+/* lettres très légèrement désalignées (style) ; mots insécables -> retours à la ligne propres */
+.W{display:inline-block;white-space:nowrap}
+.L{display:inline-block}
+/* overlays : centrés mais défilables si trop hauts (jamais coupés) */
+.overlay{justify-content:flex-start;overflow-y:auto}
+.ovpanel{margin:auto 0}
+/* La Planque condensée pour tenir sans scroll */
+#intro .ovpanel{padding:18px 22px 16px}
+#intro p{font-size:11.5px;line-height:1.5;margin-bottom:11px}
+.repBar{margin-bottom:11px}
+.repNum{font-size:30px}
+#unlockItems{gap:7px;margin-bottom:11px}
+#unlockItems .shopItem{padding:7px 11px}
+#unlockItems .shopTok{width:52px;height:52px;font-size:18px}
+#unlockItems .nm{font-size:13px}
+#unlockItems .ds{font-size:10.5px;margin-top:3px}
+.backPick{margin:0 0 10px}
+.howto{margin-top:11px;gap:5px;font-size:10px}
+.howto>div{padding:6px 9px}
 </style>
 </head>
 <body>
@@ -517,7 +535,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <div class="overlay show" id="intro">
   <div class="ovpanel">
     <h1 class="win">LA PLANQUE</h1>
-    <p>Ton repaire entre deux descentes. Dépense ta <b>réputation</b> en avantages permanents, puis replonge.</p>
+    <p>Dépense ta <b>réputation</b> en avantages permanents, puis replonge.</p>
     <div class="repBar">
       <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl">★ réputation</span></div>
       <div class="recBox">RECORD<br><b>profondeur <span id="recDepth">0</span></b> · <b><span id="recChips">0</span> $</b></div>
@@ -526,9 +544,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
     <button class="btn b-gold menu" onclick="startGame()">NOUVELLE DESCENTE ↓</button>
     <div class="howto" id="howto">
-      <div>→ Approche <span class="k">21</span>, bats le croupier. Chaque tirage <span class="d">chauffe la table</span>.</div>
-      <div>→ Franchis l'objectif → <span class="k">descends</span> (plus dur, cagnotte plus grosse) ou <span class="k">encaisse</span>.</div>
-      <div>→ Tu perds une table ? <span class="k">Seconde chance</span> si tu as un jeton, sinon tu repars avec la moitié de la cagnotte.</div>
+      <div>→ Approche <span class="k">21</span>, bats le croupier, franchis l'objectif.</div>
+      <div>→ Puis <span class="k">descends</span> (plus gros gains) ou <span class="k">encaisse</span> ta cagnotte.</div>
     </div>
   </div>
 </div>
@@ -1231,7 +1248,7 @@ function cashOut(){
 
 /* ---------- seconde chance / fin de descente ---------- */
 function openLose(){
-  $('loseTitle').textContent=G.loseTitle;staggerText($('loseTitle'));
+  $('loseTitle').textContent=G.loseTitle;
   $('loseText').innerHTML=G.loseText+`<br><br>Descente : <b>profondeur ${G.tableIdx+1}</b> · Cagnotte : <b>★${G.pot}</b>`;
   $('retryBtn').innerHTML='SECONDE CHANCE<small>🔄 '+G.tokens+' restante'+(G.tokens>1?'s':'')+'</small>';
   $('giveupBtn').innerHTML='ABANDONNER<small>encaisse ★'+repOnEnd(false)+'</small>';
@@ -1268,7 +1285,7 @@ function endRun(cashout){
   saveMeta();
   const depth=G.tableIdx+1;
   $('endTitle').textContent=cashout?'TU ENCAISSES':'DESCENTE FINIE';
-  $('endTitle').className=cashout?'win':'dead';staggerText($('endTitle'));
+  $('endTitle').className=cashout?'win':'dead';
   $('endText').innerHTML=
     (cashout
       ?`Tu pars avec la cagnotte avant que ça tourne mal.`
@@ -1358,23 +1375,55 @@ function tick(){
   }else $('shaker').style.transform='';
   if(G.pressure>=45&&G.phase==='play'&&Math.random()<(G.pressure/100)*0.32)spawnEmber();
   if(G.pressure>=75&&G.phase==='play'&&(!G._beat||performance.now()-G._beat>680)){G._beat=performance.now();sfx.thump();}
+  staggerUI();
   shakeAmt*=0.82;requestAnimationFrame(tick);
 }
 
 /* ---------- rendu global / boot ---------- */
 function renderAll(){renderTop();renderRelics();renderConsumables();renderChips();renderActions();renderPressure();renderMult();}
 
-/* titres : découpe chaque lettre en span et décale légèrement la hauteur (style) */
+/* décale légèrement chaque lettre en hauteur (style) ; mots groupés (insécables)
+   pour garder des retours à la ligne propres. Idempotent : déjà traité = ignoré. */
 const LETTER_OFF=[-2,2,-1,1,-2,1,0,2,-1,1,-2,2,-1,0,1];
-function staggerText(el){
-  if(!el)return;const t=el.textContent;if(!t)return;el.innerHTML='';
-  let k=0;
-  for(const ch of t){
-    const s=document.createElement('span');s.className='L';
-    if(ch===' '){s.innerHTML='&nbsp;';}else{s.textContent=ch;}
-    s.style.transform='translateY('+LETTER_OFF[k%LETTER_OFF.length]+'px)';
-    el.appendChild(s);k++;
+function staggerNode(node,ctr){
+  // amplitude proportionnelle à la taille de police : net sur les titres, léger sur le petit texte
+  let scale=1;
+  if(node.nodeType===1&&typeof getComputedStyle!=='undefined'){
+    const fs=parseFloat(getComputedStyle(node).fontSize)||16;
+    scale=Math.max(0.4,Math.min(1.15,fs/32));
   }
+  const kids=Array.prototype.slice.call(node.childNodes||[]);
+  for(const n of kids){
+    if(n.nodeType===3){
+      const txt=n.textContent;
+      if(!txt||!/\S/.test(txt))continue;            // espaces : on laisse tel quel
+      const frag=document.createDocumentFragment();
+      for(const part of txt.split(/(\s+)/)){
+        if(part==='')continue;
+        if(!/\S/.test(part)){frag.appendChild(document.createTextNode(part));continue;}
+        const w=document.createElement('span');w.className='W';
+        for(const ch of part){
+          const s=document.createElement('span');s.className='L';s.textContent=ch;
+          s.style.transform='translateY('+(LETTER_OFF[ctr.i%LETTER_OFF.length]*scale).toFixed(1)+'px)';
+          w.appendChild(s);ctr.i++;
+        }
+        frag.appendChild(w);
+      }
+      node.replaceChild(frag,n);
+    }else if(n.nodeType===1){
+      const c=n.classList;
+      if(c&&(c.contains('L')||c.contains('W')||c.contains('card')))continue;
+      if(n.id==='multPop'||n.id==='center'||n.id==='feltMark')continue;
+      staggerNode(n,ctr);
+    }
+  }
+}
+function staggerText(el){if(!el||!document.createDocumentFragment)return;staggerNode(el,{i:0});}
+/* re-applique le décalage à toute l'UI visible (chrome de jeu + overlay affiché) */
+function staggerUI(){
+  staggerText($('topbar'));staggerText($('bottombar'));staggerText($('effects'));
+  document.querySelectorAll('#stage .zlbl').forEach(staggerText);
+  document.querySelectorAll('.overlay.show .ovpanel').forEach(staggerText);
 }
 
 /* ---------- LA PLANQUE (hub de méta-progression) ---------- */
@@ -1414,9 +1463,7 @@ function startGame(){
   freshGame();buildShoe();
   applyHandIncome();renderAll();renderHands();
 }
-freshGame();buildShoe();renderAll();renderHands();renderBackPicker();renderPlanque();
-document.querySelectorAll('.overlay h1').forEach(staggerText);
-tick();
+freshGame();buildShoe();renderAll();renderHands();renderBackPicker();renderPlanque();tick();
 </script>
 </body>
 </html>
