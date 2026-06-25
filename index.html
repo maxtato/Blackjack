@@ -901,16 +901,16 @@ function renderActions(){
     b.innerHTML=label+(sub?`<small>${sub}</small>`:'');
     if(dis)b.disabled=true;else b.onclick=fn;parent.appendChild(b);return b;
   };
-  if(G.phase==='bet'){add(main,'MISER & DONNER','b-gold span',deal,`mise ${G.bet} $`,G.bank<10);return;}
+  if(G.phase==='bet'){add(main,'MISER','b-gold span',deal,`mise ${G.bet} $`,G.bank<10);return;}
   if(G.phase==='play'){
     const v=handValue(G.pHand).total;
     if(v>=17&&v<=20){
-      add(main,'INSISTER','b-red',()=>{G.insisted=true;playerHit();},'+bonus si survie');
-      add(main,'TENIR','b-blue',playerStand,'garde ta main');
+      add(main,'RISQUER','b-red',()=>{G.insisted=true;playerHit();},'+bonus si survie');
+      add(main,'RESTER','b-blue',playerStand,'garde ta main');
       add(wide,'FORCER LA CHANCE','b-purple',forcerChance,'2 cartes, garde la meilleure · pression +++');
     }else{
       add(main,'TIRER','b-gold',()=>playerHit(),'+1 carte');
-      add(main,'TENIR','b-blue',playerStand,'garde ta main');
+      add(main,'RESTER','b-blue',playerStand,'garde ta main');
     }
     if(hasRelic('lunettes')&&!G.peekUsed)add(wide,'LUNETTES','b-teal',usePeek,'lis la prochaine carte');
     return;
