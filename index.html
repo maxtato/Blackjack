@@ -458,16 +458,17 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* lettres très légèrement désalignées (style) ; mots insécables -> retours à la ligne propres */
 .W{display:inline-block;white-space:nowrap}
 .L{display:inline-block;transform:translateY(var(--o,0))}
-/* boutons + nom de salle + VOIR : léger tremblement des lettres (autour de leur hauteur --o) */
-.btn .L,.tname .L,#peekBtn .L{animation:letterShake 1s steps(1,end) infinite;animation-delay:var(--d,0s)}
+/* tremblement TRÈS léger des grosses lettres seulement (libellé principal,
+   pas le sous-texte <small>) : boutons, nom de la table, VOIR */
+.btn>.W .L,#tableName .L,#peekBtn .L{animation:letterShake 1.1s steps(1,end) infinite;animation-delay:var(--d,0s)}
 @keyframes letterShake{
- 0%  {transform:translate( .4px,calc(var(--o,0px) - .3px))}
- 16% {transform:translate(-.4px,calc(var(--o,0px) + .3px))}
- 33% {transform:translate( .3px,calc(var(--o,0px) + .4px))}
- 50% {transform:translate(-.3px,calc(var(--o,0px) - .4px))}
- 66% {transform:translate( .4px,calc(var(--o,0px) + .2px))}
- 83% {transform:translate(-.4px,calc(var(--o,0px) - .2px))}
- 100%{transform:translate( .4px,calc(var(--o,0px) - .3px))}
+ 0%  {transform:translate( .2px,calc(var(--o,0px) - .15px))}
+ 16% {transform:translate(-.2px,calc(var(--o,0px) + .15px))}
+ 33% {transform:translate( .15px,calc(var(--o,0px) + .2px))}
+ 50% {transform:translate(-.15px,calc(var(--o,0px) - .2px))}
+ 66% {transform:translate( .2px,calc(var(--o,0px) + .1px))}
+ 83% {transform:translate(-.2px,calc(var(--o,0px) - .1px))}
+ 100%{transform:translate( .2px,calc(var(--o,0px) - .15px))}
 }
 /* overlays : centrés mais défilables si trop hauts (jamais coupés) */
 .overlay{justify-content:flex-start;overflow-y:auto}
