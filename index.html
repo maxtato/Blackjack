@@ -134,7 +134,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .hand{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;min-height:94px;align-items:center}
 
 /* ===== CARDS ===== */
-.card{width:62px;height:88px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);color:var(--inkCard);border:3px solid var(--ink);border-radius:8px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:3px 5px 0 rgba(0,0,0,.45);animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife var(--cdur,1.7s) ease-in-out var(--cd,0s) infinite}
+.card{width:62px;height:88px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);color:var(--inkCard);border:3px solid var(--ink);border-radius:8px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:3px 5px 0 rgba(0,0,0,.45);animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife var(--cdur,2.8s) ease-in-out var(--cd,0s) infinite}
 .card.red{color:var(--suitRed)}
 .card .pip{display:flex;align-items:center;justify-content:center}
 .card .corner{position:absolute;display:flex;flex-direction:column;align-items:center;line-height:1;gap:0}
@@ -153,7 +153,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .card.back.cb11::before{background:#16131f;background-image:repeating-linear-gradient(45deg,rgba(232,197,96,.5) 0 1px,transparent 1px 5px),repeating-linear-gradient(-45deg,rgba(232,197,96,.5) 0 1px,transparent 1px 5px);box-shadow:inset 0 0 0 1px #c9971f,inset 0 0 0 2px #16131f,inset 0 0 0 3px #c9971f}
 .card.back.cb11::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:19px;height:29px;border-radius:50%;z-index:2;background:radial-gradient(circle at 50% 50%,#e8c560 0 2px,transparent 2.5px),#16131f;box-shadow:0 0 0 1px #c9971f,0 0 0 3px #16131f,0 0 0 4px #c9971f}
 .card.back.cb12::before{background:#6e2350;background-image:repeating-linear-gradient(45deg,rgba(253,243,223,.4) 0 1px,transparent 1px 4px),repeating-linear-gradient(-45deg,rgba(253,243,223,.4) 0 1px,transparent 1px 4px);box-shadow:inset 0 0 0 1px #fdf3df,inset 0 0 0 2px #6e2350,inset 0 0 0 3px #fdf3df}
-@keyframes cardLife{0%{transform:translate(0,0) rotate(-.4deg)}20%{transform:translate(-.3px,-.8px) rotate(.3deg)}40%{transform:translate(.4px,-1.3px) rotate(.5deg)}60%{transform:translate(-.3px,-.6px) rotate(-.3deg)}80%{transform:translate(.3px,-1px) rotate(.3deg)}100%{transform:translate(0,0) rotate(-.4deg)}}
+@keyframes cardLife{0%{transform:translate(0,0) rotate(-.3deg)}20%{transform:translate(-.2px,-.5px) rotate(.2deg)}40%{transform:translate(.3px,-.9px) rotate(.32deg)}60%{transform:translate(-.2px,-.4px) rotate(-.2deg)}80%{transform:translate(.2px,-.7px) rotate(.2deg)}100%{transform:translate(0,0) rotate(-.3deg)}}
+@keyframes textLife{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
 /* sélecteur de dos sur l'écran d'accueil */
 .backPick{margin:2px 0 14px}
 .bpLabel{font-size:11px;letter-spacing:.12em;color:var(--muted);margin-bottom:9px}
@@ -298,8 +299,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #bg{background:#241544}
 #pattern{opacity:.42;animation:none}
 #vignette{display:none}
-/* AMBIANCE : scanlines CRT légères */
-#scan{display:block;opacity:.06;z-index:46}
+/* AMBIANCE : scanlines CRT retirées */
+#scan{display:none}
 /* étincelles flottantes sur la moquette (fond, derrière le jeu) */
 #sparks{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
 #sparks::before,#sparks::after{content:"";position:absolute;left:0;top:0;width:3px;height:3px;border-radius:1px}
@@ -321,6 +322,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #topbar .tname .rule{font-size:11px;color:var(--gold);font-weight:400}
 #topbar .tstats{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 #topbar #scorebox{align-self:center}
+/* léger mouvement des textes (très subtil) */
+.tname,.zlbl,.overlay h1,.hdr h2{animation:textLife 4.6s ease-in-out infinite}
+.zlbl{animation-duration:3.9s}.overlay h1{animation-duration:5.6s}.hdr h2{animation-duration:5s}
 .stat{display:flex;flex-direction:column;align-items:center;line-height:1;background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);box-shadow:none;padding:7px 12px;min-width:66px}
 .stat .lbl{font-size:10px;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
 .stat .v{font-size:23px;font-weight:700;color:var(--gold)}
@@ -753,8 +757,8 @@ function suitSVG(suit,wpx){
 function cardEl(c,opts={}){
   const d=document.createElement('div');d.className='card';
   const sd=hashStr((c.r||'')+(c.s||'')),sd2=hashStr((c.s||'')+'x'+(c.r||''));
-  d.style.setProperty('--cdur',(1.15+sd*0.9).toFixed(2)+'s');
-  d.style.setProperty('--cd','-'+(sd2*2.2).toFixed(2)+'s');
+  d.style.setProperty('--cdur',(2.4+sd*1.5).toFixed(2)+'s');
+  d.style.setProperty('--cd','-'+(sd2*3).toFixed(2)+'s');
   if(opts.back){d.classList.add('back',cardBack);return d;}
   if(c.s==='♥'||c.s==='♦')d.classList.add('red');
   if(G.pressure>=50&&G.phase==='play')d.classList.add('jit');
