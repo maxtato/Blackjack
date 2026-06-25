@@ -458,9 +458,17 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* lettres très légèrement désalignées (style) ; mots insécables -> retours à la ligne propres */
 .W{display:inline-block;white-space:nowrap}
 .L{display:inline-block;transform:translateY(var(--o,0))}
-/* boutons + nom de salle : les lettres ondulent très très légèrement de haut en bas */
-.btn .L,.tname .L{animation:letterBob 2.6s ease-in-out infinite;animation-delay:var(--d,0s)}
-@keyframes letterBob{0%,100%{transform:translateY(calc(var(--o,0px) + .3px))}50%{transform:translateY(calc(var(--o,0px) - .3px))}}
+/* boutons + nom de salle + VOIR : léger tremblement des lettres (autour de leur hauteur --o) */
+.btn .L,.tname .L,#peekBtn .L{animation:letterShake 1s steps(1,end) infinite;animation-delay:var(--d,0s)}
+@keyframes letterShake{
+ 0%  {transform:translate( .4px,calc(var(--o,0px) - .3px))}
+ 16% {transform:translate(-.4px,calc(var(--o,0px) + .3px))}
+ 33% {transform:translate( .3px,calc(var(--o,0px) + .4px))}
+ 50% {transform:translate(-.3px,calc(var(--o,0px) - .4px))}
+ 66% {transform:translate( .4px,calc(var(--o,0px) + .2px))}
+ 83% {transform:translate(-.4px,calc(var(--o,0px) - .2px))}
+ 100%{transform:translate( .4px,calc(var(--o,0px) - .3px))}
+}
 /* overlays : centrés mais défilables si trop hauts (jamais coupés) */
 .overlay{justify-content:flex-start;overflow-y:auto}
 .ovpanel{margin:auto 0}
@@ -1449,7 +1457,7 @@ function staggerNode(node,ctr){
 function staggerText(el){if(!el||!document.createDocumentFragment)return;staggerNode(el,{i:0});}
 /* re-applique le décalage à toute l'UI visible (chrome de jeu + overlay affiché) */
 function staggerUI(){
-  staggerText($('topbar'));staggerText($('bottombar'));staggerText($('effects'));
+  staggerText($('topbar'));staggerText($('bottombar'));staggerText($('effects'));staggerText($('peekBtn'));
   document.querySelectorAll('#stage .zlbl').forEach(staggerText);
   document.querySelectorAll('.overlay.show .ovpanel').forEach(staggerText);
 }
