@@ -387,7 +387,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #scorebox.hot{box-shadow:0 0 0 2px var(--gold)}
 .zone{position:relative;z-index:1}#center{position:relative;z-index:1}#feltMark{display:none}
 /* BOTTOM — bloc gris pleine largeur avec tous les boutons de mise */
-#bottombar{display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--panel);box-shadow:0 -5px 10px rgba(0,0,0,.42),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -2px 0 rgba(0,0,0,.32);padding:11px 12px}
+#bottombar{display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--panel);box-shadow:0 -5px 10px rgba(0,0,0,.42),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -2px 0 rgba(0,0,0,.32);padding:11px 12px calc(20px + env(safe-area-inset-bottom,0px))}
 #bottombar #betRow,#bottombar #actions{width:100%;max-width:600px}
 #betRow{display:flex;align-items:center;gap:10px;justify-content:center;background:none!important;border:none!important;box-shadow:none!important;padding:0!important}
 #betRow .lbl{font-size:12px;letter-spacing:.06em;color:var(--muted)}
@@ -458,9 +458,12 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* lettres très légèrement désalignées (style) ; mots insécables -> retours à la ligne propres */
 .W{display:inline-block;white-space:nowrap}
 .L{display:inline-block;transform:translateY(var(--o,0))}
+/* libellé principal d'un bouton d'action : garde le titre sur sa ligne (les mots
+   ne s'empilent pas dans le bouton flex-colonne) et laisse le <small> dessous */
+.blbl{display:inline-block;line-height:1.05}
 /* tremblement TRÈS léger des grosses lettres seulement (libellé principal,
    pas le sous-texte <small>) : boutons, nom de la table, VOIR */
-.btn>.W .L,#tableName .L,#peekBtn .L{animation:letterShake 1.1s steps(1,end) infinite;animation-delay:var(--d,0s)}
+.btn>.W .L,.btn>.blbl .L,#tableName .L,#peekBtn .L{animation:letterShake 1.1s steps(1,end) infinite;animation-delay:var(--d,0s)}
 @keyframes letterShake{
  0%  {transform:translate( .2px,calc(var(--o,0px) - .15px))}
  16% {transform:translate(-.2px,calc(var(--o,0px) + .15px))}
@@ -1030,7 +1033,7 @@ function renderActions(){
   const wide=document.createElement('div');wide.className='actWide';
   const add=(parent,label,cls,fn,sub,dis)=>{
     const b=document.createElement('button');b.className='btn '+cls;
-    b.innerHTML=label+(sub?`<small>${sub}</small>`:'');
+    b.innerHTML=`<span class="blbl">${label}</span>`+(sub?`<small>${sub}</small>`:'');
     if(dis)b.disabled=true;else b.onclick=fn;parent.appendChild(b);return b;
   };
   if(G.phase==='bet'){
