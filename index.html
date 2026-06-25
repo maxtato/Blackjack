@@ -343,6 +343,12 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* tapis seulement derrière les cartes ; moquette visible au-dessus et en dessous */
 #feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:center;gap:16px;padding:0;position:relative;z-index:1;transform:none}
 #feltInner .zone{flex:0 0 auto}
+/* angles dorés : petit losange pixel (ombré jaune->marron) + traits courts décalés */
+#felt .fc{position:absolute;width:2px;height:2px;background:transparent;z-index:1;pointer-events:none;box-shadow:6px 0px 0 0 #ffe9a8,4px 2px 0 0 #ffe9a8,6px 2px 0 0 #ffe9a8,8px 2px 0 0 #f6d06a,2px 4px 0 0 #ffe9a8,4px 4px 0 0 #ffe9a8,6px 4px 0 0 #f6d06a,8px 4px 0 0 #efc64e,10px 4px 0 0 #cf9a2e,0px 6px 0 0 #ffe9a8,2px 6px 0 0 #ffe9a8,4px 6px 0 0 #f6d06a,6px 6px 0 0 #efc64e,8px 6px 0 0 #cf9a2e,10px 6px 0 0 #9c6510,12px 6px 0 0 #9c6510,2px 8px 0 0 #f6d06a,4px 8px 0 0 #efc64e,6px 8px 0 0 #cf9a2e,8px 8px 0 0 #9c6510,10px 8px 0 0 #9c6510,4px 10px 0 0 #cf9a2e,6px 10px 0 0 #9c6510,8px 10px 0 0 #9c6510,6px 12px 0 0 #9c6510,16px 6px 0 0 #efc64e,18px 6px 0 0 #cf9a2e,20px 6px 0 0 #9c6510,6px 16px 0 0 #efc64e,6px 18px 0 0 #cf9a2e,6px 20px 0 0 #9c6510}
+#felt .fc.tl{top:11px;left:11px}
+#felt .fc.tr{top:11px;right:11px;transform:scaleX(-1)}
+#felt .fc.bl{bottom:11px;left:11px;transform:scaleY(-1)}
+#felt .fc.br{bottom:11px;right:11px;transform:scale(-1,-1)}
 /* barre mise/mult : EN DESSOUS du tapis */
 #scorebox{position:relative;left:auto;bottom:auto;z-index:1;display:flex;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;box-shadow:none}
 #scorebox .seg{display:flex;flex-direction:column;align-items:center;padding:5px 12px;gap:1px}
@@ -443,6 +449,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">FROID</span> · <span id="pPct">0%</span></span></div>
     <div id="table">
       <div id="felt">
+        <span class="fc tl"></span><span class="fc tr"></span><span class="fc bl"></span><span class="fc br"></span>
         <div id="feltInner">
           <div id="feltMark">21</div>
           <div id="multPop"><div class="burst"></div><span class="m"></span><span class="t"></span></div>
