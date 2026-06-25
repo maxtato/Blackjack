@@ -370,12 +370,13 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #felt .fc.bl{bottom:11px;left:11px;transform:scaleY(-1)}
 #felt .fc.br{bottom:11px;right:11px;transform:scale(-1,-1)}
 /* barre mise/mult : EN DESSOUS du tapis */
-#scorebox{position:relative;left:auto;bottom:auto;z-index:1;display:flex;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;box-shadow:none}
-#scorebox .seg{display:flex;flex-direction:column;align-items:center;padding:5px 12px;gap:1px}
-#scorebox .seg.chips{background:var(--blue)}
-#scorebox .seg.mult{background:var(--red)}
-#scorebox .k{font-size:9px;color:rgba(255,255,255,.95);letter-spacing:.08em}
-#scorebox .v{font-size:22px;color:#fff;font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
+#scorebox{position:relative;left:auto;bottom:auto;z-index:1;display:flex;background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;box-shadow:none}
+#scorebox .seg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 13px;gap:3px;background:transparent}
+#scorebox .seg.chips{background:transparent}
+#scorebox .seg.mult{background:transparent;box-shadow:inset 2px 0 0 rgba(255,255,255,.09)}
+#scorebox .k{font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:0}
+#scorebox .seg.chips .v{font-size:21px;color:#fff;font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
+#scorebox .seg.mult .v{font-size:21px;color:var(--gold);font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
 #scorebox.hot{box-shadow:0 0 0 2px var(--gold)}
 .zone{position:relative;z-index:1}#center{position:relative;z-index:1}#feltMark{display:none}
 /* BOTTOM — bloc gris pleine largeur avec tous les boutons de mise */
@@ -454,8 +455,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <div class="tstats">
       <div class="stat tours"><span class="lbl">TOURS</span><span class="v" id="handsLeftBig">5</span></div>
       <div class="stat goal"><span class="lbl">OBJECTIF</span><span class="v">$<span id="goalVal">100</span></span></div>
-      <div class="stat bank" id="scorePanel"><span class="lbl">JETONS</span><span class="v">$<span id="bankBig">50</span></span></div>
       <div id="scorebox"><span class="seg chips"><b class="k">MISE</b><span class="v" id="chipsVal">10</span></span><span class="seg mult"><b class="k">MULT</b><span class="v" id="multVal">×1</span></span></div>
+      <div class="stat bank" id="scorePanel"><span class="lbl">JETONS</span><span class="v">$<span id="bankBig">50</span></span></div>
     </div>
   </header>
 
