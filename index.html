@@ -632,11 +632,11 @@ function saveMeta(){try{localStorage.setItem('t21meta',JSON.stringify(META));}ca
 function uLvl(id){return META.unlocks[id]|0;}
 /* déblocages permanents achetés en réputation à la planque */
 const UNLOCKS=[
-  {id:'bank',     name:'Pécule',    ic:'💰', max:5, cost:n=>15+n*15, desc:n=>'Jetons de départ +'+(15*(n+1))},
-  {id:'pourboire',name:'Pourboire', ic:'🪙', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' jeton(s) au début de chaque main'},
-  {id:'net',      name:'Filet',     ic:'🪢', max:3, cost:n=>40+n*30, desc:n=>'Secondes chances de départ : '+(1+n+1)},
-  {id:'tarot',    name:'Poche',     ic:'🎴', max:1, cost:n=>70,      desc:n=>'+1 emplacement Tarot permanent'},
-  {id:'contact',  name:'Contact',   ic:'🤝', max:1, cost:n=>90,      desc:n=>'Commence chaque descente avec une relique offerte'},
+  {id:'bank',     name:'Pécule',    tok:'+$',                     tc:'#ffce3a', max:5, cost:n=>15+n*15, desc:n=>'Jetons de départ +'+(15*(n+1))},
+  {id:'pourboire',name:'Pourboire', tok:'+$<small>/main</small>', tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' jeton(s) au début de chaque main'},
+  {id:'net',      name:'Filet',     tok:'+1<small>essai</small>', tc:'#3f8bd6', max:3, cost:n=>40+n*30, desc:n=>'Secondes chances de départ : '+(1+n+1)},
+  {id:'tarot',    name:'Poche',     tok:'+1<small>slot</small>',  tc:'#a64dff', max:1, cost:n=>70,      desc:n=>'+1 emplacement Tarot permanent'},
+  {id:'contact',  name:'Contact',   tok:'+1<small>◆</small>',     tc:'#ffce3a', max:1, cost:n=>90,      desc:n=>'Commence chaque descente avec une relique offerte'},
 ];
 function unlockCost(u){const n=uLvl(u.id);return n>=u.max?null:u.cost(n);}
 /* valeurs de départ d'une descente, dérivées des déblocages */
@@ -1371,7 +1371,7 @@ function renderPlanque(){
     const lvl=uLvl(u.id),cost=unlockCost(u),maxed=cost===null;
     const d=document.createElement('div');d.className='shopItem'+(maxed?' bought':'');
     const dots=u.max>1?` <span class="ulvl">${'●'.repeat(lvl)}${'○'.repeat(u.max-lvl)}</span>`:(lvl?' <span class="ulvl">●</span>':'');
-    d.innerHTML=`<div class="shopTok" style="color:#ffe7a0;font-size:26px">${u.ic}</div>`+
+    d.innerHTML=`<div class="shopTok" style="color:${u.tc}">${u.tok}</div>`+
       `<div class="sInfo"><div class="nm">${u.name}${dots}</div><div class="ds">${u.desc(lvl)}</div></div>`;
     const b=document.createElement('button');b.className='btn b-gold';
     b.style.cssText='font-size:13px;padding:9px 11px';
