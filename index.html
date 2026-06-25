@@ -300,13 +300,16 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #vignette{display:none}#scan{display:none}
 #hideStats{position:absolute;left:-9999px;visibility:hidden}
 #slotc,#consumeSlots{display:none}
-#app{display:flex;flex-direction:column;gap:9px;padding:9px;align-items:center}
-#topbar,#effects,#stage,#bottombar{width:100%;max-width:620px;flex-shrink:0}
+#app{display:flex;flex-direction:column;gap:0;padding:0;align-items:stretch}
+#topbar,#bottombar{width:100%;flex-shrink:0}
+#mid{width:100%;max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:9px;padding:9px 9px 0;flex:1;min-height:0}
+#effects,#stage{width:100%;flex-shrink:0}
 /* TOP */
-#topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--panel);border:none;border-radius:0;clip-path:var(--pc);box-shadow:none;padding:10px 13px}
+#topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 14px;background:var(--panel);border:none;border-radius:0;clip-path:none;box-shadow:0 3px 0 rgba(0,0,0,.3);padding:9px 16px}
 #topbar .tname{display:flex;flex-direction:column;gap:2px;font-size:20px;font-weight:700;color:var(--paper);text-shadow:1px 1px 0 var(--ink)}
 #topbar .tname .rule{font-size:11px;color:var(--gold);font-weight:400}
-#topbar .tstats{display:flex;gap:8px}
+#topbar .tstats{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#topbar #scorebox{align-self:center}
 .stat{display:flex;flex-direction:column;align-items:center;line-height:1;background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);box-shadow:none;padding:7px 12px;min-width:66px}
 .stat .lbl{font-size:10px;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
 .stat .v{font-size:23px;font-weight:700;color:var(--gold)}
@@ -360,8 +363,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #scorebox .v{font-size:22px;color:#fff;font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
 #scorebox.hot{box-shadow:0 0 0 2px var(--gold)}
 .zone{position:relative;z-index:1}#center{position:relative;z-index:1}#feltMark{display:none}
-/* BOTTOM */
-#bottombar{display:flex;flex-direction:column;gap:9px}
+/* BOTTOM — bloc gris pleine largeur avec tous les boutons de mise */
+#bottombar{display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--panel);box-shadow:0 -3px 0 rgba(0,0,0,.3);padding:11px 12px}
+#bottombar #betRow,#bottombar #actions{width:100%;max-width:600px}
 #betRow{display:flex;align-items:center;gap:10px;justify-content:center;background:none!important;border:none!important;box-shadow:none!important;padding:0!important}
 #betRow .lbl{font-size:12px;letter-spacing:.06em;color:var(--muted)}
 #actions{display:flex;flex-direction:column;gap:9px;min-height:120px}
@@ -435,9 +439,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
       <div class="stat tours"><span class="lbl">TOURS</span><span class="v" id="handsLeftBig">5</span></div>
       <div class="stat goal"><span class="lbl">OBJECTIF</span><span class="v">$<span id="goalVal">100</span></span></div>
       <div class="stat bank" id="scorePanel"><span class="lbl">JETONS</span><span class="v">$<span id="bankBig">50</span></span></div>
+      <div id="scorebox"><span class="seg chips"><b class="k">MISE</b><span class="v" id="chipsVal">10</span></span><span class="seg mult"><b class="k">MULT</b><span class="v" id="multVal">×1</span></span></div>
     </div>
   </header>
 
+  <div id="mid">
   <div id="effects">
     <div id="relicRow"><div id="relics"></div></div>
     <div id="consumeRow"><div id="consumes"></div></div>
@@ -464,7 +470,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
         </div>
       </div>
     </div>
-    <div id="scorebox"><span class="seg chips"><b class="k">MISE</b><span class="v" id="chipsVal">10</span></span><span class="seg mult"><b class="k">MULT</b><span class="v" id="multVal">×1</span></span></div>
+  </div>
   </div>
 
   <footer id="bottombar">
