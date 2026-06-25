@@ -1390,7 +1390,7 @@ function staggerNode(node,ctr){
   let scale=1;
   if(node.nodeType===1&&typeof getComputedStyle!=='undefined'){
     const fs=parseFloat(getComputedStyle(node).fontSize)||16;
-    scale=Math.max(0.5,Math.min(1,fs/34));
+    scale=Math.max(0.12,Math.min(1,Math.pow(fs/38,1.6)));
   }
   const kids=Array.prototype.slice.call(node.childNodes||[]);
   for(const n of kids){
