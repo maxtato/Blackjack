@@ -159,7 +159,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .backPick{margin:2px 0 14px}
 .bpLabel{font-size:11px;letter-spacing:.12em;color:var(--muted);margin-bottom:9px}
 .bpRow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.bpCard{width:50px;height:72px;cursor:pointer;animation:cardLife 4s ease-in-out infinite}
+.bpCard{width:50px;height:72px;cursor:pointer;animation:cardLife var(--cdur,5.5s) ease-in-out var(--cd,0s) infinite}
 .bpCard.sel{box-shadow:0 0 0 3px var(--gold),3px 5px 0 rgba(0,0,0,.45)}
 .card.jit{animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,jit .12s linear infinite}
 @keyframes deal{from{transform:translateY(-30px) rotate(-7deg);opacity:0}to{transform:none;opacity:1}}
@@ -655,8 +655,11 @@ let cardBack=(()=>{try{const v=localStorage.getItem('t21back');return CARD_BACKS
 function setCardBack(cb){cardBack=cb;try{localStorage.setItem('t21back',cb);}catch(e){}renderBackPicker();renderHands();}
 function renderBackPicker(){
   const row=document.getElementById('bpRow');if(!row)return;row.innerHTML='';
-  CARD_BACKS.forEach(cb=>{
+  CARD_BACKS.forEach((cb,i)=>{
     const d=document.createElement('div');d.className='card back '+cb+' bpCard'+(cardBack===cb?' sel':'');
+    const sd=hashStr(cb+'#'+i),sd2=hashStr(cb+'~'+i),dur=5.5+sd*2.5;   // phase+durée propres -> mouvement indépendant
+    d.style.setProperty('--cdur',dur.toFixed(2)+'s');
+    d.style.setProperty('--cd','-'+(sd2*dur).toFixed(2)+'s');
     d.onclick=()=>{setCardBack(cb);try{sfx.flip();}catch(e){}};
     row.appendChild(d);
   });
