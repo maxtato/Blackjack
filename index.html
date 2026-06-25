@@ -361,9 +361,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #table{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;max-width:580px;position:relative;padding:6px;border:none;border-radius:0;background:none;overflow:visible;box-shadow:none}
 #table::before,#table::after{display:none!important}
 /* petit bouton VOIR (lunettes) : posé sur le coin du tapis, hors de la rangée d'actions */
-#peekBtn{position:absolute;top:10px;right:10px;z-index:6;display:none;font-family:'Jersey 15',monospace;font-weight:700;font-size:12px;letter-spacing:.04em;color:#04302d;background:var(--teal);border:none;clip-path:var(--pc);padding:6px 9px;line-height:1;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+#peekBtn{position:absolute;top:50%;right:12px;transform:translateY(-50%);z-index:6;display:none;font-family:'Jersey 15',monospace;font-weight:700;font-size:17px;letter-spacing:.05em;color:#04302d;background:var(--teal);border:none;clip-path:var(--pc);padding:13px 16px;line-height:1;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.4)}
 #peekBtn.show{display:block}
-#peekBtn:active{transform:translateY(2px);filter:brightness(.92)}
+#peekBtn:active{transform:translateY(calc(-50% + 2px));filter:brightness(.92)}
 /* FELT = tapis teal, bords relevés, légèrement incliné */
 #felt{position:relative;z-index:0;flex:none;width:100%;max-width:560px;display:flex;background:#138f86;clip-path:var(--pc);box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.07),inset 0 -4px 0 rgba(0,0,0,.26);padding:16px 14px;transform:none}
 #felt::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.13) 2px,transparent 2px);background-size:15px 15px;opacity:.4;pointer-events:none}
@@ -391,11 +391,12 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #bottombar #betRow,#bottombar #actions{width:100%;max-width:600px}
 #betRow{display:flex;align-items:center;gap:10px;justify-content:center;background:none!important;border:none!important;box-shadow:none!important;padding:0!important}
 #betRow .lbl{font-size:12px;letter-spacing:.06em;color:var(--muted)}
-#actions{display:flex;flex-direction:column;gap:9px;height:108px;justify-content:center}
-.actMain{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+#actions{display:flex;flex-direction:column;gap:9px;height:108px}
+.actMain{display:grid;grid-template-columns:1fr 1fr;gap:9px;flex:1}
 .actMain .span{grid-column:1/-1}
-.actWide{display:flex;flex-direction:column;gap:9px}
-.actMain>.btn,.actWide>.btn{padding-top:8px;padding-bottom:8px}
+.actWide{display:flex;flex-direction:column;gap:9px;flex:1}
+.actMain>.btn,.actWide>.btn{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 9px}
+.btn:disabled{opacity:.42;filter:saturate(.55);cursor:default}
 /* BOUTONS — blocs de couleur, sans contour */
 .btn{border:none;border-radius:0;clip-path:var(--pc);box-shadow:none;font-size:17px;padding:13px 9px;text-shadow:1px 1px 0 rgba(0,0,0,.3)}
 .btn::before{display:none!important}
@@ -1017,20 +1018,25 @@ function renderActions(){
     b.innerHTML=label+(sub?`<small>${sub}</small>`:'');
     if(dis)b.disabled=true;else b.onclick=fn;parent.appendChild(b);return b;
   };
-  if(G.phase==='bet'){add(main,'MISER','b-gold span',deal,`mise ${G.bet} $`,G.bank<10);}
-  else if(G.phase==='play'){
-    const v=handValue(G.pHand).total;
-    if(v>=17&&v<=20){
-      add(main,'RISQUER','b-red',()=>{G.insisted=true;playerHit();},'+bonus si survie');
-      add(main,'RESTER','b-blue',playerStand,'garde ta main');
-      add(wide,'FORCER LA CHANCE','b-purple',forcerChance,'2 cartes, garde la meilleure · pression +++');
-    }else{
-      add(main,'TIRER','b-gold',()=>playerHit(),'+1 carte');
-      add(main,'RESTER','b-blue',playerStand,'garde ta main');
-    }
+  if(G.phase==='bet'){
+    add(main,'MISER','b-gold span',deal,`mise ${G.bet} $`,G.bank<10);
+    a.appendChild(main);return;
   }
-  a.appendChild(main);
-  if(wide.childElementCount)a.appendChild(wide);
+  // phases jeu / croupier / résolution : on garde toujours les 3 boutons,
+  // désactivés (grisés) quand ce n'est pas notre tour ou que l'action n'est pas dispo.
+  const live=(G.phase==='play');
+  const v=G.pHand.length?handValue(G.pHand).total:0;
+  const flirt=v>=17&&v<=20;
+  if(flirt){
+    add(main,'RISQUER','b-red',()=>{G.insisted=true;playerHit();},'+bonus si survie',!live);
+    add(main,'RESTER','b-blue',playerStand,'garde ta main',!live);
+    add(wide,'FORCER LA CHANCE','b-purple',forcerChance,'2 cartes, garde la meilleure',!live);
+  }else{
+    add(main,'TIRER','b-gold',()=>playerHit(),'+1 carte',!live);
+    add(main,'RESTER','b-blue',playerStand,'garde ta main',!live);
+    add(wide,'FORCER LA CHANCE','b-purple',forcerChance,'dispo à 17-20',true);
+  }
+  a.appendChild(main);a.appendChild(wide);
 }
 function usePeek(){
   if(G.peekUsed||G.phase!=='play'||!hasRelic('lunettes'))return;G.peekUsed=true;
@@ -1087,7 +1093,7 @@ function forcerChance(){
 }
 function playerStand(natural){
   if(G.phase!=='play')return;
-  G.phase='dealer';$('actions').innerHTML='';dealerPlay(natural);
+  G.phase='dealer';renderActions();dealerPlay(natural);
 }
 function dealerPlay(natural){
   if(!G.revealed){G.revealed=true;G.doFlip=true;sfx.flip();}
