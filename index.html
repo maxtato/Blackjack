@@ -869,9 +869,12 @@ function suitSVG(suit,wpx){
 }
 function cardEl(c,opts={}){
   const d=document.createElement('div');d.className='card';
-  const sd=hashStr((c.r||'')+(c.s||'')),sd2=hashStr((c.s||'')+'x'+(c.r||''));
-  d.style.setProperty('--cdur',(5.5+sd*2.5).toFixed(2)+'s');
-  d.style.setProperty('--cd','-'+(sd2*5).toFixed(2)+'s');
+  // graine basée sur la position (et la zone) -> chaque carte bouge indépendamment, comme les lettres
+  const seed=(c.r||'')+(c.s||'')+'#'+(opts.idx||0)+(opts.dealer?'d':'p');
+  const sd=hashStr(seed),sd2=hashStr(seed+'~');
+  const dur=5.5+sd*2.5;
+  d.style.setProperty('--cdur',dur.toFixed(2)+'s');
+  d.style.setProperty('--cd','-'+(sd2*dur).toFixed(2)+'s');   // déphasage réparti sur tout le cycle
   if(opts.back){d.classList.add('back',cardBack);return d;}
   if(c.s==='♥'||c.s==='♦')d.classList.add('red');
   if(G.pressure>=50&&G.phase==='play')d.classList.add('jit');
@@ -894,7 +897,7 @@ function fannedCard(c,idx,total,opts){
   const jRot=(hashStr(seed+'r')-0.5)*3;         // ±1.5° pour casser la symétrie
   const jY=(hashStr(seed+'y')-0.5)*3;           // ±1.5px
   slot.style.transform=`translateY(${(arc+jY).toFixed(1)}px) rotate(${(baseRot+jRot).toFixed(2)}deg)`;
-  slot.appendChild(cardEl(c,opts));
+  slot.appendChild(cardEl(c,Object.assign({idx:idx},opts)));
   return slot;
 }
 function renderHands(reveal=false){
