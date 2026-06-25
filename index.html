@@ -174,7 +174,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .card.poly::before{background:linear-gradient(125deg,#ff004c,#ff8a1e,#ffd11a,#8ee61e,#19c3c3,#a24cf0,#ff3ea5);background-size:340% 340%;animation:edPoly 3.4s linear infinite;opacity:.55}
 @keyframes edSweep{0%{background-position:130% 0}100%{background-position:-30% 0}}
 @keyframes edPoly{0%{background-position:0% 50%}100%{background-position:340% 50%}}
-.card .edtag{position:absolute;top:3px;right:4px;font-size:9px;line-height:1;z-index:2;text-shadow:0 0 3px #000,0 0 3px #000}
+.card .edtag{position:absolute;top:2px;left:50%;transform:translateX(-50%);font-size:7px;font-weight:700;line-height:1;letter-spacing:.04em;padding:1px 3px;border-radius:2px;z-index:3;color:#1a1430}
+.card .edtag.foil{background:#7fd2ff}
+.card .edtag.holo{background:#c0a3ff}
+.card .edtag.poly{background:#ffce3a}
 
 /* ===== CENTER / TIP ===== */
 #center{min-height:20px;display:flex;align-items:center;justify-content:center;margin:2px 0;position:relative;z-index:1}
@@ -188,9 +191,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #multPop .t{position:relative;z-index:1;color:#fff;font-size:17px;margin-top:10px;display:block;text-shadow:2px 2px 0 var(--ink)}
 #multPop .burst{position:absolute;left:50%;top:40%;width:240px;height:240px;z-index:0;transform:translate(-50%,-50%) rotate(-8deg);
   clip-path:polygon(50% 0,60% 22%,84% 16%,78% 40%,100% 50%,78% 60%,84% 84%,60% 78%,50% 100%,40% 78%,16% 84%,22% 60%,0 50%,22% 40%,16% 16%,40% 22%)}
-#multPop.win .burst{background:radial-gradient(circle,#fff2b0,var(--yellow) 60%,var(--orange))}
-#multPop.lose .burst{background:radial-gradient(circle,#ff9bb0,var(--red) 60%,var(--redDk))}
-#multPop.push .burst{background:radial-gradient(circle,#9af2ee,var(--teal) 60%,var(--tealDk))}
+#multPop.win .burst{background:var(--yellow)}
+#multPop.lose .burst{background:var(--red)}
+#multPop.push .burst{background:var(--teal)}
 #multPop.go{animation:popUp .95s cubic-bezier(.2,1.5,.4,1) forwards}
 @keyframes popUp{0%{opacity:0;transform:translate(-50%,-30%) scale(.4)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}70%{opacity:1;transform:translate(-50%,-58%) scale(1)}100%{opacity:0;transform:translate(-50%,-78%) scale(1)}}
 
@@ -448,7 +451,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 *{text-shadow:none!important}
 /* lettres très légèrement désalignées (style) ; mots insécables -> retours à la ligne propres */
 .W{display:inline-block;white-space:nowrap}
-.L{display:inline-block}
+.L{display:inline-block;transform:translateY(var(--o,0))}
+/* boutons + nom de salle : les lettres ondulent très très légèrement de haut en bas */
+.btn .L,.tname .L{animation:letterBob 2.6s ease-in-out infinite;animation-delay:var(--d,0s)}
+@keyframes letterBob{0%,100%{transform:translateY(calc(var(--o,0px) + .3px))}50%{transform:translateY(calc(var(--o,0px) - .3px))}}
 /* overlays : centrés mais défilables si trop hauts (jamais coupés) */
 .overlay{justify-content:flex-start;overflow-y:auto}
 .ovpanel{margin:auto 0}
@@ -538,14 +544,14 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <p>Dépense ta <b>réputation</b> en avantages permanents, puis replonge.</p>
     <div class="repBar">
       <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl">★ réputation</span></div>
-      <div class="recBox">RECORD<br><b>profondeur <span id="recDepth">0</span></b> · <b><span id="recChips">0</span> $</b></div>
+      <div class="recBox">RECORD<br><b><span id="recDepth">0</span> tables</b> · <b><span id="recChips">0</span> $</b></div>
     </div>
     <div class="shopItems" id="unlockItems"></div>
     <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
-    <button class="btn b-gold menu" onclick="startGame()">NOUVELLE DESCENTE ↓</button>
+    <button class="btn b-gold menu" onclick="startGame()">COMMENCER LA NUIT</button>
     <div class="howto" id="howto">
       <div>→ Approche <span class="k">21</span>, bats le croupier, franchis l'objectif.</div>
-      <div>→ Puis <span class="k">descends</span> (plus gros gains) ou <span class="k">encaisse</span> ta cagnotte.</div>
+      <div>→ Puis tente la <span class="k">table suivante</span> (plus gros gains) ou <span class="k">encaisse</span>.</div>
     </div>
   </div>
 </div>
@@ -554,13 +560,13 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <div class="overlay" id="shop">
   <div class="ovpanel">
     <h1 class="win" style="font-size:23px">TABLE FRANCHIE</h1>
-    <p>Profondeur <b id="shopDepth">1</b> · <b id="shopBank">0</b> $ en poche · cagnotte <b>★<span id="shopPot">0</span></b> <span style="color:var(--muted)">(+<span id="shopReward">0</span>)</span></p>
+    <p>Table <b id="shopDepth">1</b> tenue · <b id="shopBank">0</b> $ en poche · cagnotte <b>★<span id="shopPot">0</span></b> <span style="color:var(--muted)">(+<span id="shopReward">0</span>)</span></p>
     <div class="shopItems" id="shopItems"></div>
     <div class="shopBtns" style="margin-bottom:9px">
       <button class="btn b-teal" id="rerollBtn" onclick="rerollShop()" style="flex:0 0 auto;font-size:13px;padding:11px 14px">RELANCER</button>
       <button class="btn b-gold" id="cashBtn" onclick="cashOut()" style="flex:1;font-size:14px">ENCAISSER</button>
     </div>
-    <button class="btn b-blue menu" onclick="leaveShop()" style="width:100%">CONTINUER ↓<small>objectif suivant : <span id="shopNext">0</span> $</small></button>
+    <button class="btn b-blue menu" onclick="leaveShop()" style="width:100%">TABLE SUIVANTE →<small>objectif : <span id="shopNext">0</span> $</small></button>
   </div>
 </div>
 
@@ -574,7 +580,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   </div>
 </div>
 
-<!-- FIN DE DESCENTE -->
+<!-- FIN DE LA NUIT -->
 <div class="overlay" id="endScreen">
   <div class="ovpanel">
     <h1 id="endTitle"></h1>
@@ -730,6 +736,8 @@ const TAROT_POOL=[
     use(){if(Math.random()<0.5){const ed=['foil','holo','poly'][rndInt(3)];const c=addEditionToHand(ed);return c?('Édition '+ed.toUpperCase()+' !'):false;}return'Raté…';}},
 ];
 const ED_NAME={foil:'FOIL',holo:'HOLO',poly:'POLY'};
+const ED_INFO={foil:'+ jetons bonus',holo:'+1 au multiplicateur',poly:'× multiplicateur'};
+function announceEd(c){if(c&&c.ed)popText('CARTE '+ED_NAME[c.ed],ED_INFO[c.ed]);}
 /* ICON retiré : effets affichés via jetons SHOPTOK */
 
 
@@ -836,7 +844,7 @@ const SUIT_GRID={
  '♠':['0000001000000','0000011100000','0000111110000','0001111111000','0011111111100','0111111111110','1111111111111','1111111111111','1111111111111','0111110111110','0001110111000','0000001000000','0001111111000'],
  '♥':['0011100011100','0111110111110','1111111111111','1111111111111','1111111111111','1111111111111','0111111111110','0011111111100','0001111111000','0000011100000','0000001000000'],
  '♦':['0000001000000','0000011100000','0000111110000','0001111111000','0011111111100','0111111111110','1111111111111','0111111111110','0011111111100','0001111111000','0000111110000','0000011100000','0000001000000'],
- '♣':['0000011100000','0000111110000','0000111110000','0000111110000','0011111111100','0111111111110','0111111111110','0111111111110','0011101011100','0000011100000','0000011100000','0000111110000']
+ '♣':['0000111110000','0001111111000','0011111111100','1111111111111','1111111111111','1111111111111','0111111111110','0011111111100','0000111110000','0001111111000']
 };
 function suitSVG(suit,wpx){
   const g=SUIT_GRID[suit],w=g[0].length,h=g.length;let r='';
@@ -854,7 +862,7 @@ function cardEl(c,opts={}){
   if(opts.flip)d.classList.add('flip');
   if(!opts.dealer&&c.ed)d.classList.add(c.ed);
   const big=suitSVG(c.s,26),sm=suitSVG(c.s,8);
-  const tag=(!opts.dealer&&c.ed)?`<span class="edtag">${c.ed==='foil'?'◇':c.ed==='holo'?'◈':'◆'}</span>`:'';
+  const tag=(!opts.dealer&&c.ed)?`<span class="edtag ${c.ed}">${ED_NAME[c.ed]}</span>`:'';
   d.innerHTML=`<span class="corner tl"><span class="corner-r">${c.r}</span>${sm}</span><span class="pip">${big}</span><span class="corner br"><span class="corner-r">${c.r}</span>${sm}</span>${tag}`;
   return d;
 }
@@ -912,7 +920,7 @@ function renderTop(){
   $('handsLeftBig').textContent=G.table.hands-G.hand+1;
   $('bankBig').textContent=G.bank;
   $('goalVal').textContent=G.table.goal;
-  $('tableName').textContent=G.table.name+' · ↓'+G.table.depth;
+  $('tableName').textContent=G.table.name+' · table '+G.table.depth;
   const bits=[];
   if(G.table.ruleText)bits.push(G.table.ruleText);
   if(G.pot>0)bits.push('cagnotte ★'+G.pot);
@@ -1038,6 +1046,7 @@ function deal(){
   G.pHand.push(draw());sfx.card();G.dHand.push(draw());
   if(hasRelic('maitresse')&&!G.pHand[0].ed)G.pHand[0].ed='foil';
   renderAll();renderHands();
+  const ec=G.pHand.find(c=>c.ed);if(ec)announceEd(ec);
   if(handValue(G.pHand).total===21)setTimeout(()=>playerStand(true),520);
 }
 function playerHit(forced){
@@ -1046,6 +1055,7 @@ function playerHit(forced){
   G.pHand.push(c);sfx.card();if(!forced)shake(8);
   renderHands();$('tip').textContent='';
   addPressure(forced?0:14);updateBustReadout();renderMult();
+  if(c.ed)announceEd(c);
   const v=handValue(G.pHand).total;
   if(v>21){setTimeout(()=>resolve('bust'),450);return;}
   if(v===21){setTimeout(()=>playerStand(),450);return;}
@@ -1249,8 +1259,8 @@ function cashOut(){
 /* ---------- seconde chance / fin de descente ---------- */
 function openLose(){
   $('loseTitle').textContent=G.loseTitle;
-  $('loseText').innerHTML=G.loseText+`<br><br>Descente : <b>profondeur ${G.tableIdx+1}</b> · Cagnotte : <b>★${G.pot}</b>`;
-  $('retryBtn').innerHTML='SECONDE CHANCE<small>🔄 '+G.tokens+' restante'+(G.tokens>1?'s':'')+'</small>';
+  $('loseText').innerHTML=G.loseText+`<br><br>Table <b>${G.tableIdx+1}</b> · Cagnotte : <b>★${G.pot}</b>`;
+  $('retryBtn').innerHTML='SECONDE CHANCE<small>'+G.tokens+' jeton'+(G.tokens>1?'s':'')+' restant'+(G.tokens>1?'s':'')+'</small>';
   $('giveupBtn').innerHTML='ABANDONNER<small>encaisse ★'+repOnEnd(false)+'</small>';
   $('loseScreen').classList.add('show');
 }
@@ -1284,15 +1294,15 @@ function endRun(cashout){
   updateRecord(G.tableIdx+1);
   saveMeta();
   const depth=G.tableIdx+1;
-  $('endTitle').textContent=cashout?'TU ENCAISSES':'DESCENTE FINIE';
+  $('endTitle').textContent=cashout?'TU ENCAISSES':'FIN DE LA NUIT';
   $('endTitle').className=cashout?'win':'dead';
   $('endText').innerHTML=
     (cashout
       ?`Tu pars avec la cagnotte avant que ça tourne mal.`
       :`Tu repars quand même avec la moitié de ta cagnotte.`)+
-    `<br><br>Profondeur atteinte : <b>${depth}</b> · Jetons : <b>${G.bank} $</b>`+
+    `<br><br>Tables tenues : <b>${depth}</b> · Jetons : <b>${G.bank} $</b>`+
     `<br>Réputation gagnée : <b>★${gained}</b> &nbsp;→&nbsp; total <b>★${META.rep}</b>`+
-    `<br><span style="color:var(--muted)">Record : profondeur ${META.record.depth} · ${META.record.chips} $</span>`;
+    `<br><span style="color:var(--muted)">Record : ${META.record.depth} tables · ${META.record.chips} $</span>`;
   $('endScreen').classList.add('show');
 }
 
@@ -1404,7 +1414,8 @@ function staggerNode(node,ctr){
         const w=document.createElement('span');w.className='W';
         for(const ch of part){
           const s=document.createElement('span');s.className='L';s.textContent=ch;
-          s.style.transform='translateY('+(LETTER_OFF[ctr.i%LETTER_OFF.length]*scale).toFixed(1)+'px)';
+          s.style.setProperty('--o',(LETTER_OFF[ctr.i%LETTER_OFF.length]*scale).toFixed(1)+'px');
+          s.style.setProperty('--d',((ctr.i%8)*0.14).toFixed(2)+'s');
           w.appendChild(s);ctr.i++;
         }
         frag.appendChild(w);
