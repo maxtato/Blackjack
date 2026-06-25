@@ -134,7 +134,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .hand{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;min-height:94px;align-items:center}
 
 /* ===== CARDS ===== */
-.card{width:62px;height:88px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);color:var(--inkCard);border:3px solid var(--ink);border-radius:8px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:3px 5px 0 rgba(0,0,0,.45);animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife 5s ease-in-out .5s infinite}
+.card{width:62px;height:88px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);color:var(--inkCard);border:3px solid var(--ink);border-radius:8px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:3px 5px 0 rgba(0,0,0,.45);animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife 3.6s ease-in-out .5s infinite}
 .card.red{color:var(--suitRed)}
 .card .pip{display:flex;align-items:center;justify-content:center}
 .card .corner{position:absolute;display:flex;flex-direction:column;align-items:center;line-height:1;gap:0}
@@ -153,7 +153,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .card.back.cb11::before{background:#16131f;background-image:repeating-linear-gradient(45deg,rgba(232,197,96,.5) 0 1px,transparent 1px 5px),repeating-linear-gradient(-45deg,rgba(232,197,96,.5) 0 1px,transparent 1px 5px);box-shadow:inset 0 0 0 1px #c9971f,inset 0 0 0 2px #16131f,inset 0 0 0 3px #c9971f}
 .card.back.cb11::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:19px;height:29px;border-radius:50%;z-index:2;background:radial-gradient(circle at 50% 50%,#e8c560 0 2px,transparent 2.5px),#16131f;box-shadow:0 0 0 1px #c9971f,0 0 0 3px #16131f,0 0 0 4px #c9971f}
 .card.back.cb12::before{background:#6e2350;background-image:repeating-linear-gradient(45deg,rgba(253,243,223,.4) 0 1px,transparent 1px 4px),repeating-linear-gradient(-45deg,rgba(253,243,223,.4) 0 1px,transparent 1px 4px);box-shadow:inset 0 0 0 1px #fdf3df,inset 0 0 0 2px #6e2350,inset 0 0 0 3px #fdf3df}
-@keyframes cardLife{0%{transform:translateY(0) rotate(-.6deg)}50%{transform:translateY(-3.5px) rotate(.7deg)}100%{transform:translateY(0) rotate(-.6deg)}}
+@keyframes cardLife{0%{transform:translateY(1px) rotate(-1.6deg)}50%{transform:translateY(-7px) rotate(1.6deg)}100%{transform:translateY(1px) rotate(-1.6deg)}}
 /* sélecteur de dos sur l'écran d'accueil */
 .backPick{margin:2px 0 14px}
 .bpLabel{font-size:11px;letter-spacing:.12em;color:var(--muted);margin-bottom:9px}
@@ -300,11 +300,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #vignette{display:none}
 /* AMBIANCE : scanlines CRT légères */
 #scan{display:block;opacity:.06;z-index:46}
-/* lueur qui respire derrière le tapis */
-#ambGlow{position:fixed;left:50%;top:46%;transform:translate(-50%,-50%);width:min(780px,96vw);height:460px;pointer-events:none;z-index:44;mix-blend-mode:screen;border-radius:50%;background:radial-gradient(50% 50% at 50% 50%,rgba(255,78,168,.42),rgba(31,209,200,.22) 46%,transparent 72%);filter:blur(8px);animation:breathe 6s ease-in-out infinite}
-@keyframes breathe{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(.9)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.07)}}
-/* étincelles flottantes (2 couches déphasées) */
-#sparks{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:45}
+/* étincelles flottantes sur la moquette (fond, derrière le jeu) */
+#sparks{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
 #sparks::before,#sparks::after{content:"";position:absolute;left:0;top:0;width:3px;height:3px;border-radius:1px}
 #sparks::before{box-shadow:811px 245px 0 0 #19c3c3,1342px 551px 0 0 #19c3c3,1183px 750px 0 0 #fff7e6,1356px 171px 0 0 #fff7e6,1350px 48px 0 0 #ffce3a,41px 59px 0 0 #ff4ea8,1256px 663px 0 0 #ff4ea8,86px 506px 0 0 #19c3c3,277px 731px 0 0 #fff7e6,1091px 120px 0 0 #fff7e6,974px 605px 0 0 #fff,1111px 685px 0 0 #ff4ea8,49px 277px 0 0 #fff7e6,896px 314px 0 0 #ffce3a,1074px 256px 0 0 #fff,758px 164px 0 0 #19c3c3,780px 340px 0 0 #ffce3a,1142px 492px 0 0 #ffce3a,975px 481px 0 0 #ffce3a,780px 194px 0 0 #fff7e6,804px 430px 0 0 #19c3c3,401px 370px 0 0 #fff7e6,1048px 165px 0 0 #fff7e6,1156px 495px 0 0 #ff4ea8,1267px 203px 0 0 #19c3c3,535px 517px 0 0 #ff4ea8,315px 157px 0 0 #ff4ea8,0px 232px 0 0 #ff4ea8,1042px 354px 0 0 #ffce3a,692px 208px 0 0 #ffce3a;animation:twk1 4.5s ease-in-out infinite,drift1 11s ease-in-out infinite}
 #sparks::after{box-shadow:1186px 158px 0 0 #fff,482px 592px 0 0 #ff4ea8,137px 566px 0 0 #fff,178px 524px 0 0 #19c3c3,1154px 722px 0 0 #19c3c3,397px 150px 0 0 #ff4ea8,1201px 802px 0 0 #ffce3a,890px 640px 0 0 #ffce3a,643px 488px 0 0 #19c3c3,96px 819px 0 0 #fff,12px 359px 0 0 #ff4ea8,1151px 416px 0 0 #19c3c3,1331px 787px 0 0 #ffce3a,595px 306px 0 0 #fff,392px 765px 0 0 #ffce3a,1051px 212px 0 0 #ff4ea8,515px 184px 0 0 #ff4ea8,1331px 719px 0 0 #fff,1328px 214px 0 0 #ff4ea8,200px 410px 0 0 #fff7e6,519px 268px 0 0 #ff4ea8,1230px 223px 0 0 #fff7e6,873px 28px 0 0 #fff7e6,609px 472px 0 0 #fff7e6;animation:twk2 5.5s ease-in-out infinite,drift2 9s ease-in-out infinite}
@@ -319,7 +316,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #mid{width:100%;max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:9px;padding:9px 9px 0;flex:1;min-height:0}
 #effects,#stage{width:100%;flex-shrink:0}
 /* TOP */
-#topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 14px;background:var(--panel);border:none;border-radius:0;clip-path:none;box-shadow:0 3px 0 rgba(0,0,0,.3);padding:9px 16px}
+#topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 14px;background:var(--panel);border:none;border-radius:0;clip-path:none;box-shadow:0 5px 10px rgba(0,0,0,.42),inset 0 2px 0 rgba(255,255,255,.07),inset 0 -3px 0 rgba(0,0,0,.32);padding:9px 16px}
 #topbar .tname{display:flex;flex-direction:column;gap:2px;font-size:20px;font-weight:700;color:var(--paper);text-shadow:1px 1px 0 var(--ink)}
 #topbar .tname .rule{font-size:11px;color:var(--gold);font-weight:400}
 #topbar .tstats{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -378,7 +375,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #scorebox.hot{box-shadow:0 0 0 2px var(--gold)}
 .zone{position:relative;z-index:1}#center{position:relative;z-index:1}#feltMark{display:none}
 /* BOTTOM — bloc gris pleine largeur avec tous les boutons de mise */
-#bottombar{display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--panel);box-shadow:0 -3px 0 rgba(0,0,0,.3);padding:11px 12px}
+#bottombar{display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--panel);box-shadow:0 -5px 10px rgba(0,0,0,.42),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -2px 0 rgba(0,0,0,.32);padding:11px 12px}
 #bottombar #betRow,#bottombar #actions{width:100%;max-width:600px}
 #betRow{display:flex;align-items:center;gap:10px;justify-content:center;background:none!important;border:none!important;box-shadow:none!important;padding:0!important}
 #betRow .lbl{font-size:12px;letter-spacing:.06em;color:var(--muted)}
@@ -436,6 +433,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <body>
 <div id="bg">
   <div id="pattern"></div>
+  <div id="sparks"></div>
   <div id="heat"></div>
   <div id="heat2"></div>
 </div>
@@ -443,8 +441,6 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <div id="fx"></div>
 <div id="particles"></div>
 <div id="vignette"></div>
-<div id="ambGlow"></div>
-<div id="sparks"></div>
 <div id="scan"></div>
 
 <div id="shaker">
