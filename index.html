@@ -360,6 +360,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* TABLE = simple conteneur (plus de bois) */
 #table{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;max-width:580px;position:relative;padding:6px;border:none;border-radius:0;background:none;overflow:visible;box-shadow:none}
 #table::before,#table::after{display:none!important}
+/* petit bouton VOIR (lunettes) : posé sur le coin du tapis, hors de la rangée d'actions */
+#peekBtn{position:absolute;top:10px;right:10px;z-index:6;display:none;font-family:'Jersey 15',monospace;font-weight:700;font-size:12px;letter-spacing:.04em;color:#04302d;background:var(--teal);border:none;clip-path:var(--pc);padding:6px 9px;line-height:1;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+#peekBtn.show{display:block}
+#peekBtn:active{transform:translateY(2px);filter:brightness(.92)}
 /* FELT = tapis teal, bords relevés, légèrement incliné */
 #felt{position:relative;z-index:0;flex:none;width:100%;max-width:560px;display:flex;background:#138f86;clip-path:var(--pc);box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.07),inset 0 -4px 0 rgba(0,0,0,.26);padding:16px 14px;transform:none}
 #felt::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.13) 2px,transparent 2px);background-size:15px 15px;opacity:.4;pointer-events:none}
@@ -387,10 +391,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #bottombar #betRow,#bottombar #actions{width:100%;max-width:600px}
 #betRow{display:flex;align-items:center;gap:10px;justify-content:center;background:none!important;border:none!important;box-shadow:none!important;padding:0!important}
 #betRow .lbl{font-size:12px;letter-spacing:.06em;color:var(--muted)}
-#actions{display:flex;flex-direction:column;gap:9px;min-height:120px}
+#actions{display:flex;flex-direction:column;gap:9px;height:108px;justify-content:center}
 .actMain{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .actMain .span{grid-column:1/-1}
-.actWide{min-height:52px;display:flex;flex-direction:column;gap:9px}
+.actWide{display:flex;flex-direction:column;gap:9px}
+.actMain>.btn,.actWide>.btn{padding-top:8px;padding-bottom:8px}
 /* BOUTONS — blocs de couleur, sans contour */
 .btn{border:none;border-radius:0;clip-path:var(--pc);box-shadow:none;font-size:17px;padding:13px 9px;text-shadow:1px 1px 0 rgba(0,0,0,.3)}
 .btn::before{display:none!important}
@@ -524,6 +529,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
           </div>
         </div>
       </div>
+      <button id="peekBtn" onclick="usePeek()" title="Lis la prochaine carte du sabot">VOIR</button>
     </div>
   </div>
   </div>
@@ -997,18 +1003,22 @@ function renderChips(){
     wrap.appendChild(b);
   });
 }
+function syncPeek(){
+  const b=$('peekBtn');if(!b)return;
+  b.classList.toggle('show',G.phase==='play'&&hasRelic('lunettes')&&!G.peekUsed);
+}
 function renderActions(){
+  syncPeek();
   const a=$('actions');a.innerHTML='';
   const main=document.createElement('div');main.className='actMain';
   const wide=document.createElement('div');wide.className='actWide';
-  a.appendChild(main);a.appendChild(wide);
   const add=(parent,label,cls,fn,sub,dis)=>{
     const b=document.createElement('button');b.className='btn '+cls;
     b.innerHTML=label+(sub?`<small>${sub}</small>`:'');
     if(dis)b.disabled=true;else b.onclick=fn;parent.appendChild(b);return b;
   };
-  if(G.phase==='bet'){add(main,'MISER','b-gold span',deal,`mise ${G.bet} $`,G.bank<10);return;}
-  if(G.phase==='play'){
+  if(G.phase==='bet'){add(main,'MISER','b-gold span',deal,`mise ${G.bet} $`,G.bank<10);}
+  else if(G.phase==='play'){
     const v=handValue(G.pHand).total;
     if(v>=17&&v<=20){
       add(main,'RISQUER','b-red',()=>{G.insisted=true;playerHit();},'+bonus si survie');
@@ -1018,14 +1028,14 @@ function renderActions(){
       add(main,'TIRER','b-gold',()=>playerHit(),'+1 carte');
       add(main,'RESTER','b-blue',playerStand,'garde ta main');
     }
-    if(hasRelic('lunettes')&&!G.peekUsed)add(wide,'LUNETTES','b-teal',usePeek,'lis la prochaine carte');
-    return;
   }
+  a.appendChild(main);
+  if(wide.childElementCount)a.appendChild(wide);
 }
 function usePeek(){
-  if(G.peekUsed)return;G.peekUsed=true;
+  if(G.peekUsed||G.phase!=='play'||!hasRelic('lunettes'))return;G.peekUsed=true;
   const n=G.shoe[G.shoe.length-1];
-  $('tip').textContent=`PROCHAINE : ${n.r}${n.s}`;blip(880,.05,'sine',.06);renderActions();
+  $('tip').textContent=`PROCHAINE : ${n.r}${n.s}`;blip(880,.05,'sine',.06);syncPeek();
 }
 function updateBustReadout(){
   if(hasRelic('compteur')&&G.phase==='play'){
