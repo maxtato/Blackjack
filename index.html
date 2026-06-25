@@ -444,6 +444,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .howto{text-align:left;font-size:11px;line-height:1.5;color:var(--muted);margin-top:16px;display:flex;flex-direction:column;gap:6px}
 .howto>div{background:var(--panelDk2);clip-path:var(--pc);padding:7px 10px;box-shadow:inset 4px 0 0 var(--gold)}
 .howto .k{color:var(--gold)}.howto .d{color:var(--red)}
+/* titres : pas d'ombre, lettres très légèrement désalignées pour le style */
+.overlay h1,.overlay h1.win,.overlay h1.dead{text-shadow:none}
+.overlay h1 .L{display:inline-block}
 </style>
 </head>
 <body>
@@ -533,7 +536,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <!-- SHOP -->
 <div class="overlay" id="shop">
   <div class="ovpanel">
-    <h1 class="win" style="font-size:23px;text-shadow:2px 2px 0 var(--magenta),3px 3px 0 var(--ink)">TABLE FRANCHIE</h1>
+    <h1 class="win" style="font-size:23px">TABLE FRANCHIE</h1>
     <p>Profondeur <b id="shopDepth">1</b> · <b id="shopBank">0</b> $ en poche · cagnotte <b>★<span id="shopPot">0</span></b> <span style="color:var(--muted)">(+<span id="shopReward">0</span>)</span></p>
     <div class="shopItems" id="shopItems"></div>
     <div class="shopBtns" style="margin-bottom:9px">
@@ -1228,7 +1231,7 @@ function cashOut(){
 
 /* ---------- seconde chance / fin de descente ---------- */
 function openLose(){
-  $('loseTitle').textContent=G.loseTitle;
+  $('loseTitle').textContent=G.loseTitle;staggerText($('loseTitle'));
   $('loseText').innerHTML=G.loseText+`<br><br>Descente : <b>profondeur ${G.tableIdx+1}</b> · Cagnotte : <b>★${G.pot}</b>`;
   $('retryBtn').innerHTML='SECONDE CHANCE<small>🔄 '+G.tokens+' restante'+(G.tokens>1?'s':'')+'</small>';
   $('giveupBtn').innerHTML='ABANDONNER<small>encaisse ★'+repOnEnd(false)+'</small>';
@@ -1265,7 +1268,7 @@ function endRun(cashout){
   saveMeta();
   const depth=G.tableIdx+1;
   $('endTitle').textContent=cashout?'TU ENCAISSES':'DESCENTE FINIE';
-  $('endTitle').className=cashout?'win':'dead';
+  $('endTitle').className=cashout?'win':'dead';staggerText($('endTitle'));
   $('endText').innerHTML=
     (cashout
       ?`Tu pars avec la cagnotte avant que ça tourne mal.`
@@ -1361,6 +1364,19 @@ function tick(){
 /* ---------- rendu global / boot ---------- */
 function renderAll(){renderTop();renderRelics();renderConsumables();renderChips();renderActions();renderPressure();renderMult();}
 
+/* titres : découpe chaque lettre en span et décale légèrement la hauteur (style) */
+const LETTER_OFF=[-2,2,-1,1,-2,1,0,2,-1,1,-2,2,-1,0,1];
+function staggerText(el){
+  if(!el)return;const t=el.textContent;if(!t)return;el.innerHTML='';
+  let k=0;
+  for(const ch of t){
+    const s=document.createElement('span');s.className='L';
+    if(ch===' '){s.innerHTML='&nbsp;';}else{s.textContent=ch;}
+    s.style.transform='translateY('+LETTER_OFF[k%LETTER_OFF.length]+'px)';
+    el.appendChild(s);k++;
+  }
+}
+
 /* ---------- LA PLANQUE (hub de méta-progression) ---------- */
 function renderPlanque(){
   $('repBal').textContent=META.rep;
@@ -1398,7 +1414,9 @@ function startGame(){
   freshGame();buildShoe();
   applyHandIncome();renderAll();renderHands();
 }
-freshGame();buildShoe();renderAll();renderHands();renderBackPicker();renderPlanque();tick();
+freshGame();buildShoe();renderAll();renderHands();renderBackPicker();renderPlanque();
+document.querySelectorAll('.overlay h1').forEach(staggerText);
+tick();
 </script>
 </body>
 </html>
