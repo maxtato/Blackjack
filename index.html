@@ -387,7 +387,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #scorebox.hot{box-shadow:0 0 0 2px var(--gold)}
 .zone{position:relative;z-index:1}#center{position:relative;z-index:1}#feltMark{display:none}
 /* BOTTOM — bloc gris pleine largeur avec tous les boutons de mise */
-#bottombar{display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--panel);box-shadow:0 -5px 10px rgba(0,0,0,.42),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -2px 0 rgba(0,0,0,.32);padding:11px 12px}
+#bottombar{display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--panel);box-shadow:0 -5px 10px rgba(0,0,0,.42),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -2px 0 rgba(0,0,0,.32);padding:11px 12px calc(20px + env(safe-area-inset-bottom,0px))}
 #bottombar #betRow,#bottombar #actions{width:100%;max-width:600px}
 #betRow{display:flex;align-items:center;gap:10px;justify-content:center;background:none!important;border:none!important;box-shadow:none!important;padding:0!important}
 #betRow .lbl{font-size:12px;letter-spacing:.06em;color:var(--muted)}
