@@ -444,6 +444,27 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .howto{text-align:left;font-size:11px;line-height:1.5;color:var(--muted);margin-top:16px;display:flex;flex-direction:column;gap:6px}
 .howto>div{background:var(--panelDk2);clip-path:var(--pc);padding:7px 10px;box-shadow:inset 4px 0 0 var(--gold)}
 .howto .k{color:var(--gold)}.howto .d{color:var(--red)}
+/* aucune ombre de texte nulle part */
+*{text-shadow:none!important}
+/* lettres très légèrement désalignées (style) ; mots insécables -> retours à la ligne propres */
+.W{display:inline-block;white-space:nowrap}
+.L{display:inline-block}
+/* overlays : centrés mais défilables si trop hauts (jamais coupés) */
+.overlay{justify-content:flex-start;overflow-y:auto}
+.ovpanel{margin:auto 0}
+/* La Planque condensée pour tenir sans scroll */
+#intro .ovpanel{padding:18px 22px 16px}
+#intro p{font-size:11.5px;line-height:1.5;margin-bottom:11px}
+.repBar{margin-bottom:11px}
+.repNum{font-size:30px}
+#unlockItems{gap:7px;margin-bottom:11px}
+#unlockItems .shopItem{padding:7px 11px}
+#unlockItems .shopTok{width:52px;height:52px;font-size:18px}
+#unlockItems .nm{font-size:13px}
+#unlockItems .ds{font-size:10.5px;margin-top:3px}
+.backPick{margin:0 0 10px}
+.howto{margin-top:11px;gap:5px;font-size:10px}
+.howto>div{padding:6px 9px}
 </style>
 </head>
 <body>
@@ -514,7 +535,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <div class="overlay show" id="intro">
   <div class="ovpanel">
     <h1 class="win">LA PLANQUE</h1>
-    <p>Ton repaire entre deux descentes. Dépense ta <b>réputation</b> en avantages permanents, puis replonge.</p>
+    <p>Dépense ta <b>réputation</b> en avantages permanents, puis replonge.</p>
     <div class="repBar">
       <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl">★ réputation</span></div>
       <div class="recBox">RECORD<br><b>profondeur <span id="recDepth">0</span></b> · <b><span id="recChips">0</span> $</b></div>
@@ -523,9 +544,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
     <button class="btn b-gold menu" onclick="startGame()">NOUVELLE DESCENTE ↓</button>
     <div class="howto" id="howto">
-      <div>→ Approche <span class="k">21</span>, bats le croupier. Chaque tirage <span class="d">chauffe la table</span>.</div>
-      <div>→ Franchis l'objectif → <span class="k">descends</span> (plus dur, cagnotte plus grosse) ou <span class="k">encaisse</span>.</div>
-      <div>→ Tu perds une table ? <span class="k">Seconde chance</span> si tu as un jeton, sinon tu repars avec la moitié de la cagnotte.</div>
+      <div>→ Approche <span class="k">21</span>, bats le croupier, franchis l'objectif.</div>
+      <div>→ Puis <span class="k">descends</span> (plus gros gains) ou <span class="k">encaisse</span> ta cagnotte.</div>
     </div>
   </div>
 </div>
@@ -533,7 +553,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <!-- SHOP -->
 <div class="overlay" id="shop">
   <div class="ovpanel">
-    <h1 class="win" style="font-size:23px;text-shadow:2px 2px 0 var(--magenta),3px 3px 0 var(--ink)">TABLE FRANCHIE</h1>
+    <h1 class="win" style="font-size:23px">TABLE FRANCHIE</h1>
     <p>Profondeur <b id="shopDepth">1</b> · <b id="shopBank">0</b> $ en poche · cagnotte <b>★<span id="shopPot">0</span></b> <span style="color:var(--muted)">(+<span id="shopReward">0</span>)</span></p>
     <div class="shopItems" id="shopItems"></div>
     <div class="shopBtns" style="margin-bottom:9px">
@@ -1355,11 +1375,56 @@ function tick(){
   }else $('shaker').style.transform='';
   if(G.pressure>=45&&G.phase==='play'&&Math.random()<(G.pressure/100)*0.32)spawnEmber();
   if(G.pressure>=75&&G.phase==='play'&&(!G._beat||performance.now()-G._beat>680)){G._beat=performance.now();sfx.thump();}
+  staggerUI();
   shakeAmt*=0.82;requestAnimationFrame(tick);
 }
 
 /* ---------- rendu global / boot ---------- */
 function renderAll(){renderTop();renderRelics();renderConsumables();renderChips();renderActions();renderPressure();renderMult();}
+
+/* décale légèrement chaque lettre en hauteur (style) ; mots groupés (insécables)
+   pour garder des retours à la ligne propres. Idempotent : déjà traité = ignoré. */
+const LETTER_OFF=[-1,1,-1,1,0,1,-1,1,0,-1,1,-1,0,1,-1];
+function staggerNode(node,ctr){
+  // amplitude proportionnelle à la taille de police : net sur les titres, léger sur le petit texte
+  let scale=1;
+  if(node.nodeType===1&&typeof getComputedStyle!=='undefined'){
+    const fs=parseFloat(getComputedStyle(node).fontSize)||16;
+    scale=Math.max(0.11,Math.min(0.9,Math.pow(fs/38,1.6)));
+  }
+  const kids=Array.prototype.slice.call(node.childNodes||[]);
+  for(const n of kids){
+    if(n.nodeType===3){
+      const txt=n.textContent;
+      if(!txt||!/\S/.test(txt))continue;            // espaces : on laisse tel quel
+      const frag=document.createDocumentFragment();
+      for(const part of txt.split(/(\s+)/)){
+        if(part==='')continue;
+        if(!/\S/.test(part)){frag.appendChild(document.createTextNode(part));continue;}
+        const w=document.createElement('span');w.className='W';
+        for(const ch of part){
+          const s=document.createElement('span');s.className='L';s.textContent=ch;
+          s.style.transform='translateY('+(LETTER_OFF[ctr.i%LETTER_OFF.length]*scale).toFixed(1)+'px)';
+          w.appendChild(s);ctr.i++;
+        }
+        frag.appendChild(w);
+      }
+      node.replaceChild(frag,n);
+    }else if(n.nodeType===1){
+      const c=n.classList;
+      if(c&&(c.contains('L')||c.contains('W')||c.contains('card')))continue;
+      if(n.id==='multPop'||n.id==='center'||n.id==='feltMark')continue;
+      staggerNode(n,ctr);
+    }
+  }
+}
+function staggerText(el){if(!el||!document.createDocumentFragment)return;staggerNode(el,{i:0});}
+/* re-applique le décalage à toute l'UI visible (chrome de jeu + overlay affiché) */
+function staggerUI(){
+  staggerText($('topbar'));staggerText($('bottombar'));staggerText($('effects'));
+  document.querySelectorAll('#stage .zlbl').forEach(staggerText);
+  document.querySelectorAll('.overlay.show .ovpanel').forEach(staggerText);
+}
 
 /* ---------- LA PLANQUE (hub de méta-progression) ---------- */
 function renderPlanque(){
