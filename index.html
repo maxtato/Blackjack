@@ -343,6 +343,12 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* tapis seulement derrière les cartes ; moquette visible au-dessus et en dessous */
 #feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:center;gap:16px;padding:0;position:relative;z-index:1;transform:none}
 #feltInner .zone{flex:0 0 auto}
+/* angles dorés : petit losange pixel (ombré jaune->marron) + traits courts décalés */
+#felt .fc{position:absolute;width:3px;height:3px;background:transparent;z-index:1;pointer-events:none;box-shadow:6px 0 0 0 #ffe7a0,3px 3px 0 0 #ffe7a0,6px 3px 0 0 #ffe7a0,9px 3px 0 0 #edc24a,0 6px 0 0 #ffe7a0,3px 6px 0 0 #ffe7a0,6px 6px 0 0 #edc24a,9px 6px 0 0 #d39a2a,12px 6px 0 0 #9c6510,3px 9px 0 0 #edc24a,6px 9px 0 0 #d39a2a,9px 9px 0 0 #9c6510,6px 12px 0 0 #9c6510,18px 6px 0 0 #edc24a,21px 6px 0 0 #d39a2a,24px 6px 0 0 #9c6510,6px 18px 0 0 #edc24a,6px 21px 0 0 #d39a2a,6px 24px 0 0 #9c6510}
+#felt .fc.tl{top:11px;left:11px}
+#felt .fc.tr{top:11px;right:11px;transform:scaleX(-1)}
+#felt .fc.bl{bottom:11px;left:11px;transform:scaleY(-1)}
+#felt .fc.br{bottom:11px;right:11px;transform:scale(-1,-1)}
 /* barre mise/mult : EN DESSOUS du tapis */
 #scorebox{position:relative;left:auto;bottom:auto;z-index:1;display:flex;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;box-shadow:none}
 #scorebox .seg{display:flex;flex-direction:column;align-items:center;padding:5px 12px;gap:1px}
@@ -443,6 +449,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">FROID</span> · <span id="pPct">0%</span></span></div>
     <div id="table">
       <div id="felt">
+        <span class="fc tl"></span><span class="fc tr"></span><span class="fc bl"></span><span class="fc br"></span>
         <div id="feltInner">
           <div id="feltMark">21</div>
           <div id="multPop"><div class="burst"></div><span class="m"></span><span class="t"></span></div>
