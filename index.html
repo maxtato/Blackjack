@@ -408,11 +408,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #effects .joker img.ic{width:34px;height:48px;object-fit:contain;image-rendering:pixelated;display:block}
 #effects .tarot img.tic{width:34px;height:48px;object-fit:contain;image-rendering:pixelated;display:block}
 .shopico{width:26px;height:26px;object-fit:contain;image-rendering:pixelated;vertical-align:-7px;margin-right:3px}
-.shopItem .shopCard{flex:0 0 auto;width:54px;height:74px;display:flex;align-items:center;justify-content:center;border:2px solid var(--ink);border-radius:7px;box-shadow:3px 4px 0 rgba(0,0,0,.45)}
-.shopItem .shopCard.relic{background:var(--cream)}
-.shopItem .shopCard.tarot{background:var(--grape)}
-.shopItem .shopCard img{width:42px;height:58px;object-fit:contain;image-rendering:pixelated;display:block}
-.shopItem .shopCard span{font-size:28px;line-height:1}
+.shopItem .shopTok{flex:0 0 auto;width:64px;height:64px;display:flex;align-items:center;justify-content:center;background:#0e1620;clip-path:var(--pc);font-family:'Jersey 15',monospace;font-weight:700;font-size:21px;line-height:1;text-align:center;text-shadow:2px 2px 0 #000}
+.shopItem .shopTok small{font-size:11px;font-weight:700}
 .shopItem .sInfo{flex:1;text-align:left}
 </style>
 </head>
@@ -1008,6 +1005,32 @@ function nextHandOrEnd(){
 }
 
 /* ---------- boutique ---------- */
+/* jeton d'effet explicite (au lieu d'un logo) : couleur = type d'effet
+   or=jetons · orange=mult · cyan=pression · vert=info · violet=édition/slot · rouge=retrait */
+const SHOPTOK={
+  lunettes:{t:'VOIR',c:'#9be84a'},
+  jeton:{t:'½<small>MISE</small>',c:'#ffce3a'},
+  clope:{t:'−30<small>%</small>',c:'#19c3c3'},
+  as:{t:'+1<small>×</small>',c:'#ff9326'},
+  froid:{t:'+1<small>×</small>',c:'#ff9326'},
+  compteur:{t:'BUST<small>%</small>',c:'#9be84a'},
+  mecene:{t:'+4<small>$</small>',c:'#ffce3a'},
+  usurier:{t:'+1<small>/5$</small>',c:'#ffce3a'},
+  collector:{t:'ÉD<small>×3</small>',c:'#a64dff'},
+  maitresse:{t:'FOIL',c:'#7fd2ff'},
+  bruleur:{t:'×1.5',c:'#ff9326'},
+  portebonheur:{t:'+1<small>★</small>',c:'#a64dff'},
+  diplomate:{t:'=<small>½</small>',c:'#ffce3a'},
+  etoile:{t:'−45<small>%</small>',c:'#19c3c3'},
+  jugement:{t:'P<small>=0</small>',c:'#19c3c3'},
+  soleil:{t:'+18<small>$</small>',c:'#ffce3a'},
+  diable:{t:'POLY',c:'#ff7ad9'},
+  lune:{t:'HOLO',c:'#b388ff'},
+  etoileD:{t:'FOIL',c:'#7fd2ff'},
+  pendu:{t:'−1<small>carte</small>',c:'#e0524f'},
+  magicien:{t:'IDÉAL',c:'#9be84a'},
+  roue:{t:'ÉD<small>?</small>',c:'#a64dff'},
+};
 let shopOffer=[],rerollCost=5;
 function openShop(){
   $('shopBank').textContent=G.bank;rerollCost=5;
@@ -1032,8 +1055,8 @@ function renderShop(){
     const tag=isTarot
       ?'<span style="font-size:9px;color:var(--grape)">★ CARTE</span>'
       :'<span style="font-size:9px;color:var(--yellow)">◆ RELIQUE</span>';
-    const face=ICON[r.id]?`<img src="${ICON[r.id]}" alt="">`:`<span>${r.ic}</span>`;
-    d.innerHTML=`<div class="shopCard ${isTarot?'tarot':'relic'}">${face}</div><div class="sInfo"><div class="nm">${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
+    const tk=SHOPTOK[r.id]||{t:'?',c:'#ffce3a'};
+    d.innerHTML=`<div class="shopTok" style="color:${tk.c}">${tk.t}</div><div class="sInfo"><div class="nm">${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
     const b=document.createElement('button');b.className='btn '+(isTarot?'b-purple':'b-gold');
     b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=r.cost+' $';
     const slotFull=isTarot?G.consumables.length>=consumableSlots():G.relics.length>=5;
