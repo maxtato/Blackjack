@@ -1384,13 +1384,13 @@ function renderAll(){renderTop();renderRelics();renderConsumables();renderChips(
 
 /* décale légèrement chaque lettre en hauteur (style) ; mots groupés (insécables)
    pour garder des retours à la ligne propres. Idempotent : déjà traité = ignoré. */
-const LETTER_OFF=[-2,2,-1,1,-2,1,0,2,-1,1,-2,2,-1,0,1];
+const LETTER_OFF=[-1,1,-1,1,0,1,-1,1,0,-1,1,-1,0,1,-1];
 function staggerNode(node,ctr){
   // amplitude proportionnelle à la taille de police : net sur les titres, léger sur le petit texte
   let scale=1;
   if(node.nodeType===1&&typeof getComputedStyle!=='undefined'){
     const fs=parseFloat(getComputedStyle(node).fontSize)||16;
-    scale=Math.max(0.4,Math.min(1.15,fs/32));
+    scale=Math.max(0.5,Math.min(1,fs/34));
   }
   const kids=Array.prototype.slice.call(node.childNodes||[]);
   for(const n of kids){
