@@ -431,8 +431,19 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #effects .tarot img.tic{width:34px;height:48px;object-fit:contain;image-rendering:pixelated;display:block}
 .shopico{width:26px;height:26px;object-fit:contain;image-rendering:pixelated;vertical-align:-7px;margin-right:3px}
 .shopItem .shopTok{flex:0 0 auto;width:64px;height:64px;display:flex;align-items:center;justify-content:center;background:#0e1620;clip-path:var(--pc);font-family:'Jersey 15',monospace;font-weight:700;font-size:21px;line-height:1;text-align:center;text-shadow:2px 2px 0 #000}
-.shopItem .shopTok small{font-size:11px;font-weight:700}
+.shopItem .shopTok small{font-size:11px;font-weight:700;margin-left:3px}
 .shopItem .sInfo{flex:1;text-align:left}
+/* ===== LA PLANQUE ===== */
+.repBar{display:flex;gap:10px;align-items:stretch;margin-bottom:16px}
+.repBig{flex:1;background:var(--panelDk2);clip-path:var(--pc);padding:10px 12px;display:flex;flex-direction:column;justify-content:center}
+.repNum{font-size:34px;font-weight:700;color:var(--gold);line-height:1;text-shadow:2px 2px 0 #a89f86}
+.repLbl{font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:3px}
+.recBox{flex:1;background:var(--panelDk2);clip-path:var(--pc);padding:10px 12px;display:flex;flex-direction:column;justify-content:center;font-size:11px;color:var(--muted);line-height:1.5;text-align:left}
+.recBox b{color:#fff;font-size:13px}
+.ulvl{font-size:11px;color:var(--gold);letter-spacing:1px}
+.howto{text-align:left;font-size:11px;line-height:1.5;color:var(--muted);margin-top:16px;display:flex;flex-direction:column;gap:6px}
+.howto>div{background:var(--panelDk2);clip-path:var(--pc);padding:7px 10px;box-shadow:inset 4px 0 0 var(--gold)}
+.howto .k{color:var(--gold)}.howto .d{color:var(--red)}
 </style>
 </head>
 <body>
@@ -499,44 +510,56 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 </div>
 </div>
 
-<!-- INTRO -->
+<!-- LA PLANQUE (hub) -->
 <div class="overlay show" id="intro">
   <div class="ovpanel">
-    <h1 class="win">TABLE 21</h1>
-    <p>Soirée clandestine. Trois tables avant la fermeture. Atteins l'objectif en jetons.</p>
-    <div class="rules">
-      <div>→ Approche <span class="k">21</span> sans dépasser. Bats le croupier.</div>
-      <div>→ Chaque carte tirée <span class="d">chauffe la table</span> (pression).</div>
-      <div>→ <span class="k">Tirer fort = MULT qui grimpe.</span> À pression ≥75% tes gains s'embrasent. À 100% la table te force la main.</div>
-      <div>→ À 17–20 tu peux <span class="k">FLIRTER</span> : insister, ou forcer la chance.</div>
-      <div>→ Certaines cartes brillent : <span class="d">FOIL</span> (+jetons), <span class="d">HOLO</span> (+mult), <span class="d">POLY</span> (×mult).</div>
-      <div>→ Les <span class="k">cartes Tarot</span> sont des pouvoirs à usage unique (refroidir, truquer, transmuter…).</div>
-      <div>→ Entre les tables : la <span class="k">boutique</span>, ses reliques, ses tarots et le bouton <span class="k">RELANCER</span>.</div>
+    <h1 class="win">LA PLANQUE</h1>
+    <p>Ton repaire entre deux descentes. Dépense ta <b>réputation</b> en avantages permanents, puis replonge.</p>
+    <div class="repBar">
+      <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl">★ réputation</span></div>
+      <div class="recBox">RECORD<br><b>profondeur <span id="recDepth">0</span></b> · <b><span id="recChips">0</span> $</b></div>
     </div>
+    <div class="shopItems" id="unlockItems"></div>
     <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
-    <button class="btn b-gold menu" onclick="startGame()">JOUER</button>
+    <button class="btn b-gold menu" onclick="startGame()">NOUVELLE DESCENTE ↓</button>
+    <div class="howto" id="howto">
+      <div>→ Approche <span class="k">21</span>, bats le croupier. Chaque tirage <span class="d">chauffe la table</span>.</div>
+      <div>→ Franchis l'objectif → <span class="k">descends</span> (plus dur, cagnotte plus grosse) ou <span class="k">encaisse</span>.</div>
+      <div>→ Tu perds une table ? <span class="k">Seconde chance</span> si tu as un jeton, sinon tu repars avec la moitié de la cagnotte.</div>
+    </div>
   </div>
 </div>
 
 <!-- SHOP -->
 <div class="overlay" id="shop">
   <div class="ovpanel">
-    <h1 class="win" style="font-size:23px;text-shadow:2px 2px 0 var(--magenta),3px 3px 0 var(--ink)">BOUTIQUE</h1>
-    <p>Table franchie. <b id="shopBank">0</b> $ en poche.</p>
+    <h1 class="win" style="font-size:23px;text-shadow:2px 2px 0 var(--magenta),3px 3px 0 var(--ink)">TABLE FRANCHIE</h1>
+    <p>Profondeur <b id="shopDepth">1</b> · <b id="shopBank">0</b> $ en poche · cagnotte <b>★<span id="shopPot">0</span></b> <span style="color:var(--muted)">(+<span id="shopReward">0</span>)</span></p>
     <div class="shopItems" id="shopItems"></div>
-    <div class="shopBtns">
+    <div class="shopBtns" style="margin-bottom:9px">
       <button class="btn b-teal" id="rerollBtn" onclick="rerollShop()" style="flex:0 0 auto;font-size:13px;padding:11px 14px">RELANCER</button>
-      <button class="btn b-blue menu" onclick="leaveShop()" style="flex:1">TABLE SUIVANTE →</button>
+      <button class="btn b-gold" id="cashBtn" onclick="cashOut()" style="flex:1;font-size:14px">ENCAISSER</button>
     </div>
+    <button class="btn b-blue menu" onclick="leaveShop()" style="width:100%">CONTINUER ↓<small>objectif suivant : <span id="shopNext">0</span> $</small></button>
   </div>
 </div>
 
-<!-- END -->
+<!-- SECONDE CHANCE -->
+<div class="overlay" id="loseScreen">
+  <div class="ovpanel">
+    <h1 id="loseTitle" class="dead"></h1>
+    <p id="loseText"></p>
+    <button class="btn b-gold menu" id="retryBtn" onclick="retryTable()" style="width:100%;margin-bottom:9px">SECONDE CHANCE</button>
+    <button class="btn b-blue" id="giveupBtn" onclick="giveUp()" style="width:100%">ABANDONNER</button>
+  </div>
+</div>
+
+<!-- FIN DE DESCENTE -->
 <div class="overlay" id="endScreen">
   <div class="ovpanel">
     <h1 id="endTitle"></h1>
     <p id="endText"></p>
-    <button class="btn b-gold menu" onclick="location.reload()">REJOUER</button>
+    <button class="btn b-gold menu" onclick="toPlanque()">RETOUR À LA PLANQUE</button>
   </div>
 </div>
 
@@ -597,14 +620,58 @@ function renderBackPicker(){
   });
 }
 
+/* ---------- méta-progression (réputation, déblocages, record) ---------- */
+function loadMeta(){
+  try{const v=JSON.parse(localStorage.getItem('t21meta'));
+    if(v&&typeof v==='object')return {rep:v.rep|0,unlocks:v.unlocks||{},record:{depth:(v.record&&v.record.depth)|0,chips:(v.record&&v.record.chips)|0}};
+  }catch(e){}
+  return {rep:0,unlocks:{},record:{depth:0,chips:0}};
+}
+let META=loadMeta();
+function saveMeta(){try{localStorage.setItem('t21meta',JSON.stringify(META));}catch(e){}}
+function uLvl(id){return META.unlocks[id]|0;}
+/* déblocages permanents achetés en réputation à la planque */
+const UNLOCKS=[
+  {id:'bank',     name:'Pécule',    tok:'+$',                     tc:'#ffce3a', max:5, cost:n=>15+n*15, desc:n=>'Jetons de départ +'+(15*(n+1))},
+  {id:'pourboire',name:'Pourboire', tok:'+$<small>/main</small>', tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' jeton(s) au début de chaque main'},
+  {id:'net',      name:'Filet',     tok:'+1<small>essai</small>', tc:'#3f8bd6', max:3, cost:n=>40+n*30, desc:n=>'Secondes chances de départ : '+(1+n+1)},
+  {id:'tarot',    name:'Poche',     tok:'+1<small>slot</small>',  tc:'#a64dff', max:1, cost:n=>70,      desc:n=>'+1 emplacement Tarot permanent'},
+  {id:'contact',  name:'Contact',   tok:'+1<small>◆</small>',     tc:'#ffce3a', max:1, cost:n=>90,      desc:n=>'Commence chaque descente avec une relique offerte'},
+];
+function unlockCost(u){const n=uLvl(u.id);return n>=u.max?null:u.cost(n);}
+/* valeurs de départ d'une descente, dérivées des déblocages */
+function startBank(){return 50+uLvl('bank')*15;}
+function startTokens(){return 1+uLvl('net');}
+function startRelics(){if(uLvl('contact')){const r=RELIC_POOL[rndInt(RELIC_POOL.length)];return [Object.assign({},r)];}return [];}
+/* réputation gagnée en franchissant la table de profondeur d (cumulée dans la cagnotte) */
+function tableRepReward(d){return 5+d*5;}
+/* réputation totale en fin de descente : cagnotte (entière si on encaisse, moitié sinon)
+   + une prime d'effort liée à la profondeur, pour qu'une descente ratée rapporte toujours */
+function repOnEnd(cashout){
+  const depth=(G.tableIdx|0)+1;
+  const base=cashout?G.pot:Math.floor(G.pot*0.5);
+  return base+depth*2;
+}
+
 /* ---------- données ---------- */
 const SUITS=['♠','♥','♦','♣'];
 const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-const TABLES=[
-  {name:'Arrière-salle', goal:100, hands:5, rule:null,      ruleText:''},
-  {name:'Table nerveuse',goal:230, hands:5, rule:'nervous', ruleText:'La pression monte 2× plus vite'},
-  {name:'Croupier muet', goal:480, hands:5, rule:'mute',    ruleText:'Ses deux cartes restent cachées jusqu\'à la révélation'},
+/* descente infinie : table générée à la volée selon la profondeur */
+const TBL_NAMES=['Arrière-salle','Table nerveuse','Croupier muet','Cave humide','Salon rouge','Cercle privé','Fosse aux as','Table maudite'];
+const TBL_RULES=[
+  {rule:null,     text:''},
+  {rule:'nervous',text:'La pression monte 2× plus vite'},
+  {rule:'mute',   text:'Le croupier garde ses deux cartes cachées'},
 ];
+function goalFor(n){let g=100;for(let k=1;k<=n;k++)g+=80+30*k;return g;}
+function makeTable(n){
+  const depth=n+1;
+  let nm=TBL_NAMES[n%TBL_NAMES.length];
+  if(n>=TBL_NAMES.length)nm+=' '+('I'.repeat(1+Math.floor(n/TBL_NAMES.length)));
+  let r=TBL_RULES[0];
+  if(n>0)r=TBL_RULES[1+((n-1)%(TBL_RULES.length-1))];
+  return {name:nm,goal:goalFor(n),hands:5,rule:r.rule,ruleText:r.text,depth};
+}
 const RELIC_POOL=[
   {id:'lunettes',name:'Lunettes',ic:'👓',desc:'Une fois par main : regarde la prochaine carte du sabot.',cost:14},
   {id:'jeton',name:'Jeton fendu',ic:'🪙',desc:'Tu perds avec un 20 → tu récupères la moitié de ta mise.',cost:10},
@@ -649,9 +716,10 @@ const ED_NAME={foil:'FOIL',holo:'HOLO',poly:'POLY'};
 /* ---------- état ---------- */
 let G={};
 function freshGame(){
-  G={bank:50,tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
-     peekUsed:false,relics:[],consumables:[],magicNext:false,insisted:false,forced:false,maxPressureReached:0,
-     phase:'bet',table:TABLES[0]};
+  G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
+     peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,maxPressureReached:0,
+     phase:'bet',pot:0,tokens:startTokens(),table:makeTable(0)};
+  G.tableStartBank=G.bank;
 }
 
 /* ---------- sabot / cartes ---------- */
@@ -824,8 +892,11 @@ function renderTop(){
   $('handsLeftBig').textContent=G.table.hands-G.hand+1;
   $('bankBig').textContent=G.bank;
   $('goalVal').textContent=G.table.goal;
-  $('tableName').textContent=G.table.name;
-  $('ruleText').textContent=G.table.ruleText||'';
+  $('tableName').textContent=G.table.name+' · ↓'+G.table.depth;
+  const bits=[];
+  if(G.table.ruleText)bits.push(G.table.ruleText);
+  if(G.pot>0)bits.push('cagnotte ★'+G.pot);
+  $('ruleText').textContent=bits.join('  ·  ');
   $('shoeCount').textContent=G.shoe.length;
 }
 function fanEffects(){
@@ -846,7 +917,7 @@ function renderRelics(){
   $('slotc').innerHTML=`${G.relics.length}/5<br>reliques`;
   fanEffects();
 }
-function consumableSlots(){return 2+(hasRelic('portebonheur')?1:0);}
+function consumableSlots(){return 2+(hasRelic('portebonheur')?1:0)+uLvl('tarot');}
 function renderConsumables(){
   const row=$('consumeRow'),wrap=$('consumes');wrap.innerHTML='';
   G.consumables.forEach((t,i)=>{
@@ -884,6 +955,7 @@ function applyHandIncome(){
   let inc=0;const parts=[];
   if(hasRelic('mecene')){inc+=4;parts.push('Mécène +4');}
   if(hasRelic('usurier')){const u=Math.min(6,Math.floor(G.bank/5));if(u>0){inc+=u;parts.push('Usurier +'+u);}}
+  const tip=uLvl('pourboire');if(tip>0){inc+=tip;parts.push('Pourboire +'+tip);}
   if(inc>0){G.bank+=inc;renderTop();renderChips();popText('REVENU','+'+inc+' $ · '+parts.join(' · '));}
 }
 function renderChips(){
@@ -1026,13 +1098,27 @@ function resolve(mode){
 
 /* ---------- progression ---------- */
 function nextHandOrEnd(){
-  if(G.bank>=G.table.goal){openShop();return;}
-  if(G.bank<10){gameOver('À SEC','Plus de quoi miser. La sécurité te raccompagne dehors.');return;}
-  if(G.hand>=G.table.hands){gameOver('FERMETURE','La table ferme, objectif manqué. Soirée terminée.');return;}
+  if(G.bank>=G.table.goal){clearTable();return;}
+  if(G.bank<10){onTableLost('À SEC','Plus de quoi miser pour atteindre l\'objectif.');return;}
+  if(G.hand>=G.table.hands){onTableLost('FERMETURE','La table ferme, objectif manqué.');return;}
   G.hand++;G.phase='bet';G.dHand=[];G.pHand=[];
   G.bet=Math.min(G.bet,Math.max(10,G.bank));
   applyHandIncome();
   renderAll();renderHands();
+}
+/* table franchie : la cagnotte de réputation grossit, puis boutique (encaisser/continuer) */
+function clearTable(){
+  const reward=tableRepReward(G.table.depth);
+  G.pot+=reward;G.lastReward=reward;
+  updateRecord(G.table.depth);
+  openShop();
+}
+/* table perdue : seconde chance (jeton) ou fin de descente */
+function onTableLost(title,text){
+  updateRecord(G.tableIdx+1);
+  G.loseTitle=title;G.loseText=text;
+  if(G.tokens>0){openLose();return;}
+  endRun(false);
 }
 
 /* ---------- boutique ---------- */
@@ -1065,6 +1151,11 @@ const SHOPTOK={
 let shopOffer=[],rerollCost=5;
 function openShop(){
   $('shopBank').textContent=G.bank;rerollCost=5;
+  $('shopDepth').textContent=G.table.depth;
+  $('shopPot').textContent=G.pot;
+  $('shopReward').textContent=G.lastReward;
+  $('shopNext').textContent=goalFor(G.tableIdx+1);
+  $('cashBtn').innerHTML='ENCAISSER<small>★'+repOnEnd(true)+' réput.</small>';
   rollShop();
   $('shop').classList.add('show');
 }
@@ -1118,19 +1209,70 @@ function rerollShop(){
   G.bank-=rerollCost;rerollCost+=2;$('shopBank').textContent=G.bank;sfx.card();
   rollShop();
 }
+/* CONTINUER : on descend d'un cran (objectif plus haut, cagnotte future plus grosse) */
 function leaveShop(){
   $('shop').classList.remove('show');G.tableIdx++;
-  if(G.tableIdx>=TABLES.length){gameOver('SORTIE LIBRE','Tu as traversé les trois tables avant la fermeture. La nuit est à toi.',true);return;}
-  G.table=TABLES[G.tableIdx];G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];
+  G.table=makeTable(G.tableIdx);
+  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];
+  G.bet=Math.min(G.bet,Math.max(10,G.bank));
+  G.tableStartBank=G.bank;
+  applyHandIncome();
+  if(G.bank<10){onTableLost('À SEC','Tu as trop dépensé en boutique : plus de quoi miser.');return;}
+  renderAll();renderHands();renderPressure();
+}
+/* ENCAISSER : on quitte la descente en banquant toute la cagnotte */
+function cashOut(){
+  $('shop').classList.remove('show');
+  endRun(true);
+}
+
+/* ---------- seconde chance / fin de descente ---------- */
+function openLose(){
+  $('loseTitle').textContent=G.loseTitle;
+  $('loseText').innerHTML=G.loseText+`<br><br>Descente : <b>profondeur ${G.tableIdx+1}</b> · Cagnotte : <b>★${G.pot}</b>`;
+  $('retryBtn').innerHTML='SECONDE CHANCE<small>🔄 '+G.tokens+' restante'+(G.tokens>1?'s':'')+'</small>';
+  $('giveupBtn').innerHTML='ABANDONNER<small>encaisse ★'+repOnEnd(false)+'</small>';
+  $('loseScreen').classList.add('show');
+}
+/* rejoue la table en cours (sabot neuf, reliques gardées), contre un jeton */
+function retryTable(){
+  if(G.tokens<=0)return;
+  G.tokens--;
+  $('loseScreen').classList.remove('show');
+  buildShoe();
+  G.bank=Math.max(G.tableStartBank,startBank());
+  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];
   G.bet=Math.min(G.bet,Math.max(10,G.bank));
   applyHandIncome();
   renderAll();renderHands();renderPressure();
 }
+function giveUp(){
+  $('loseScreen').classList.remove('show');
+  endRun(false);
+}
+function updateRecord(depth){
+  if(depth>META.record.depth)META.record.depth=depth;
+  if(G.bank>META.record.chips)META.record.chips=G.bank;
+  saveMeta();
+}
 
-/* ---------- fin ---------- */
-function gameOver(title,text,win){
-  $('endTitle').textContent=title;$('endTitle').className=win?'win':'dead';
-  $('endText').innerHTML=text+`<br><br>Jetons finaux : <b>${G.bank} $</b> · Table atteinte : <b>${Math.min(G.tableIdx+1,3)}/3</b>`;
+/* ---------- fin de descente : cagnotte → réputation ---------- */
+function endRun(cashout){
+  $('shop').classList.remove('show');$('loseScreen').classList.remove('show');
+  const gained=repOnEnd(cashout);
+  META.rep+=gained;
+  updateRecord(G.tableIdx+1);
+  saveMeta();
+  const depth=G.tableIdx+1;
+  $('endTitle').textContent=cashout?'TU ENCAISSES':'DESCENTE FINIE';
+  $('endTitle').className=cashout?'win':'dead';
+  $('endText').innerHTML=
+    (cashout
+      ?`Tu pars avec la cagnotte avant que ça tourne mal.`
+      :`Tu repars quand même avec la moitié de ta cagnotte.`)+
+    `<br><br>Profondeur atteinte : <b>${depth}</b> · Jetons : <b>${G.bank} $</b>`+
+    `<br>Réputation gagnée : <b>★${gained}</b> &nbsp;→&nbsp; total <b>★${META.rep}</b>`+
+    `<br><span style="color:var(--muted)">Record : profondeur ${META.record.depth} · ${META.record.chips} $</span>`;
   $('endScreen').classList.add('show');
 }
 
@@ -1218,11 +1360,45 @@ function tick(){
 
 /* ---------- rendu global / boot ---------- */
 function renderAll(){renderTop();renderRelics();renderConsumables();renderChips();renderActions();renderPressure();renderMult();}
-function startGame(){
-  audioInit();freshGame();buildShoe();
-  $('intro').classList.remove('show');applyHandIncome();renderAll();renderHands();
+
+/* ---------- LA PLANQUE (hub de méta-progression) ---------- */
+function renderPlanque(){
+  $('repBal').textContent=META.rep;
+  $('recDepth').textContent=META.record.depth;
+  $('recChips').textContent=META.record.chips;
+  const box=$('unlockItems');box.innerHTML='';
+  UNLOCKS.forEach(u=>{
+    const lvl=uLvl(u.id),cost=unlockCost(u),maxed=cost===null;
+    const d=document.createElement('div');d.className='shopItem'+(maxed?' bought':'');
+    const dots=u.max>1?` <span class="ulvl">${'●'.repeat(lvl)}${'○'.repeat(u.max-lvl)}</span>`:(lvl?' <span class="ulvl">●</span>':'');
+    d.innerHTML=`<div class="shopTok" style="color:${u.tc}">${u.tok}</div>`+
+      `<div class="sInfo"><div class="nm">${u.name}${dots}</div><div class="ds">${u.desc(lvl)}</div></div>`;
+    const b=document.createElement('button');b.className='btn b-gold';
+    b.style.cssText='font-size:13px;padding:9px 11px';
+    if(maxed){b.textContent='MAX';b.disabled=true;}
+    else{b.textContent='★'+cost;if(META.rep<cost)b.disabled=true;b.onclick=()=>buyUnlock(u.id);}
+    d.appendChild(b);box.appendChild(d);
+  });
 }
-freshGame();buildShoe();renderAll();renderHands();renderBackPicker();tick();
+function buyUnlock(id){
+  const u=UNLOCKS.find(x=>x.id===id);if(!u)return;
+  const cost=unlockCost(u);if(cost===null||META.rep<cost)return;
+  META.rep-=cost;META.unlocks[id]=uLvl(id)+1;saveMeta();sfx.buy();
+  renderPlanque();
+}
+function toPlanque(){
+  $('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');$('shop').classList.remove('show');
+  renderPlanque();renderBackPicker();
+  $('intro').classList.add('show');
+}
+
+function startGame(){
+  audioInit();
+  $('intro').classList.remove('show');$('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');
+  freshGame();buildShoe();
+  applyHandIncome();renderAll();renderHands();
+}
+freshGame();buildShoe();renderAll();renderHands();renderBackPicker();renderPlanque();tick();
 </script>
 </body>
 </html>
