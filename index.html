@@ -360,6 +360,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* TABLE = simple conteneur (plus de bois) */
 #table{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;max-width:580px;position:relative;padding:6px;border:none;border-radius:0;background:none;overflow:visible;box-shadow:none}
 #table::before,#table::after{display:none!important}
+/* petit bouton VOIR (lunettes) : posé sur le coin du tapis, hors de la rangée d'actions */
+#peekBtn{position:absolute;top:50%;right:12px;transform:translateY(-50%);z-index:6;display:none;font-family:'Jersey 15',monospace;font-weight:700;font-size:17px;letter-spacing:.05em;color:#04302d;background:var(--teal);border:none;clip-path:var(--pc);padding:13px 16px;line-height:1;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.4)}
+#peekBtn.show{display:block}
+#peekBtn:active{transform:translateY(calc(-50% + 2px));filter:brightness(.92)}
 /* FELT = tapis teal, bords relevés, légèrement incliné */
 #felt{position:relative;z-index:0;flex:none;width:100%;max-width:560px;display:flex;background:#138f86;clip-path:var(--pc);box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.07),inset 0 -4px 0 rgba(0,0,0,.26);padding:16px 14px;transform:none}
 #felt::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.13) 2px,transparent 2px);background-size:15px 15px;opacity:.4;pointer-events:none}
@@ -387,10 +391,12 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #bottombar #betRow,#bottombar #actions{width:100%;max-width:600px}
 #betRow{display:flex;align-items:center;gap:10px;justify-content:center;background:none!important;border:none!important;box-shadow:none!important;padding:0!important}
 #betRow .lbl{font-size:12px;letter-spacing:.06em;color:var(--muted)}
-#actions{display:flex;flex-direction:column;gap:9px;min-height:120px}
-.actMain{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+#actions{display:flex;flex-direction:column;gap:9px;height:108px}
+.actMain{display:grid;grid-template-columns:1fr 1fr;gap:9px;flex:1}
 .actMain .span{grid-column:1/-1}
-.actWide{min-height:52px;display:flex;flex-direction:column;gap:9px}
+.actWide{display:flex;flex-direction:column;gap:9px;flex:1}
+.actMain>.btn,.actWide>.btn{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 9px}
+.btn:disabled{background:#44464d!important;color:#868c95!important;opacity:1;filter:none;cursor:default}
 /* BOUTONS — blocs de couleur, sans contour */
 .btn{border:none;border-radius:0;clip-path:var(--pc);box-shadow:none;font-size:17px;padding:13px 9px;text-shadow:1px 1px 0 rgba(0,0,0,.3)}
 .btn::before{display:none!important}
@@ -452,9 +458,17 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* lettres très légèrement désalignées (style) ; mots insécables -> retours à la ligne propres */
 .W{display:inline-block;white-space:nowrap}
 .L{display:inline-block;transform:translateY(var(--o,0))}
-/* boutons + nom de salle : les lettres ondulent très très légèrement de haut en bas */
-.btn .L,.tname .L{animation:letterBob 2.6s ease-in-out infinite;animation-delay:var(--d,0s)}
-@keyframes letterBob{0%,100%{transform:translateY(calc(var(--o,0px) + .3px))}50%{transform:translateY(calc(var(--o,0px) - .3px))}}
+/* boutons + nom de salle + VOIR : léger tremblement des lettres (autour de leur hauteur --o) */
+.btn .L,.tname .L,#peekBtn .L{animation:letterShake 1s steps(1,end) infinite;animation-delay:var(--d,0s)}
+@keyframes letterShake{
+ 0%  {transform:translate( .4px,calc(var(--o,0px) - .3px))}
+ 16% {transform:translate(-.4px,calc(var(--o,0px) + .3px))}
+ 33% {transform:translate( .3px,calc(var(--o,0px) + .4px))}
+ 50% {transform:translate(-.3px,calc(var(--o,0px) - .4px))}
+ 66% {transform:translate( .4px,calc(var(--o,0px) + .2px))}
+ 83% {transform:translate(-.4px,calc(var(--o,0px) - .2px))}
+ 100%{transform:translate( .4px,calc(var(--o,0px) - .3px))}
+}
 /* overlays : centrés mais défilables si trop hauts (jamais coupés) */
 .overlay{justify-content:flex-start;overflow-y:auto}
 .ovpanel{margin:auto 0}
@@ -524,6 +538,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
           </div>
         </div>
       </div>
+      <button id="peekBtn" onclick="usePeek()" title="Lis la prochaine carte du sabot">VOIR</button>
     </div>
   </div>
   </div>
@@ -997,35 +1012,44 @@ function renderChips(){
     wrap.appendChild(b);
   });
 }
+function syncPeek(){
+  const b=$('peekBtn');if(!b)return;
+  b.classList.toggle('show',G.phase==='play'&&hasRelic('lunettes')&&!G.peekUsed);
+}
 function renderActions(){
+  syncPeek();
   const a=$('actions');a.innerHTML='';
   const main=document.createElement('div');main.className='actMain';
   const wide=document.createElement('div');wide.className='actWide';
-  a.appendChild(main);a.appendChild(wide);
   const add=(parent,label,cls,fn,sub,dis)=>{
     const b=document.createElement('button');b.className='btn '+cls;
     b.innerHTML=label+(sub?`<small>${sub}</small>`:'');
     if(dis)b.disabled=true;else b.onclick=fn;parent.appendChild(b);return b;
   };
-  if(G.phase==='bet'){add(main,'MISER','b-gold span',deal,`mise ${G.bet} $`,G.bank<10);return;}
-  if(G.phase==='play'){
-    const v=handValue(G.pHand).total;
-    if(v>=17&&v<=20){
-      add(main,'RISQUER','b-red',()=>{G.insisted=true;playerHit();},'+bonus si survie');
-      add(main,'RESTER','b-blue',playerStand,'garde ta main');
-      add(wide,'FORCER LA CHANCE','b-purple',forcerChance,'2 cartes, garde la meilleure · pression +++');
-    }else{
-      add(main,'TIRER','b-gold',()=>playerHit(),'+1 carte');
-      add(main,'RESTER','b-blue',playerStand,'garde ta main');
-    }
-    if(hasRelic('lunettes')&&!G.peekUsed)add(wide,'LUNETTES','b-teal',usePeek,'lis la prochaine carte');
-    return;
+  if(G.phase==='bet'){
+    add(main,'MISER','b-gold span',deal,`mise ${G.bet} $`,G.bank<10);
+    a.appendChild(main);return;
   }
+  // phases jeu / croupier / résolution : on garde toujours les 3 boutons,
+  // désactivés (grisés) quand ce n'est pas notre tour ou que l'action n'est pas dispo.
+  const live=(G.phase==='play');
+  const v=G.pHand.length?handValue(G.pHand).total:0;
+  const flirt=v>=17&&v<=20;
+  if(flirt){
+    add(main,'RISQUER','b-red',()=>{G.insisted=true;playerHit();},'+bonus si survie',!live);
+    add(main,'RESTER','b-blue',playerStand,'garde ta main',!live);
+    add(wide,'FORCER LA CHANCE','b-purple',forcerChance,'2 cartes, garde la meilleure',!live);
+  }else{
+    add(main,'TIRER','b-gold',()=>playerHit(),'+1 carte',!live);
+    add(main,'RESTER','b-blue',playerStand,'garde ta main',!live);
+    add(wide,'FORCER LA CHANCE','b-purple',forcerChance,'dispo à 17-20',true);
+  }
+  a.appendChild(main);a.appendChild(wide);
 }
 function usePeek(){
-  if(G.peekUsed)return;G.peekUsed=true;
+  if(G.peekUsed||G.phase!=='play'||!hasRelic('lunettes'))return;G.peekUsed=true;
   const n=G.shoe[G.shoe.length-1];
-  $('tip').textContent=`PROCHAINE : ${n.r}${n.s}`;blip(880,.05,'sine',.06);renderActions();
+  $('tip').textContent=`PROCHAINE : ${n.r}${n.s}`;blip(880,.05,'sine',.06);syncPeek();
 }
 function updateBustReadout(){
   if(hasRelic('compteur')&&G.phase==='play'){
@@ -1077,7 +1101,7 @@ function forcerChance(){
 }
 function playerStand(natural){
   if(G.phase!=='play')return;
-  G.phase='dealer';$('actions').innerHTML='';dealerPlay(natural);
+  G.phase='dealer';renderActions();dealerPlay(natural);
 }
 function dealerPlay(natural){
   if(!G.revealed){G.revealed=true;G.doFlip=true;sfx.flip();}
@@ -1433,7 +1457,7 @@ function staggerNode(node,ctr){
 function staggerText(el){if(!el||!document.createDocumentFragment)return;staggerNode(el,{i:0});}
 /* re-applique le décalage à toute l'UI visible (chrome de jeu + overlay affiché) */
 function staggerUI(){
-  staggerText($('topbar'));staggerText($('bottombar'));staggerText($('effects'));
+  staggerText($('topbar'));staggerText($('bottombar'));staggerText($('effects'));staggerText($('peekBtn'));
   document.querySelectorAll('#stage .zlbl').forEach(staggerText);
   document.querySelectorAll('.overlay.show .ovpanel').forEach(staggerText);
 }
