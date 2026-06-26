@@ -165,7 +165,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .card.back.cb16::before{background:#22305f;background-image:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,247,230,.5) 0 2deg,transparent 2deg 9deg);box-shadow:inset 0 0 0 2px #fff7e6}
 .card.back.cb16::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-72%);width:0;height:0;z-index:2;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:12px solid #ffce3a;filter:drop-shadow(0 7px 0 #ffce3a)}
 /* tressautement des cartes : même mouvement rapide et discret que les lettres */
-@keyframes cardLife{0%{transform:translate(.4px,-.3px)}16%{transform:translate(-.4px,.3px)}33%{transform:translate(.3px,.4px)}50%{transform:translate(-.3px,-.4px)}66%{transform:translate(.4px,.2px)}83%{transform:translate(-.4px,-.2px)}100%{transform:translate(.4px,-.3px)}}
+@keyframes cardLife{0%{transform:translate(.2px,-.14px)}16%{transform:translate(-.2px,.14px)}33%{transform:translate(.14px,.2px)}50%{transform:translate(-.14px,-.2px)}66%{transform:translate(.2px,.1px)}83%{transform:translate(-.2px,-.1px)}100%{transform:translate(.2px,-.1px)}}
 @keyframes textLife{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
 /* sélecteur de dos sur l'écran d'accueil */
 .backPick{margin:2px 0 14px}
@@ -248,13 +248,13 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
    que les lettres (letterShake), 1.1s en steps, faible amplitude. translate
    se compose avec le translateY de :active. Désynchronisé ; grisés = immobiles. */
 @keyframes btnTwitch{
- 0%  {translate:.4px -.3px}
- 16% {translate:-.4px .3px}
- 33% {translate:.3px .4px}
- 50% {translate:-.3px -.4px}
- 66% {translate:.4px .2px}
- 83% {translate:-.4px -.2px}
- 100%{translate:.4px -.3px}
+ 0%  {translate:.2px -.14px}
+ 16% {translate:-.2px .14px}
+ 33% {translate:.14px .2px}
+ 50% {translate:-.14px -.2px}
+ 66% {translate:.2px .1px}
+ 83% {translate:-.2px -.1px}
+ 100%{translate:.2px -.14px}
 }
 .btn{animation:btnTwitch 1.1s steps(1,end) infinite}
 .btn:nth-child(2){animation-delay:-.4s}
