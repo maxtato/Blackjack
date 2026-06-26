@@ -409,7 +409,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #peekBtn.show{display:block}
 #peekBtn:active{transform:translateY(calc(-50% + 2px));filter:brightness(.92)}
 /* FELT = tapis teal, bords relevés, légèrement incliné */
-#felt{position:relative;z-index:0;flex:1;width:100%;max-width:560px;display:flex;background:#138f86;clip-path:var(--pc);box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.07),inset 0 -4px 0 rgba(0,0,0,.26);padding:14px 12px;transform:none}
+#felt{position:relative;z-index:0;flex:1;width:100%;max-width:560px;display:flex;background:var(--felt,#138f86);transition:background .5s ease;clip-path:var(--pc);box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.07),inset 0 -4px 0 rgba(0,0,0,.26);padding:14px 12px;transform:none}
 #felt::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.13) 2px,transparent 2px);background-size:15px 15px;opacity:.4;pointer-events:none}
 /* tapis seulement derrière les cartes ; moquette visible au-dessus et en dessous */
 #feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:10px;padding:0;position:relative;z-index:1;transform:none}
@@ -675,7 +675,9 @@ function abbr(n){
   if(n<1000)s=''+n;
   else if(n<1e6)s=fix(n/1e3)+'K';
   else if(n<1e9)s=fix(n/1e6)+'M';
-  else s=fix(n/1e9)+'B';
+  else if(n<1e12)s=fix(n/1e9)+'B';
+  else if(n<1e15)s=fix(n/1e12)+'T';
+  else s=fix(n/1e15)+'P';
   return (neg?'-':'')+s;
 }
 
@@ -783,21 +785,35 @@ const BOSS_RULES=[
   {rule:'sec',   text:'PATRON · les égalités comptent comme des défaites'},
 ];
 function isBossDepth(depth){return depth%3===0;}
-function goalFor(n){let g=100;for(let k=1;k<=n;k++)g+=80+30*k;return g;}
+/* série = palier de 10 tables (1-based) */
+function seriesOf(depth){return Math.floor((depth-1)/10)+1;}
+/* couleur du tapis par série : repère visuel quand on change de palier */
+const SERIES_FELT=['#138f86','#7c3a9e','#1f6fb0','#b07a1f','#a52f55','#2f8f3f','#8f3a1f','#3a3f8f'];
+function seriesFelt(series){return SERIES_FELT[(series-1)%SERIES_FELT.length];}
+/* objectif FORTEMENT exponentiel : ~×1.6 par table, et le facteur grimpe à
+   chaque série de 10 tables → palier marqué, ça devient vite très dur */
+function goalFor(n){
+  const s=Math.floor(n/10);
+  const base=1.6+s*0.12;
+  let g=100*Math.pow(base,n);
+  if(g<1000)return Math.round(g/10)*10;
+  const mag=Math.pow(10,Math.floor(Math.log10(g))-1);   // arrondi ~2 chiffres significatifs
+  return Math.round(g/mag)*mag;
+}
 function makeTable(n){
-  const depth=n+1;
+  const depth=n+1,series=seriesOf(depth);
   if(isBossDepth(depth)){
     const bi=(depth/3|0)-1;
     const b=BOSS_RULES[bi%BOSS_RULES.length];
     let nm=BOSS_NAMES[bi%BOSS_NAMES.length];
     if(bi>=BOSS_NAMES.length)nm+=' '+('I'.repeat(1+Math.floor(bi/BOSS_NAMES.length)));
-    return {name:'★ '+nm,goal:Math.round(goalFor(n)*1.12/5)*5,hands:5,rule:b.rule,ruleText:b.text,depth,boss:true};
+    return {name:'★ '+nm,goal:Math.round(goalFor(n)*1.12/5)*5,hands:5,rule:b.rule,ruleText:b.text,depth,series,boss:true};
   }
   let nm=TBL_NAMES[n%TBL_NAMES.length];
   if(n>=TBL_NAMES.length)nm+=' '+('I'.repeat(1+Math.floor(n/TBL_NAMES.length)));
   let r=TBL_RULES[0];
   if(n>0)r=TBL_RULES[1+((n-1)%(TBL_RULES.length-1))];
-  return {name:nm,goal:goalFor(n),hands:5,rule:r.rule,ruleText:r.text,depth};
+  return {name:nm,goal:goalFor(n),hands:5,rule:r.rule,ruleText:r.text,depth,series};
 }
 const RELIC_POOL=[
   {id:'lunettes',name:'Lunettes',ic:'👓',desc:'Une fois par main : regarde la prochaine carte du sabot.',cost:14},
@@ -1030,7 +1046,9 @@ function renderTop(){
   $('bankBig').textContent=abbr(G.bank);
   $('bankBig').parentElement.classList.toggle('warn',G.bank<25); // banque au plus bas
   $('goalVal').textContent=abbr(G.table.goal);
-  $('tableName').textContent=G.table.name+' · table '+G.table.depth;
+  const series=G.table.series||1;
+  document.documentElement.style.setProperty('--felt',seriesFelt(series));   // tapis coloré par série
+  $('tableName').textContent=G.table.name+' · série '+series+' · table '+G.table.depth;
   const bits=[];
   if(G.table.ruleText)bits.push(G.table.ruleText);
   if(G.pot>0)bits.push('cagnotte ★'+abbr(G.pot));
@@ -1388,7 +1406,11 @@ function leaveShop(){
   applyHandIncome();
   if(G.bank<10){onTableLost('À SEC','Tu as trop dépensé en boutique : plus de quoi miser.');return;}
   renderAll();renderHands();renderPressure();
-  if(G.table.boss){sfx.danger();shake(16);popText('TABLE DU PATRON',G.table.ruleText);}
+  // entrée dans une nouvelle série (tous les 10 paliers) : annonce marquée
+  if(G.table.depth>1&&(G.table.depth-1)%10===0){
+    sfx.danger();shake(24);flashScreen('win');coinBurst(12);
+    popText('SÉRIE '+G.table.series,'nouveau palier — ça se corse');
+  }else if(G.table.boss){sfx.danger();shake(16);popText('TABLE DU PATRON',G.table.ruleText);}
 }
 /* ENCAISSER : on quitte la descente en banquant toute la cagnotte */
 function cashOut(){
