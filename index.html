@@ -232,6 +232,15 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .b-teal{background:linear-gradient(180deg,#5ee6dd,var(--teal) 55%,var(--tealDk));color:#04302d}
 .wide{grid-column:1/-1}
 .btn:disabled{opacity:.4;pointer-events:none;filter:grayscale(.3)}
+/* léger flottement d'inactivité des boutons (Balatro-like) : translate/rotate
+   se composent avec le translateY de :active, donc l'appui reste net.
+   Désynchronisé d'un bouton à l'autre ; les boutons grisés restent immobiles. */
+@keyframes btnBob{0%,100%{translate:0 0;rotate:-.3deg}50%{translate:0 -2px;rotate:.3deg}}
+.btn{animation:btnBob 2.9s ease-in-out infinite}
+.btn:nth-child(2){animation-duration:3.4s;animation-delay:-1.3s}
+.btn:nth-child(3){animation-duration:3.7s;animation-delay:-.7s}
+.actWide>.btn{animation-duration:3.6s;animation-delay:-1.9s}
+.btn:disabled{animation:none}
 
 /* ===== FX / PARTICLES ===== */
 #fx{position:fixed;inset:0;pointer-events:none;z-index:40;opacity:0}
@@ -397,6 +406,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .actMain .span{grid-column:1/-1}
 .actWide{display:flex;flex-direction:column;gap:9px;flex:1}
 .actMain>.btn,.actWide>.btn{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 9px}
+/* phase de mise : bouton MISER moins haut, mais centré verticalement au même endroit */
+.actMain.betmain{align-content:center}
+.actMain.betmain>.btn{height:auto;padding:15px 10px}
 .btn:disabled{background:#44464d!important;color:#868c95!important;opacity:1;filter:none;cursor:default}
 /* BOUTONS — blocs de couleur, sans contour */
 .btn{border:none;border-radius:0;clip-path:var(--pc);box-shadow:none;font-size:17px;padding:13px 9px;text-shadow:1px 1px 0 rgba(0,0,0,.3)}
@@ -1060,6 +1072,7 @@ function renderActions(){
     if(dis)b.disabled=true;else b.onclick=fn;parent.appendChild(b);return b;
   };
   if(G.phase==='bet'){
+    main.classList.add('betmain');
     add(main,'MISER','b-gold span',deal,`mise ${G.bet} $`,G.bank<10);
     a.appendChild(main);return;
   }
