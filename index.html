@@ -134,14 +134,14 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .hand{display:flex;justify-content:center;flex-wrap:wrap;gap:4px;min-height:74px;align-items:center}
 
 /* ===== CARDS ===== */
-.card{width:46px;height:65px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);color:var(--inkCard);border:3px solid var(--ink);border-radius:8px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:3px 5px 0 rgba(0,0,0,.45);animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife var(--cdur,2.8s) steps(1,end) var(--cd,0s) infinite}
+.card{width:46px;height:65px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);color:var(--inkCard);border:3px solid var(--ink);border-radius:8px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:3px 5px 0 rgba(0,0,0,.45);animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife 1.1s steps(1,end) var(--cd,0s) infinite}
 .card.red{color:var(--suitRed)}
 .card .pip{display:flex;align-items:center;justify-content:center}
 .card .corner{position:absolute;display:flex;flex-direction:column;align-items:center;line-height:1;gap:0}
 .card .corner-r{font-family:'Jersey 15',monospace;font-weight:700;font-size:12px}
 .card .suit{display:block}
-.card .tl{top:5px;left:5px}
-.card .br{bottom:5px;right:5px;transform:rotate(180deg)}
+.card .tl{top:2px;left:3px}
+.card .br{bottom:2px;right:3px;transform:rotate(180deg)}
 .card.back .pip,.card.back .corner,.card.back .edtag{display:none}
 .card.back{background:#fdf3df;border-color:var(--ink)}
 .card.back::before{content:"";position:absolute;inset:3px;border-radius:4px;z-index:1}
@@ -164,14 +164,14 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* cb16 — marine, rayons crème + étoile or */
 .card.back.cb16::before{background:#22305f;background-image:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,247,230,.5) 0 2deg,transparent 2deg 9deg);box-shadow:inset 0 0 0 2px #fff7e6}
 .card.back.cb16::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-72%);width:0;height:0;z-index:2;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:12px solid #ffce3a;filter:drop-shadow(0 7px 0 #ffce3a)}
-/* tressautement des cartes : à-coups saccadés (utilisé avec steps()) */
-@keyframes cardLife{0%{transform:translate(0,0) rotate(-.8deg)}18%{transform:translate(-1.3px,-1.4px) rotate(.8deg)}36%{transform:translate(1.4px,-.6px) rotate(-.6deg)}54%{transform:translate(-.6px,-2px) rotate(.9deg)}72%{transform:translate(1px,-1px) rotate(-.7deg)}88%{transform:translate(-1px,-.4px) rotate(.5deg)}100%{transform:translate(0,0) rotate(-.8deg)}}
+/* tressautement des cartes : même mouvement rapide et discret que les lettres */
+@keyframes cardLife{0%{transform:translate(.4px,-.3px)}16%{transform:translate(-.4px,.3px)}33%{transform:translate(.3px,.4px)}50%{transform:translate(-.3px,-.4px)}66%{transform:translate(.4px,.2px)}83%{transform:translate(-.4px,-.2px)}100%{transform:translate(.4px,-.3px)}}
 @keyframes textLife{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
 /* sélecteur de dos sur l'écran d'accueil */
 .backPick{margin:2px 0 14px}
 .bpLabel{font-size:11px;letter-spacing:.12em;color:var(--muted);margin-bottom:9px}
 .bpRow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.bpCard{width:50px;height:72px;cursor:pointer;animation:cardLife var(--cdur,5.5s) steps(1,end) var(--cd,0s) infinite}
+.bpCard{width:50px;height:72px;cursor:pointer;animation:cardLife 1.1s steps(1,end) var(--cd,0s) infinite}
 .bpCard.sel{box-shadow:0 0 0 3px var(--gold),3px 5px 0 rgba(0,0,0,.45)}
 .card.jit{animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,jit .12s linear infinite}
 @keyframes deal{from{transform:translateY(-30px) rotate(-7deg);opacity:0}to{transform:none;opacity:1}}
@@ -244,22 +244,22 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .b-teal{background:linear-gradient(180deg,#5ee6dd,var(--teal) 55%,var(--tealDk));color:#04302d}
 .wide{grid-column:1/-1}
 .btn:disabled{opacity:.4;pointer-events:none;filter:grayscale(.3)}
-/* tressautement d'inactivité des boutons : petits à-coups saccadés (steps),
-   pas un flottement lisse. translate/rotate se composent avec le translateY
-   de :active. Désynchronisé d'un bouton à l'autre ; grisés = immobiles. */
+/* tressautement d'inactivité des boutons : même mouvement rapide et discret
+   que les lettres (letterShake), 1.1s en steps, faible amplitude. translate
+   se compose avec le translateY de :active. Désynchronisé ; grisés = immobiles. */
 @keyframes btnTwitch{
- 0%  {translate:0 0;rotate:0deg}
- 20% {translate:0 -2px;rotate:-.6deg}
- 38% {translate:1px 0;rotate:.5deg}
- 55% {translate:-1px -1px;rotate:-.4deg}
- 72% {translate:0 -1px;rotate:.5deg}
- 88% {translate:1px 0;rotate:-.2deg}
- 100%{translate:0 0;rotate:0deg}
+ 0%  {translate:.4px -.3px}
+ 16% {translate:-.4px .3px}
+ 33% {translate:.3px .4px}
+ 50% {translate:-.3px -.4px}
+ 66% {translate:.4px .2px}
+ 83% {translate:-.4px -.2px}
+ 100%{translate:.4px -.3px}
 }
-.btn{animation:btnTwitch 2s steps(1,end) infinite}
-.btn:nth-child(2){animation-duration:2.4s;animation-delay:-1.1s}
-.btn:nth-child(3){animation-duration:1.7s;animation-delay:-.6s}
-.actWide>.btn{animation-duration:2.7s;animation-delay:-1.5s}
+.btn{animation:btnTwitch 1.1s steps(1,end) infinite}
+.btn:nth-child(2){animation-delay:-.4s}
+.btn:nth-child(3){animation-delay:-.75s}
+.actWide>.btn{animation-delay:-.55s}
 .btn:disabled{animation:none}
 
 /* ===== FX / PARTICLES ===== */
