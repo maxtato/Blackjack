@@ -633,6 +633,17 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
    ============================================================ */
 const $=id=>document.getElementById(id);
 const rndInt=n=>Math.floor(Math.random()*n);
+/* abrège les grands nombres : 1 500 → 1.5K, 2 000 000 → 2M, etc. */
+function abbr(n){
+  const neg=n<0;n=Math.abs(n);
+  const fix=x=>{const r=Math.round(x*10)/10;return Number.isInteger(r)?''+r:r.toFixed(1);};
+  let s;
+  if(n<1000)s=''+n;
+  else if(n<1e6)s=fix(n/1e3)+'K';
+  else if(n<1e9)s=fix(n/1e6)+'M';
+  else s=fix(n/1e9)+'B';
+  return (neg?'-':'')+s;
+}
 
 /* ---------- audio ---------- */
 const Audio_={ctx:null,drone:null,droneGain:null,started:false};
@@ -969,7 +980,7 @@ function renderMult(){
     const mode=(G.pHand.length===2&&handValue(G.pHand).total===21)?'natural':'stand';
     const r=computeMult(mode);m=r.mult;bonus=r.bonusChips;
   }
-  $('chipsVal').textContent=bonus?(G.bet+'+'+bonus):G.bet;
+  $('chipsVal').textContent=bonus?(abbr(G.bet)+'+'+bonus):abbr(G.bet);
   $('multVal').textContent=fmtMult(m);
   $('scorebox').classList.toggle('hot',m>1||bonus>0);
 }
@@ -978,12 +989,12 @@ function renderTop(){
   $('handNum').textContent=G.hand;$('handMax').textContent=G.table.hands;
   $('handsLeft').textContent=G.table.hands-G.hand+1;
   $('handsLeftBig').textContent=G.table.hands-G.hand+1;
-  $('bankBig').textContent=G.bank;
-  $('goalVal').textContent=G.table.goal;
+  $('bankBig').textContent=abbr(G.bank);
+  $('goalVal').textContent=abbr(G.table.goal);
   $('tableName').textContent=G.table.name+' · table '+G.table.depth;
   const bits=[];
   if(G.table.ruleText)bits.push(G.table.ruleText);
-  if(G.pot>0)bits.push('cagnotte ★'+G.pot);
+  if(G.pot>0)bits.push('cagnotte ★'+abbr(G.pot));
   $('ruleText').textContent=bits.join('  ·  ');
   $('ruleText').classList.toggle('boss',!!G.table.boss);
   $('shoeCount').textContent=G.shoe.length;
@@ -1045,11 +1056,11 @@ function applyHandIncome(){
   if(hasRelic('mecene')){inc+=4;parts.push('Mécène +4');}
   if(hasRelic('usurier')){const u=Math.min(6,Math.floor(G.bank/5));if(u>0){inc+=u;parts.push('Usurier +'+u);}}
   const tip=uLvl('pourboire');if(tip>0){inc+=tip;parts.push('Pourboire +'+tip);}
-  if(inc>0){G.bank+=inc;renderTop();renderChips();popText('REVENU','+'+inc+' $ · '+parts.join(' · '));}
+  if(inc>0){G.bank+=inc;renderTop();renderChips();popText('REVENU','+'+abbr(inc)+' $ · '+parts.join(' · '));}
 }
 /* mises échelonnées : on monte avec la banque (100, 200, 500, 1000…) ;
    on n'affiche que les 4 plus grosses valeurs abordables pour ne pas surcharger */
-const BET_LADDER=[10,25,50,100,200,500,1000,2000,5000,10000];
+const BET_LADDER=(()=>{const l=[10,25,50,100,200,500];for(let m=1000;m<=1e12;m*=10)l.push(m,2*m,5*m);return l;})();
 function betChoices(){
   let opts=BET_LADDER.filter(v=>v<=G.bank);
   if(!opts.length)opts=[10];
@@ -1066,7 +1077,7 @@ function renderChips(){
   opts.forEach(v=>{
     const b=document.createElement('div');
     b.className='chip'+(G.bet===v?' on':'');
-    b.textContent=v;
+    b.textContent=abbr(v);
     b.onclick=()=>{G.bet=v;renderChips();renderActions();renderMult();};
     wrap.appendChild(b);
   });
@@ -1087,7 +1098,7 @@ function renderActions(){
   };
   if(G.phase==='bet'){
     main.classList.add('betmain');
-    add(main,'MISER','b-gold span',deal,`mise ${G.bet} $`,G.bank<10);
+    add(main,'MISER','b-gold span',deal,`mise ${abbr(G.bet)} $`,G.bank<10);
     a.appendChild(main);return;
   }
   // phases jeu / croupier / résolution : on garde toujours les 3 boutons,
@@ -1267,14 +1278,14 @@ const SHOPTOK={
 };
 let shopOffer=[],rerollCost=5;
 function openShop(){
-  $('shopBank').textContent=G.bank;rerollCost=5;
+  $('shopBank').textContent=abbr(G.bank);rerollCost=5;
   $('shopDepth').textContent=G.table.depth;
-  $('shopPot').textContent=G.pot;
-  $('shopReward').textContent=G.lastReward;
+  $('shopPot').textContent=abbr(G.pot);
+  $('shopReward').textContent=abbr(G.lastReward);
   $('shopTitle').textContent=G.table.boss?'PATRON VAINCU':'TABLE FRANCHIE';
   const next=makeTable(G.tableIdx+1);
-  $('shopNext').textContent=next.goal+' $'+(next.boss?' · ★ PATRON':'');
-  $('cashBtn').innerHTML='ENCAISSER<small>★'+repOnEnd(true)+' réput.</small>';
+  $('shopNext').textContent=abbr(next.goal)+' $'+(next.boss?' · ★ PATRON':'');
+  $('cashBtn').innerHTML='ENCAISSER<small>★'+abbr(repOnEnd(true))+' réput.</small>';
   rollShop();
   $('shop').classList.add('show');
 }
@@ -1320,12 +1331,12 @@ function buyShopItem(i,el,btn){
   }
   it.bought=true;sfx.buy();
   el.classList.add('bought');btn.disabled=true;btn.textContent='ACQUIS';
-  $('shopBank').textContent=G.bank;
+  $('shopBank').textContent=abbr(G.bank);
   renderRelics();renderConsumables();renderShop();
 }
 function rerollShop(){
   if(G.bank<rerollCost)return;
-  G.bank-=rerollCost;rerollCost+=2;$('shopBank').textContent=G.bank;sfx.card();
+  G.bank-=rerollCost;rerollCost+=2;$('shopBank').textContent=abbr(G.bank);sfx.card();
   rollShop();
 }
 /* CONTINUER : on descend d'un cran (objectif plus haut, cagnotte future plus grosse) */
@@ -1349,9 +1360,9 @@ function cashOut(){
 /* ---------- seconde chance / fin de descente ---------- */
 function openLose(){
   $('loseTitle').textContent=G.loseTitle;
-  $('loseText').innerHTML=G.loseText+`<br><br>Table <b>${G.tableIdx+1}</b> · Cagnotte : <b>★${G.pot}</b>`;
+  $('loseText').innerHTML=G.loseText+`<br><br>Table <b>${G.tableIdx+1}</b> · Cagnotte : <b>★${abbr(G.pot)}</b>`;
   $('retryBtn').innerHTML='SECONDE CHANCE<small>'+G.tokens+' jeton'+(G.tokens>1?'s':'')+' restant'+(G.tokens>1?'s':'')+'</small>';
-  $('giveupBtn').innerHTML='ABANDONNER<small>encaisse ★'+repOnEnd(false)+'</small>';
+  $('giveupBtn').innerHTML='ABANDONNER<small>encaisse ★'+abbr(repOnEnd(false))+'</small>';
   $('loseScreen').classList.add('show');
 }
 /* rejoue la table en cours (sabot neuf, reliques gardées), contre un jeton */
@@ -1390,9 +1401,9 @@ function endRun(cashout){
     (cashout
       ?`Tu pars avec la cagnotte avant que ça tourne mal.`
       :`Tu repars quand même avec la moitié de ta cagnotte.`)+
-    `<br><br>Tables tenues : <b>${depth}</b> · Jetons : <b>${G.bank} $</b>`+
-    `<br>Réputation gagnée : <b>★${gained}</b> &nbsp;→&nbsp; total <b>★${META.rep}</b>`+
-    `<br><span style="color:var(--muted)">Record : ${META.record.depth} tables · ${META.record.chips} $</span>`;
+    `<br><br>Tables tenues : <b>${depth}</b> · Jetons : <b>${abbr(G.bank)} $</b>`+
+    `<br>Réputation gagnée : <b>★${abbr(gained)}</b> &nbsp;→&nbsp; total <b>★${abbr(META.rep)}</b>`+
+    `<br><span style="color:var(--muted)">Record : ${META.record.depth} tables · ${abbr(META.record.chips)} $</span>`;
   $('endScreen').classList.add('show');
 }
 
@@ -1415,9 +1426,9 @@ function showWord(kind,gain,mult,natural,bust){
   let word,sub='';
   if(kind==='win'){
     word=natural?pick(WORDS.bj):(mult>=3?pick(WORDS.jackpot):pick(WORDS.win));
-    sub=(mult>1?fmtMult(mult)+'   ':'')+'+'+gain+' $';
-  }else if(kind==='push'){word=pick(WORDS.push);sub=gain>0?('+'+gain+' $'):'mise rendue';}
-  else{word=bust?pick(WORDS.bust):pick(WORDS.lose);sub=gain?gain+' $':'';}
+    sub=(mult>1?fmtMult(mult)+'   ':'')+'+'+abbr(gain)+' $';
+  }else if(kind==='push'){word=pick(WORDS.push);sub=gain>0?('+'+abbr(gain)+' $'):'mise rendue';}
+  else{word=bust?pick(WORDS.bust):pick(WORDS.lose);sub=gain?abbr(gain)+' $':'';}
   const p=$('multPop');
   p.className=kind+(word.length>7?' long':'');
   p.querySelector('.m').textContent=word;p.querySelector('.t').textContent=sub;
@@ -1529,9 +1540,9 @@ function staggerUI(){
 
 /* ---------- LA PLANQUE (hub de méta-progression) ---------- */
 function renderPlanque(){
-  $('repBal').textContent=META.rep;
+  $('repBal').textContent=abbr(META.rep);
   $('recDepth').textContent=META.record.depth;
-  $('recChips').textContent=META.record.chips;
+  $('recChips').textContent=abbr(META.record.chips);
   const box=$('unlockItems');box.innerHTML='';
   UNLOCKS.forEach(u=>{
     const lvl=uLvl(u.id),cost=unlockCost(u),maxed=cost===null;
