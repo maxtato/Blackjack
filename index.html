@@ -362,6 +362,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .stat .lbl{font-size:10px;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
 .stat .v{font-size:23px;font-weight:700;color:var(--gold)}
 .stat.goal .v{color:#fff}
+/* nombre « alerte » : attire l'œil quand il faut faire attention
+   (ex. dernier tour, banque au plus bas) — pulsation + virage au rouge */
+@keyframes warnPulse{0%,100%{transform:scale(1);color:var(--gold)}50%{transform:scale(1.22);color:#ff5470}}
+.stat .v.warn,#scorebox .seg .v.warn{animation:warnPulse .62s ease-in-out infinite}
+.stat.goal .v.warn{animation:warnPulse .62s ease-in-out infinite}
 /* EFFECTS fan (blocs + ombre carte) */
 #effects{display:flex;justify-content:center;align-items:flex-end;gap:5px;min-height:66px;padding:8px 0 0}
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
@@ -1017,9 +1022,12 @@ function renderMult(){
 function renderTop(){
   $('tableNum').textContent=G.tableIdx+1;
   $('handNum').textContent=G.hand;$('handMax').textContent=G.table.hands;
-  $('handsLeft').textContent=G.table.hands-G.hand+1;
-  $('handsLeftBig').textContent=G.table.hands-G.hand+1;
+  const left=G.table.hands-G.hand+1;
+  $('handsLeft').textContent=left;
+  $('handsLeftBig').textContent=left;
+  $('handsLeftBig').classList.toggle('warn',left===1);          // dernier tour : ça clignote
   $('bankBig').textContent=abbr(G.bank);
+  $('bankBig').parentElement.classList.toggle('warn',G.bank<25); // banque au plus bas
   $('goalVal').textContent=abbr(G.table.goal);
   $('tableName').textContent=G.table.name+' · table '+G.table.depth;
   const bits=[];
