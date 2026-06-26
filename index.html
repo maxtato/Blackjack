@@ -153,6 +153,17 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .card.back.cb11::before{background:#16131f;background-image:repeating-linear-gradient(45deg,rgba(232,197,96,.5) 0 1px,transparent 1px 5px),repeating-linear-gradient(-45deg,rgba(232,197,96,.5) 0 1px,transparent 1px 5px);box-shadow:inset 0 0 0 1px #c9971f,inset 0 0 0 2px #16131f,inset 0 0 0 3px #c9971f}
 .card.back.cb11::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:19px;height:29px;border-radius:50%;z-index:2;background:radial-gradient(circle at 50% 50%,#e8c560 0 2px,transparent 2.5px),#16131f;box-shadow:0 0 0 1px #c9971f,0 0 0 3px #16131f,0 0 0 4px #c9971f}
 .card.back.cb12::before{background:#6e2350;background-image:repeating-linear-gradient(45deg,rgba(253,243,223,.4) 0 1px,transparent 1px 4px),repeating-linear-gradient(-45deg,rgba(253,243,223,.4) 0 1px,transparent 1px 4px);box-shadow:inset 0 0 0 1px #fdf3df,inset 0 0 0 2px #6e2350,inset 0 0 0 3px #fdf3df}
+/* cb13 — émeraude, grands losanges crème */
+.card.back.cb13::before{background:#0f6e57;background-image:repeating-linear-gradient(45deg,rgba(255,247,230,.5) 0 1.5px,transparent 1.5px 9px),repeating-linear-gradient(-45deg,rgba(255,247,230,.5) 0 1.5px,transparent 1.5px 9px);box-shadow:inset 0 0 0 2px #fff7e6}
+/* cb14 — prune, croisillon or + médaillon losange */
+.card.back.cb14::before{background:#6e2350;background-image:repeating-linear-gradient(45deg,rgba(240,200,90,.4) 0 1px,transparent 1px 5px),repeating-linear-gradient(-45deg,rgba(240,200,90,.4) 0 1px,transparent 1px 5px);box-shadow:inset 0 0 0 1px #e6c04a,inset 0 0 0 2px #6e2350,inset 0 0 0 3px #e6c04a}
+.card.back.cb14::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(45deg);width:15px;height:15px;z-index:2;background:#e6c04a;box-shadow:0 0 0 2px #6e2350,0 0 0 3px #e6c04a}
+/* cb15 — noir & or, soleil art-déco */
+.card.back.cb15::before{background:#16131f;background-image:repeating-conic-gradient(from 0deg at 50% 50%,#e6c04a 0 5deg,transparent 5deg 10deg);box-shadow:inset 0 0 0 2px #e6c04a}
+.card.back.cb15::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;z-index:2;background:#16131f;box-shadow:0 0 0 2px #e6c04a}
+/* cb16 — marine, rayons crème + étoile or */
+.card.back.cb16::before{background:#22305f;background-image:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,247,230,.5) 0 2deg,transparent 2deg 9deg);box-shadow:inset 0 0 0 2px #fff7e6}
+.card.back.cb16::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-72%);width:0;height:0;z-index:2;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:12px solid #ffce3a;filter:drop-shadow(0 7px 0 #ffce3a)}
 /* tressautement des cartes : à-coups saccadés (utilisé avec steps()) */
 @keyframes cardLife{0%{transform:translate(0,0) rotate(-.8deg)}18%{transform:translate(-1.3px,-1.4px) rotate(.8deg)}36%{transform:translate(1.4px,-.6px) rotate(-.6deg)}54%{transform:translate(-.6px,-2px) rotate(.9deg)}72%{transform:translate(1px,-1px) rotate(-.7deg)}88%{transform:translate(-1px,-.4px) rotate(.5deg)}100%{transform:translate(0,0) rotate(-.8deg)}}
 @keyframes textLife{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
@@ -372,7 +383,16 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* STAGE — table bois (rebord double rail + liseré or) ; barres hors du tapis */
 #stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:9px;min-height:0;width:100%;max-width:620px}
 /* barre de pression : AU-DESSUS du tapis */
-#pBar{position:relative;left:auto;right:auto;top:auto;width:100%;max-width:500px;height:20px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:#0a1c17;z-index:1;box-shadow:none}
+#pBar{position:relative;left:auto;right:auto;top:auto;width:100%;max-width:500px;height:20px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:#0a1c17;z-index:1;box-shadow:none;animation:pbarBuzz .16s steps(1,end) infinite;will-change:transform}
+/* la barre de pression vibre de plus en plus fort à mesure que la pression monte
+   (amplitude pilotée par --p, 0 à froid → ~2.4px à fond) */
+@keyframes pbarBuzz{
+ 0%  {transform:translate(0,0)}
+ 25% {transform:translate(calc(var(--p,0)*-2.4px),calc(var(--p,0)*1.4px))}
+ 50% {transform:translate(calc(var(--p,0)*2.4px),calc(var(--p,0)*-1.4px))}
+ 75% {transform:translate(calc(var(--p,0)*-1.6px),calc(var(--p,0)*1.6px))}
+ 100%{transform:translate(0,0)}
+}
 #pFill{position:absolute;inset:0;width:0;background:linear-gradient(90deg,var(--teal) 0 34%,var(--gold) 34% 60%,var(--orange) 60% 82%,var(--red) 82% 100%);transition:width .35s cubic-bezier(.2,.8,.2,1)}
 #pBar .pmeta{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:700;color:#fff;text-shadow:1px 1px 0 #000;z-index:1;letter-spacing:.04em}
 #pBar.tick #pFill{animation:pflash .5s linear infinite}
@@ -692,7 +712,7 @@ const sfx={
 };
 
 /* ---------- dos de carte (préférence persistante) ---------- */
-const CARD_BACKS=['cb9','cb10','cb11','cb12'];
+const CARD_BACKS=['cb9','cb10','cb11','cb12','cb13','cb14','cb15','cb16'];
 let cardBack=(()=>{try{const v=localStorage.getItem('t21back');return CARD_BACKS.includes(v)?v:'cb9';}catch(e){return 'cb9';}})();
 function setCardBack(cb){cardBack=cb;try{localStorage.setItem('t21back',cb);}catch(e){}renderBackPicker();renderHands();}
 function renderBackPicker(){
