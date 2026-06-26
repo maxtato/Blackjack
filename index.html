@@ -165,7 +165,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .card.back.cb16::before{background:#22305f;background-image:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,247,230,.5) 0 2deg,transparent 2deg 9deg);box-shadow:inset 0 0 0 2px #fff7e6}
 .card.back.cb16::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-72%);width:0;height:0;z-index:2;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:12px solid #ffce3a;filter:drop-shadow(0 7px 0 #ffce3a)}
 /* tressautement des cartes : même mouvement rapide et discret que les lettres */
-@keyframes cardLife{0%{transform:translate(.4px,-.3px)}16%{transform:translate(-.4px,.3px)}33%{transform:translate(.3px,.4px)}50%{transform:translate(-.3px,-.4px)}66%{transform:translate(.4px,.2px)}83%{transform:translate(-.4px,-.2px)}100%{transform:translate(.4px,-.3px)}}
+@keyframes cardLife{0%{transform:translate(.2px,-.14px)}16%{transform:translate(-.2px,.14px)}33%{transform:translate(.14px,.2px)}50%{transform:translate(-.14px,-.2px)}66%{transform:translate(.2px,.1px)}83%{transform:translate(-.2px,-.1px)}100%{transform:translate(.2px,-.1px)}}
 @keyframes textLife{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
 /* sélecteur de dos sur l'écran d'accueil */
 .backPick{margin:2px 0 14px}
@@ -248,13 +248,13 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
    que les lettres (letterShake), 1.1s en steps, faible amplitude. translate
    se compose avec le translateY de :active. Désynchronisé ; grisés = immobiles. */
 @keyframes btnTwitch{
- 0%  {translate:.4px -.3px}
- 16% {translate:-.4px .3px}
- 33% {translate:.3px .4px}
- 50% {translate:-.3px -.4px}
- 66% {translate:.4px .2px}
- 83% {translate:-.4px -.2px}
- 100%{translate:.4px -.3px}
+ 0%  {translate:.2px -.14px}
+ 16% {translate:-.2px .14px}
+ 33% {translate:.14px .2px}
+ 50% {translate:-.14px -.2px}
+ 66% {translate:.2px .1px}
+ 83% {translate:-.2px -.1px}
+ 100%{translate:.2px -.14px}
 }
 .btn{animation:btnTwitch 1.1s steps(1,end) infinite}
 .btn:nth-child(2){animation-delay:-.4s}
@@ -362,6 +362,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .stat .lbl{font-size:10px;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
 .stat .v{font-size:23px;font-weight:700;color:var(--gold)}
 .stat.goal .v{color:#fff}
+/* nombre « alerte » : attire l'œil quand il faut faire attention
+   (ex. dernier tour, banque au plus bas) — pulsation + virage au rouge */
+@keyframes warnPulse{0%,100%{transform:scale(1);color:var(--gold)}50%{transform:scale(1.22);color:#ff5470}}
+.stat .v.warn,#scorebox .seg .v.warn{animation:warnPulse .62s ease-in-out infinite}
+.stat.goal .v.warn{animation:warnPulse .62s ease-in-out infinite}
 /* EFFECTS fan (blocs + ombre carte) */
 #effects{display:flex;justify-content:center;align-items:flex-end;gap:5px;min-height:66px;padding:8px 0 0}
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
@@ -373,9 +378,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #effects .tarot{width:50px;height:48px;border-radius:7px;animation:cardLife 4.8s ease-in-out infinite;background:#0e1620;border:2px solid #a64dff;display:flex;align-items:center;justify-content:center;padding:2px;box-shadow:3px 4px 0 rgba(0,0,0,.45);transform-origin:bottom center}
 #effects .tarot:nth-child(2n){animation-delay:-2.2s}
 #effects .tarot .tic{font-size:20px}
-/* mouvement permanent désynchronisé */
-.hand .card:nth-child(3n){animation-delay:0s,-1.7s}
-.hand .card:nth-child(3n+1){animation-delay:0s,-3.2s}
+/* mouvement permanent désynchronisé : chaque carte garde son propre délai
+   (--cd, calculé par carte) → tressautement indépendant d'une carte à l'autre */
 #effects .joker:nth-child(odd){animation-delay:-2.2s}
 #effects .joker:nth-child(3n){animation-delay:-1.1s}
 #effects .tarot:nth-child(even){animation-delay:-1.5s}
@@ -400,7 +404,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #table{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;max-width:580px;position:relative;padding:6px;border:none;border-radius:0;background:none;overflow:visible;box-shadow:none}
 #table::before,#table::after{display:none!important}
 /* petit bouton VOIR (lunettes) : posé sur le coin du tapis, hors de la rangée d'actions */
-#peekBtn{position:absolute;top:50%;right:12px;transform:translateY(-50%);z-index:6;display:none;font-family:'Jersey 15',monospace;font-weight:700;font-size:17px;letter-spacing:.05em;color:#04302d;background:var(--teal);border:none;clip-path:var(--pc);padding:13px 16px;line-height:1;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.4)}
+#peekBtn{position:absolute;top:50%;right:12px;transform:translateY(-50%);z-index:6;display:none;font-family:'Jersey 15',monospace;font-weight:700;font-size:17px;letter-spacing:.05em;color:#fff;background:#54565e;border:none;clip-path:var(--pc);padding:13px 16px;line-height:1;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.4);animation:btnTwitch 1.1s steps(1,end) infinite}
 #peekBtn.show{display:block}
 #peekBtn:active{transform:translateY(calc(-50% + 2px));filter:brightness(.92)}
 /* FELT = tapis teal, bords relevés, légèrement incliné */
@@ -954,7 +958,9 @@ function cardEl(c,opts={}){
   const sd=hashStr(seed),sd2=hashStr(seed+'~');
   const dur=5.5+sd*2.5;
   d.style.setProperty('--cdur',dur.toFixed(2)+'s');
-  d.style.setProperty('--cd','-'+(sd2*dur).toFixed(2)+'s');   // déphasage réparti sur tout le cycle
+  // déphasage propre à chaque carte : l'indice garantit des phases distinctes
+  // (pas de collision de hash), le hash ajoute un petit aléa -> mouvement indépendant
+  d.style.setProperty('--cd','-'+((opts.idx||0)*0.16+sd2*0.6).toFixed(3)+'s');
   if(opts.back){d.classList.add('back',cardBack);return d;}
   if(c.s==='♥'||c.s==='♦')d.classList.add('red');
   if(G.pressure>=50&&G.phase==='play')d.classList.add('jit');
@@ -1016,9 +1022,12 @@ function renderMult(){
 function renderTop(){
   $('tableNum').textContent=G.tableIdx+1;
   $('handNum').textContent=G.hand;$('handMax').textContent=G.table.hands;
-  $('handsLeft').textContent=G.table.hands-G.hand+1;
-  $('handsLeftBig').textContent=G.table.hands-G.hand+1;
+  const left=G.table.hands-G.hand+1;
+  $('handsLeft').textContent=left;
+  $('handsLeftBig').textContent=left;
+  $('handsLeftBig').classList.toggle('warn',left===1);          // dernier tour : ça clignote
   $('bankBig').textContent=abbr(G.bank);
+  $('bankBig').parentElement.classList.toggle('warn',G.bank<25); // banque au plus bas
   $('goalVal').textContent=abbr(G.table.goal);
   $('tableName').textContent=G.table.name+' · table '+G.table.depth;
   const bits=[];
