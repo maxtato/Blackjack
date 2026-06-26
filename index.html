@@ -212,7 +212,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #betRow{display:flex;align-items:center;gap:10px;background:linear-gradient(180deg,var(--panelDk),var(--panelDk2));border:var(--bd) solid var(--ink);border-radius:var(--r);padding:7px 11px;box-shadow:var(--shS)}
 #betRow .lbl{font-size:11px;letter-spacing:.06em;color:var(--muted)}
 #chips{display:flex;gap:8px}
-.chip{font-size:17px;color:#fff;background:linear-gradient(180deg,#2a1d52,var(--panelDk2));border:3px solid var(--ink);border-radius:50px;width:48px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shS),inset 0 2px 0 rgba(255,255,255,.12);position:relative;transition:transform .06s}
+.chip{font-size:17px;color:#fff;background:linear-gradient(180deg,#2a1d52,var(--panelDk2));border:3px solid var(--ink);border-radius:50px;min-width:48px;padding:0 11px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shS),inset 0 2px 0 rgba(255,255,255,.12);position:relative;transition:transform .06s}
 .chip::before{content:"";position:absolute;inset:3px;border-radius:50px;border:1px dashed rgba(255,255,255,.25)}
 .chip.on{background:linear-gradient(180deg,#ffe27a,var(--yellow) 60%,var(--goldDk));color:#3a2a00;border-color:var(--ink);box-shadow:var(--shS),0 0 0 2px rgba(255,206,58,.5)}
 .chip.off{opacity:.3;pointer-events:none}
@@ -1047,13 +1047,27 @@ function applyHandIncome(){
   const tip=uLvl('pourboire');if(tip>0){inc+=tip;parts.push('Pourboire +'+tip);}
   if(inc>0){G.bank+=inc;renderTop();renderChips();popText('REVENU','+'+inc+' $ · '+parts.join(' · '));}
 }
+/* mises échelonnées : on monte avec la banque (100, 200, 500, 1000…) ;
+   on n'affiche que les 4 plus grosses valeurs abordables pour ne pas surcharger */
+const BET_LADDER=[10,25,50,100,200,500,1000,2000,5000,10000];
+function betChoices(){
+  let opts=BET_LADDER.filter(v=>v<=G.bank);
+  if(!opts.length)opts=[10];
+  if(opts.length>4)opts=opts.slice(-4);
+  return opts;
+}
 function renderChips(){
   const wrap=$('chips');wrap.innerHTML='';
-  [10,25,50].forEach(v=>{
+  const opts=betChoices();
+  if(!opts.includes(G.bet)){               // garde une mise valide quand l'échelle change
+    const le=opts.filter(v=>v<=G.bet);
+    G.bet=le.length?le[le.length-1]:opts[0];
+  }
+  opts.forEach(v=>{
     const b=document.createElement('div');
-    b.className='chip'+(G.bet===v?' on':'')+(v>G.bank?' off':'');
+    b.className='chip'+(G.bet===v?' on':'');
     b.textContent=v;
-    if(v<=G.bank)b.onclick=()=>{G.bet=v;renderChips();renderMult();};
+    b.onclick=()=>{G.bet=v;renderChips();renderActions();renderMult();};
     wrap.appendChild(b);
   });
 }
