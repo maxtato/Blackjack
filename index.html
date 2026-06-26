@@ -462,9 +462,14 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* libellé principal d'un bouton d'action : garde le titre sur sa ligne (les mots
    ne s'empilent pas dans le bouton flex-colonne) et laisse le <small> dessous */
 .blbl{display:inline-block;line-height:1.05}
-/* tremblement TRÈS léger des grosses lettres seulement (libellé principal,
-   pas le sous-texte <small>) : boutons, nom de la table, VOIR */
-.btn>.W .L,.btn>.blbl .L,#tableName .L,#peekBtn .L{animation:letterShake 1.1s steps(1,end) infinite;animation-delay:var(--d,0s)}
+/* tremblement TRÈS léger des grosses lettres (libellé principal, pas le <small>) :
+   boutons, nom de la table, VOIR, titres des overlays (LA PLANQUE, etc.),
+   libellés de zone (Croupier/Toi) et tous les gros chiffres (TOURS, OBJECTIF,
+   MISE, MULT, JETONS, valeurs de main, réputation, record). */
+.btn>.W .L,.btn>.blbl .L,#tableName .L,#peekBtn .L,
+.overlay.show .ovpanel h1 .L,
+.zlbl .L,.tstats .v .L,
+.repNum .L,.recBox .L{animation:letterShake 1.1s steps(1,end) infinite;animation-delay:var(--d,0s)}
 @keyframes letterShake{
  0%  {transform:translate( .2px,calc(var(--o,0px) - .15px))}
  16% {transform:translate(-.2px,calc(var(--o,0px) + .15px))}
