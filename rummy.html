@@ -112,6 +112,24 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
 .joffer .jd{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.3}
 .home h2{font-size:13px;color:var(--muted);margin:14px 0 8px;letter-spacing:.1em}
 .runinfo{font-size:11px;color:var(--muted);margin-top:14px;line-height:1.5;max-width:330px}
+
+/* forge */
+#forgeShop{display:flex;flex-direction:column;gap:9px;width:100%;max-width:340px;margin-bottom:12px}
+.forgeRow{display:flex;align-items:center;gap:11px;background:var(--panelDk2);clip-path:var(--pc);padding:10px 12px;cursor:pointer;text-align:left;border:2px solid transparent}
+.forgeRow:active:not(.off){border-color:var(--gold)}
+.forgeRow.off{opacity:.5;cursor:default}
+.forgeRow .ic{font-size:24px;flex:0 0 auto}
+.forgeRow .fn{font-size:14px;font-weight:700;color:var(--gold)}
+.forgeRow .fd{font-size:10.5px;color:var(--muted);margin-top:2px;line-height:1.3}
+.forgeRow .cost{margin-left:auto;font-size:15px;font-weight:700;color:var(--lime);white-space:nowrap;align-self:center}
+.forgeRow.off .cost{color:var(--red)}
+#forgePick{display:none;flex-direction:column;gap:10px;width:100%;max-width:344px;margin-bottom:10px}
+#forgePick.show{display:flex}
+.pickGrid{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-height:44vh;overflow:auto;padding:4px;background:rgba(0,0,0,.25);clip-path:var(--pc)}
+.card.mini{width:34px;height:48px;border-width:2px;border-radius:5px;cursor:pointer}
+.card.mini .cn{font-size:10px;top:2px;left:3px}
+.card.mini:active{box-shadow:0 0 0 3px var(--gold),2px 3px 0 rgba(0,0,0,.4)}
+.pickTtl{font-size:13px;color:var(--paper)}
 </style>
 </head>
 <body>
@@ -159,6 +177,15 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
   <h1 class="J">VICTOIRE</h1>
   <p id="jokSub">Choisis 1 joker.</p>
   <div class="jpick" id="jokOffer"></div>
+</div>
+
+<!-- forge -->
+<div class="ov" id="forgeOv">
+  <h1 class="J">LA FORGE</h1>
+  <p id="forgeSub">Affûte ton deck avant le prochain duel.</p>
+  <div id="forgeShop"></div>
+  <div id="forgePick"></div>
+  <button class="btn b-gold menu" id="forgeGo">DUEL SUIVANT →</button>
 </div>
 
 <!-- result -->
@@ -253,11 +280,17 @@ const JOKERS=[
   {id:'voyant',  ic:'🔮',n:'Voyant',    d:'Tu vois en continu le nb de cartes mortes de l\'adversaire.'},
   {id:'collec',  ic:'💎',n:'Joaillier', d:'+4 pièces par combinaison posée quand tu gagnes la manche.'},
   {id:'requin',  ic:'🦈',n:'Requin',    d:'Bonus de score : +10 quand tu remportes une manche.'},
+  {id:'pioche2', ic:'👀',n:'Œil de lynx',d:'Tu vois la prochaine carte de la pioche.'},
+  {id:'main11',  ic:'✋',n:'Grande main',d:'Tu démarres chaque manche avec 1 carte de plus (11).'},
+  {id:'banquier',ic:'🏦',n:'Banquier',  d:'+2 pièces à chaque carte que tu défausses.'},
+  {id:'sangfroid',ic:'🧊',n:'Sang-froid',d:'L\'adversaire knock plus tard (seuil −2).'},
 ];
 let G={};
-function freshRun(){G={duel:0,coins:0,jokers:[],run:true};}
+function standard52(){const d=[];for(const s of SUITS)for(const r of RANKS)d.push({r,s});return d;}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function freshRun(){G={duel:0,coins:0,jokers:[],run:true,deck:standard52(),knockBonus:0};}
 function hasJ(id){return G.jokers.some(j=>j.id===id);}
-function knockThreshold(){return hasJ('filou')?13:10;}
+function knockThreshold(){return (hasJ('filou')?13:10)+(G.knockBonus||0);}
 function adjDead(hand){
   // deadwood réel ; 'radin' enlève 2 par carte morte
   const bm=bestMelds(hand);
@@ -271,11 +304,12 @@ function adjDead(hand){
 let D={};
 function startDuel(){
   const opp=OPPS[G.duel];
-  // deck
-  let deck=[];for(const s of SUITS)for(const r of RANKS)deck.push({r,s});
-  for(let i=deck.length-1;i>0;i--){const j=rnd(i+1);[deck[i],deck[j]]=[deck[j],deck[i]];}
+  // paquet persistant de la run (édité à la Forge), copié + mélangé
+  const deck=shuffle(G.deck.map(c=>({r:c.r,s:c.s})));
   D={opp,deck,you:[],ai:[],discard:[],phase:'draw',turn:0,sortMode:'rank',sel:-1,pendingDiscard:-1,over:false,drewFrom:null};
-  for(let k=0;k<10;k++){D.you.push(D.deck.pop());D.ai.push(D.deck.pop());}
+  const youStart=hasJ('main11')?11:10;
+  for(let k=0;k<10;k++){D.ai.push(D.deck.pop());}
+  for(let k=0;k<youStart;k++){D.you.push(D.deck.pop());}
   D.discard.push(D.deck.pop());
   sortHand();
   renderAll();
@@ -467,12 +501,84 @@ function offerJokers(detail,gain){
   offer.forEach(j=>{
     const d=document.createElement('div');d.className='joffer';
     d.innerHTML=`<span class="ic">${j.ic}</span><div><div class="jn">${j.n}</div><div class="jd">${j.d}</div></div>`;
-    d.onclick=()=>{G.jokers.push(j);ov.classList.remove('show');G.duel++;startDuel();};
+    d.onclick=()=>{G.jokers.push(j);ov.classList.remove('show');G.duel++;openForge(startDuel);};
     box.appendChild(d);
   });
-  if(!offer.length){box.innerHTML='<p style="color:var(--muted)">Plus de joker — file au duel suivant !</p>';const b=document.createElement('button');b.className='btn b-gold menu';b.textContent='DUEL SUIVANT →';b.onclick=()=>{ov.classList.remove('show');G.duel++;startDuel();};box.appendChild(b);}
+  if(!offer.length){box.innerHTML='<p style="color:var(--muted)">Plus de joker — file à la forge !</p>';const b=document.createElement('button');b.className='btn b-gold menu';b.textContent='LA FORGE →';b.onclick=()=>{ov.classList.remove('show');G.duel++;openForge(startDuel);};box.appendChild(b);}
   ov.classList.add('show');
 }
+
+/* ---- forge (édition de deck) ---- */
+const FORGE_SERVICES=[
+  {id:'burn', ic:'🔥',n:'Brûler une carte', d:'Retire une carte de ton paquet pour de bon. Vise les grosses cartes mortes.'},
+  {id:'add',  ic:'➕',n:'Carte fantôme',    d:'Ajoute une carte basse à ton paquet (plus facile à combiner / défausser).'},
+  {id:'knock',ic:'📏',n:'Seuil de knock +1',d:'Tu peux frapper avec 1 carte morte de plus, pour toute la nuit.'},
+];
+function forgeCost(id){
+  if(id==='burn')return 12;
+  if(id==='add') return 18;
+  if(id==='knock')return 24+(G.knockBonus||0)*16;
+  return 0;
+}
+let forgeAfter=null;
+function openForge(after){
+  forgeAfter=after;
+  document.getElementById('forgePick').classList.remove('show');
+  document.getElementById('forgePick').innerHTML='';
+  document.getElementById('forgeShop').style.display='';
+  renderForge();
+  document.getElementById('forgeOv').classList.add('show');
+}
+function renderForge(){
+  document.getElementById('coins').textContent=G.coins;
+  document.getElementById('forgeSub').innerHTML='<b style="color:var(--gold)">'+G.coins+' pièces</b> · paquet : '+G.deck.length+' cartes · knock ≤ '+knockThreshold()+'.';
+  const shop=document.getElementById('forgeShop');shop.innerHTML='';
+  FORGE_SERVICES.forEach(s=>{
+    const cost=forgeCost(s.id);
+    const off=G.coins<cost || (s.id==='burn'&&G.deck.length<=20);
+    const row=document.createElement('div');row.className='forgeRow'+(off?' off':'');
+    row.innerHTML=`<span class="ic">${s.ic}</span><div><div class="fn">${s.n}</div><div class="fd">${s.d}</div></div><span class="cost">${cost}🪙</span>`;
+    if(!off)row.onclick=()=>forgeBuy(s.id,cost);
+    shop.appendChild(row);
+  });
+}
+function miniCardEl(c){
+  const d=document.createElement('div');d.className='card mini'+(isRed(c.s)?' red':'');
+  d.innerHTML=`<span class="cn">${c.r}${suitSVG(c.s,7)}</span><span class="pip">${suitSVG(c.s,13)}</span>`;
+  return d;
+}
+function forgeBuy(id,cost){
+  if(G.coins<cost)return;
+  if(id==='knock'){G.coins-=cost;G.knockBonus=(G.knockBonus||0)+1;renderForge();return;}
+  openPick(id,cost);
+}
+function backToShop(){
+  const pick=document.getElementById('forgePick');pick.classList.remove('show');pick.innerHTML='';
+  document.getElementById('forgeShop').style.display='';
+  document.getElementById('forgeGo').style.display='';
+  renderForge();
+}
+function openPick(kind,cost){
+  document.getElementById('forgeShop').style.display='none';
+  document.getElementById('forgeGo').style.display='none';
+  const pick=document.getElementById('forgePick');pick.classList.add('show');pick.innerHTML='';
+  const ttl=document.createElement('div');ttl.className='pickTtl';
+  const grid=document.createElement('div');grid.className='pickGrid';
+  if(kind==='burn'){
+    ttl.innerHTML='Touche la carte à <b style="color:var(--red)">brûler</b> (−'+cost+'🪙).';
+    G.deck.map((c,i)=>({c,i}))
+      .sort((a,b)=>cardVal(b.c.r)-cardVal(a.c.r)||SUITS.indexOf(a.c.s)-SUITS.indexOf(b.c.s))
+      .forEach(({c,i})=>{const el=miniCardEl(c);el.onclick=()=>{G.coins-=cost;G.deck.splice(i,1);backToShop();};grid.appendChild(el);});
+  }else{
+    ttl.innerHTML='Touche la carte à <b style="color:var(--lime)">ajouter</b> (−'+cost+'🪙).';
+    for(const r of ['A','2','3','4','5'])for(const s of SUITS){
+      const c={r,s};const el=miniCardEl(c);el.onclick=()=>{G.coins-=cost;G.deck.push({r,s});backToShop();};grid.appendChild(el);
+    }
+  }
+  const cancel=document.createElement('button');cancel.className='btn b-blue menu';cancel.textContent='◀ ANNULER';cancel.onclick=backToShop;
+  pick.appendChild(ttl);pick.appendChild(grid);pick.appendChild(cancel);
+}
+document.getElementById('forgeGo').onclick=()=>{document.getElementById('forgeOv').classList.remove('show');const fn=forgeAfter;forgeAfter=null;if(fn)fn();};
 function runWin(){
   const ov=document.getElementById('endOv');
   document.getElementById('endTitle').textContent='NUIT REMPORTÉE';document.getElementById('endTitle').className='J';
