@@ -109,6 +109,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
 #actions{display:flex;gap:9px}
 .btn{flex:1;font-family:'Jersey 15',monospace;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.03em;border:3px solid var(--ink);border-radius:var(--rS);padding:14px 8px;cursor:pointer;color:#fff;line-height:1.1;position:relative;transition:transform .05s,box-shadow .05s;box-shadow:0 6px 0 var(--ink);overflow:hidden;animation:floatSoft 3.6s ease-in-out infinite}
 .btn::before{content:"";position:absolute;left:0;right:0;top:0;height:42%;background:linear-gradient(180deg,rgba(255,255,255,.28),transparent);pointer-events:none}
+.btn .blbl{display:inline-block;line-height:1.05}
 .btn small{display:block;font-size:10px;font-weight:400;opacity:.95;margin-top:4px;text-transform:none;letter-spacing:0}
 .btn:active{transform:translateY(6px);box-shadow:0 0 0 var(--ink)}
 .btn:nth-child(2){animation-delay:-1.3s}
@@ -144,6 +145,8 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
 .ov p b{color:#fff}
 .ov .menu{width:100%;font-size:16px;padding:14px;margin-top:8px}
 .shopList{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.gameList{display:flex;flex-direction:column;margin-bottom:14px}
+.gameList .btn{flex:0 0 auto;width:100%}
 .shopItem{display:flex;align-items:center;gap:12px;background:var(--panelDk2);clip-path:var(--pc);padding:10px 12px;text-align:left;cursor:pointer;transition:transform .08s}
 .shopItem:active{transform:translateY(2px)}
 .shopTok{flex:0 0 auto;width:58px;height:58px;display:flex;align-items:center;justify-content:center;background:#0e1620;clip-path:var(--pc);font-size:27px}
@@ -341,14 +344,14 @@ function renderFeltStat(){
 function renderRelics(){const r=document.getElementById('relRow');r.innerHTML='';G.relics.forEach(x=>{const d=document.createElement('div');d.className='rchip';d.textContent=x.ic+' '+x.n;r.appendChild(d);});}
 function renderChips(){
   const box=document.getElementById('chips');box.innerHTML='';
-  [5,10,25,50].forEach(v=>{const c=document.createElement('div');c.className='chip'+(G.bet===v?' on':'')+(v>G.chips?' off':'');c.textContent=v;c.onclick=()=>{if(v<=G.chips&&G.phase==='bet'){G.bet=v;renderAll();}};box.appendChild(c);});
-  const all=document.createElement('div');all.className='chip'+(G.bet===G.chips?' on':'');all.textContent='TOUT';all.onclick=()=>{if(G.phase==='bet'){G.bet=G.chips;renderAll();}};box.appendChild(all);
+  [5,10,25,50].forEach(v=>{const c=document.createElement('div');c.className='chip'+(G.bet===v?' on':'')+(v>G.chips?' off':'');c.innerHTML=shakeNum(v);c.onclick=()=>{if(v<=G.chips&&G.phase==='bet'){G.bet=v;renderAll();}};box.appendChild(c);});
+  const all=document.createElement('div');all.className='chip'+(G.bet===G.chips?' on':'');all.innerHTML=shakeText('TOUT');all.onclick=()=>{if(G.phase==='bet'){G.bet=G.chips;renderAll();}};box.appendChild(all);
   document.getElementById('betVal').innerHTML=shakeNum(Math.min(G.bet,G.chips));
   document.getElementById('chips').style.opacity=G.phase==='bet'?'1':'.4';
 }
 function renderActions(){
   const a=document.getElementById('actions');a.innerHTML='';
-  const add=(label,cls,fn,sub,dis)=>{const b=document.createElement('button');b.className='btn '+cls;b.innerHTML=label+(sub?`<small>${sub}</small>`:'');b.disabled=!!dis;if(!dis)b.onclick=fn;a.appendChild(b);};
+  const add=(label,cls,fn,sub,dis)=>{const b=document.createElement('button');b.className='btn '+cls;b.innerHTML='<span class="blbl">'+shakeText(label)+'</span>'+(sub?`<small>${sub}</small>`:'');b.disabled=!!dis;if(!dis)b.onclick=fn;a.appendChild(b);};
   document.getElementById('hint').textContent=G.mode==='craps'?'Passe : 7/11 gagne · 2/3/12 perd':'Garde des dés, compose ta figure';
   if(G.mode==='craps'){
     if(G.phase==='bet')add('LANCER LES DÉS','b-gold ready',crapsCome,'come-out · mise '+Math.min(G.bet,G.chips),G.rolling);
@@ -523,21 +526,25 @@ function runWin(){
   const ov=document.getElementById('endOv');
   document.getElementById('endTitle').textContent='NUIT RAFLÉE';document.getElementById('endTitle').className='J';
   document.getElementById('endText').innerHTML='Tu as tenu les 6 tables. <b style="color:var(--gold)">'+G.chips+' jetons</b> · '+G.relics.length+' reliques.';
-  const b=document.getElementById('endBtn');b.textContent='REVENIR AU CHOIX';b.onclick=()=>{ov.classList.remove('show');openHome();};
+  const b=document.getElementById('endBtn');b.innerHTML=shakeText('REVENIR AU CHOIX');b.onclick=()=>{ov.classList.remove('show');openHome();};
   ov.classList.add('show');
 }
 function gameOver(){
   const ov=document.getElementById('endOv');
   document.getElementById('endTitle').textContent='À SEC';document.getElementById('endTitle').className='J dead';
   document.getElementById('endText').innerHTML='Plus un jeton. Tu tombes à la table <b>'+(G.table+1)+'/6</b> ('+TABLES[G.table].name+').';
-  const b=document.getElementById('endBtn');b.textContent='REVENIR AU CHOIX';b.onclick=()=>{ov.classList.remove('show');openHome();};
+  const b=document.getElementById('endBtn');b.innerHTML=shakeText('REVENIR AU CHOIX');b.onclick=()=>{ov.classList.remove('show');openHome();};
   ov.classList.add('show');
 }
 function openHome(){document.getElementById('homeOv').classList.add('show');}
 function startRun(mode){document.getElementById('homeOv').classList.remove('show');freshRun(mode);startTable();}
 function renderGameList(){
-  const box=document.getElementById('gameList');box.innerHTML='';
-  GAMES.forEach(g=>{const d=document.createElement('div');d.className='shopItem';d.innerHTML=`<div class="shopTok">${g.ic}</div><div class="sInfo"><div class="nm">${g.n}</div><div class="ds">${g.d}</div></div>`;d.onclick=()=>startRun(g.id);box.appendChild(d);});
+  const box=document.getElementById('gameList');box.innerHTML='';box.className='gameList';
+  GAMES.forEach((g,i)=>{
+    const b=document.createElement('button');b.className='btn menu '+(i===0?'b-gold':'b-teal');if(i)b.style.marginTop='9px';
+    b.innerHTML='<span class="blbl">'+g.ic+' '+shakeText(g.n)+'</span><small>'+g.d+'</small>';
+    b.onclick=()=>startRun(g.id);box.appendChild(b);
+  });
 }
 document.querySelector('#top .nm').innerHTML=shakeText('BARBOTTE')+'<small>dés clandestins</small>';
 renderGameList();
