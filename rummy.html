@@ -57,6 +57,14 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
 .pile.pick{box-shadow:0 0 0 3px var(--gold),3px 5px 0 rgba(0,0,0,.4)}
 #msg{z-index:1;text-align:center;font-size:14px;color:#eafff8;min-height:20px;text-shadow:1px 1px 0 #043}
 #msg b{color:var(--gold)}
+#feltStat{position:absolute;top:8px;left:0;right:0;display:flex;justify-content:center;gap:6px;flex-wrap:wrap;z-index:2;padding:0 8px;pointer-events:none}
+.fpill{font-size:10px;font-weight:700;color:#eafff8;background:rgba(0,0,0,.34);padding:4px 8px;border-radius:11px;letter-spacing:.03em}
+.fpill b{color:var(--gold)}
+.fpill.boss{background:var(--redDk);color:#fff}
+.fpill.warn{color:#fff;background:var(--redDk);box-shadow:0 0 0 2px rgba(255,84,112,.55)}
+.fpill .big{display:inline-block;font-size:13px}
+.fpill.warn .big{animation:numPulse .7s ease-in-out infinite}
+@keyframes numPulse{0%,100%{transform:scale(1);color:#fff}50%{transform:scale(1.45);color:var(--gold)}}
 
 /* cards */
 .card{width:46px;height:65px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);color:var(--inkCard);border:3px solid var(--ink);border-radius:7px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:2px 3px 0 rgba(0,0,0,.4);flex:0 0 auto}
@@ -156,6 +164,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
 
   <div id="mid">
     <div id="felt">
+      <div id="feltStat"></div>
       <div id="piles">
         <div class="pileWrap"><span class="lbl">PIOCHE</span><div class="pile" id="stockPile"></div></div>
         <div class="pileWrap"><span class="lbl">DÉFAUSSE</span><div class="pile" id="discardPile"></div></div>
@@ -306,7 +315,7 @@ function startDuel(){
   const opp=OPPS[G.duel];
   // paquet persistant de la run (édité à la Forge), copié + mélangé
   const deck=shuffle(G.deck.map(c=>({r:c.r,s:c.s})));
-  D={opp,deck,you:[],ai:[],discard:[],phase:'draw',turn:0,sortMode:'rank',sel:-1,pendingDiscard:-1,over:false,drewFrom:null};
+  D={opp,deck,you:[],ai:[],discard:[],phase:'draw',turn:0,sortMode:'rank',sel:-1,pendingDiscard:-1,over:false,drewFrom:null,justDrew:null,discAnim:false};
   const youStart=hasJ('main11')?11:10;
   for(let k=0;k<10;k++){D.ai.push(D.deck.pop());}
   for(let k=0;k<youStart;k++){D.you.push(D.deck.pop());}
@@ -334,8 +343,9 @@ function renderPiles(){
   sp.className='pile'+(D.phase==='draw'&&!D.over?'':' dim');
   sp.onclick=(D.phase==='draw'&&!D.over)?()=>playerDraw('stock'):null;
   const dp=document.getElementById('discardPile');dp.innerHTML='';
-  if(D.discard.length){dp.appendChild(cardEl(D.discard[D.discard.length-1]));}
+  if(D.discard.length){const dc=cardEl(D.discard[D.discard.length-1]);if(D.discAnim)dc.classList.add('deal');dp.appendChild(dc);}
   else dp.innerHTML='<div class="card" style="opacity:.25"></div>';
+  D.discAnim=false;
   dp.className='pile'+(D.phase==='draw'&&!D.over&&D.discard.length?'':' dim');
   dp.onclick=(D.phase==='draw'&&!D.over&&D.discard.length)?()=>playerDraw('discard'):null;
 }
@@ -344,10 +354,12 @@ function renderHand(){
   const bm=bestMelds(D.you);
   D.you.forEach((c,i)=>{
     const melded=(bm.meldedMask&(1<<i))!==0;
-    const el=cardEl(c,{cls:(melded?' meld':'')+(D.sel===i?' sel':'')+(D.phase==='discard'?' tap':'')});
+    const isNew=c===D.justDrew;
+    const el=cardEl(c,{cls:(melded?' meld':'')+(D.sel===i?' sel':'')+(D.phase==='discard'?' tap':'')+(isNew?' deal':'')});
     if(D.phase==='discard'&&!D.over)el.onclick=()=>tapDiscard(i);
     h.appendChild(el);
   });
+  D.justDrew=null;
   document.getElementById('deadVal').textContent=adjDead(D.you);
 }
 function renderJokers(){
@@ -380,7 +392,22 @@ function renderActions(){
     add(gin?'GIN !':'KNOCK',gin?'b-lime':'b-red',()=>{if(D.sel<0){setMsg('Touche d\'abord la carte à <b>défausser</b>.');return;}doDiscard(D.sel,true);},can?(dead+' mortes'):('≤'+knockThreshold()+' requis'),!can||D.sel<0);
   }
 }
-function renderAll(){renderPiles();renderHand();renderOpp();renderActions();renderJokers();}
+function renderFeltStat(){
+  const el=document.getElementById('feltStat');el.innerHTML='';
+  if(D.over)return;
+  const p=[];
+  p.push('<span class="fpill">TOUR <b>'+(Math.floor(D.turn/2)+1)+'</b></span>');
+  p.push('<span class="fpill">PIOCHE <b>'+D.deck.length+'</b></span>');
+  if(D.opp.rule==='rush'){
+    const left=Math.max(0,Math.ceil((16-D.turn)/2));
+    p.push('<span class="fpill '+(left<=2?'warn':'boss')+'">⏱️ FIN · reste <span class="big">'+left+'</span> tour'+(left>1?'s':'')+'</span>');
+  }else if(D.opp.rule==='count'){p.push('<span class="fpill boss">🧮 tes mortes ×2</span>');}
+  else if(D.opp.rule==='cheat'){p.push('<span class="fpill">🦊 elle t\'espionne</span>');}
+  else if(D.opp.rule==='bank'){p.push('<span class="fpill">💰 défaite −15🪙</span>');}
+  else if(D.opp.rule==='collec'){p.push('<span class="fpill">🐙 il collectionne</span>');}
+  el.innerHTML=p.join('');
+}
+function renderAll(){renderFeltStat();renderPiles();renderHand();renderOpp();renderActions();renderJokers();}
 function setMsg(t){document.getElementById('msg').innerHTML=t;}
 
 function playerDraw(src){
@@ -388,13 +415,13 @@ function playerDraw(src){
   let c;
   if(src==='stock'){if(D.deck.length<=2)return endByStock();c=D.deck.pop();D.drewFrom='stock';}
   else{c=D.discard.pop();D.drewFrom='discard';}
-  D.you.push(c);sortHand();D.phase='discard';D.sel=-1;
+  D.you.push(c);D.justDrew=c;sortHand();D.phase='discard';D.sel=-1;
   setMsg(src==='discard'?('Tu ramasses <b>'+c.r+c.s+'</b>. Défausse 1 carte.'):'Tu pioches une carte. Défausse 1 carte.');
   renderAll();
 }
 function tapDiscard(i){if(D.phase!=='discard'||D.over)return;D.sel=(D.sel===i?-1:i);renderHand();renderActions();}
 function doDiscard(i,knock){
-  const c=D.you.splice(i,1)[0];D.discard.push(c);D.sel=-1;D.turn++;
+  const c=D.you.splice(i,1)[0];D.discard.push(c);D.discAnim=true;D.sel=-1;D.turn++;
   if(knock){return resolveKnock('you');}
   D.phase='ai';renderAll();setMsg('L\'adversaire réfléchit…');
   setTimeout(aiTurn,750);
@@ -419,7 +446,7 @@ function aiTurn(){
   else{if(D.deck.length<=2)return endByStock();drew=D.deck.pop();D.ai.push(drew);}
   // défausse optimale
   const bd=bestDiscard(D.ai);
-  const disc=D.ai.splice(bd.discard,1)[0];D.discard.push(disc);D.turn++;
+  const disc=D.ai.splice(bd.discard,1)[0];D.discard.push(disc);D.discAnim=true;D.turn++;
   const dead=bd.deadwood;
   // décision de knock
   let aiThresh=10;if(D.opp.rule==='collec')aiThresh=12;if(D.opp.rule==='cheat')aiThresh=11;
