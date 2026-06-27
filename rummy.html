@@ -108,6 +108,8 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
 #handBar{padding:9px 7px;background:linear-gradient(180deg,var(--panelHi),var(--panel) 60%)}
 #handMeta{display:flex;justify-content:space-between;align-items:center;padding:0 4px 7px;font-size:12px;color:var(--muted)}
 #handMeta b{color:var(--gold);font-size:16px;text-shadow:1px 1px 0 var(--ink)}
+#handMeta .dot{display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--lime);box-shadow:0 0 0 2px var(--ink);vertical-align:-1px;margin-right:2px}
+#handMeta .thr{color:var(--gold)}
 #sortBtn{font-family:inherit;font-size:11px;font-weight:700;color:#fff;background:rgba(0,0,0,.28);border:2px solid var(--ink);border-radius:8px;padding:5px 9px;cursor:pointer;text-shadow:1px 1px 0 var(--ink)}
 #sortBtn:active{transform:translateY(2px)}
 
@@ -122,6 +124,8 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
 .btn:nth-child(3){animation-delay:-2.5s}
 .btn:disabled{opacity:.4;pointer-events:none;filter:grayscale(.3);animation:none}
 @keyframes floatSoft{0%,100%{translate:0 -1.5px;rotate:-.35deg}50%{translate:0 1.5px;rotate:.35deg}}
+.btn.ready{animation:floatSoft 3.6s ease-in-out infinite,knockPulse .75s ease-in-out infinite}
+@keyframes knockPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35) saturate(1.3)}}
 .b-gold{background:linear-gradient(180deg,#ffe27a,var(--gold) 55%,var(--goldDk));color:#3a2a00}
 .b-blue{background:linear-gradient(180deg,#5aa6ff,var(--blue) 55%,var(--blueDk))}
 .b-red{background:linear-gradient(180deg,#ff7d92,var(--red) 55%,var(--redDk))}
@@ -236,7 +240,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
   </div>
 
   <footer id="handBar">
-    <div id="handMeta"><span>TA MAIN · cartes mortes <b id="deadVal">0</b></span><button id="sortBtn" onclick="toggleSort()">TRI: RANG</button></div>
+    <div id="handMeta"><span><i class="dot"></i> combiné · cartes mortes <b id="deadVal">0</b><span class="thr">/<span id="thrVal">10</span></span></span><button id="sortBtn" onclick="toggleSort()">TRI: RANG</button></div>
     <div id="hand"></div>
     <div id="actions"></div>
   </footer>
@@ -279,10 +283,10 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
     <button class="btn b-lime menu" onclick="startRun()">COMMENCER LA NUIT</button>
     <div class="howto">
       <h2>RÈGLES EXPRESS</h2>
-      <div>→ <span class="k">Brelan</span> : 3-4 cartes de même rang. <span class="k">Suite</span> : 3+ qui se suivent, même couleur.</div>
-      <div>→ À ton tour : pioche (pioche ou défausse) puis défausse 1 carte.</div>
-      <div>→ <span class="k">KNOCK</span> dès que tes cartes mortes ≤ 10. <span class="k">GIN</span> = 0 carte morte (gros bonus).</div>
-      <div>→ Tous les boss imposent une <span class="d">contrainte</span> vicieuse.</div>
+      <div>→ À ton tour : <span class="k">pioche</span> 1 carte (pioche ou défausse) puis <span class="k">défausse</span> 1 carte. C'est tout.</div>
+      <div>→ Tes combos se forment <span class="k">tout seuls dans ta main</span> — rien à poser. Les cartes <span class="k">en vert</span> sont déjà combinées (<span class="k">brelan</span> = 3-4 même rang · <span class="k">suite</span> = 3+ qui se suivent, même couleur).</div>
+      <div>→ Garde les bonnes cartes pour faire baisser tes <span class="k">cartes mortes</span> (les non-vertes). À <span class="k">≤ 10</span>, le bouton <span class="k">KNOCK</span> s'allume → tu frappes.</div>
+      <div>→ <span class="k">GIN</span> = 0 carte morte (gros bonus). Les boss imposent une <span class="d">contrainte</span> vicieuse.</div>
     </div>
   </div>
 </div>
@@ -449,7 +453,10 @@ function renderHand(){
     slot.appendChild(el);h.appendChild(slot);
   });
   D.justDrew=null;
-  document.getElementById('deadVal').innerHTML=shakeNum(adjDead(D.you));
+  const dv=adjDead(D.you);
+  const deadEl=document.getElementById('deadVal');
+  deadEl.innerHTML=shakeNum(dv);deadEl.style.color=dv<=knockThreshold()?'var(--lime)':'';
+  document.getElementById('thrVal').textContent=knockThreshold();
 }
 function renderJokers(){
   const r=document.getElementById('jokRow');r.innerHTML='';
@@ -477,8 +484,9 @@ function renderActions(){
     const dead=adjDead(D.you);
     const can=dead<=knockThreshold();
     const gin=bestMelds(D.you).deadwood===0;
+    const ready=can&&D.sel>=0;
     add('DÉFAUSSER','b-blue',()=>{if(D.sel<0){setMsg('Touche une carte à <b>défausser</b>.');return;}doDiscard(D.sel,false);},'choisis une carte');
-    add(gin?'GIN !':'KNOCK',gin?'b-lime':'b-red',()=>{if(D.sel<0){setMsg('Touche d\'abord la carte à <b>défausser</b>.');return;}doDiscard(D.sel,true);},can?(dead+' mortes'):('≤'+knockThreshold()+' requis'),!can||D.sel<0);
+    add(gin?'GIN !':'KNOCK',(gin?'b-lime':'b-red')+(ready?' ready':''),()=>{if(D.sel<0){setMsg('Touche d\'abord la carte à <b>défausser</b>.');return;}doDiscard(D.sel,true);},ready?'frappe maintenant !':(can?(dead+' mortes'):('≤'+knockThreshold()+' requis')),!can||D.sel<0);
   }
 }
 function renderFeltStat(){
@@ -505,7 +513,7 @@ function playerDraw(src){
   if(src==='stock'){if(D.deck.length<=2)return endByStock();c=D.deck.pop();D.drewFrom='stock';}
   else{c=D.discard.pop();D.drewFrom='discard';}
   D.you.push(c);D.justDrew=c;sortHand();D.phase='discard';D.sel=-1;
-  setMsg(src==='discard'?('Tu ramasses <b>'+c.r+c.s+'</b>. Défausse 1 carte.'):'Tu pioches une carte. Défausse 1 carte.');
+  setMsg((src==='discard'?('Tu ramasses <b>'+c.r+c.s+'</b>. '):'')+'Touche une carte morte à <b>défausser</b> (garde le vert).');
   renderAll();
 }
 function tapDiscard(i){if(D.phase!=='discard'||D.over)return;D.sel=(D.sel===i?-1:i);renderHand();renderActions();}
