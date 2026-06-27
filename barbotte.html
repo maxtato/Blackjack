@@ -75,6 +75,12 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
 #dice.five .die{width:44px;height:44px}
 .die .pip{position:absolute;width:8px;height:8px;background:var(--ink);transform:translate(-50%,-50%)}
 #dice.five .die .pip{width:7px;height:7px}
+#aiWrap{display:none;flex-direction:column;align-items:center;gap:4px;z-index:1}
+.dtag{font-size:11px;font-weight:700;color:#f6f0df;letter-spacing:.04em}
+.dtag:empty{display:none}
+.ddice{display:flex;gap:8px;justify-content:center}
+.ddice .die{width:38px;height:38px;border-width:3px}
+.ddice .die .pip{width:6px;height:6px}
 .die.shake{animation:diceShake .1s steps(2,end) infinite}
 @keyframes diceShake{0%{transform:translate(-2px,-2px) rotate(-8deg)}100%{transform:translate(2px,2px) rotate(8deg)}}
 .die.land{animation:dieLand .32s cubic-bezier(.2,1.5,.4,1)}
@@ -182,7 +188,9 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
     <div id="felt">
       <div class="fc tl"></div><div class="fc tr"></div><div class="fc bl"></div><div class="fc br"></div>
       <div id="feltStat"></div>
+      <div id="aiWrap"><div class="dtag" id="aiTag"></div><div id="aiDice" class="ddice"></div></div>
       <div id="dice"></div>
+      <div class="dtag" id="youTag"></div>
       <div id="sumTag"></div>
       <div id="msg"></div>
     </div>
@@ -223,7 +231,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
     <div class="howto">
       <h2>LES JEUX</h2>
       <div>→ <span class="k">PASSE</span> (craps) : <span class="k">7/11</span> gagne, <span class="d">2/3/12</span> perd, sinon fais ton <span class="k">POINT</span> avant un 7. Le multiplicateur grimpe à chaque relance.</div>
-      <div>→ <span class="k">FIGURES</span> (5 dés) : 3 lancers, garde les dés que tu veux, et compose la meilleure <span class="k">combinaison</span> — paire, brelan, suite, full, carré, <span class="k">YAHTZEE</span>.</div>
+      <div>→ <span class="k">FIGURES</span> (5 dés) : <span class="k">duel</span>. 3 lancers, garde les dés que tu veux, puis ta <span class="k">combinaison</span> affronte celle de l'adversaire — la plus forte rafle la mise (paire, brelan, suite, full, carré, <span class="k">YAHTZEE</span>).</div>
       <div>→ Atteins l'objectif de jetons pour passer à la table suivante. À sec = la nuit est finie.</div>
     </div>
   </div>
@@ -240,12 +248,12 @@ function showPop(kind,big,txt){const p=document.getElementById('multPop');p.clas
 /* ===================== JEUX ===================== */
 const GAMES=[
   {id:'craps',  n:'PASSE',  d:'Le craps : 7/11 gagne, fais ton point avant un 7. Multiplicateur qui grimpe.'},
-  {id:'figures',n:'FIGURES',d:'5 dés, 3 lancers : compose brelan, suite, full, carré, yahtzee.'},
+  {id:'figures',n:'FIGURES',d:'Duel : 5 dés, 3 lancers, bats l\'adversaire avec ta meilleure combinaison.'},
 ];
 const TABLES=[
   {name:'Le Rade',         boss:null, desc:'Le bar du coin. On chauffe les dés.'},
   {name:'L\'Arrière-cour', boss:null, desc:'Ça mise plus sec ici.'},
-  {name:'Le Croupier',     boss:'hard', desc:'BOSS · plus dur : au craps le 11 perd, aux figures la paire ne paie plus.'},
+  {name:'Le Croupier',     boss:'hard', desc:'BOSS · plus dur : au craps le 11 perd, aux figures l\'adversaire joue mieux.'},
   {name:'La Cave',         boss:null, desc:'Sous la ville, on joue gros.'},
   {name:'Le Cercle',       boss:null, desc:'Les gros bonnets sont là.'},
   {name:'La Banque',       boss:'less', desc:'BOSS · au craps point à faire 2 fois, aux figures un lancer en moins.'},
@@ -331,7 +339,7 @@ function renderFeltStat(){
     if(G.boss==='less')p.push('<span class="fpill boss">POINT ×2'+(G.point?(' ('+G.pointHits+'/2)'):'')+'</span>');
   }else{
     if(G.phase==='roll'){const f=evalFigure(G.dice);p.push('<span class="fpill fig">'+f.name+'</span>');p.push('<span class="fpill">LANCERS <b>'+G.rollsLeft+'</b></span>');}
-    if(G.boss==='hard')p.push('<span class="fpill boss">PAIRE = 0</span>');
+    if(G.boss==='hard')p.push('<span class="fpill boss">ADV. +1 JET</span>');
     if(G.boss==='less')p.push('<span class="fpill boss">−1 LANCER</span>');
   }
   el.innerHTML=p.join('');
@@ -357,7 +365,7 @@ function renderActions(){
     else if(G.phase==='roll'){
       const last=G.rollsLeft<=0;
       add('RELANCER','b-blue'+(last?'':' '),()=>figReroll(),last?'plus de lancer':((G.rollsLeft)+' restant'+(G.rollsLeft>1?'s':'')+' · garde des dés'),last||G.rolling);
-      add('VALIDER','b-lime ready',figScore,'encaisser la figure',G.rolling);
+      add('VALIDER','b-lime ready',figValidate,'défie l\'adversaire',G.rolling);
     }
     else add('…','b-blue',null,'',true);
   }
@@ -374,6 +382,9 @@ function startTable(){
 }
 function resetRound(){
   G.phase='bet';G.point=0;G.mult=1;G.pointHits=0;G.landed=false;G.rollingIdx=[];G.dtrans=[];
+  G.youDice=[];G.aiDice=[];G.youFig=null;G.aiFig=null;G.aiTrans=[];
+  const aw=document.getElementById('aiWrap');if(aw)aw.style.display='none';
+  const at=document.getElementById('aiTag'),yt=document.getElementById('youTag');if(at)at.textContent='';if(yt)yt.textContent='';
   if(G.mode==='craps'){G.dice=[5,2];}
   else{G.dice=[1,2,3,4,6];G.kept=[false,false,false,false,false];G.rollsLeft=maxRolls();G.firstThrow=true;}
 }
@@ -456,23 +467,73 @@ function figMsg(){
   if(G.rollsLeft>0)setMsg('<b>'+f.name+'</b> · garde des dés et <b>relance</b> ('+G.rollsLeft+'), ou <b>valide</b>.');
   else setMsg('<b>'+f.name+'</b> · dernier jet. <b>Valide</b> ta figure.');
 }
-function figScore(){
+/* ---- duel vs IA ---- */
+function applyRelicMult(fig){
+  let m=fig.mult,name=fig.name;
+  if(name==='YAHTZEE'&&hasR('fetiche'))m=16;
+  if(name==='PETITE SUITE'&&hasR('rampe'))m=5;
+  if((name==='PAIRE'||name==='DEUX PAIRES'||name==='BRELAN')&&hasR('pactole'))m*=2;
+  return m;
+}
+function figKey(dice,fig){return fig.mult*1000+dice.reduce((a,b)=>a+b,0);}
+function aiBestKeep(d){
+  const c={};d.forEach((v,i)=>{(c[v]=c[v]||[]).push(i);});
+  let best=[],bestn=0;for(const v in c){if(c[v].length>bestn){bestn=c[v].length;best=c[v];}}
+  if(bestn>=2)return best;                              // garde le plus gros groupe
+  const u=[...new Set(d)].sort((a,b)=>a-b);             // sinon, plus longue suite partielle
+  let run=[u[0]],bestRun=[u[0]];
+  for(let i=1;i<u.length;i++){if(u[i]===u[i-1]+1)run.push(u[i]);else{if(run.length>bestRun.length)bestRun=run;run=[u[i]];}}
+  if(run.length>bestRun.length)bestRun=run;
+  if(bestRun.length>=3){const set=new Set(bestRun),used=new Set(),idx=[];d.forEach((v,i)=>{if(set.has(v)&&!used.has(v)){idx.push(i);used.add(v);}});return idx;}
+  let hi=0;for(let i=1;i<d.length;i++)if(d[i]>d[hi])hi=i;return [hi];                // sinon, garde le plus haut
+}
+function renderAiDice(shake){
+  const box=document.getElementById('aiDice');box.innerHTML='';
+  G.aiDice.forEach((v,i)=>{const slot=document.createElement('div');slot.className='dieSlot';if(!shake)slot.style.transform=(G.aiTrans&&G.aiTrans[i])||'';const d=dieFace(v);if(shake)d.classList.add('shake');slot.appendChild(d);box.appendChild(slot);});
+}
+function figValidate(){
   if(G.phase!=='roll'||G.rolling)return;
+  G.youDice=G.dice.slice();G.youFig=evalFigure(G.youDice);
+  G.phase='aiturn';renderActions();
+  aiPlay();
+}
+function aiPlay(){
+  setMsg('Tu poses <b>'+G.youFig.name+'</b>. L\'adversaire joue…');
+  const rerolls=(G.boss==='hard')?3:2;
+  let d=[0,0,0,0,0].map(()=>1+rnd(6));
+  for(let r=0;r<rerolls;r++){const keep=aiBestKeep(d);d=d.map((v,i)=>keep.includes(i)?v:1+rnd(6));}
+  document.getElementById('aiWrap').style.display='flex';
+  document.getElementById('aiTag').textContent='ADVERSAIRE';
+  G.aiDice=[0,0,0,0,0];let ticks=0;
+  const iv=setInterval(()=>{
+    G.aiDice=G.aiDice.map(()=>1+rnd(6));renderAiDice(true);ticks++;
+    if(ticks>=8){clearInterval(iv);
+      G.aiDice=d;G.aiTrans=d.map(()=>randTrans());renderAiDice(false);
+      G.aiFig=evalFigure(d);setTimeout(compareFigures,520);
+    }
+  },55);
+}
+function compareFigures(){
   G.phase='over';
-  const f=evalFigure(G.dice);
-  let mult=f.mult,name=f.name;
-  if(name==='YAHTZEE'&&hasR('fetiche'))mult=16;
-  if(name==='PETITE SUITE'&&hasR('rampe'))mult=5;
-  if((name==='PAIRE'||name==='DEUX PAIRES'||name==='BRELAN')&&hasR('pactole'))mult*=2;
-  const hard=(G.boss==='hard');
-  const floorLose = mult<=0 || (hard&&name==='PAIRE');
-  if(floorLose)return lose(name+' — rien.',false);
-  let gain=Math.round(G.bet*mult);
-  if(hasR('fortune'))gain=Math.round(gain*1.25);
-  G.chips+=gain;
-  showPop('win',name,'×'+mult+' · +'+gain);
-  setMsg('<b>'+name+'</b> ×'+mult+' — <b>+'+gain+' jetons</b>');
-  flashSum('win');renderAll();setTimeout(afterRound,1300);
+  document.getElementById('aiTag').textContent='ADVERSAIRE · '+G.aiFig.name;
+  document.getElementById('youTag').textContent='TOI · '+G.youFig.name;
+  const yk=figKey(G.youDice,G.youFig), ak=figKey(G.aiDice,G.aiFig);
+  if(yk>ak){
+    let gain=Math.max(G.bet,Math.round(G.bet*applyRelicMult(G.youFig)));
+    if(hasR('fortune'))gain=Math.round(gain*1.25);
+    G.chips+=gain;
+    showPop('win','GAGNÉ','+'+gain+' jetons');
+    setMsg('<b>'+G.youFig.name+'</b> bat <b>'+G.aiFig.name+'</b> — <b>+'+gain+' jetons</b>');
+    renderAll();setTimeout(afterRound,1500);
+  }else if(yk<ak){
+    G.chips=Math.max(0,G.chips-G.bet);
+    showPop('lose','PERDU','−'+G.bet+' jetons');
+    setMsg('<b>'+G.aiFig.name+'</b> bat <b>'+G.youFig.name+'</b> — <b>−'+G.bet+' jetons</b>');
+    renderAll();setTimeout(afterRound,1500);
+  }else{
+    setMsg('Égalité (<b>'+G.youFig.name+'</b>) — mise rendue.');
+    renderAll();setTimeout(afterRound,1500);
+  }
 }
 
 /* ---- résolutions communes ---- */
