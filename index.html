@@ -253,13 +253,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .btn:nth-child(3){animation-delay:-2.5s}
 .actWide>.btn{animation-delay:-1.9s}
 .btn:disabled{animation:none}
-/* gros chiffres du bandeau (argent, etc.) : flottent aussi, en plus du
-   tremblement des lettres ; désynchronisés */
-.tstats .v,#scorebox .seg .v{animation:floatSoft 3.6s ease-in-out infinite}
-.tstats .stat:nth-child(2) .v{animation-delay:-1.6s}
-.tstats .stat:nth-child(4) .v{animation-delay:-2.7s}
-#scorebox .seg.chips .v{animation-delay:-.9s}
-#scorebox .seg.mult .v{animation-delay:-2.1s}
+/* (les gros chiffres du bandeau gardent uniquement le tremblement des
+   lettres — pas de flottement) */
 
 /* ===== FX / PARTICLES ===== */
 #fx{position:fixed;inset:0;pointer-events:none;z-index:40;opacity:0}
@@ -514,7 +509,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
    MISE, MULT, JETONS, valeurs de main, réputation, record). */
 .btn>.W .L,.btn>.blbl .L,#tableName .L,#peekBtn .L,
 .overlay.show .ovpanel h1 .L,
-.zlbl .L,.tstats .v .L,
+.zlbl .L,.tstats .v .L,#chips .chip .L,
 .repNum .L,.recBox .L{animation:letterShake 1.1s steps(1,end) infinite;animation-delay:var(--d,0s)}
 @keyframes letterShake{
  0%  {transform:translate( .12px,calc(var(--o,0px) - .09px))}
@@ -528,19 +523,25 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* overlays : centrés mais défilables si trop hauts (jamais coupés) */
 .overlay{justify-content:flex-start;overflow-y:auto}
 .ovpanel{margin:auto 0}
-/* La Planque condensée pour tenir sans scroll */
-#intro .ovpanel{padding:18px 22px 16px}
-#intro p{font-size:11.5px;line-height:1.5;margin-bottom:11px}
-.repBar{margin-bottom:11px}
-.repNum{font-size:30px}
-#unlockItems{gap:7px;margin-bottom:11px}
-#unlockItems .shopItem{padding:7px 11px}
-#unlockItems .shopTok{width:52px;height:52px;font-size:18px}
-#unlockItems .nm{font-size:13px}
-#unlockItems .ds{font-size:10.5px;margin-top:3px}
-.backPick{margin:0 0 10px}
-.howto{margin-top:11px;gap:5px;font-size:10px}
-.howto>div{padding:6px 9px}
+/* La Planque condensée pour tenir sans scroll (même avec 8 dos) */
+#intro .ovpanel{padding:13px 18px 11px}
+#intro h1{font-size:30px;margin-bottom:6px}
+#intro p{font-size:11px;line-height:1.4;margin-bottom:9px}
+.repBar{margin-bottom:9px}
+.repBig,.recBox{padding:7px 11px}
+.repNum{font-size:25px}
+.recBox{font-size:10.5px;line-height:1.4}
+#unlockItems{gap:6px;margin-bottom:9px}
+#unlockItems .shopItem{padding:5px 9px}
+#unlockItems .shopTok{width:44px;height:44px;font-size:16px}
+#unlockItems .nm{font-size:12.5px}
+#unlockItems .ds{font-size:10px;margin-top:2px;line-height:1.3}
+.backPick{margin:0 0 8px}
+.bpLabel{margin-bottom:6px}
+#bpRow{gap:6px}
+#bpRow .bpCard{width:34px;height:49px}
+.howto{margin-top:8px;gap:4px;font-size:9.5px}
+.howto>div{padding:5px 8px}
 </style>
 </head>
 <body>
@@ -623,7 +624,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <div class="howto" id="howto">
       <div>→ Approche <span class="k">21</span>, bats le croupier, franchis l'objectif.</div>
       <div>→ Puis tente la <span class="k">table suivante</span> (plus gros gains) ou <span class="k">encaisse</span>.</div>
-      <div>→ Une table sur trois est tenue par <span class="d">le Patron</span> : plus dure, mais cagnotte renforcée.</div>
+      <div>→ Tous les 10 paliers, <span class="d">le Patron</span> t'attend : bien plus dur, mais grosse récompense.</div>
     </div>
   </div>
 </div>
@@ -777,7 +778,7 @@ const TBL_RULES=[
   {rule:'nervous',text:'La pression monte 2× plus vite'},
   {rule:'mute',   text:'Le croupier garde ses deux cartes cachées'},
 ];
-/* tables du Patron : un palier sur trois, plus dur, mais cagnotte renforcée */
+/* tables du Patron : fin de chaque série de 10, plus dur, mais cagnotte renforcée */
 const BOSS_NAMES=['Le Patron','La Maison','Le Banquier','La Faucheuse'];
 const BOSS_RULES=[
   {rule:'gros',  text:'PATRON · le croupier tire jusqu’à 18'},
