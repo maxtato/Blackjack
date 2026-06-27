@@ -102,6 +102,17 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
 @keyframes cardLife{0%{transform:translate(.5px,-.4px) rotate(-.25deg)}16%{transform:translate(-.5px,.4px) rotate(.25deg)}33%{transform:translate(.4px,.5px) rotate(-.15deg)}50%{transform:translate(-.4px,-.5px) rotate(.2deg)}66%{transform:translate(.5px,.3px) rotate(-.2deg)}83%{transform:translate(-.5px,-.3px) rotate(.15deg)}100%{transform:translate(.5px,-.4px) rotate(-.25deg)}}
 .card.deal{animation:deal .34s cubic-bezier(.2,1.4,.4,1) both}
 @keyframes deal{from{transform:translateY(-30px) rotate(-7deg);opacity:0}to{transform:none;opacity:1}}
+/* combinaisons posées (mini cartes groupées) */
+.posedRow{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;z-index:1}
+.posedRow:empty{display:none}
+#aiPosed{margin-top:2px}
+.posedRow.mine{padding:0 4px 7px}
+.meldGroup{display:flex;gap:1px;background:rgba(0,0,0,.22);border:2px solid var(--ink);border-radius:6px;padding:3px}
+.posedRow.mine .meldGroup{background:rgba(155,232,74,.16)}
+.card.pmini{width:25px;height:35px;border-width:2px;border-radius:4px;box-shadow:1px 1px 0 rgba(0,0,0,.4)}
+.card.pmini .cn{font-size:8px;top:1px;left:2px}
+.card.pmini .cn.br{display:none}
+.card.pmini .pip{transform:scale(.62)}
 
 /* player hand */
 #hand{display:flex;justify-content:center;flex-wrap:wrap;gap:4px;padding:2px}
@@ -230,6 +241,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
   <div id="mid">
     <div id="felt">
       <div id="feltStat"></div>
+      <div id="aiPosed" class="posedRow"></div>
       <div id="piles">
         <div class="pileWrap"><span class="lbl">PIOCHE</span><div class="pile" id="stockPile"></div></div>
         <div class="pileWrap"><span class="lbl">DÉFAUSSE</span><div class="pile" id="discardPile"></div></div>
@@ -240,7 +252,8 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
   </div>
 
   <footer id="handBar">
-    <div id="handMeta"><span><i class="dot"></i> combiné · cartes mortes <b id="deadVal">0</b><span class="thr">/<span id="thrVal">10</span></span></span><button id="sortBtn" onclick="toggleSort()">TRI: RANG</button></div>
+    <div id="youPosed" class="posedRow mine"></div>
+    <div id="handMeta"><span><i class="dot"></i> posable · <b id="handCount">0</b> cartes en main — <span class="thr">vide-la pour gagner</span></span><button id="sortBtn" onclick="toggleSort()">TRI: RANG</button></div>
     <div id="hand"></div>
     <div id="actions"></div>
   </footer>
@@ -279,14 +292,14 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
 <div class="ov show" id="homeOv">
   <div class="ovpanel">
     <h1 class="J">GIN CLANDESTIN</h1>
-    <p>Bats <b>6 adversaires</b> en duel de Gin Rummy. Forme des suites et des brelans, vide ta main, et frappe (<b>KNOCK</b>) avant l'adversaire. Après chaque victoire, choisis un <b>joker</b> et affûte ton deck à la <b>Forge</b>.</p>
+    <p>Bats <b>6 adversaires</b> en duel de Rami. Forme tes combinaisons, <b>pose-les</b> sur la table, et sois le premier à <b>vider ta main</b>. Après chaque victoire, choisis un <b>joker</b> et affûte ton deck à la <b>Forge</b>.</p>
     <button class="btn b-lime menu" onclick="startRun()">COMMENCER LA NUIT</button>
     <div class="howto">
-      <h2>RÈGLES EXPRESS</h2>
-      <div>→ À ton tour : <span class="k">pioche</span> 1 carte (pioche ou défausse) puis <span class="k">défausse</span> 1 carte. C'est tout.</div>
-      <div>→ Tes combos se forment <span class="k">tout seuls dans ta main</span> — rien à poser. Les cartes <span class="k">en vert</span> sont déjà combinées (<span class="k">brelan</span> = 3-4 même rang · <span class="k">suite</span> = 3+ qui se suivent, même couleur).</div>
-      <div>→ Garde les bonnes cartes pour faire baisser tes <span class="k">cartes mortes</span> (les non-vertes). À <span class="k">≤ 10</span>, le bouton <span class="k">KNOCK</span> s'allume → tu frappes.</div>
-      <div>→ <span class="k">GIN</span> = 0 carte morte (gros bonus). Les boss imposent une <span class="d">contrainte</span> vicieuse.</div>
+      <h2>COMMENT JOUER</h2>
+      <div>→ À ton tour : <span class="k">pioche</span> 1 carte (pioche ou défausse).</div>
+      <div>→ <span class="k">POSE</span> tes combinaisons : touche 3+ cartes puis <span class="k">POSER</span>. <span class="k">Brelan</span> = 3-4 même rang · <span class="k">Suite</span> = 3+ qui se suivent, même couleur. (Les cartes <span class="k">en vert</span> te montrent ce qui est posable.)</div>
+      <div>→ Finis ton tour en <span class="k">défaussant</span> 1 carte. Repioche au tour suivant pour continuer.</div>
+      <div>→ Le premier qui <span class="k">vide sa main</span> gagne la manche. Les boss imposent une <span class="d">contrainte</span> vicieuse.</div>
     </div>
   </div>
 </div>
@@ -362,38 +375,36 @@ function bestDiscard(hand11){
 
 /* ===================== ÉTAT / RUN ===================== */
 const OPPS=[
-  {name:'Le Bleu',     face:'🧢', rule:null,        desc:''},
-  {name:'La Tricheuse',face:'🦊', rule:'cheat',     desc:'Voit parfois ta dernière carte piochée (et joue mieux).'},
-  {name:'Le Pressé',   face:'⏱️', rule:'rush', boss:true, desc:'BOSS · la manche se termine d\'office au tour 8 — la main la plus légère gagne.'},
-  {name:'Le Collectionneur',face:'🐙', rule:'collec', desc:'Gagne un avantage à chaque brelan : il knock plus agressivement.'},
+  {name:'Le Bleu',     face:'🧢', rule:null,        desc:'Adversaire honnête… ou presque.'},
+  {name:'La Tricheuse',face:'🦊', rule:'cheat',     desc:'Joue plus finement et rafle la défausse dès qu\'elle peut.'},
+  {name:'Le Pressé',   face:'⏱️', rule:'rush', boss:true, desc:'BOSS · la manche s\'arrête au tour 8 : la main la plus légère gagne.'},
+  {name:'Le Collectionneur',face:'🐙', rule:'collec', desc:'Démarre avec une carte de plus et pose vite.'},
   {name:'La Banquière',face:'💰', rule:'bank',     desc:'Une défaite ici te coûte 15 pièces de plus.'},
-  {name:'Le Comptable',face:'🧮', rule:'count', boss:true, desc:'BOSS · tes cartes mortes comptent DOUBLE au décompte.'},
+  {name:'Le Comptable',face:'🧮', rule:'heavy', boss:true, desc:'BOSS · tu démarres chaque manche avec 2 cartes de plus.'},
 ];
 const JOKERS=[
-  {id:'gros_gin',ic:'🍸',n:'Triple Gin',d:'+20 pièces quand tu fais GIN.'},
-  {id:'filou',   ic:'🃏',n:'Filou',     d:'Tu peux KNOCK jusqu\'à 13 cartes mortes (au lieu de 10).'},
-  {id:'radin',   ic:'🪙',n:'Radin',     d:'Tes cartes mortes valent 2 de moins chacune au décompte.'},
-  {id:'voyant',  ic:'🔮',n:'Voyant',    d:'Tu vois en continu le nb de cartes mortes de l\'adversaire.'},
-  {id:'collec',  ic:'💎',n:'Joaillier', d:'+4 pièces par combinaison posée quand tu gagnes la manche.'},
-  {id:'requin',  ic:'🦈',n:'Requin',    d:'Bonus de score : +10 quand tu remportes une manche.'},
-  {id:'pioche2', ic:'👀',n:'Œil de lynx',d:'Tu vois la prochaine carte de la pioche.'},
-  {id:'main11',  ic:'✋',n:'Grande main',d:'Tu démarres chaque manche avec 1 carte de plus (11).'},
+  {id:'requin',  ic:'🦈',n:'Requin',    d:'+12 pièces à chaque manche gagnée.'},
+  {id:'collec',  ic:'💎',n:'Joaillier', d:'+5 pièces par combinaison posée quand tu gagnes.'},
+  {id:'recolte', ic:'🪙',n:'Récolte',   d:'+3 pièces dès que tu poses une combinaison (même en perdant).'},
   {id:'banquier',ic:'🏦',n:'Banquier',  d:'+2 pièces à chaque carte que tu défausses.'},
-  {id:'sangfroid',ic:'🧊',n:'Sang-froid',d:'L\'adversaire knock plus tard (seuil −2).'},
+  {id:'vide',    ic:'🌀',n:'Main propre',d:'+25 pièces si tu gagnes en vidant ta main.'},
+  {id:'legere',  ic:'🪶',n:'Main légère',d:'Tu démarres chaque manche avec 1 carte de moins.'},
+  {id:'lynx',    ic:'👀',n:'Œil de lynx',d:'Tu vois la prochaine carte de la pioche.'},
+  {id:'aubaine', ic:'✨',n:'Aubaine',   d:'Tes gains de manche sont augmentés de 50%.'},
 ];
 let G={};
 function standard52(){const d=[];for(const s of SUITS)for(const r of RANKS)d.push({r,s});return d;}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
-function freshRun(){G={duel:0,coins:0,jokers:[],run:true,deck:standard52(),knockBonus:0};}
+function freshRun(){G={duel:0,coins:0,jokers:[],run:true,deck:standard52(),startCut:0};}
 function hasJ(id){return G.jokers.some(j=>j.id===id);}
-function knockThreshold(){return (hasJ('filou')?13:10)+(G.knockBonus||0);}
-function adjDead(hand){
-  // deadwood réel ; 'radin' enlève 2 par carte morte
-  const bm=bestMelds(hand);
-  if(!hasJ('radin'))return bm.deadwood;
-  let d=0,full=(1<<hand.length)-1,mask=full&~bm.meldedMask;
-  for(let i=0;i<hand.length;i++)if(mask&(1<<i))d+=Math.max(0,cardVal(hand[i].r)-2);
-  return d;
+function handStart(){return Math.max(7,10-(G.startCut||0)-(hasJ('legere')?1:0));}
+function handVal(hand){return hand.reduce((s,c)=>s+cardVal(c.r),0);}
+/* une sélection forme-t-elle une combinaison valide ? brelan (3-4 même rang, couleurs distinctes) ou suite (3+ même couleur, rangs consécutifs) */
+function isMeld(cards){
+  if(cards.length<3)return false;
+  if(cards.every(c=>c.r===cards[0].r)){const su=new Set(cards.map(c=>c.s));return cards.length<=4&&su.size===cards.length;}
+  if(cards.every(c=>c.s===cards[0].s)){const o=cards.map(c=>RORD(c.r)).sort((a,b)=>a-b);for(let i=1;i<o.length;i++)if(o[i]!==o[i-1]+1)return false;return true;}
+  return false;
 }
 
 /* ===================== DUEL ===================== */
@@ -402,20 +413,21 @@ function startDuel(){
   const opp=OPPS[G.duel];
   // paquet persistant de la run (édité à la Forge), copié + mélangé
   const deck=shuffle(G.deck.map(c=>({r:c.r,s:c.s})));
-  D={opp,deck,you:[],ai:[],discard:[],phase:'draw',turn:0,sortMode:'rank',sel:-1,pendingDiscard:-1,over:false,drewFrom:null,justDrew:null,discAnim:false};
-  const youStart=hasJ('main11')?11:10;
-  for(let k=0;k<10;k++){D.ai.push(D.deck.pop());}
-  for(let k=0;k<youStart;k++){D.you.push(D.deck.pop());}
+  D={opp,deck,you:[],ai:[],youMelds:[],aiMelds:[],discard:[],phase:'draw',turn:0,sortMode:'rank',sel:[],over:false,justDrew:null,discAnim:false};
+  const yn=handStart()+(opp.rule==='heavy'?2:0);
+  const an=handStart()+(opp.rule==='collec'?1:0);
+  for(let k=0;k<an;k++){D.ai.push(D.deck.pop());}
+  for(let k=0;k<yn;k++){D.you.push(D.deck.pop());}
   D.discard.push(D.deck.pop());
   sortHand();
   renderAll();
-  setMsg('À toi. <b>Pioche</b> (pioche ou défausse).');
+  setMsg('À toi. <b>Pioche</b> une carte (pioche ou défausse).');
 }
 function sortHand(){
   if(D.sortMode==='rank')D.you.sort((a,b)=>RORD(a.r)-RORD(b.r)||SUITS.indexOf(a.s)-SUITS.indexOf(b.s));
   else D.you.sort((a,b)=>SUITS.indexOf(a.s)-SUITS.indexOf(b.s)||RORD(a.r)-RORD(b.r));
 }
-function toggleSort(){D.sortMode=D.sortMode==='rank'?'suit':'rank';document.getElementById('sortBtn').textContent='TRI: '+(D.sortMode==='rank'?'RANG':'COULEUR');sortHand();renderHand();}
+function toggleSort(){D.sortMode=D.sortMode==='rank'?'suit':'rank';document.getElementById('sortBtn').textContent='TRI: '+(D.sortMode==='rank'?'RANG':'COULEUR');D.sel=[];sortHand();renderHand();renderActions();}
 
 function cardEl(c,opts={}){
   const d=document.createElement('div');d.className='card'+(isRed(c.s)?' red':'')+(opts.cls||'');
@@ -438,25 +450,29 @@ function renderPiles(){
 }
 function renderHand(){
   const h=document.getElementById('hand');h.innerHTML='';
-  const bm=bestMelds(D.you);
+  const bm=bestMelds(D.you);                          // suggestion : cartes posables (vert)
   D.you.forEach((c,i)=>{
     const melded=(bm.meldedMask&(1<<i))!==0;
-    const isNew=c===D.justDrew;const lift=D.sel===i;
-    const el=cardEl(c,{cls:(melded?' meld':'')+(lift?' sel':'')+(D.phase==='discard'?' tap':'')+(isNew?' deal':(lift?'':' live'))});
+    const isNew=c===D.justDrew;const lift=D.sel.includes(i);
+    const tap=(D.phase==='play'&&!D.over);
+    const el=cardEl(c,{cls:(melded?' meld':'')+(lift?' sel':'')+(tap?' tap':'')+(isNew?' deal':(lift?'':' live'))});
     const seed=c.r+c.s+i;
     if(!isNew&&!lift)el.style.setProperty('--cd',(-hashStr(seed+'c')*3.6).toFixed(2)+'s');
-    if(D.phase==='discard'&&!D.over)el.onclick=()=>tapDiscard(i);
-    // enveloppe jitter : décalage léger + rotation pour casser l'alignement (DA TABLE 21)
+    if(tap)el.onclick=()=>tapCard(i);
     const slot=document.createElement('div');slot.className='cardslot';
     const jRot=(hashStr(seed+'r')-0.5)*4, jY=(hashStr(seed+'y')-0.5)*5;
     slot.style.transform=`translateY(${jY.toFixed(1)}px) rotate(${jRot.toFixed(2)}deg)`;
     slot.appendChild(el);h.appendChild(slot);
   });
   D.justDrew=null;
-  const dv=adjDead(D.you);
-  const deadEl=document.getElementById('deadVal');
-  deadEl.innerHTML=shakeNum(dv);deadEl.style.color=dv<=knockThreshold()?'var(--lime)':'';
-  document.getElementById('thrVal').textContent=knockThreshold();
+  document.getElementById('handCount').textContent=D.you.length;
+}
+function meldGroupEl(m){const g=document.createElement('div');g.className='meldGroup';m.forEach(c=>g.appendChild(cardEl(c,{cls:' pmini'})));return g;}
+function renderPosed(){
+  const ya=document.getElementById('youPosed'),aa=document.getElementById('aiPosed');
+  ya.innerHTML='';aa.innerHTML='';
+  D.youMelds&&D.youMelds.forEach(m=>ya.appendChild(meldGroupEl(m)));
+  D.aiMelds&&D.aiMelds.forEach(m=>aa.appendChild(meldGroupEl(m)));
 }
 function renderJokers(){
   const r=document.getElementById('jokRow');r.innerHTML='';
@@ -467,7 +483,7 @@ function renderOpp(){
   const nm=document.getElementById('oppName');nm.textContent=o.name;nm.className=o.boss?'boss':'';
   document.getElementById('oppRule').textContent=o.desc||'Adversaire honnête… ou presque.';
   const dd=document.getElementById('oppDead');
-  dd.textContent=hasJ('voyant')&&D.ai.length?('Ses cartes mortes : '+bestMelds(D.ai).deadwood):'';
+  dd.textContent=D.ai?('Cartes en main : '+D.ai.length+(D.aiMelds.length?(' · '+D.aiMelds.length+' combo'+(D.aiMelds.length>1?'s':'')+' posée'+(D.aiMelds.length>1?'s':'')):'')):'';
   const dots=document.getElementById('runDots');dots.innerHTML='';
   for(let i=0;i<6;i++){const el=document.createElement('i');if(OPPS[i].boss)el.classList.add('boss');if(i<G.duel)el.classList.add('done');if(i===G.duel)el.classList.add('cur');dots.appendChild(el);}
 }
@@ -479,127 +495,133 @@ function renderActions(){
   if(D.over){return;}
   if(D.phase==='draw'){
     add('PIOCHE','b-blue',()=>playerDraw('stock'),'carte cachée');
-    add('DÉFAUSSE','b-gold',()=>playerDraw('discard'),D.discard.length?(D.discard[D.discard.length-1].r+D.discard[D.discard.length-1].s):'vide',!D.discard.length);
-  }else if(D.phase==='discard'){
-    const dead=adjDead(D.you);
-    const can=dead<=knockThreshold();
-    const gin=bestMelds(D.you).deadwood===0;
-    const ready=can&&D.sel>=0;
-    add('DÉFAUSSER','b-blue',()=>{if(D.sel<0){setMsg('Touche une carte à <b>défausser</b>.');return;}doDiscard(D.sel,false);},'choisis une carte');
-    add(gin?'GIN !':'KNOCK',(gin?'b-lime':'b-red')+(ready?' ready':''),()=>{if(D.sel<0){setMsg('Touche d\'abord la carte à <b>défausser</b>.');return;}doDiscard(D.sel,true);},ready?'frappe maintenant !':(can?(dead+' mortes'):('≤'+knockThreshold()+' requis')),!can||D.sel<0);
+    const top=D.discard.length?(D.discard[D.discard.length-1].r+D.discard[D.discard.length-1].s):'';
+    add('DÉFAUSSE','b-gold',()=>playerDraw('discard'),D.discard.length?('prendre '+top):'vide',!D.discard.length);
+  }else if(D.phase==='play'){
+    const cards=D.sel.map(i=>D.you[i]);
+    const selValid=D.sel.length>=3&&isMeld(cards);
+    add('POSER','b-lime'+(selValid?' ready':''),poseSelected,selValid?'combo valide !':'3+ cartes (brelan/suite)');
+    add('DÉFAUSSER','b-gold',()=>{if(D.sel.length!==1){setMsg('Touche <b>1 seule</b> carte à défausser pour finir ton tour.');return;}doDiscard(D.sel[0]);},D.sel.length===1?'finir le tour':'choisis 1 carte');
   }
 }
+function rushLimit(){return 16;}
 function renderFeltStat(){
   const el=document.getElementById('feltStat');el.innerHTML='';
   if(D.over)return;
   const p=[];
   p.push('<span class="fpill">TOUR <b>'+(Math.floor(D.turn/2)+1)+'</b></span>');
   p.push('<span class="fpill">PIOCHE <b>'+D.deck.length+'</b></span>');
+  p.push('<span class="fpill">🃏 lui <b>'+(D.ai?D.ai.length:0)+'</b></span>');
+  if(hasJ('lynx')&&D.deck.length){const n=D.deck[D.deck.length-1];p.push('<span class="fpill">👀 pioche '+n.r+n.s+'</span>');}
   if(D.opp.rule==='rush'){
-    const left=Math.max(0,Math.ceil((16-D.turn)/2));
+    const left=Math.max(0,Math.ceil((rushLimit()-D.turn)/2));
     p.push('<span class="fpill '+(left<=2?'warn':'boss')+'">⏱️ FIN · reste <span class="big">'+left+'</span> tour'+(left>1?'s':'')+'</span>');
-  }else if(D.opp.rule==='count'){p.push('<span class="fpill boss">🧮 tes mortes ×2</span>');}
-  else if(D.opp.rule==='cheat'){p.push('<span class="fpill">🦊 elle t\'espionne</span>');}
+  }else if(D.opp.rule==='heavy'){p.push('<span class="fpill boss">🧮 +2 cartes pour toi</span>');}
+  else if(D.opp.rule==='cheat'){p.push('<span class="fpill">🦊 elle joue mieux</span>');}
   else if(D.opp.rule==='bank'){p.push('<span class="fpill">💰 défaite −15🪙</span>');}
-  else if(D.opp.rule==='collec'){p.push('<span class="fpill">🐙 il collectionne</span>');}
+  else if(D.opp.rule==='collec'){p.push('<span class="fpill">🐙 il pose vite</span>');}
   el.innerHTML=p.join('');
 }
-function renderAll(){renderFeltStat();renderPiles();renderHand();renderOpp();renderActions();renderJokers();}
+function renderAll(){renderFeltStat();renderPiles();renderPosed();renderHand();renderOpp();renderActions();renderJokers();}
 function setMsg(t){document.getElementById('msg').innerHTML=t;}
 
 function playerDraw(src){
   if(D.phase!=='draw'||D.over)return;
   let c;
-  if(src==='stock'){if(D.deck.length<=2)return endByStock();c=D.deck.pop();D.drewFrom='stock';}
-  else{c=D.discard.pop();D.drewFrom='discard';}
-  D.you.push(c);D.justDrew=c;sortHand();D.phase='discard';D.sel=-1;
-  setMsg((src==='discard'?('Tu ramasses <b>'+c.r+c.s+'</b>. '):'')+'Touche une carte morte à <b>défausser</b> (garde le vert).');
+  if(src==='stock'){if(!D.deck.length)return endByStock();c=D.deck.pop();}
+  else{if(!D.discard.length)return;c=D.discard.pop();}
+  D.you.push(c);D.justDrew=c;sortHand();D.phase='play';D.sel=[];
+  setMsg((src==='discard'?('Tu ramasses <b>'+c.r+c.s+'</b>. '):'')+'Touche 3+ cartes puis <b>POSER</b>, puis <b>défausse</b> 1 carte.');
   renderAll();
 }
-function tapDiscard(i){if(D.phase!=='discard'||D.over)return;D.sel=(D.sel===i?-1:i);renderHand();renderActions();}
-function doDiscard(i,knock){
-  const c=D.you.splice(i,1)[0];D.discard.push(c);D.discAnim=true;D.sel=-1;D.turn++;
-  if(knock){return resolveKnock('you');}
-  D.phase='ai';renderAll();setMsg('L\'adversaire réfléchit…');
+function tapCard(i){
+  if(D.phase!=='play'||D.over)return;
+  const k=D.sel.indexOf(i);if(k>=0)D.sel.splice(k,1);else D.sel.push(i);
+  renderHand();renderActions();
+}
+function poseSelected(){
+  if(D.phase!=='play'||D.over)return;
+  if(D.sel.length<3){setMsg('Sélectionne au moins <b>3 cartes</b> formant un brelan (même rang) ou une suite (même couleur).');return;}
+  const cards=D.sel.map(i=>D.you[i]);
+  if(!isMeld(cards)){setMsg('Ces cartes ne forment pas une combinaison valide.');return;}
+  D.sel.slice().sort((a,b)=>b-a).forEach(i=>D.you.splice(i,1));
+  D.youMelds.push(cards.slice());D.sel=[];
+  if(hasJ('recolte'))G.coins+=3;
+  sortHand();
+  if(D.you.length===0)return resolveOut('you');
+  setMsg('Combo posée ! Pose-en d\'autres ou <b>défausse</b> 1 carte pour finir.');
+  renderAll();
+}
+function doDiscard(i){
+  if(D.phase!=='play'||D.over)return;
+  const c=D.you.splice(i,1)[0];D.discard.push(c);D.discAnim=true;D.sel=[];D.turn++;
+  if(hasJ('banquier'))G.coins+=2;
+  if(D.you.length===0)return resolveOut('you');
+  D.phase='ai';renderAll();setMsg('L\'adversaire joue…');
   setTimeout(aiTurn,750);
 }
 
-/* ---- IA ---- */
+/* ---- IA : pioche, pose toutes ses combinaisons, défausse ---- */
 function aiTurn(){
   if(D.over)return;
   const top=D.discard[D.discard.length-1];
-  // évalue ramasser la défausse
-  let takeDiscard=false;
+  // ramasser la défausse si ça crée une combinaison ou baisse nettement la main
+  let take=false;
   if(top){
-    const withD=D.ai.concat([top]);
-    const bd=bestDiscard(withD);
-    const cur=bestMelds(D.ai).deadwood;
-    // La Tricheuse / Collectionneur jouent un peu mieux (seuil plus bas)
-    const margin=(D.opp.rule==='cheat'||D.opp.rule==='collec')?0:1;
-    if(bd.deadwood<=cur-margin)takeDiscard=true;
+    const test=D.ai.concat([top]);
+    const moreMelds=bestMelds(test).melds.length>bestMelds(D.ai).melds.length;
+    const lighter=bestMelds(test).deadwood<bestMelds(D.ai).deadwood-(D.opp.rule==='cheat'?0:1);
+    take=moreMelds||lighter;
   }
-  let drew;
-  if(takeDiscard){drew=D.discard.pop();D.ai.push(drew);}
-  else{if(D.deck.length<=2)return endByStock();drew=D.deck.pop();D.ai.push(drew);}
-  // défausse optimale
-  const bd=bestDiscard(D.ai);
-  const disc=D.ai.splice(bd.discard,1)[0];D.discard.push(disc);D.discAnim=true;D.turn++;
-  const dead=bd.deadwood;
-  // décision de knock
-  let aiThresh=10;if(D.opp.rule==='collec')aiThresh=12;if(D.opp.rule==='cheat')aiThresh=11;
-  const wantKnock=dead<=aiThresh && (dead<=6 || D.turn>6 || dead===0);
+  if(take){D.ai.push(D.discard.pop());}
+  else{if(!D.deck.length)return endByStock();D.ai.push(D.deck.pop());}
+  // pose toutes les combinaisons possibles
+  let bm=bestMelds(D.ai);
+  while(bm.melds.length){
+    const meld=bm.melds[0];const cards=meld.map(i=>D.ai[i]);
+    meld.slice().sort((a,b)=>b-a).forEach(i=>D.ai.splice(i,1));
+    D.aiMelds.push(cards);
+    if(D.ai.length===0)return resolveOut('ai');
+    bm=bestMelds(D.ai);
+  }
+  // défausse la plus grosse carte morte
+  let hi=0;for(let i=1;i<D.ai.length;i++)if(cardVal(D.ai[i].r)>cardVal(D.ai[hi].r))hi=i;
+  const disc=D.ai.splice(hi,1)[0];D.discard.push(disc);D.discAnim=true;D.turn++;
   renderAll();
   setMsg('L\'adversaire défausse <b>'+disc.r+disc.s+'</b>.');
-  if(wantKnock){setTimeout(()=>resolveKnock('ai'),650);return;}
-  // contrainte "Le Pressé"
-  if(D.opp.rule==='rush'&&D.turn>=16){return resolveTimeout();}
+  if(D.opp.rule==='rush'&&D.turn>=rushLimit())return setTimeout(resolveTimeout,650);
   D.phase='draw';
-  setTimeout(()=>{renderAll();setMsg('À toi. <b>Pioche</b>.');},300);
+  setTimeout(()=>{if(!D.over){renderAll();setMsg('À toi. <b>Pioche</b> une carte.');}},300);
 }
 
 /* ---- résolutions ---- */
-function youDead(){let d=bestMelds(D.you).deadwood;if(hasJ('radin'))d=adjDead(D.you);if(D.opp.rule==='count')d*=2;return d;}
-function aiDead(){return bestMelds(D.ai).deadwood;}
-function youMeldCount(){return bestMelds(D.you).melds.length;}
-
-function resolveKnock(who){
-  D.over=true;D.phase='over';
-  const yd=youDead(), ad=aiDead();
-  const yGin=bestMelds(D.you).deadwood===0, aGin=bestMelds(D.ai).deadwood===0;
-  let youWin,detail,pts=0;
-  if(who==='you'){
-    if(yGin){youWin=true;pts=ad+25;detail='GIN ! +'+ad+' +25 bonus';}
-    else if(ad>yd){youWin=true;pts=ad-yd;detail='Tu frappes : '+ad+' − '+yd+' = '+pts;}
-    else {youWin=false;pts=(yd-ad)+25;detail='Contré ! L\'adversaire avait '+ad+' (≤ '+yd+') · −'+pts;}
-  }else{
-    if(aGin){youWin=false;detail='Il fait GIN ('+ad+' contre tes '+yd+').';}
-    else if(yd<=ad){youWin=true;pts=(ad-yd)+25;detail='CONTRE ! Tu n\'avais que '+yd+' contre '+ad+'. +'+pts;}
-    else {youWin=false;detail='Il frappe : '+yd+' − '+ad+'.';}
-  }
-  finishDuel(youWin,detail);
+function resolveOut(who){            // quelqu'un a vidé sa main
+  if(D.over)return;D.over=true;D.phase='over';
+  const youWin=(who==='you');
+  finishDuel(youWin,youWin?'Tu as vidé ta main avant lui !':'L\'adversaire a vidé sa main avant toi.',youWin);
 }
-function resolveTimeout(){
-  D.over=true;D.phase='over';
-  const yd=youDead(),ad=aiDead();
-  const youWin=yd<=ad;
-  finishDuel(youWin,'Tour 8 — décompte : toi '+yd+' / lui '+ad+'.');
+function resolveTimeout(){           // boss Le Pressé : main la plus légère gagne
+  if(D.over)return;D.over=true;D.phase='over';
+  const yv=handVal(D.you),av=handVal(D.ai);
+  finishDuel(yv<=av,'Temps écoulé — main la plus légère : toi '+yv+' / lui '+av+'.',false);
 }
-function endByStock(){
-  D.over=true;D.phase='over';
-  const yd=youDead(),ad=aiDead();
-  finishDuel(yd<=ad,'Pioche épuisée — décompte : toi '+yd+' / lui '+ad+'.');
+function endByStock(){               // pioche épuisée : main la plus légère gagne
+  if(D.over)return;D.over=true;D.phase='over';
+  const yv=handVal(D.you),av=handVal(D.ai);
+  finishDuel(yv<=av,'Pioche épuisée — main la plus légère : toi '+yv+' / lui '+av+'.',false);
 }
 
-function finishDuel(youWin,detail){
+function finishDuel(youWin,detail,emptied){
   renderAll();
   let gain=0;
   if(youWin){
     gain=15+G.duel*5;
-    if(hasJ('requin'))gain+=10;
-    if(hasJ('gros_gin')&&bestMelds(D.you).deadwood===0)gain+=20;
-    if(hasJ('collec'))gain+=youMeldCount()*4;
+    if(hasJ('requin'))gain+=12;
+    if(hasJ('vide')&&emptied)gain+=25;
+    if(hasJ('collec'))gain+=D.youMelds.length*5;
+    if(hasJ('aubaine'))gain=Math.round(gain*1.5);
     G.coins+=gain;
-    showPop('win',bestMelds(D.you).deadwood===0?'GIN !':'GAGNÉ','+'+gain+' pièces');
+    showPop('win',emptied?'MAIN VIDE !':'GAGNÉ','+'+gain+' pièces');
   }else{
     let loss=8;if(D.opp.rule==='bank')loss+=15;
     G.coins=Math.max(0,G.coins-loss);
@@ -636,14 +658,14 @@ function offerJokers(detail,gain){
 
 /* ---- forge (édition de deck) ---- */
 const FORGE_SERVICES=[
-  {id:'burn', ic:'🔥',n:'Brûler une carte', d:'Retire une carte de ton paquet pour de bon. Vise les grosses cartes mortes.'},
-  {id:'add',  ic:'➕',n:'Carte fantôme',    d:'Ajoute une carte basse à ton paquet (plus facile à combiner / défausser).'},
-  {id:'knock',ic:'📏',n:'Seuil de knock +1',d:'Tu peux frapper avec 1 carte morte de plus, pour toute la nuit.'},
+  {id:'burn', ic:'🔥',n:'Brûler une carte', d:'Retire une carte de ton paquet pour de bon. Vise les cartes encombrantes.'},
+  {id:'add',  ic:'➕',n:'Carte fantôme',    d:'Ajoute une carte de ton choix au paquet (pour compléter tes combos).'},
+  {id:'light',ic:'🪶',n:'Main allégée',     d:'Tu démarres chaque manche avec 1 carte de moins (plus vite vidée).'},
 ];
 function forgeCost(id){
   if(id==='burn')return 12;
   if(id==='add') return 18;
-  if(id==='knock')return 24+(G.knockBonus||0)*16;
+  if(id==='light')return 24+(G.startCut||0)*18;
   return 0;
 }
 let forgeAfter=null;
@@ -657,11 +679,11 @@ function openForge(after){
 }
 function renderForge(){
   document.getElementById('coins').innerHTML=shakeNum(G.coins);
-  document.getElementById('forgeSub').innerHTML='<b style="color:var(--gold)">'+G.coins+' pièces</b> · paquet : '+G.deck.length+' cartes · knock ≤ '+knockThreshold()+'.';
+  document.getElementById('forgeSub').innerHTML='<b style="color:var(--gold)">'+G.coins+' pièces</b> · paquet : '+G.deck.length+' cartes · main de départ : '+handStart()+'.';
   const shop=document.getElementById('forgeShop');shop.innerHTML='';
   FORGE_SERVICES.forEach(s=>{
     const cost=forgeCost(s.id);
-    const off=G.coins<cost || (s.id==='burn'&&G.deck.length<=20);
+    const off=G.coins<cost || (s.id==='burn'&&G.deck.length<=20) || (s.id==='light'&&handStart()<=7);
     const row=document.createElement('div');row.className='shopItem'+(off?' off':'');
     row.innerHTML=`<div class="shopTok">${s.ic}</div><div class="sInfo"><div class="nm">${s.n}</div><div class="ds">${s.d}</div></div><div class="sCost">${cost}🪙</div>`;
     if(!off)row.onclick=()=>forgeBuy(s.id,cost);
@@ -675,7 +697,7 @@ function miniCardEl(c){
 }
 function forgeBuy(id,cost){
   if(G.coins<cost)return;
-  if(id==='knock'){G.coins-=cost;G.knockBonus=(G.knockBonus||0)+1;renderForge();return;}
+  if(id==='light'){G.coins-=cost;G.startCut=(G.startCut||0)+1;renderForge();return;}
   openPick(id,cost);
 }
 function backToShop(){
@@ -696,8 +718,8 @@ function openPick(kind,cost){
       .sort((a,b)=>cardVal(b.c.r)-cardVal(a.c.r)||SUITS.indexOf(a.c.s)-SUITS.indexOf(b.c.s))
       .forEach(({c,i})=>{const el=miniCardEl(c);el.onclick=()=>{G.coins-=cost;G.deck.splice(i,1);backToShop();};grid.appendChild(el);});
   }else{
-    ttl.innerHTML='Touche la carte à <b style="color:var(--lime)">ajouter</b> (−'+cost+'🪙).';
-    for(const r of ['A','2','3','4','5'])for(const s of SUITS){
+    ttl.innerHTML='Touche la carte à <b style="color:var(--lime)">ajouter</b> à ton paquet (−'+cost+'🪙).';
+    for(const s of SUITS)for(const r of RANKS){
       const c={r,s};const el=miniCardEl(c);el.onclick=()=>{G.coins-=cost;G.deck.push({r,s});backToShop();};grid.appendChild(el);
     }
   }
