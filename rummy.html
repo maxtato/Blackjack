@@ -15,9 +15,10 @@
   --green:#0f8f86;--greenDk:#0a5c57;
   --cardW:#fff7e6;--inkCard:#1a1430;--suitRed:#e23b46;
   /* tokens repris de TABLE 21 pour une DA identique */
-  --r:13px;--rS:9px;--rL:18px;--bd:3px;
+  --r:13px;--rS:9px;--rL:18px;--rXL:22px;--bd:3px;
   --sh:5px 5px 0 var(--ink);--shS:3px 3px 0 var(--ink);--shL:7px 7px 0 var(--ink);
   --gloss:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 38%);
+  --pc:polygon(0 7px,7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px));
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 *{text-shadow:none!important}
@@ -157,43 +158,44 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
 #multPop.go{animation:popUp 1.32s cubic-bezier(.2,1.5,.4,1) forwards}
 @keyframes popUp{0%{opacity:0;transform:translate(-50%,-30%) scale(.4)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}80%{opacity:1;transform:translate(-50%,-56%) scale(1)}100%{opacity:0;transform:translate(-50%,-74%) scale(1)}}
 
-/* overlay */
-.ov{position:absolute;inset:0;z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;padding:18px;text-align:center;background:rgba(10,8,24,.93)}
-.ov.show{display:flex;animation:ovIn .25s}
+/* overlays — style menu octogonal (DA TABLE 21 actuelle) */
+.ov{position:absolute;inset:0;z-index:50;display:none;flex-direction:column;align-items:center;justify-content:flex-start;overflow-y:auto;padding:20px;text-align:center;background:radial-gradient(120% 100% at 50% 30%,rgba(40,20,80,.82),rgba(10,6,24,.94));backdrop-filter:blur(3px)}
+.ov.show{display:flex;animation:ovIn .25s ease-out}
 @keyframes ovIn{from{opacity:0}to{opacity:1}}
-.ov h1{font-size:34px;font-weight:700;color:var(--gold);margin-bottom:6px;text-shadow:2px 2px 0 var(--magenta),3px 3px 0 var(--ink)}
-.ov h1.dead{color:var(--red);text-shadow:2px 2px 0 var(--ink)}
-.ov p{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:16px;max-width:340px}
-.ov .menu{width:100%;max-width:320px;font-size:16px;padding:14px}
-.jpick{display:flex;flex-direction:column;gap:11px;width:100%;max-width:340px;margin-bottom:8px}
-.joffer{display:flex;align-items:center;gap:11px;background:linear-gradient(180deg,var(--panelHi),var(--panel) 60%);border:var(--bd) solid var(--ink);border-radius:var(--r);box-shadow:var(--sh);padding:11px 13px;cursor:pointer;text-align:left;transition:transform .05s,box-shadow .05s}
-.joffer::before{content:"";position:absolute;inset:0;border-radius:calc(var(--r) - 2px);background:var(--gloss);pointer-events:none}
-.joffer{position:relative}
-.joffer:active{transform:translateY(3px);box-shadow:var(--shS)}
-.joffer .ic{font-size:26px;flex:0 0 auto}
-.joffer .jn{font-size:15px;font-weight:700;color:var(--gold);text-shadow:1px 1px 0 var(--ink)}
-.joffer .jd{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.3}
-.home h2{font-size:13px;color:var(--muted);margin:14px 0 8px;letter-spacing:.1em}
-.runinfo{font-size:11px;color:var(--muted);margin-top:14px;line-height:1.5;max-width:330px}
+.ovpanel{background:var(--panel);clip-path:var(--pc);padding:24px 20px 20px;max-width:420px;width:100%;margin:auto 0;position:relative;animation:panelIn .3s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes panelIn{from{transform:translateY(16px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.ov h1{font-size:36px;font-weight:700;color:var(--gold);margin-bottom:12px;letter-spacing:1px;line-height:1.15}
+.ov h1.dead{color:var(--red)}
+.ov p{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:16px}
+.ov p b{color:#fff}
+.ov .menu{width:100%;font-size:16px;padding:14px;margin-top:2px}
 
-/* forge */
-#forgeShop{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px;margin-bottom:12px}
-.forgeRow{position:relative;display:flex;align-items:center;gap:11px;background:linear-gradient(180deg,var(--panelHi),var(--panel) 60%);border:var(--bd) solid var(--ink);border-radius:var(--r);box-shadow:var(--sh);padding:10px 12px;cursor:pointer;text-align:left;transition:transform .05s,box-shadow .05s}
-.forgeRow::before{content:"";position:absolute;inset:0;border-radius:calc(var(--r) - 2px);background:var(--gloss);pointer-events:none}
-.forgeRow:active:not(.off){transform:translateY(3px);box-shadow:var(--shS)}
-.forgeRow.off{opacity:.5;cursor:default;box-shadow:var(--shS)}
-.forgeRow .ic{font-size:24px;flex:0 0 auto}
-.forgeRow .fn{font-size:14px;font-weight:700;color:var(--gold);text-shadow:1px 1px 0 var(--ink)}
-.forgeRow .fd{font-size:10.5px;color:var(--muted);margin-top:2px;line-height:1.3}
-.forgeRow .cost{margin-left:auto;font-size:15px;font-weight:700;color:var(--lime);white-space:nowrap;align-self:center;text-shadow:1px 1px 0 var(--ink)}
-.forgeRow.off .cost{color:var(--red)}
-#forgePick{display:none;flex-direction:column;gap:10px;width:100%;max-width:344px;margin-bottom:10px}
+/* lignes type boutique (octogones, badge + cost) */
+.shopList{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.shopItem{display:flex;align-items:center;gap:12px;background:var(--panelDk2);clip-path:var(--pc);padding:10px 12px;text-align:left;cursor:pointer;transition:transform .08s}
+.shopItem:active:not(.off){transform:translateY(2px)}
+.shopItem.off{opacity:.45;cursor:default}
+.shopTok{flex:0 0 auto;width:58px;height:58px;display:flex;align-items:center;justify-content:center;background:#0e1620;clip-path:var(--pc);font-size:27px;line-height:1}
+.sInfo{flex:1;min-width:0}
+.sInfo .nm{font-size:15px;font-weight:700;color:var(--gold)}
+.sInfo .ds{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4}
+.sCost{flex:0 0 auto;align-self:center;font-family:'Jersey 15',monospace;font-weight:700;font-size:16px;color:var(--lime);background:#0e1620;clip-path:var(--pc);padding:9px 11px;white-space:nowrap}
+.shopItem.off .sCost{color:var(--red)}
+
+/* infos / règles (octogone + accent or à gauche) */
+.howto{text-align:left;font-size:11.5px;line-height:1.5;color:#fff;margin-top:8px;display:flex;flex-direction:column;gap:7px}
+.howto h2{font-size:12px;color:var(--muted);letter-spacing:.12em;margin:4px 0 1px;text-align:center}
+.howto>div:not(.howH){background:var(--panelDk2);clip-path:var(--pc);padding:8px 11px;box-shadow:inset 4px 0 0 var(--gold)}
+.howto .k{color:var(--gold)}.howto .d{color:var(--red)}
+
+/* forge — sélecteur de cartes */
+#forgePick{display:none;flex-direction:column;gap:10px;width:100%;margin-bottom:10px}
 #forgePick.show{display:flex}
-.pickGrid{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-height:44vh;overflow:auto;padding:8px;background:rgba(0,0,0,.3);border:var(--bd) solid var(--ink);border-radius:var(--r)}
+.pickGrid{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-height:42vh;overflow:auto;padding:8px;background:#0e1620;clip-path:var(--pc)}
 .card.mini{width:34px;height:48px;border-width:2px;border-radius:5px;cursor:pointer}
 .card.mini .cn{font-size:10px;top:2px;left:3px}
 .card.mini:active{box-shadow:0 0 0 3px var(--gold),var(--shS)}
-.pickTtl{font-size:13px;color:var(--paper)}
+.pickTtl{font-size:13px;color:var(--paper);margin-bottom:2px}
 </style>
 </head>
 <body>
@@ -242,38 +244,46 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:var(--bg0);col
 
 <!-- joker pick -->
 <div class="ov" id="jokOv">
-  <h1 class="J">VICTOIRE</h1>
-  <p id="jokSub">Choisis 1 joker.</p>
-  <div class="jpick" id="jokOffer"></div>
+  <div class="ovpanel">
+    <h1 class="J">VICTOIRE</h1>
+    <p id="jokSub">Choisis 1 joker.</p>
+    <div class="shopList" id="jokOffer"></div>
+  </div>
 </div>
 
 <!-- forge -->
 <div class="ov" id="forgeOv">
-  <h1 class="J">LA FORGE</h1>
-  <p id="forgeSub">Affûte ton deck avant le prochain duel.</p>
-  <div id="forgeShop"></div>
-  <div id="forgePick"></div>
-  <button class="btn b-gold menu" id="forgeGo">DUEL SUIVANT →</button>
+  <div class="ovpanel">
+    <h1 class="J">LA FORGE</h1>
+    <p id="forgeSub">Affûte ton deck avant le prochain duel.</p>
+    <div class="shopList" id="forgeShop"></div>
+    <div id="forgePick"></div>
+    <button class="btn b-gold menu" id="forgeGo">DUEL SUIVANT →</button>
+  </div>
 </div>
 
 <!-- result -->
 <div class="ov" id="endOv">
-  <h1 id="endTitle"></h1>
-  <p id="endText"></p>
-  <button class="btn b-gold menu" id="endBtn"></button>
+  <div class="ovpanel">
+    <h1 id="endTitle"></h1>
+    <p id="endText"></p>
+    <button class="btn b-gold menu" id="endBtn"></button>
+  </div>
 </div>
 
 <!-- home / start -->
 <div class="ov show" id="homeOv">
-  <h1 class="J">GIN CLANDESTIN</h1>
-  <p>Bats <b style="color:var(--gold)">6 adversaires</b> en duel de Gin Rummy. Forme des suites et des brelans, vide ta main, et frappe (<b style="color:var(--gold)">KNOCK</b>) avant l'adversaire. Après chaque victoire, choisis un <b style="color:var(--gold)">joker</b>.</p>
-  <button class="btn b-lime menu" onclick="startRun()">COMMENCER LA NUIT</button>
-  <div class="home"><h2>RÈGLES EXPRESS</h2></div>
-  <div class="runinfo">
-    → <b>Brelan</b> : 3-4 cartes de même rang. <b>Suite</b> : 3+ cartes qui se suivent, même couleur.<br>
-    → À ton tour : pioche (pioche ou défausse) puis défausse 1 carte.<br>
-    → <b>KNOCK</b> dès que tes cartes mortes ≤ 10. <b>GIN</b> = 0 carte morte (gros bonus).<br>
-    → Les <b style="color:var(--red)">boss</b> imposent une contrainte vicieuse.
+  <div class="ovpanel">
+    <h1 class="J">GIN CLANDESTIN</h1>
+    <p>Bats <b>6 adversaires</b> en duel de Gin Rummy. Forme des suites et des brelans, vide ta main, et frappe (<b>KNOCK</b>) avant l'adversaire. Après chaque victoire, choisis un <b>joker</b> et affûte ton deck à la <b>Forge</b>.</p>
+    <button class="btn b-lime menu" onclick="startRun()">COMMENCER LA NUIT</button>
+    <div class="howto">
+      <h2>RÈGLES EXPRESS</h2>
+      <div>→ <span class="k">Brelan</span> : 3-4 cartes de même rang. <span class="k">Suite</span> : 3+ qui se suivent, même couleur.</div>
+      <div>→ À ton tour : pioche (pioche ou défausse) puis défausse 1 carte.</div>
+      <div>→ <span class="k">KNOCK</span> dès que tes cartes mortes ≤ 10. <span class="k">GIN</span> = 0 carte morte (gros bonus).</div>
+      <div>→ Tous les boss imposent une <span class="d">contrainte</span> vicieuse.</div>
+    </div>
   </div>
 </div>
 
@@ -607,8 +617,8 @@ function offerJokers(detail,gain){
   for(let i=0;i<3&&p.length;i++){offer.push(p.splice(rnd(p.length),1)[0]);}
   const box=document.getElementById('jokOffer');box.innerHTML='';
   offer.forEach(j=>{
-    const d=document.createElement('div');d.className='joffer';
-    d.innerHTML=`<span class="ic">${j.ic}</span><div><div class="jn">${j.n}</div><div class="jd">${j.d}</div></div>`;
+    const d=document.createElement('div');d.className='shopItem';
+    d.innerHTML=`<div class="shopTok">${j.ic}</div><div class="sInfo"><div class="nm">${j.n}</div><div class="ds">${j.d}</div></div>`;
     d.onclick=()=>{G.jokers.push(j);ov.classList.remove('show');G.duel++;openForge(startDuel);};
     box.appendChild(d);
   });
@@ -644,8 +654,8 @@ function renderForge(){
   FORGE_SERVICES.forEach(s=>{
     const cost=forgeCost(s.id);
     const off=G.coins<cost || (s.id==='burn'&&G.deck.length<=20);
-    const row=document.createElement('div');row.className='forgeRow'+(off?' off':'');
-    row.innerHTML=`<span class="ic">${s.ic}</span><div><div class="fn">${s.n}</div><div class="fd">${s.d}</div></div><span class="cost">${cost}🪙</span>`;
+    const row=document.createElement('div');row.className='shopItem'+(off?' off':'');
+    row.innerHTML=`<div class="shopTok">${s.ic}</div><div class="sInfo"><div class="nm">${s.n}</div><div class="ds">${s.d}</div></div><div class="sCost">${cost}🪙</div>`;
     if(!off)row.onclick=()=>forgeBuy(s.id,cost);
     shop.appendChild(row);
   });
