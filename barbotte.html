@@ -41,7 +41,9 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
 
 #mid{flex:1;display:flex;flex-direction:column;min-height:0;gap:7px;padding:6px 6px 0;width:100%;max-width:620px;margin:0 auto}
 #bankRow{display:flex;align-items:center;gap:9px;background:var(--panelDk2);clip-path:var(--pc);padding:8px 11px}
-#bankFace{width:42px;height:42px;flex:0 0 auto;clip-path:var(--pc);background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:23px}
+#bankFace{width:46px;height:46px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:transparent}
+#bankFace .die{width:44px;height:44px;border-width:3px;box-shadow:2px 3px 0 rgba(0,0,0,.4)}
+#bankFace .die .pip{width:7px;height:7px}
 #bankInfo{flex:1;min-width:0}
 #bankName{font-size:16px;font-weight:700;color:var(--paper)}
 #bankName.boss{color:var(--red)}
@@ -144,7 +146,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
 .gameList .btn{flex:0 0 auto;width:100%}
 .shopItem{display:flex;align-items:center;gap:12px;background:var(--panelDk2);clip-path:var(--pc);padding:10px 12px;text-align:left;cursor:pointer;transition:transform .08s}
 .shopItem:active{transform:translateY(2px)}
-.shopTok{flex:0 0 auto;width:58px;height:58px;display:flex;align-items:center;justify-content:center;background:#0e1620;clip-path:var(--pc);font-size:27px}
+.shopTok{flex:0 0 auto;width:58px;height:58px;display:flex;align-items:center;justify-content:center;background:#0e1620;clip-path:var(--pc);font-size:17px;font-weight:700;color:var(--gold);text-align:center;line-height:1.05;padding:4px}
 .sInfo{flex:1;min-width:0}
 .sInfo .nm{font-size:15px;font-weight:700;color:var(--gold)}
 .sInfo .ds{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4}
@@ -169,7 +171,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
 
   <div id="mid">
     <div id="bankRow">
-      <div id="bankFace">🍺</div>
+      <div id="bankFace"></div>
       <div id="bankInfo">
         <div id="bankName">—</div>
         <div id="bankRule"></div>
@@ -237,34 +239,34 @@ function showPop(kind,big,txt){const p=document.getElementById('multPop');p.clas
 
 /* ===================== JEUX ===================== */
 const GAMES=[
-  {id:'craps',  ic:'🎲',n:'PASSE',  d:'Le craps : 7/11 gagne, fais ton point avant un 7. Multiplicateur qui grimpe.'},
-  {id:'figures',ic:'🂡',n:'FIGURES',d:'5 dés, 3 lancers : compose brelan, suite, full, carré, yahtzee.'},
+  {id:'craps',  n:'PASSE',  d:'Le craps : 7/11 gagne, fais ton point avant un 7. Multiplicateur qui grimpe.'},
+  {id:'figures',n:'FIGURES',d:'5 dés, 3 lancers : compose brelan, suite, full, carré, yahtzee.'},
 ];
 const TABLES=[
-  {name:'Le Rade',         face:'🍺', boss:null, desc:'Le bar du coin. On chauffe les dés.'},
-  {name:'L\'Arrière-cour', face:'🚬', boss:null, desc:'Ça mise plus sec ici.'},
-  {name:'Le Croupier',     face:'🎩', boss:'hard', desc:'BOSS · plus dur : au craps le 11 perd, aux figures la paire ne paie plus.'},
-  {name:'La Cave',         face:'🕳️', boss:null, desc:'Sous la ville, on joue gros.'},
-  {name:'Le Cercle',       face:'🎴', boss:null, desc:'Les gros bonnets sont là.'},
-  {name:'La Banque',       face:'🏛️', boss:'less', desc:'BOSS · au craps point à faire 2 fois, aux figures un lancer en moins.'},
+  {name:'Le Rade',         boss:null, desc:'Le bar du coin. On chauffe les dés.'},
+  {name:'L\'Arrière-cour', boss:null, desc:'Ça mise plus sec ici.'},
+  {name:'Le Croupier',     boss:'hard', desc:'BOSS · plus dur : au craps le 11 perd, aux figures la paire ne paie plus.'},
+  {name:'La Cave',         boss:null, desc:'Sous la ville, on joue gros.'},
+  {name:'Le Cercle',       boss:null, desc:'Les gros bonnets sont là.'},
+  {name:'La Banque',       boss:'less', desc:'BOSS · au craps point à faire 2 fois, aux figures un lancer en moins.'},
 ];
 const RELICS_CRAPS=[
-  {id:'chaud',   ic:'🔥',n:'Main chaude', d:'Ton multiplicateur démarre à ×1,3.'},
-  {id:'compteur',ic:'📈',n:'Compteur',   d:'+0,40 au multiplicateur par relance (au lieu de +0,25).'},
-  {id:'trefle',  ic:'🍀',n:'Trèfle',     d:'Le 11 au come-out paie DOUBLE.'},
-  {id:'porte',   ic:'🧿',n:'Porte-bonheur',d:'Le 2 et le 12 au come-out ne te font plus perdre.'},
-  {id:'assurance',ic:'🛡️',n:'Assurance', d:'Au seven-out, tu ne perds que la MOITIÉ de ta mise.'},
-  {id:'banquier',ic:'🏦',n:'Banquier',   d:'+3 jetons à chaque relance neutre.'},
-  {id:'fortune', ic:'💰',n:'Fortune',    d:'Tes gains de manche sont augmentés de 25%.'},
+  {id:'chaud',   tok:'×1.3',n:'Main chaude', d:'Ton multiplicateur démarre à ×1,3.'},
+  {id:'compteur',tok:'+.4', n:'Compteur',   d:'+0,40 au multiplicateur par relance (au lieu de +0,25).'},
+  {id:'trefle',  tok:'11×2',n:'Trèfle',     d:'Le 11 au come-out paie DOUBLE.'},
+  {id:'porte',   tok:'2·12',n:'Porte-bonheur',d:'Le 2 et le 12 au come-out ne te font plus perdre.'},
+  {id:'assurance',tok:'−½', n:'Assurance', d:'Au seven-out, tu ne perds que la MOITIÉ de ta mise.'},
+  {id:'banquier',tok:'+3$', n:'Banquier',   d:'+3 jetons à chaque relance neutre.'},
+  {id:'fortune', tok:'+25%',n:'Fortune',    d:'Tes gains de manche sont augmentés de 25%.'},
 ];
 const RELICS_FIG=[
-  {id:'fortune', ic:'💰',n:'Fortune',    d:'Tes gains de manche sont augmentés de 25%.'},
-  {id:'quatre',  ic:'🎲',n:'Quatrième jet',d:'+1 lancer par manche (4 au lieu de 3).'},
-  {id:'fetiche', ic:'⭐',n:'Dé fétiche', d:'Le Yahtzee paie ×16 au lieu de ×10.'},
-  {id:'rampe',   ic:'➡️',n:'Rampe',      d:'Une petite suite est payée comme une grande.'},
-  {id:'pactole', ic:'👯',n:'Pactole',    d:'Paires, deux paires et brelans paient le DOUBLE.'},
-  {id:'banquier',ic:'🏦',n:'Banquier',   d:'+4 jetons à chaque relance.'},
-  {id:'des6',    ic:'6️⃣',n:'Pipé',       d:'Au tout premier lancer d\'une manche, un dé tombe sur 6.'},
+  {id:'fortune', tok:'+25%',n:'Fortune',    d:'Tes gains de manche sont augmentés de 25%.'},
+  {id:'quatre',  tok:'+1',  n:'Quatrième jet',d:'+1 lancer par manche (4 au lieu de 3).'},
+  {id:'fetiche', tok:'×16', n:'Dé fétiche', d:'Le Yahtzee paie ×16 au lieu de ×10.'},
+  {id:'rampe',   tok:'SUITE',n:'Rampe',      d:'Une petite suite est payée comme une grande.'},
+  {id:'pactole', tok:'×2',  n:'Pactole',    d:'Paires, deux paires et brelans paient le DOUBLE.'},
+  {id:'banquier',tok:'+4$', n:'Banquier',   d:'+4 jetons à chaque relance.'},
+  {id:'des6',    tok:'6',   n:'Pipé',       d:'Au tout premier lancer d\'une manche, un dé tombe sur 6.'},
 ];
 let G={};
 function freshRun(mode){G={mode,table:0,chips:60,bet:10,relics:[],phase:'bet',rolling:false,landed:false,dice:[],dtrans:[],rollingIdx:[],kept:[],rollsLeft:0,point:0,mult:1,pointHits:0,boss:null};}
@@ -312,7 +314,7 @@ function setMsg(t){document.getElementById('msg').innerHTML=t;}
 function renderTop(){document.getElementById('tableNum').innerHTML=shakeNum(G.table+1);document.getElementById('chipsV').innerHTML=shakeNum(G.chips);}
 function renderBank(){
   const t=TABLES[G.table];
-  document.getElementById('bankFace').textContent=t.face;
+  const bf=document.getElementById('bankFace');bf.innerHTML='';bf.appendChild(dieFace(Math.min(6,G.table+1)));
   const nm=document.getElementById('bankName');nm.textContent=t.name;nm.className=t.boss?'boss':'';
   document.getElementById('bankRule').textContent=t.desc;
   document.getElementById('objLine').innerHTML='Objectif : <b>'+goalFor(G.table)+'</b> jetons';
@@ -325,12 +327,12 @@ function renderFeltStat(){
   p.push('<span class="fpill">OBJECTIF <b>'+goalFor(G.table)+'</b></span>');
   if(G.mode==='craps'){
     if(G.point){p.push('<span class="fpill hot">POINT <span class="big">'+G.point+'</span></span>');p.push('<span class="fpill">GAIN ×<b>'+G.mult.toFixed(2)+'</b></span>');}
-    if(G.boss==='hard')p.push('<span class="fpill boss">🎩 11 = craps</span>');
-    if(G.boss==='less')p.push('<span class="fpill boss">🏛️ point ×2'+(G.point?(' ('+G.pointHits+'/2)'):'')+'</span>');
+    if(G.boss==='hard')p.push('<span class="fpill boss">11 = CRAPS</span>');
+    if(G.boss==='less')p.push('<span class="fpill boss">POINT ×2'+(G.point?(' ('+G.pointHits+'/2)'):'')+'</span>');
   }else{
     if(G.phase==='roll'){const f=evalFigure(G.dice);p.push('<span class="fpill fig">'+f.name+'</span>');p.push('<span class="fpill">LANCERS <b>'+G.rollsLeft+'</b></span>');}
-    if(G.boss==='hard')p.push('<span class="fpill boss">🎩 paire = rien</span>');
-    if(G.boss==='less')p.push('<span class="fpill boss">🏛️ −1 lancer</span>');
+    if(G.boss==='hard')p.push('<span class="fpill boss">PAIRE = 0</span>');
+    if(G.boss==='less')p.push('<span class="fpill boss">−1 LANCER</span>');
   }
   el.innerHTML=p.join('');
 }
@@ -508,7 +510,7 @@ function offerRelics(){
   const box=document.getElementById('relOffer');box.innerHTML='';
   offer.forEach(r=>{
     const d=document.createElement('div');d.className='shopItem';
-    d.innerHTML=`<div class="shopTok">${r.ic}</div><div class="sInfo"><div class="nm">${r.n}</div><div class="ds">${r.d}</div></div>`;
+    d.innerHTML=`<div class="shopTok">${r.tok}</div><div class="sInfo"><div class="nm">${r.n}</div><div class="ds">${r.d}</div></div>`;
     d.onclick=()=>{G.relics.push(r);ov.classList.remove('show');G.table++;startTable();};
     box.appendChild(d);
   });
@@ -535,7 +537,7 @@ function renderGameList(){
   const box=document.getElementById('gameList');box.innerHTML='';box.className='gameList';
   GAMES.forEach((g,i)=>{
     const b=document.createElement('button');b.className='btn menu '+(i===0?'b-gold':'b-teal');if(i)b.style.marginTop='9px';
-    b.innerHTML='<span class="blbl">'+g.ic+' '+shakeText(g.n)+'</span><small>'+g.d+'</small>';
+    b.innerHTML='<span class="blbl">'+shakeText(g.n)+'</span><small>'+g.d+'</small>';
     b.onclick=()=>startRun(g.id);box.appendChild(b);
   });
 }
