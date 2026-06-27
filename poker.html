@@ -83,6 +83,9 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
 .card.tap{cursor:pointer}
 .card.deal{animation:deal .3s cubic-bezier(.2,1.4,.4,1) both}
 @keyframes deal{from{transform:translateY(-22px) rotate(-6deg);opacity:0}to{transform:none;opacity:1}}
+.card.flip{animation:flipIn .42s cubic-bezier(.25,.85,.35,1) both}
+@keyframes flipIn{0%{transform:perspective(500px) rotateY(90deg) scale(1.04);opacity:.15}55%{opacity:1}100%{transform:none;opacity:1}}
+#commHand{min-height:62px;gap:6px}
 
 #relRow{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;min-height:0}
 .rchip{font-size:10px;font-weight:700;background:#0e1620;clip-path:var(--pc);padding:5px 9px;color:var(--paper);box-shadow:3px 3px 0 rgba(0,0,0,.4)}
@@ -172,6 +175,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
       <div id="feltStat"></div>
       <div class="seat"><div class="seatTag" id="aiTag">ADVERSAIRE</div><div class="handRow" id="aiHand"></div></div>
       <div class="potBox"><span class="pl">POT</span><div class="pv" id="potV">0</div></div>
+      <div class="handRow" id="commHand"></div>
       <div class="seat"><div class="handRow" id="youHand"></div><div class="seatTag" id="youTag">TOI</div></div>
       <div id="msg"></div>
     </div>
@@ -255,7 +259,11 @@ function evalPoker(cards){
   return {rank,tb,name};
 }
 function cmpPoker(a,b){if(a.rank!==b.rank)return a.rank-b.rank;for(let i=0;i<5;i++){const x=a.tb[i]||0,y=b.tb[i]||0;if(x!==y)return x-y;}return 0;}
-function aiStrength(cards){const e=evalPoker(cards);return (e.rank*14+(e.tb[0]||0))/(8*14+14);}
+function combos5(a){const r=[],n=a.length;for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)for(let k=j+1;k<n;k++)for(let l=k+1;l<n;l++)for(let m=l+1;m<n;m++)r.push([a[i],a[j],a[k],a[l],a[m]]);return r;}
+function bestEval(cards){let best=null;for(const co of combos5(cards)){const e=evalPoker(co);if(!best||cmpPoker(e,best)>0)best=e;}return best;}
+function preflopStrength(two){const v=two.map(c=>rankVal(c.r)).sort((a,b)=>b-a);let s=(v[0]+v[1])/28;if(v[0]===v[1])s=0.5+v[0]/30;if(two[0].s===two[1].s)s+=0.06;if(Math.abs(v[0]-v[1])===1)s+=0.04;return Math.min(1,s);}
+function handStrength(hole,comm){const a=hole.concat(comm);if(a.length>=5){const e=bestEval(a);return (e.rank*14+(e.tb[0]||0))/(8*14+14);}return preflopStrength(hole);}
+function bestName(hole){const a=hole.concat(D.community?D.community.slice(0,D.revealed):[]);return a.length>=5?bestEval(a).name:'—';}
 
 /* ===================== ÉTAT / RUN ===================== */
 const TABLES=[
@@ -270,7 +278,7 @@ const RELICS=[
   {id:'voyant', tok:'VOIR',n:'Sixième sens', d:'Tu vois une carte de l\'adversaire à chaque main.'},
   {id:'fortune',tok:'+25%',n:'Veine',        d:'Tes gains de main sont augmentés de 25%.'},
   {id:'bluff',  tok:'PEUR',n:'Regard noir',  d:'L\'adversaire se couche plus souvent face à tes mises.'},
-  {id:'mull',   tok:'5×',  n:'Re-donne',     d:'Tu peux échanger jusqu\'à tes 5 cartes (au lieu de 3).'},
+  {id:'lecteur',tok:'2e',  n:'Lecteur',      d:'Tu vois les DEUX cartes fermées de l\'adversaire à chaque main.'},
   {id:'magot',  tok:'+3',  n:'Magot',        d:'+3 jetons à chaque main jouée.'},
   {id:'assur',  tok:'−½',  n:'Assurance',    d:'Si tu perds l\'abattage, tu récupères la moitié de ta mise.'},
   {id:'carre',  tok:'+40', n:'Gros coup',    d:'+40 jetons bonus quand tu gagnes avec un carré ou mieux.'},
@@ -280,7 +288,6 @@ function freshRun(){G={table:0,chips:80,bet:10,relics:[],phase:'stake',run:true}
 function hasR(id){return G.relics.some(r=>r.id===id);}
 function niceRound(n){if(n<100)return Math.round(n/5)*5;const p=Math.pow(10,Math.floor(Math.log10(n))-1);return Math.round(n/p)*p;}
 function goalFor(t){let g=niceRound(150*Math.pow(1.8,t));if(TABLES[t]&&TABLES[t].boss)g=niceRound(g*1.2);return g;}
-function maxDiscard(){return hasR('mull')?5:3;}
 
 let D={};
 function deck52(){const d=[];for(const s of SUITS)for(const r of RANKS)d.push({r,s});return d;}
@@ -301,27 +308,27 @@ function renderOpp(){
 function renderFeltStat(){
   const el=document.getElementById('feltStat');el.innerHTML='';
   const p=['<span class="fpill">OBJECTIF <b>'+goalFor(G.table)+'</b></span>'];
-  if(D.you&&D.you.length===5&&G.phase!=='stake')p.push('<span class="fpill">TA MAIN <b>'+evalPoker(D.you).name+'</b></span>');
+  if(D.you&&D.you.length&&G.phase!=='stake'){const n=bestName(D.you);if(n!=='—')p.push('<span class="fpill">TA MAIN <b>'+n+'</b></span>');}
   el.innerHTML=p.join('');
 }
 function renderHands(){
-  const ah=document.getElementById('aiHand');ah.innerHTML='';
   const reveal=D.reveal;
+  const ah=document.getElementById('aiHand');ah.innerHTML='';
   (D.ai||[]).forEach((c,i)=>{
-    let show=reveal||(D.peek&&D.peek.includes(i));
-    const el=show?cardEl(c,{cls:(reveal&&D.aiWinIdx&&D.aiWinIdx.includes(i))?' win':''}):cardEl(c,{back:true});
-    ah.appendChild(el);
+    const show=reveal||(D.peek&&D.peek.includes(i));
+    ah.appendChild(show?cardEl(c):cardEl(c,{back:true}));
   });
   document.getElementById('aiTag').innerHTML=reveal&&D.aiEval?('ADVERSAIRE · <b>'+D.aiEval.name+'</b>'):'ADVERSAIRE';
-  const yh=document.getElementById('youHand');yh.innerHTML='';
-  (D.you||[]).forEach((c,i)=>{
-    const sel=D.sel&&D.sel.includes(i), tap=(G.phase==='draw');
-    const el=cardEl(c,{cls:(sel?' sel':'')+(tap?' tap':'')+(D.youWinIdx&&D.youWinIdx.includes(i)?' win':'')});
-    if(tap)el.onclick=()=>tapCard(i);
-    yh.appendChild(el);
+  // cartes communes (retournées une par une)
+  const ch=document.getElementById('commHand');ch.innerHTML='';
+  (D.community||[]).slice(0,D.revealed||0).forEach((c,i)=>{
+    ch.appendChild(cardEl(c,{cls:(i===(D.revealed-1)&&D.flipLast)?' flip':''}));
   });
-  const yt=document.getElementById('youTag');
-  yt.innerHTML=(D.you&&D.you.length===5)?('TOI · <b>'+evalPoker(D.you).name+'</b>'):'TOI';
+  D.flipLast=false;
+  // tes 2 cartes
+  const yh=document.getElementById('youHand');yh.innerHTML='';
+  (D.you||[]).forEach(c=>yh.appendChild(cardEl(c)));
+  document.getElementById('youTag').innerHTML=(D.you&&D.you.length)?('TOI · <b>'+bestName(D.you)+'</b>'):'TOI';
   document.getElementById('potV').innerHTML=shakeNum(D.pot||0);
 }
 function renderRelics(){const r=document.getElementById('relRow');r.innerHTML='';G.relics.forEach(x=>{const d=document.createElement('div');d.className='rchip';d.innerHTML='<b>'+x.tok+'</b> '+x.n;r.appendChild(d);});}
@@ -335,17 +342,15 @@ function renderChips(){
 function renderActions(){
   const a=document.getElementById('actions');a.innerHTML='';
   const add=(label,cls,fn,sub,dis)=>{const b=document.createElement('button');b.className='btn '+cls;b.innerHTML='<span class="blbl">'+shakeText(label)+'</span>'+(sub?`<small>${sub}</small>`:'');b.disabled=!!dis;if(!dis)b.onclick=fn;a.appendChild(b);};
-  document.getElementById('hint').textContent={stake:'Choisis ta mise',bet1:'Tour d\'enchères',draw:'Jette puis repioche',bet2:'Dernier tour',call1:'Il a misé',call2:'Il a misé'}[G.phase]||'';
-  if(G.phase==='stake'){add('DONNER','b-gold ready',deal,'ante '+anteAmt()+' · distribue');}
-  else if(G.phase==='bet1'||G.phase==='bet2'){
+  const STREET=['PRÉ-FLOP','FLOP','TURN','RIVER'];
+  document.getElementById('hint').textContent=G.phase==='stake'?'Choisis ta mise':(G.phase==='bet'||G.phase==='call')?STREET[G.street]:'';
+  if(G.phase==='stake'){add('DONNER','b-gold ready',deal,'mise '+anteAmt()+' · distribue');}
+  else if(G.phase==='bet'){
     add('MISER','b-gold ready',()=>youBet(),'+'+G.bet+' au pot');
     add('PASSER','b-blue',()=>youCheck(),'checker');
-  }else if(G.phase==='call1'||G.phase==='call2'){
+  }else if(G.phase==='call'){
     add('SUIVRE','b-gold ready',()=>youCall(),'+'+D.toCall+' au pot');
     add('SE COUCHER','b-red',()=>youFold(),'abandonner');
-  }else if(G.phase==='draw'){
-    const n=D.sel?D.sel.length:0;
-    add('ÉCHANGER',(n?'b-gold ready':'b-gold'),()=>doDraw(),n?('jeter '+n+' carte'+(n>1?'s':'')):'garde tout');
   }else{add('…','b-blue',null,'',true);}
 }
 function renderAll(){renderTop();renderOpp();renderFeltStat();renderHands();renderRelics();renderChips();renderActions();}
@@ -358,8 +363,8 @@ function startTable(){
 }
 function newHand(){
   if(G.bet>G.chips)G.bet=Math.min(10,G.chips);
-  D={you:[],ai:[],deck:[],pot:0,youContrib:0,aiContrib:0,sel:[],toCall:0,reveal:false,peek:null,tell:'',aiEval:null,youWinIdx:null,aiWinIdx:null};
-  G.phase='stake';
+  D={you:[],ai:[],community:[],revealed:0,deck:[],pot:0,youContrib:0,aiContrib:0,toCall:0,reveal:false,peek:null,tell:'',aiEval:null,flipLast:false};
+  G.phase='stake';G.street=0;
   renderAll();
   setMsg('Choisis ta mise et <b>donne</b> les cartes.');
 }
@@ -368,118 +373,79 @@ function deal(){
   const ante=Math.min(anteAmt(),G.chips);
   if(ante<5){setMsg('Il te faut au moins <b>5 jetons</b>.');return;}
   D.deck=shuffle(deck52());
-  D.you=[];D.ai=[];for(let k=0;k<5;k++){D.you.push(D.deck.pop());D.ai.push(D.deck.pop());}
+  D.you=[D.deck.pop(),D.deck.pop()];
+  D.ai=[D.deck.pop(),D.deck.pop()];
+  D.community=[D.deck.pop(),D.deck.pop(),D.deck.pop(),D.deck.pop(),D.deck.pop()];
+  D.revealed=0;
   D.youContrib=ante;D.aiContrib=ante;D.pot=ante*2;
-  sortYou();
-  if(hasR('voyant')||G.boss==='peek'){/* placeholder, handled below */}
-  D.peek=hasR('voyant')?[rnd(5)]:null;          // tu vois une de SES cartes
-  if(G.boss==='peek')D.tell='Il a vu une de tes cartes.';
-  G.phase='bet1';
+  D.peek=hasR('lecteur')?[0,1]:(hasR('voyant')?[rnd(2)]:null);   // tu vois ses cartes fermées
+  if(G.boss==='peek')D.tell='Il a lu une de tes cartes.';
+  G.phase='bet';G.street=0;
   renderAll();
-  setMsg('Cartes données. <b>Mise</b> ou <b>passe</b>.');
+  setMsg('Tes 2 cartes sont servies. <b>Mise</b> ou <b>passe</b>.');
 }
-function sortYou(){D.you.sort((a,b)=>rankVal(b.r)-rankVal(a.r)||SUITS.indexOf(a.s)-SUITS.indexOf(b.s));}
 
 /* ---- enchères ---- */
-function curRound(){return (G.phase==='bet1'||G.phase==='call1')?1:2;}
 function youBet(){
-  if(G.phase!=='bet1'&&G.phase!=='bet2')return;
-  const amt=Math.min(G.bet,G.chips-D.youContrib+D.youContrib); // bet from remaining is checked at hand end; allow
+  if(G.phase!=='bet')return;
+  if(D.youContrib+G.bet>G.chips){setMsg('Pas assez de jetons pour miser autant.');return;}
   D.youContrib+=G.bet;D.pot+=G.bet;
-  setMsg('Tu mises <b>'+G.bet+'</b>. L\'adversaire réfléchit…');renderAll();
-  setTimeout(()=>aiVsBet(curRound()),700);
+  setMsg('Tu mises <b>'+G.bet+'</b>. L\'adversaire réfléchit…');G.phase='wait';renderAll();
+  setTimeout(aiVsBet,700);
 }
 function youCheck(){
-  if(G.phase!=='bet1'&&G.phase!=='bet2')return;
-  setMsg('Tu checkes. L\'adversaire réfléchit…');
-  G.phase='wait';renderActions();
-  setTimeout(()=>aiVsCheck(curRound()),700);
+  if(G.phase!=='bet')return;
+  setMsg('Tu checkes. L\'adversaire réfléchit…');G.phase='wait';renderActions();
+  setTimeout(aiVsCheck,700);
 }
 function youCall(){
-  if(G.phase!=='call1'&&G.phase!=='call2')return;
-  D.youContrib+=D.toCall;D.pot+=D.toCall;const r=(G.phase==='call1')?1:2;D.toCall=0;
+  if(G.phase!=='call')return;
+  D.youContrib+=D.toCall;D.pot+=D.toCall;D.toCall=0;
   setMsg('Tu suis.');renderAll();
-  setTimeout(()=>afterBetting(r),500);
+  setTimeout(endStreet,500);
 }
-function youFold(){
-  if(G.phase!=='call1'&&G.phase!=='call2')return;
-  endHand('ai','Tu te couches.');
-}
-function aiVsBet(round){           // tu as misé : l'IA suit, relance ou se couche
-  const s=aiStrength(D.ai);
+function youFold(){if(G.phase!=='call')return;endHand('ai','Tu te couches.');}
+function aiVsBet(){               // tu as misé : l'IA suit, relance ou se couche
+  const s=handStrength(D.ai,D.community.slice(0,D.revealed));
   const foldThr=(hasR('bluff')?0.42:0.32)+(G.boss==='peek'?0.04:0);
-  if(s<foldThr && Math.random()>0.12){return endHand('you','L\'adversaire se couche. Tu rafles le pot !');}
+  if(s<foldThr && Math.random()>0.12)return endHand('you','L\'adversaire se couche. Tu rafles le pot !');
   if(s>0.78 && Math.random()<0.5){ // relance
     D.aiContrib+=G.bet*2;D.pot+=G.bet*2;D.toCall=G.bet;
-    G.phase=(round===1)?'call1':'call2';D.tell='Il relance gros.';renderAll();
-    setMsg('L\'adversaire <b>relance</b>. À toi : suivre ou te coucher ?');
-    return;
+    G.phase='call';D.tell='Il relance gros.';renderAll();
+    setMsg('L\'adversaire <b>relance</b>. Suivre ou te coucher ?');return;
   }
   D.aiContrib+=G.bet;D.pot+=G.bet;D.tell='Il suit.';renderAll();
-  setMsg('L\'adversaire suit.');
-  setTimeout(()=>afterBetting(round),500);
+  setMsg('L\'adversaire suit.');setTimeout(endStreet,500);
 }
-function aiVsCheck(round){          // tu as checké : l'IA check ou mise
-  const s=aiStrength(D.ai);
-  const bet = s>0.6 || (s<0.25&&Math.random()<0.18);   // value ou bluff
-  if(bet){
-    const amt=G.bet;D.aiContrib+=amt;D.pot+=amt;D.toCall=amt;
-    G.phase=(round===1)?'call1':'call2';D.tell='Il mise.';renderAll();
-    setMsg('L\'adversaire <b>mise '+amt+'</b>. Suivre ou te coucher ?');
-    return;
+function aiVsCheck(){             // tu as checké : l'IA check ou mise
+  const s=handStrength(D.ai,D.community.slice(0,D.revealed));
+  if(s>0.6 || (s<0.25&&Math.random()<0.18)){
+    D.aiContrib+=G.bet;D.pot+=G.bet;D.toCall=G.bet;
+    G.phase='call';D.tell='Il mise.';renderAll();
+    setMsg('L\'adversaire <b>mise '+G.bet+'</b>. Suivre ou te coucher ?');return;
   }
   D.tell='Il checke.';renderAll();setMsg('L\'adversaire checke.');
-  setTimeout(()=>afterBetting(round),450);
+  setTimeout(endStreet,450);
 }
-function afterBetting(round){
-  if(round===1){G.phase='draw';D.sel=[];renderAll();setMsg('<b>Échange</b> : touche les cartes à jeter (max '+maxDiscard()+'), puis ÉCHANGER.');}
-  else showdown();
+/* ---- streets : cartes communes retournées une par une ---- */
+function endStreet(){
+  if(G.street>=3)return showdown();
+  const target={0:3,1:4,2:5}[G.street];
+  G.phase='wait';D.tell='';renderActions();
+  const STN=['','LE FLOP','LE TURN','LE RIVER'];
+  setMsg('On dévoile '+STN[G.street+1]+'…');
+  revealUpTo(target,()=>{G.street++;G.phase='bet';renderAll();setMsg('À toi. <b>Mise</b> ou <b>passe</b>.');});
 }
-
-/* ---- échange ---- */
-function tapCard(i){
-  if(G.phase!=='draw')return;
-  const k=D.sel.indexOf(i);
-  if(k>=0)D.sel.splice(k,1);
-  else{if(D.sel.length>=maxDiscard()){setMsg('Maximum <b>'+maxDiscard()+'</b> cartes.');return;}D.sel.push(i);}
-  renderHands();renderActions();
-}
-function doDraw(){
-  if(G.phase!=='draw')return;
-  const keep=D.you.filter((_,i)=>!D.sel.includes(i));
-  const drawn=D.sel.length;
-  for(let k=0;k<drawn;k++)keep.push(D.deck.pop());
-  D.you=keep;sortYou();D.sel=[];
-  // IA échange
-  aiDraw();
-  G.phase='wait';renderAll();
-  setMsg('Tu échanges <b>'+drawn+'</b> carte'+(drawn>1?'s':'')+'. L\'adversaire échange…');
-  setTimeout(()=>{G.phase='bet2';D.tell='';renderAll();setMsg('Dernier tour. <b>Mise</b> ou <b>passe</b>.');},850);
-}
-function aiDraw(){
-  const e=evalPoker(D.ai);
-  let keepIdx;
-  if(e.rank>=4)keepIdx=[0,1,2,3,4];                     // quinte+ : garde tout
-  else{
-    const cnt={};D.ai.forEach(c=>cnt[c.r]=(cnt[c.r]||0)+1);
-    const paired=Object.keys(cnt).filter(r=>cnt[r]>=2);
-    if(paired.length){keepIdx=[];D.ai.forEach((c,i)=>{if(cnt[c.r]>=2)keepIdx.push(i);});}
-    else{ // 4-flush ?
-      const bs={};D.ai.forEach((c,i)=>{(bs[c.s]=bs[c.s]||[]).push(i);});
-      const fl=Object.values(bs).find(g=>g.length>=4);
-      if(fl)keepIdx=fl.slice(0,4);
-      else{const ord=D.ai.map((c,i)=>[rankVal(c.r),i]).sort((a,b)=>b[0]-a[0]);keepIdx=[ord[0][1],ord[1][1]];} // garde 2 hautes
-    }
-  }
-  const keep=D.ai.filter((_,i)=>keepIdx.includes(i));
-  while(keep.length<5)keep.push(D.deck.pop());
-  D.ai=keep;
+function revealUpTo(n,cb){
+  if(D.revealed>=n)return cb&&cb();
+  D.revealed++;D.flipLast=true;renderHands();
+  setTimeout(()=>revealUpTo(n,cb),470);
 }
 
 /* ---- abattage ---- */
 function showdown(){
   D.reveal=true;G.phase='show';
-  const ye=evalPoker(D.you), ae=evalPoker(D.ai);D.aiEval=ae;
+  const ye=bestEval(D.you.concat(D.community)), ae=bestEval(D.ai.concat(D.community));D.aiEval=ae;
   const c=cmpPoker(ye,ae);
   renderAll();
   if(c>0)endHand('you','<b>'+ye.name+'</b> bat <b>'+ae.name+'</b> !',ye);
@@ -488,7 +454,7 @@ function showdown(){
 }
 function endHand(who,detail,yourEval){
   D.reveal=true;G.phase='show';
-  if(who==='you'&&!D.aiEval){D.aiEval=evalPoker(D.ai);} // fold reveal not needed but keep
+  if(!D.aiEval&&D.revealed>=3)D.aiEval=bestEval(D.ai.concat(D.community.slice(0,D.revealed)));
   let delta=0;
   if(who==='you'){
     let gain=D.aiContrib;
