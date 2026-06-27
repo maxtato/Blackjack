@@ -197,11 +197,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #tip:empty{display:none}
 
 /* ===== MULTPOP / WORD ===== */
-#multPop{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);pointer-events:none;z-index:20;text-align:center;opacity:0}
-#multPop .m{color:#fff;font-size:52px;font-weight:700;position:relative;z-index:1;text-shadow:-2px -2px 0 var(--ink),2px -2px 0 var(--ink),-2px 2px 0 var(--ink),2px 2px 0 var(--ink),0 -3px 0 var(--ink),0 3px 0 var(--ink),-3px 0 0 var(--ink),3px 0 0 var(--ink),5px 7px 0 rgba(0,0,0,.32)}
-#multPop.long .m{font-size:36px}
-#multPop .t{position:relative;z-index:1;color:#fff;font-size:17px;margin-top:10px;display:block;text-shadow:2px 2px 0 var(--ink)}
-#multPop .burst{position:absolute;left:50%;top:40%;width:240px;height:240px;z-index:0;transform:translate(-50%,-50%) rotate(-8deg);
+#multPop{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);pointer-events:none;z-index:20;text-align:center;opacity:0;width:270px}
+#multPop .m{color:#fff;font-size:44px;font-weight:700;position:relative;z-index:1;max-width:200px;margin:0 auto;line-height:1;word-break:break-word;text-shadow:-2px -2px 0 var(--ink),2px -2px 0 var(--ink),-2px 2px 0 var(--ink),2px 2px 0 var(--ink),0 -3px 0 var(--ink),0 3px 0 var(--ink),-3px 0 0 var(--ink),3px 0 0 var(--ink),5px 7px 0 rgba(0,0,0,.32)}
+#multPop.long .m{font-size:27px}
+#multPop .t{position:relative;z-index:1;color:#fff;font-size:16px;margin-top:8px;max-width:180px;margin-left:auto;margin-right:auto;display:block;text-shadow:2px 2px 0 var(--ink)}
+#multPop .burst{position:absolute;left:50%;top:40%;width:270px;height:270px;z-index:0;transform:translate(-50%,-50%) rotate(-8deg);
   clip-path:polygon(50% 0,60% 22%,84% 16%,78% 40%,100% 50%,78% 60%,84% 84%,60% 78%,50% 100%,40% 78%,16% 84%,22% 60%,0 50%,22% 40%,16% 16%,40% 22%)}
 #multPop.win .burst{background:var(--yellow)}
 #multPop.lose .burst{background:var(--red)}
@@ -1505,7 +1505,7 @@ function showWord(kind,gain,mult,natural,bust){
   }else if(kind==='push'){word=pick(WORDS.push);sub=gain>0?('+'+abbr(gain)+' $'):'mise rendue';}
   else{word=bust?pick(WORDS.bust):pick(WORDS.lose);sub=gain?abbr(gain)+' $':'';}
   const p=$('multPop');
-  p.className=kind+(word.length>7?' long':'');
+  p.className=kind+(word.length>6?' long':'');
   p.querySelector('.m').textContent=word;p.querySelector('.t').textContent=sub;
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
 }
