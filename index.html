@@ -758,7 +758,7 @@ function startBank(){return 50+uLvl('bank')*15;}
 function startTokens(){return 1+uLvl('net');}
 function startRelics(){if(uLvl('contact')){const r=RELIC_POOL[rndInt(RELIC_POOL.length)];return [Object.assign({},r)];}return [];}
 /* réputation gagnée en franchissant la table de profondeur d (cumulée dans la cagnotte) */
-function tableRepReward(d){return 5+d*5+(isBossDepth(d)?15:0);}
+function tableRepReward(d){return 5+d*5+(isBossDepth(d)?40:0);}
 /* réputation totale en fin de descente : cagnotte (entière si on encaisse, moitié sinon)
    + une prime d'effort liée à la profondeur, pour qu'une descente ratée rapporte toujours */
 function repOnEnd(cashout){
@@ -784,7 +784,8 @@ const BOSS_RULES=[
   {rule:'depart',text:'PATRON · la table démarre déjà chaude (pression +30%)'},
   {rule:'sec',   text:'PATRON · les égalités comptent comme des défaites'},
 ];
-function isBossDepth(depth){return depth%3===0;}
+/* le Patron clôt chaque série : 10ᵉ table (10, 20, 30…) */
+function isBossDepth(depth){return depth%10===0;}
 /* série = palier de 10 tables (1-based) */
 function seriesOf(depth){return Math.floor((depth-1)/10)+1;}
 /* couleur du tapis par série : repère visuel quand on change de palier */
@@ -794,7 +795,7 @@ function seriesFelt(series){return SERIES_FELT[(series-1)%SERIES_FELT.length];}
    chaque série de 10 tables → palier marqué, ça devient vite très dur */
 function goalFor(n){
   const s=Math.floor(n/10);
-  const base=1.6+s*0.12;
+  const base=1.8+s*0.15;
   let g=100*Math.pow(base,n);
   if(g<1000)return Math.round(g/10)*10;
   const mag=Math.pow(10,Math.floor(Math.log10(g))-1);   // arrondi ~2 chiffres significatifs
@@ -803,11 +804,11 @@ function goalFor(n){
 function makeTable(n){
   const depth=n+1,series=seriesOf(depth);
   if(isBossDepth(depth)){
-    const bi=(depth/3|0)-1;
+    const bi=(depth/10|0)-1;
     const b=BOSS_RULES[bi%BOSS_RULES.length];
     let nm=BOSS_NAMES[bi%BOSS_NAMES.length];
     if(bi>=BOSS_NAMES.length)nm+=' '+('I'.repeat(1+Math.floor(bi/BOSS_NAMES.length)));
-    return {name:'★ '+nm,goal:Math.round(goalFor(n)*1.12/5)*5,hands:5,rule:b.rule,ruleText:b.text,depth,series,boss:true};
+    return {name:'★ '+nm,goal:Math.round(goalFor(n)*1.25),hands:5,rule:b.rule,ruleText:b.text,depth,series,boss:true};
   }
   let nm=TBL_NAMES[n%TBL_NAMES.length];
   if(n>=TBL_NAMES.length)nm+=' '+('I'.repeat(1+Math.floor(n/TBL_NAMES.length)));
@@ -1334,8 +1335,13 @@ const SHOPTOK={
   roue:{t:'ÉD<small>?</small>',c:'#a64dff'},
 };
 let shopOffer=[],rerollCost=5;
+/* prix de boutique indexés sur la profondeur (≈ ta banque) : les cartes
+   d'effet restent chères, on ne peut pas en acheter plein d'un coup */
+function niceRound(c){if(c<1000)return Math.max(5,Math.round(c/5)*5);const mag=Math.pow(10,Math.floor(Math.log10(c))-1);return Math.round(c/mag)*mag;}
+function shopScale(){return Math.max(1,goalFor(G.tableIdx)/100*1.5);}
+function itemCost(r){return niceRound(r.cost*shopScale());}
 function openShop(){
-  $('shopBank').textContent=abbr(G.bank);rerollCost=5;
+  $('shopBank').textContent=abbr(G.bank);rerollCost=niceRound(6*shopScale());
   $('shopDepth').textContent=G.table.depth;
   $('shopPot').textContent=abbr(G.pot);
   $('shopReward').textContent=abbr(G.lastReward);
@@ -1366,25 +1372,27 @@ function renderShop(){
       :'<span style="font-size:9px;color:var(--yellow)">◆ RELIQUE</span>';
     const tk=SHOPTOK[r.id]||{t:'?',c:'#ffce3a'};
     d.innerHTML=`<div class="shopTok" style="color:${tk.c}">${tk.t}</div><div class="sInfo"><div class="nm">${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
+    const cost=itemCost(r);
     const b=document.createElement('button');b.className='btn '+(isTarot?'b-purple':'b-gold');
-    b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=r.cost+' $';
+    b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=abbr(cost)+' $';
     const slotFull=isTarot?G.consumables.length>=consumableSlots():G.relics.length>=5;
-    if(it.bought||G.bank<r.cost||slotFull)b.disabled=true;
+    if(it.bought||G.bank<cost||slotFull)b.disabled=true;
     if(slotFull&&!it.bought)b.textContent='PLEIN';
     b.onclick=()=>buyShopItem(i,d,b);
     d.appendChild(b);box.appendChild(d);
   });
-  const rb=$('rerollBtn');if(rb){rb.textContent='RELANCER ('+rerollCost+' $)';rb.disabled=G.bank<rerollCost;}
+  const rb=$('rerollBtn');if(rb){rb.textContent='RELANCER ('+abbr(rerollCost)+' $)';rb.disabled=G.bank<rerollCost;}
 }
 function buyShopItem(i,el,btn){
   const it=shopOffer[i];if(!it||it.bought)return;const r=it.data;
-  if(G.bank<r.cost)return;
+  const cost=itemCost(r);
+  if(G.bank<cost)return;
   if(it.type==='tarot'){
     if(G.consumables.length>=consumableSlots()){popText('SLOTS PLEINS','');return;}
-    G.bank-=r.cost;G.consumables.push(r);
+    G.bank-=cost;G.consumables.push(r);
   }else{
     if(G.relics.length>=5){popText('RELIQUES PLEINES','5 max');return;}
-    G.bank-=r.cost;G.relics.push(r);
+    G.bank-=cost;G.relics.push(r);
   }
   it.bought=true;sfx.buy();
   el.classList.add('bought');btn.disabled=true;btn.textContent='ACQUIS';
@@ -1393,7 +1401,7 @@ function buyShopItem(i,el,btn){
 }
 function rerollShop(){
   if(G.bank<rerollCost)return;
-  G.bank-=rerollCost;rerollCost+=2;$('shopBank').textContent=abbr(G.bank);sfx.card();
+  G.bank-=rerollCost;rerollCost=niceRound(rerollCost+3*shopScale());$('shopBank').textContent=abbr(G.bank);sfx.card();
   rollShop();
 }
 /* CONTINUER : on descend d'un cran (objectif plus haut, cagnotte future plus grosse) */
