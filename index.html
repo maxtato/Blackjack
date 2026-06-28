@@ -134,7 +134,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .hand{display:flex;justify-content:center;flex-wrap:wrap;gap:3px;min-height:80px;align-items:center}
 
 /* ===== CARDS ===== */
-.card{width:60px;height:84px;background:var(--ink);color:var(--inkCard);position:relative;display:flex;align-items:center;justify-content:center;clip-path:var(--rc);filter:drop-shadow(3px 5px 0 rgba(0,0,0,.45));animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife 3.6s ease-in-out var(--cd,0s) infinite}
+.card{width:56px;height:78px;background:var(--ink);color:var(--inkCard);position:relative;display:flex;align-items:center;justify-content:center;clip-path:var(--rc);filter:drop-shadow(3px 5px 0 rgba(0,0,0,.45));animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife 3.6s ease-in-out var(--cd,0s) infinite}
 .card::before{content:"";position:absolute;inset:2px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);clip-path:var(--rc);z-index:-1}
 .card.red{color:var(--suitRed)}
 .card .pip{display:flex;align-items:center;justify-content:center}
@@ -172,7 +172,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .backPick{margin:2px 0 14px}
 .bpLabel{font-size:11px;letter-spacing:.12em;color:var(--muted);margin-bottom:9px}
 .bpRow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.bpCard{width:56px;height:80px;cursor:pointer;animation:cardLife 3.6s ease-in-out var(--cd,0s) infinite}
+.bpCard{width:52px;height:74px;cursor:pointer;animation:cardLife 3.6s ease-in-out var(--cd,0s) infinite}
 .bpCard.sel{box-shadow:0 0 0 3px var(--gold),3px 5px 0 rgba(0,0,0,.45)}
 .card.jit{animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,jit .12s linear infinite}
 @keyframes deal{from{transform:translateY(-30px) rotate(-7deg);opacity:0}to{transform:none;opacity:1}}
