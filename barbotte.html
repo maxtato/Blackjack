@@ -46,7 +46,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
 #mid{flex:1;display:flex;flex-direction:column;min-height:0;gap:7px;padding:6px 6px 0;width:100%;max-width:620px;margin:0 auto}
 #bankRow{display:flex;align-items:center;gap:9px;background:var(--panelDk2);clip-path:var(--pc);padding:8px 11px}
 #bankFace{width:46px;height:46px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:transparent}
-#bankFace .die{width:44px;height:44px;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.4))}
+#bankFace .die{width:44px;height:44px;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.45))}
 #bankFace .die .pip{width:7px;height:7px}
 #bankInfo{flex:1;min-width:0}
 #bankName{font-size:16px;font-weight:700;color:var(--paper)}
@@ -75,7 +75,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
 /* dés pixel — petits points distincts, une seule ligne */
 #dice{display:flex;gap:9px;justify-content:center;flex-wrap:nowrap;z-index:1}
 .dieSlot{transform-origin:center center;will-change:transform}
-.die{width:52px;height:52px;background:var(--ink);position:relative;clip-path:var(--pc);filter:drop-shadow(2px 3px 0 rgba(0,0,0,.42))}
+.die{width:52px;height:52px;background:var(--ink);position:relative;clip-path:var(--pc);filter:drop-shadow(3px 4px 0 rgba(0,0,0,.45))}
 .die::before{content:"";position:absolute;inset:2px;background:var(--paper);clip-path:var(--pc)}
 #dice.five .die{width:44px;height:44px}
 .die .pip{position:absolute;width:9px;height:9px;background:var(--ink);clip-path:var(--pippc);transform:translate(-50%,-50%)}
@@ -91,7 +91,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
 .die.land{animation:dieLand .32s cubic-bezier(.2,1.5,.4,1)}
 @keyframes dieLand{0%{transform:scale(1.2)}100%{transform:scale(1)}}
 .die.tap{cursor:pointer}
-.die.kept{background:var(--gold);filter:drop-shadow(2px 3px 0 rgba(0,0,0,.4))}
+.die.kept{background:var(--gold);filter:drop-shadow(3px 4px 0 rgba(0,0,0,.45))}
 .die.kept::after{content:"GARDÉ";position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);font-size:8px;font-weight:700;color:var(--gold);letter-spacing:.05em}
 #sumTag{z-index:1;font-size:26px;font-weight:700;color:#fff;min-height:26px}
 #sumTag.win{color:var(--gold)}#sumTag.lose{color:var(--red)}
