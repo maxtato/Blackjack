@@ -633,9 +633,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
     <button class="btn b-gold menu" onclick="startGame()">COMMENCER LA NUIT</button>
     <div class="howto" id="howto">
-      <div>→ Approche <span class="k">21</span>, bats le croupier, franchis l'objectif.</div>
-      <div>→ Puis tente la <span class="k">table suivante</span> (plus gros gains) ou <span class="k">encaisse</span>.</div>
-      <div>→ Tous les 10 paliers, <span class="d">le Patron</span> t'attend : bien plus dur, mais grosse récompense.</div>
+      <div>→ Chaque table : joue <span class="k">toutes les mains</span>, mise dans la <span class="k">limite imposée</span>, atteins l'<span class="k">objectif final</span>.</div>
+      <div>→ Décroche des <span class="k">étoiles ✦</span> (survie · objectif · maîtrise) : elles ouvrent les <span class="d">boss</span> et les zones profondes.</div>
+      <div>→ <span class="k">9 tables · 3 zones · un boss tous les 3 niveaux.</span> Après un boss : <span class="k">encaisser</span> ta réputation ou <span class="d">replonger</span>.</div>
     </div>
   </div>
 </div>
@@ -644,13 +644,15 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <div class="overlay" id="shop">
   <div class="ovpanel">
     <h1 class="win" id="shopTitle" style="font-size:23px">TABLE FRANCHIE</h1>
-    <p>Table <b id="shopDepth">1</b> tenue · <b id="shopBank">0</b> $ en poche · cagnotte <b>★<span id="shopPot">0</span></b> <span style="color:var(--muted)">(+<span id="shopReward">0</span>)</span></p>
+    <div id="shopStars" style="font-size:24px;letter-spacing:.18em;color:var(--gold);text-align:center;margin:-2px 0 6px"></div>
+    <p>Table <b id="shopDepth">1</b>/9 tenue · <b id="shopBank">0</b> $ en poche · cagnotte <b>★<span id="shopPot">0</span></b> <span style="color:var(--muted)">(+<span id="shopReward">0</span> ★)</span></p>
+    <p id="shopGate" style="font-size:12px;color:var(--muted);margin-top:-4px"></p>
     <div class="shopItems" id="shopItems"></div>
     <div class="shopBtns" style="margin-bottom:9px">
       <button class="btn b-teal" id="rerollBtn" onclick="rerollShop()" style="flex:0 0 auto;font-size:13px;padding:11px 14px">RELANCER</button>
       <button class="btn b-gold" id="cashBtn" onclick="cashOut()" style="flex:1;font-size:14px">ENCAISSER</button>
     </div>
-    <button class="btn b-blue menu" onclick="leaveShop()" style="width:100%">TABLE SUIVANTE →<small>objectif : <span id="shopNext">0</span></small></button>
+    <button class="btn b-blue menu" id="shopNextBtn" onclick="leaveShop()" style="width:100%">TABLE SUIVANTE →<small><span id="shopNext">0</span></small></button>
   </div>
 </div>
 
@@ -770,64 +772,55 @@ function unlockCost(u){const n=uLvl(u.id);return n>=u.max?null:u.cost(n);}
 function startBank(){return 50+uLvl('bank')*15;}
 function startTokens(){return 1+uLvl('net');}
 function startRelics(){if(uLvl('contact')){const r=RELIC_POOL[rndInt(RELIC_POOL.length)];return [Object.assign({},r)];}return [];}
-/* réputation gagnée en franchissant la table de profondeur d (cumulée dans la cagnotte) */
-function tableRepReward(d){return 5+d*5+(isBossDepth(d)?40:0);}
-/* réputation totale en fin de descente : cagnotte (entière si on encaisse, moitié sinon)
-   + une prime d'effort liée à la profondeur, pour qu'une descente ratée rapporte toujours */
-function repOnEnd(cashout){
-  const depth=(G.tableIdx|0)+1;
-  const base=cashout?G.pot:Math.floor(G.pot*0.5);
-  return base+depth*2;
-}
-
 /* ---------- données ---------- */
 const SUITS=['♠','♥','♦','♣'];
 const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-/* descente infinie : table générée à la volée selon la profondeur */
-const TBL_NAMES=['Arrière-salle','Table nerveuse','Croupier muet','Cave humide','Salon rouge','Cercle privé','Fosse aux as','Table maudite'];
-const TBL_RULES=[
-  {rule:null,     text:''},
-  {rule:'nervous',text:'La pression monte 2× plus vite'},
-  {rule:'mute',   text:'Le croupier garde ses deux cartes cachées'},
+
+/* ============================================================
+   RUN STRUCTURÉE — 9 tables, 3 zones, boss tous les 3 niveaux.
+   Chaque table est une épreuve fermée : on joue TOUTES les mains
+   obligatoires, puis on valide en étoiles. Mise plafonnée FIXE.
+   ============================================================ */
+const RUN=[
+  /* ZONE 1 — Initiation */
+  {n:'Arrière-salle', zone:1, mains:4, min:5,  max:20,  cap:50,   goal:120,  master:180,  rule:null,     entry:0,   need:0,           ruleText:'Initiation'},
+  {n:'Table nerveuse',zone:1, mains:5, min:5,  max:25,  cap:130,  goal:220,  master:320,  rule:'nervous',entry:0,   need:0,           ruleText:'La pression monte 2× plus vite'},
+  {n:'Le Videur',     zone:1, mains:5, min:10, max:30,  cap:200,  goal:340,  master:460,  rule:'gros',   entry:0,   need:2, boss:true, ruleText:'BOSS · le croupier tire jusqu’à 18'},
+  /* ZONE 2 — La Pression */
+  {n:'Cave humide',   zone:2, mains:5, min:10, max:40,  cap:300,  goal:560,  master:760,  rule:'mute',   entry:150, need:3,           ruleText:'Croupier muet · droit d’entrée 150'},
+  {n:'Salon rouge',   zone:2, mains:6, min:15, max:50,  cap:450,  goal:820,  master:1080, rule:null,     entry:0,   need:0,           ruleText:'Salon feutré'},
+  {n:'Le Banquier',   zone:2, mains:6, min:20, max:60,  cap:650,  goal:1150, master:1500, rule:'depart', entry:0,   need:8, boss:true, ruleText:'BOSS · table déjà chaude (+30 %)'},
+  /* ZONE 3 — Casino profond */
+  {n:'Fosse aux as',  zone:3, mains:6, min:25, max:80,  cap:900,  goal:1650, master:2150, rule:null,     entry:400, need:10,          ruleText:'Casino profond · droit d’entrée 400'},
+  {n:'Table maudite', zone:3, mains:7, min:30, max:100, cap:1300, goal:2350, master:3000, rule:'gros',   entry:0,   need:0,           ruleText:'Croupier impitoyable (18)'},
+  {n:'La Faucheuse',  zone:3, mains:7, min:40, max:120, cap:1800, goal:3200, master:4100, rule:'sec',    entry:0,   need:18,boss:true, ruleText:'BOSS FINAL · égalité = défaite'},
 ];
-/* tables du Patron : fin de chaque série de 10, plus dur, mais cagnotte renforcée */
-const BOSS_NAMES=['Le Patron','La Maison','Le Banquier','La Faucheuse'];
-const BOSS_RULES=[
-  {rule:'gros',  text:'PATRON · le croupier tire jusqu’à 18'},
-  {rule:'depart',text:'PATRON · la table démarre déjà chaude (pression +30%)'},
-  {rule:'sec',   text:'PATRON · les égalités comptent comme des défaites'},
-];
-/* le Patron clôt chaque série : 10ᵉ table (10, 20, 30…) */
-function isBossDepth(depth){return depth%10===0;}
-/* série = palier de 10 tables (1-based) */
-function seriesOf(depth){return Math.floor((depth-1)/10)+1;}
-/* couleur du tapis par série : repère visuel quand on change de palier */
-const SERIES_FELT=['#138f86','#7c3a9e','#1f6fb0','#b07a1f','#a52f55','#2f8f3f','#8f3a1f','#3a3f8f'];
-function seriesFelt(series){return SERIES_FELT[(series-1)%SERIES_FELT.length];}
-/* objectif FORTEMENT exponentiel : ~×1.6 par table, et le facteur grimpe à
-   chaque série de 10 tables → palier marqué, ça devient vite très dur */
-function goalFor(n){
-  const s=Math.floor(n/10);
-  const base=1.8+s*0.15;
-  let g=100*Math.pow(base,n);
-  if(g<1000)return Math.round(g/10)*10;
-  const mag=Math.pow(10,Math.floor(Math.log10(g))-1);   // arrondi ~2 chiffres significatifs
-  return Math.round(g/mag)*mag;
+const RUN_LEN=RUN.length;
+const ZONE_NAMES={1:'Initiation',2:'La Pression',3:'Casino profond'};
+const ZONE_FELT={1:'#138f86',2:'#7c3a9e',3:'#a52f55'};
+const ZONE_MULTCAP={1:4,2:6,3:9};                 // plafond de multiplicateur par zone
+function curTable(){return RUN[Math.min(G.tableIdx,RUN_LEN-1)];}
+/* étoiles d'une table selon le capital final (la maîtrise = capital ≥ master) */
+function starsFor(t,bank){
+  if(bank<t.min)return 0;          // à sec : table non validée
+  if(bank>=t.master)return 3;
+  if(bank>=t.goal)return 2;
+  return 1;                        // survie
 }
-function makeTable(n){
-  const depth=n+1,series=seriesOf(depth);
-  if(isBossDepth(depth)){
-    const bi=(depth/10|0)-1;
-    const b=BOSS_RULES[bi%BOSS_RULES.length];
-    let nm=BOSS_NAMES[bi%BOSS_NAMES.length];
-    if(bi>=BOSS_NAMES.length)nm+=' '+('I'.repeat(1+Math.floor(bi/BOSS_NAMES.length)));
-    return {name:'★ '+nm,goal:Math.round(goalFor(n)*1.25),hands:5,rule:b.rule,ruleText:b.text,depth,series,boss:true};
-  }
-  let nm=TBL_NAMES[n%TBL_NAMES.length];
-  if(n>=TBL_NAMES.length)nm+=' '+('I'.repeat(1+Math.floor(n/TBL_NAMES.length)));
-  let r=TBL_RULES[0];
-  if(n>0)r=TBL_RULES[1+((n-1)%(TBL_RULES.length-1))];
-  return {name:nm,goal:goalFor(n),hands:5,rule:r.rule,ruleText:r.text,depth,series};
+/* réputation d'une table validée : indexée sur la zone, les étoiles, le boss —
+   jamais sur le tas de jetons. Petit bonus de risque maîtrisé. */
+function tableRep(t,stars,maxPressure){
+  const base=4+t.zone*6;
+  let rep=base+stars*6+(t.boss?40:0);
+  if(stars>=2&&maxPressure>=75)rep+=8;             // risque maîtrisé
+  return rep;
+}
+/* réputation totale en fin de run : cagnotte (entière si encaisse, moitié sinon)
+   + prime d'effort (tables tenues), pour qu'une run ratée serve toujours */
+function repOnEnd(cashout){
+  const depth=(G.tableIdx|0)+(G.phase==='done'?1:0);
+  const base=cashout?G.pot:Math.floor(G.pot*0.5);
+  return base+Math.max(0,depth)*3+(G.runStars|0)*2;
 }
 const RELIC_POOL=[
   {id:'lunettes',name:'Lunettes',ic:'👓',desc:'Une fois par main : regarde la prochaine carte du sabot.',cost:14},
@@ -866,6 +859,17 @@ const TAROT_POOL=[
   {id:'roue',name:'La Roue',ic:'🎡',cost:6,desc:'50% : édition aléatoire sur une carte, sinon rien.',when:'play',need:'cards',
     use(){if(Math.random()<0.5){const ed=['foil','holo','poly'][rndInt(3)];const c=addEditionToHand(ed);return c?('Édition '+ed.toUpperCase()+' !'):false;}return'Raté…';}},
 ];
+/* SERVICES de boutique : régulateurs économiques, appliqués immédiatement à l'achat
+   (ni relique ni tarot). Aident à encaisser les coups durs sans casser l'économie. */
+const SERVICE_POOL=[
+  {id:'soin',     name:'Avance de fonds', svc:true, baseCost:0.9, desc:'Renfloue ta banque jusqu’au capital conseillé de la table.',
+    apply(){const c=curTable().cap;if(G.bank<c){G.bank=c;}coinBurst(8);return'Banque renflouée';}},
+  {id:'assurance',name:'Assurance',       svc:true, baseCost:0.7, desc:'Ta prochaine perte de la table est remboursée (1×).',
+    apply(){G.insurance=true;return'Assuré';}},
+  {id:'videur',   name:'Pourboire au videur', svc:true, baseCost:1.1, desc:'+1 jeton de seconde chance.',
+    apply(){G.tokens=(G.tokens||0)+1;return'+1 seconde chance';}},
+];
+const SERVICE_BY_ID=Object.fromEntries(SERVICE_POOL.map(s=>[s.id,s]));
 const ED_NAME={foil:'FOIL',holo:'HOLO',poly:'POLY'};
 const ED_INFO={foil:'+ jetons bonus',holo:'+1 au multiplicateur',poly:'× multiplicateur'};
 function announceEd(c){if(c&&c.ed)popText('CARTE '+ED_NAME[c.ed],ED_INFO[c.ed]);}
@@ -876,8 +880,9 @@ function announceEd(c){if(c&&c.ed)popText('CARTE '+ED_NAME[c.ed],ED_INFO[c.ed]);
 let G={};
 function freshGame(){
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
-     peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,maxPressureReached:0,
-     phase:'bet',pot:0,tokens:startTokens(),table:makeTable(0)};
+     peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,insurance:false,
+     phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0]};
+  G.bet=Math.max(G.table.min,Math.min(G.table.max,10));
   G.tableStartBank=G.bank;
 }
 
@@ -925,6 +930,8 @@ function addPressure(base){
   if(G.table.rule==='nervous')amt*=2;
   if(hasRelic('clope'))amt*=0.7;
   G.pressure=Math.min(100,G.pressure+amt);
+  G.maxPressureReached=Math.max(G.maxPressureReached||0,G.pressure);
+  G.tableMaxPressure=Math.max(G.tableMaxPressure||0,G.pressure);
   renderPressure();renderMult();
   if(G.pressure>=100&&G.phase==='play'&&!G.forced){
     G.forced=true;
@@ -961,6 +968,11 @@ function computeMult(mode){
   if(poly){const pm=Math.pow(1.5,poly);mult*=pm;lines.push(['◆ POLY','×'+(Math.round(pm*100)/100)]);}
   if(hasRelic('as')&&G.pHand.some(c=>c.r==='A')){mult+=1;lines.push(['◆ AS TRUQUÉ','+1']);}
   if(hasRelic('froid')&&G.pressure>=75){mult+=1;lines.push(['◆ SANG-FROID','+1']);}
+  /* anti-explosion : rendement décroissant au-delà de ×3, puis plafond de zone */
+  const cap=ZONE_MULTCAP[curTable().zone]||9;
+  if(mult>3)mult=3+(mult-3)*0.6;            // au-delà de ×3, chaque bonus compte à 60 %
+  if(mult>cap){mult=cap;lines.push(['PLAFOND ZONE','×'+cap]);}
+  mult=Math.round(mult*100)/100;
   return {mult,lines,bonusChips};
 }
 function countRank(r){return G.pHand.filter(c=>c.r===r).length;}
@@ -1051,23 +1063,26 @@ function renderMult(){
   $('scorebox').classList.toggle('hot',m>1||bonus>0);
 }
 function renderTop(){
-  $('tableNum').textContent=G.tableIdx+1;
-  $('handNum').textContent=G.hand;$('handMax').textContent=G.table.hands;
-  const left=G.table.hands-G.hand+1;
+  const t=G.table;
+  $('tableNum').textContent=(G.tableIdx+1)+'/'+RUN_LEN;
+  $('handNum').textContent=G.hand;$('handMax').textContent=t.mains;
+  const left=t.mains-G.hand+1;
   $('handsLeft').textContent=left;
   $('handsLeftBig').textContent=left;
   $('handsLeftBig').classList.toggle('warn',left===1);          // dernier tour : ça clignote
   $('bankBig').textContent=abbr(G.bank);
-  $('bankBig').parentElement.classList.toggle('warn',G.bank<25); // banque au plus bas
-  $('goalVal').textContent=abbr(G.table.goal);
-  const series=G.table.series||1;
-  document.documentElement.style.setProperty('--felt',seriesFelt(series));   // tapis coloré par série
-  $('tableName').textContent=G.table.name+' · série '+series+' · table '+G.table.depth;
+  $('bankBig').parentElement.classList.toggle('warn',G.bank<t.min*3); // banque vraiment basse
+  $('goalVal').textContent=abbr(t.goal);
+  document.documentElement.style.setProperty('--felt',ZONE_FELT[t.zone]||'#138f86');   // tapis coloré par zone
+  $('tableName').textContent=t.n+' · zone '+t.zone+' '+ZONE_NAMES[t.zone]+' · '+(G.tableIdx+1)+'/'+RUN_LEN;
   const bits=[];
-  if(G.table.ruleText)bits.push(G.table.ruleText);
+  if(t.ruleText)bits.push(t.ruleText);
+  bits.push('maîtrise ≥'+abbr(t.master)+' $');
+  bits.push('mise '+abbr(t.min)+'–'+abbr(t.max));
+  bits.push('✦'+(G.runStars||0));
   if(G.pot>0)bits.push('cagnotte ★'+abbr(G.pot));
   $('ruleText').textContent=bits.join('  ·  ');
-  $('ruleText').classList.toggle('boss',!!G.table.boss);
+  $('ruleText').classList.toggle('boss',!!t.boss);
   $('shoeCount').textContent=G.shoe.length;
 }
 function fanEffects(){
@@ -1131,26 +1146,28 @@ function applyHandIncome(){
 }
 /* mises échelonnées : on monte avec la banque (100, 200, 500, 1000…) ;
    on n'affiche que les 4 plus grosses valeurs abordables pour ne pas surcharger */
-const BET_LADDER=(()=>{const l=[10,25,50,100,200,500];for(let m=1000;m<=1e12;m*=10)l.push(m,2*m,5*m);return l;})();
+/* paliers de mise FIXES, propres à la table : entre min et max, jamais un % du capital */
 function betChoices(){
-  let opts=BET_LADDER.filter(v=>v<=G.bank);
-  if(!opts.length)opts=[10];
-  if(opts.length>4)opts=opts.slice(-4);
-  return opts;
+  const t=curTable(),span=t.max-t.min;
+  const raw=span<=0?[t.min]:[t.min,t.min+Math.round(span/3),t.min+Math.round(2*span/3),t.max];
+  return [...new Set(raw)].sort((a,b)=>a-b);
+}
+function clampBet(){
+  const t=curTable();
+  G.bet=Math.max(t.min,Math.min(t.max,G.bet));
+  // on ne peut pas miser plus que son capital : on retombe sur le plus gros palier abordable
+  if(G.bet>G.bank){const aff=betChoices().filter(v=>v<=G.bank);G.bet=aff.length?aff[aff.length-1]:t.min;}
 }
 function renderChips(){
   const wrap=$('chips');wrap.innerHTML='';
-  const opts=betChoices();
-  if(!opts.includes(G.bet)){               // garde une mise valide quand l'échelle change
-    const le=opts.filter(v=>v<=G.bet);
-    G.bet=le.length?le[le.length-1]:opts[0];
-  }
+  const opts=betChoices();clampBet();
   const locked=(G.phase!=='bet');     // mise verrouillée dès qu'une main est lancée
   opts.forEach(v=>{
     const b=document.createElement('div');
-    b.className='chip'+(G.bet===v?' on':'')+(locked?' locked':'');
+    const tooDear=v>G.bank;            // palier hors budget
+    b.className='chip'+(G.bet===v?' on':'')+((locked||tooDear)?' locked':'');
     b.textContent=abbr(v);
-    if(!locked)b.onclick=()=>{G.bet=v;renderChips();renderActions();renderMult();};
+    if(!locked&&!tooDear)b.onclick=()=>{G.bet=v;renderChips();renderActions();renderMult();};
     wrap.appendChild(b);
   });
 }
@@ -1170,7 +1187,7 @@ function renderActions(){
   };
   if(G.phase==='bet'){
     main.classList.add('betmain');
-    add(main,'MISER','b-gold span',deal,`mise ${abbr(G.bet)} $`,G.bank<10);
+    add(main,'MISER','b-gold span',deal,`mise ${abbr(G.bet)} $ · main ${G.hand}/${G.table.mains}`,G.bank<curTable().min);
     a.appendChild(main);return;
   }
   // phases jeu / croupier / résolution : on garde toujours les 3 boutons,
@@ -1181,7 +1198,7 @@ function renderActions(){
   if(flirt){
     add(main,'RISQUER','b-red',()=>{G.insisted=true;playerHit();},'+bonus si survie',!live);
     add(main,'RESTER','b-blue',playerStand,'garde ta main',!live);
-    add(wide,'FORCER LA CHANCE','b-purple',forcerChance,'2 cartes, garde la meilleure · pression +++',!live);
+    add(wide,'FORCER LA CHANCE','b-purple',forcerChance,G.forcedUsed?'déjà utilisé cette table':'2 cartes, garde la meilleure · 1×/table',!live||G.forcedUsed);
   }else{
     add(main,'TIRER','b-gold',()=>playerHit(),'+1 carte',!live);
     add(main,'RESTER','b-blue',playerStand,'garde ta main',!live);
@@ -1206,9 +1223,14 @@ function updateBustReadout(){
    DÉROULÉ
    ============================================================ */
 function deal(){
-  audioInit();if(G.bank<10)return;
+  audioInit();clampBet();if(G.bank<curTable().min)return;
   G.bank-=G.bet;
-  G.phase='play';G.pressure=(G.table.rule==='depart')?30:0;G.peekUsed=false;G.insisted=false;G.forced=false;G.magicNext=false;G.maxPressureReached=G.pressure;G.revealed=false;G.doFlip=false;
+  // pression PERSISTANTE : reportée de la main précédente, refroidie si on joue posé
+  let p0;
+  if(G.hand===1)p0=(G.table.rule==='depart')?30:0;          // table chaude : seulement à l'entrée
+  else p0=Math.max(0,(G.pressure||0)-8);                      // léger refroidissement entre les mains
+  p0+=Math.round(22*(G.bet-G.table.min)/Math.max(1,G.table.max-G.table.min));   // grosse mise = +pression
+  G.phase='play';G.pressure=Math.min(100,p0);G.peekUsed=false;G.insisted=false;G.forced=false;G.magicNext=false;G.maxPressureReached=G.pressure;G.revealed=false;G.doFlip=false;
   G.dHand=[];G.pHand=[];$('tip').textContent='';$('tip').style.color='';
   G.pHand.push(draw());sfx.card();G.dHand.push(draw());
   G.pHand.push(draw());sfx.card();G.dHand.push(draw());
@@ -1287,30 +1309,41 @@ function resolve(mode){
     let pg=0;if(hasRelic('diplomate')){pg=Math.floor(G.bet*0.5);G.bank+=pg;}
     G.bank+=G.bet;gain=pg;sfx.push();showWord('push',pg,1);
   }else{
-    if(hasRelic('jeton')&&pv===20&&!pBust){const back=Math.floor(G.bet/2);G.bank+=back;gain=-(G.bet-back);}
-    else gain=-G.bet;
+    let back=0;
+    if(G.insurance){G.insurance=false;back=G.bet;popText('ASSURANCE','perte remboursée');}      // service boutique
+    else if(hasRelic('jeton')&&pv===20&&!pBust){back=Math.floor(G.bet/2);}
+    G.bank+=back;gain=back-G.bet;
     sfx.lose();shake(8);showWord('lose',gain,1,false,pBust);
   }
 
-  renderTop();renderRelics();G.pressure=0;renderPressure();renderMult();
+  // la pression PERSISTE dans la table : elle retombe après un revers, peu après un gain
+  const drop=pBust?32:(outcome==='lose'?38:(outcome==='push'?18:6));
+  G.pressure=Math.max(0,G.pressure-drop);
+  renderTop();renderRelics();renderPressure();renderMult();
   setTimeout(()=>nextHandOrEnd(),1750);
 }
 
 /* ---------- progression ---------- */
+/* la table n'est JAMAIS validée en cours de route : on joue toutes les mains
+   obligatoires, puis on évalue en étoiles. À sec en chemin = table perdue. */
 function nextHandOrEnd(){
-  if(G.bank>=G.table.goal){clearTable();return;}
-  if(G.bank<10){onTableLost('À SEC','Plus de quoi miser pour atteindre l\'objectif.');return;}
-  if(G.hand>=G.table.hands){onTableLost('FERMETURE','La table ferme, objectif manqué.');return;}
+  if(G.bank<G.table.min){return finishTable();}    // à sec : on ne peut plus miser le minimum
+  if(G.hand>=G.table.mains){return finishTable();}  // toutes les mains jouées → validation
   G.hand++;G.phase='bet';G.dHand=[];G.pHand=[];
-  G.bet=Math.min(G.bet,Math.max(10,G.bank));
+  clampBet();
   applyHandIncome();
   renderAll();renderHands();
 }
-/* table franchie : la cagnotte de réputation grossit, puis boutique (encaisser/continuer) */
-function clearTable(){
-  const reward=tableRepReward(G.table.depth);
-  G.pot+=reward;G.lastReward=reward;
-  updateRecord(G.table.depth);
+/* fin de table : 0★ = perdue · 1★ survie · 2★ objectif · 3★ maîtrise */
+function finishTable(){
+  const t=G.table;
+  const stars=starsFor(t,G.bank);
+  if(stars===0){onTableLost('À SEC','Tu finis sous le capital minimum de la table.');return;}
+  G.tableStars[G.tableIdx]=stars;
+  G.runStars=G.tableStars.reduce((a,b)=>a+(b||0),0);
+  const reward=tableRep(t,stars,G.tableMaxPressure||0);
+  G.pot+=reward;G.lastReward=reward;G.lastStars=stars;
+  updateRecord(G.tableIdx+1);
   openShop();
 }
 /* table perdue : seconde chance (jeton) ou fin de descente */
@@ -1347,22 +1380,49 @@ const SHOPTOK={
   pendu:{t:'−1<small>carte</small>',c:'#e0524f'},
   magicien:{t:'IDÉAL',c:'#9be84a'},
   roue:{t:'ÉD<small>?</small>',c:'#a64dff'},
+  soin:{t:'+<small>$$$</small>',c:'#9be84a'},
+  assurance:{t:'ASSU<small>R</small>',c:'#3f8bd6'},
+  videur:{t:'+1<small>essai</small>',c:'#19c3c3'},
 };
+function serviceCost(s){return niceRound(s.baseCost*curTable().goal*0.16);}
 let shopOffer=[],rerollCost=5;
 /* prix de boutique indexés sur la profondeur (≈ ta banque) : les cartes
    d'effet restent chères, on ne peut pas en acheter plein d'un coup */
 function niceRound(c){if(c<1000)return Math.max(5,Math.round(c/5)*5);const mag=Math.pow(10,Math.floor(Math.log10(c))-1);return Math.round(c/mag)*mag;}
-function shopScale(){return Math.max(1,goalFor(G.tableIdx)/100*1.5);}
+/* prix de boutique indexés sur l'objectif de la table (pas sur ta richesse) :
+   les bons objets restent chers, impossible de tout rafler d'un coup. */
+function shopScale(){return Math.max(1,curTable().goal/100*1.2);}
 function itemCost(r){return niceRound(r.cost*shopScale());}
 function openShop(){
   $('shopBank').textContent=abbr(G.bank);rerollCost=niceRound(6*shopScale());
-  $('shopDepth').textContent=G.table.depth;
+  $('shopDepth').textContent=G.tableIdx+1;
   $('shopPot').textContent=abbr(G.pot);
   $('shopReward').textContent=abbr(G.lastReward);
-  $('shopTitle').textContent=G.table.boss?'PATRON VAINCU':'TABLE FRANCHIE';
-  const next=makeTable(G.tableIdx+1);
-  $('shopNext').textContent=abbr(next.goal)+' $'+(next.boss?' · ★ PATRON':'');
-  $('cashBtn').innerHTML='ENCAISSER<small>★'+abbr(repOnEnd(true))+' réput.</small>';
+  $('shopStars').textContent='✦'.repeat(G.lastStars||0)+'✧'.repeat(3-(G.lastStars||0))+'  ·  total ✦'+(G.runStars||0);
+  const isBoss=!!G.table.boss, last=(G.tableIdx>=RUN_LEN-1);
+  $('shopTitle').textContent=last?'CASINO DÉVALISÉ':(isBoss?'BOSS VAINCU':'TABLE FRANCHIE');
+  // cash-out seulement aux paliers importants : après un boss (ou fin de run)
+  const cb=$('cashBtn');
+  if(isBoss||last){cb.style.display='';cb.innerHTML=(last?'TERMINER<small>':'ENCAISSER<small>')+'★'+abbr(repOnEnd(true))+' réput.</small>';}
+  else{cb.style.display='none';}
+  // table suivante : verrou par étoiles + droit d'entrée éventuel
+  const nextBtn=$('shopNextBtn');
+  if(last){
+    nextBtn.style.display='none';$('shopGate').textContent='Tu as bouclé la run. Encaisse ta réputation.';
+  }else{
+    const nx=RUN[G.tableIdx+1];
+    nextBtn.style.display='';
+    const locked=(G.runStars||0)<nx.need;
+    const feeTxt=nx.entry?` · droit d'entrée ${abbr(nx.entry)} $`:'';
+    $('shopNext').textContent=`${nx.n} · obj. ${abbr(nx.goal)} $${feeTxt}`;
+    if(locked){
+      nextBtn.disabled=true;
+      $('shopGate').textContent=`🔒 Table suivante : ${nx.need}✦ requis (tu as ${G.runStars||0}✦). Vise mieux que survivre.`;
+    }else{
+      nextBtn.disabled=false;
+      $('shopGate').textContent=nx.entry?`Salle plus exclusive — droit d'entrée ${abbr(nx.entry)} $.`:'';
+    }
+  }
   rollShop();
   $('shop').classList.add('show');
 }
@@ -1372,24 +1432,29 @@ function rollShop(){
   const tarots=TAROT_POOL.map(t=>({type:'tarot',data:t}));
   const pool=relics.concat(tarots);
   for(let i=pool.length-1;i>0;i--){const j=rndInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
-  shopOffer=pool.slice(0,Math.min(4,pool.length));
+  shopOffer=pool.slice(0,3);
+  // un SERVICE de régulation toujours proposé (soin/assurance/seconde chance)
+  const svc=SERVICE_POOL[rndInt(SERVICE_POOL.length)];
+  shopOffer.push({type:'service',data:svc});
   renderShop();
 }
 function renderShop(){
   const box=$('shopItems');box.innerHTML='';
   if(!shopOffer.length){box.innerHTML='<p style="color:var(--muted)">Rien à acheter ici.</p>';}
   shopOffer.forEach((it,i)=>{
-    const r=it.data,isTarot=it.type==='tarot';
+    const r=it.data,isTarot=it.type==='tarot',isSvc=it.type==='service';
     const d=document.createElement('div');d.className='shopItem'+(it.bought?' bought':'');
-    const tag=isTarot
+    const tag=isSvc
+      ?'<span style="font-size:9px;color:var(--teal)">✚ SERVICE</span>'
+      :isTarot
       ?'<span style="font-size:9px;color:var(--grape)">★ CARTE</span>'
       :'<span style="font-size:9px;color:var(--yellow)">◆ RELIQUE</span>';
     const tk=SHOPTOK[r.id]||{t:'?',c:'#ffce3a'};
     d.innerHTML=`<div class="shopTok" style="color:${tk.c}">${tk.t}</div><div class="sInfo"><div class="nm">${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
-    const cost=itemCost(r);
-    const b=document.createElement('button');b.className='btn '+(isTarot?'b-purple':'b-gold');
+    const cost=isSvc?serviceCost(r):itemCost(r);
+    const b=document.createElement('button');b.className='btn '+(isSvc?'b-teal':isTarot?'b-purple':'b-gold');
     b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=abbr(cost)+' $';
-    const slotFull=isTarot?G.consumables.length>=consumableSlots():G.relics.length>=5;
+    const slotFull=isSvc?false:isTarot?G.consumables.length>=consumableSlots():G.relics.length>=5;
     if(it.bought||G.bank<cost||slotFull)b.disabled=true;
     if(slotFull&&!it.bought)b.textContent='PLEIN';
     b.onclick=()=>buyShopItem(i,d,b);
@@ -1399,9 +1464,11 @@ function renderShop(){
 }
 function buyShopItem(i,el,btn){
   const it=shopOffer[i];if(!it||it.bought)return;const r=it.data;
-  const cost=itemCost(r);
+  const cost=it.type==='service'?serviceCost(r):itemCost(r);
   if(G.bank<cost)return;
-  if(it.type==='tarot'){
+  if(it.type==='service'){
+    G.bank-=cost;const msg=r.apply();if(msg)popText(r.name.toUpperCase(),msg);
+  }else if(it.type==='tarot'){
     if(G.consumables.length>=consumableSlots()){popText('SLOTS PLEINS','');return;}
     G.bank-=cost;G.consumables.push(r);
   }else{
@@ -1418,21 +1485,27 @@ function rerollShop(){
   G.bank-=rerollCost;rerollCost=niceRound(rerollCost+3*shopScale());$('shopBank').textContent=abbr(G.bank);sfx.card();
   rollShop();
 }
-/* CONTINUER : on descend d'un cran (objectif plus haut, cagnotte future plus grosse) */
+/* CONTINUER : table suivante. Verrou par étoiles + droit d'entrée éventuel. */
 function leaveShop(){
-  $('shop').classList.remove('show');G.tableIdx++;
-  G.table=makeTable(G.tableIdx);
-  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];
-  G.bet=Math.min(G.bet,Math.max(10,G.bank));
+  const nx=RUN[G.tableIdx+1];
+  if(!nx)return;                                   // sécurité : pas de table après la dernière
+  if((G.runStars||0)<nx.need){popText('VERROUILLÉ',nx.need+'✦ requis');return;}
+  $('shop').classList.remove('show');
+  const prevZone=G.table.zone;
+  G.tableIdx++;
+  G.table=RUN[G.tableIdx];
+  // droit d'entrée de zone : absorbe une partie des jetons (anti boule de neige)
+  if(G.table.entry){G.bank=Math.max(0,G.bank-G.table.entry);popText("DROIT D'ENTRÉE",'−'+abbr(G.table.entry)+' $');}
+  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;
+  clampBet();
   G.tableStartBank=G.bank;
   applyHandIncome();
-  if(G.bank<10){onTableLost('À SEC','Tu as trop dépensé en boutique : plus de quoi miser.');return;}
+  if(G.bank<G.table.min){onTableLost('À SEC','Plus de quoi miser le minimum de la table.');return;}
   renderAll();renderHands();renderPressure();
-  // entrée dans une nouvelle série (tous les 10 paliers) : annonce marquée
-  if(G.table.depth>1&&(G.table.depth-1)%10===0){
+  if(G.table.zone>prevZone){
     sfx.danger();shake(24);flashScreen('win');coinBurst(12);
-    popText('SÉRIE '+G.table.series,'nouveau palier — ça se corse');
-  }else if(G.table.boss){sfx.danger();shake(16);popText('TABLE DU PATRON',G.table.ruleText);}
+    popText('ZONE '+G.table.zone+' — '+ZONE_NAMES[G.table.zone],G.table.ruleText);
+  }else if(G.table.boss){sfx.danger();shake(16);popText('TABLE BOSS',G.table.ruleText);}
 }
 /* ENCAISSER : on quitte la descente en banquant toute la cagnotte */
 function cashOut(){
@@ -1454,9 +1527,9 @@ function retryTable(){
   G.tokens--;
   $('loseScreen').classList.remove('show');
   buildShoe();
-  G.bank=Math.max(G.tableStartBank,startBank());
-  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];
-  G.bet=Math.min(G.bet,Math.max(10,G.bank));
+  G.bank=Math.max(G.tableStartBank||0,curTable().cap);   // on repart au capital conseillé de la table
+  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;
+  clampBet();
   applyHandIncome();
   renderAll();renderHands();renderPressure();
 }
