@@ -385,16 +385,26 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #effects .tarot:nth-child(3n){animation-delay:-2.7s}
 /* STAGE — table bois (rebord double rail + liseré or) ; barres hors du tapis */
 #stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:9px;min-height:0;width:100%;max-width:620px}
-/* barre de pression : AU-DESSUS du tapis */
-#pBar{position:relative;left:auto;right:auto;top:auto;width:100%;max-width:500px;height:20px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:#0a1c17;z-index:1;box-shadow:none;animation:pbarBuzz .16s steps(1,end) infinite;will-change:transform}
+/* barre de GAIN → OBJECTIF : jaune uni, sans texte ; montant actuel en curseur dessous */
+#objWrap{position:relative;width:100%;max-width:500px;margin:0 auto;z-index:1}
+#objBar{position:relative;width:100%;height:16px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:#0a1c17}
+#objFill{position:absolute;inset:0;width:0;background:var(--gold);transition:width .4s cubic-bezier(.2,.8,.2,1)}
+#objBar.full #objFill{animation:pflash .6s linear infinite}
+#objMarks{position:relative;height:15px;margin-top:3px;font-size:11px;font-weight:700;line-height:1}
+#objCur{position:absolute;top:0;transform:translateX(-50%);color:var(--gold);white-space:nowrap}
+#objCur::before{content:"";position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:5px solid var(--gold)}
+#objGoal{position:absolute;top:0;right:0;color:var(--muted)}
+/* barre de PRESSION : petite, posée en haut du tapis */
+#pBar{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:150px;height:11px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:rgba(8,22,18,.72);z-index:3;box-shadow:none;animation:pbarBuzz .16s steps(1,end) infinite;will-change:transform}
+#pBar .pmeta{font-size:8.5px!important;letter-spacing:.02em}
 /* la barre de pression vibre de plus en plus fort à mesure que la pression monte
    (amplitude pilotée par --p, 0 à froid → ~2.4px à fond) */
 @keyframes pbarBuzz{
- 0%  {transform:translate(0,0)}
- 25% {transform:translate(calc(var(--p,0)*-2.4px),calc(var(--p,0)*1.4px))}
- 50% {transform:translate(calc(var(--p,0)*2.4px),calc(var(--p,0)*-1.4px))}
- 75% {transform:translate(calc(var(--p,0)*-1.6px),calc(var(--p,0)*1.6px))}
- 100%{transform:translate(0,0)}
+ 0%  {transform:translate(-50%,0)}
+ 25% {transform:translate(calc(-50% + var(--p,0)*-2.2px),calc(var(--p,0)*1.2px))}
+ 50% {transform:translate(calc(-50% + var(--p,0)*2.2px),calc(var(--p,0)*-1.2px))}
+ 75% {transform:translate(calc(-50% + var(--p,0)*-1.4px),calc(var(--p,0)*1.4px))}
+ 100%{transform:translate(-50%,0)}
 }
 #pFill{position:absolute;inset:0;width:0;background:linear-gradient(90deg,var(--teal) 0 34%,var(--gold) 34% 60%,var(--orange) 60% 82%,var(--red) 82% 100%);transition:width .35s cubic-bezier(.2,.8,.2,1)}
 #pBar .pmeta{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:700;color:#fff;text-shadow:1px 1px 0 #000;z-index:1;letter-spacing:.04em}
@@ -591,9 +601,13 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   </div>
 
   <div id="stage">
-    <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">FROID</span> · <span id="pPct">0%</span></span></div>
+    <div id="objWrap">
+      <div id="objBar"><div id="objFill"></div></div>
+      <div id="objMarks"><span id="objCur">0 $</span><span id="objGoal">0 $</span></div>
+    </div>
     <div id="table">
       <div id="felt">
+        <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">FROID</span> · <span id="pPct">0%</span></span></div>
         <span class="fc tl"></span><span class="fc tr"></span><span class="fc bl"></span><span class="fc br"></span>
         <div id="feltInner">
           <div id="feltMark">21</div>
@@ -1088,6 +1102,16 @@ function renderTop(){
   $('ruleText').textContent=bits.join('  ·  ');
   $('ruleText').classList.toggle('boss',!!t.boss);
   $('shoeCount').textContent=G.shoe.length;
+  renderObjective();
+}
+/* barre de progression GAIN → OBJECTIF (au-dessus du tapis) */
+function renderObjective(){
+  const goal=(G.table&&G.table.goal)||1;
+  const pct=Math.max(0,Math.min(100,G.bank/goal*100));
+  const f=$('objFill');if(f)f.style.width=pct+'%';
+  const c=$('objCur');if(c){c.textContent=abbr(G.bank)+' $';c.style.left=Math.max(7,Math.min(88,pct))+'%';}  // curseur sous le bord du remplissage
+  const g=$('objGoal');if(g)g.textContent=abbr(goal)+' $';
+  const bar=$('objBar');if(bar)bar.classList.toggle('full',G.bank>=goal);
 }
 function fanEffects(){
   const ef=Array.prototype.slice.call(document.querySelectorAll('#effects .joker,#effects .tarot'));
