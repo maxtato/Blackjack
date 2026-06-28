@@ -859,6 +859,17 @@ const TAROT_POOL=[
   {id:'roue',name:'La Roue',ic:'🎡',cost:6,desc:'50% : édition aléatoire sur une carte, sinon rien.',when:'play',need:'cards',
     use(){if(Math.random()<0.5){const ed=['foil','holo','poly'][rndInt(3)];const c=addEditionToHand(ed);return c?('Édition '+ed.toUpperCase()+' !'):false;}return'Raté…';}},
 ];
+/* SERVICES de boutique : régulateurs économiques, appliqués immédiatement à l'achat
+   (ni relique ni tarot). Aident à encaisser les coups durs sans casser l'économie. */
+const SERVICE_POOL=[
+  {id:'soin',     name:'Avance de fonds', svc:true, baseCost:0.9, desc:'Renfloue ta banque jusqu’au capital conseillé de la table.',
+    apply(){const c=curTable().cap;if(G.bank<c){G.bank=c;}coinBurst(8);return'Banque renflouée';}},
+  {id:'assurance',name:'Assurance',       svc:true, baseCost:0.7, desc:'Ta prochaine perte de la table est remboursée (1×).',
+    apply(){G.insurance=true;return'Assuré';}},
+  {id:'videur',   name:'Pourboire au videur', svc:true, baseCost:1.1, desc:'+1 jeton de seconde chance.',
+    apply(){G.tokens=(G.tokens||0)+1;return'+1 seconde chance';}},
+];
+const SERVICE_BY_ID=Object.fromEntries(SERVICE_POOL.map(s=>[s.id,s]));
 const ED_NAME={foil:'FOIL',holo:'HOLO',poly:'POLY'};
 const ED_INFO={foil:'+ jetons bonus',holo:'+1 au multiplicateur',poly:'× multiplicateur'};
 function announceEd(c){if(c&&c.ed)popText('CARTE '+ED_NAME[c.ed],ED_INFO[c.ed]);}
@@ -869,7 +880,7 @@ function announceEd(c){if(c&&c.ed)popText('CARTE '+ED_NAME[c.ed],ED_INFO[c.ed]);
 let G={};
 function freshGame(){
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
-     peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,
+     peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,insurance:false,
      phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0]};
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));
   G.tableStartBank=G.bank;
@@ -1298,8 +1309,10 @@ function resolve(mode){
     let pg=0;if(hasRelic('diplomate')){pg=Math.floor(G.bet*0.5);G.bank+=pg;}
     G.bank+=G.bet;gain=pg;sfx.push();showWord('push',pg,1);
   }else{
-    if(hasRelic('jeton')&&pv===20&&!pBust){const back=Math.floor(G.bet/2);G.bank+=back;gain=-(G.bet-back);}
-    else gain=-G.bet;
+    let back=0;
+    if(G.insurance){G.insurance=false;back=G.bet;popText('ASSURANCE','perte remboursée');}      // service boutique
+    else if(hasRelic('jeton')&&pv===20&&!pBust){back=Math.floor(G.bet/2);}
+    G.bank+=back;gain=back-G.bet;
     sfx.lose();shake(8);showWord('lose',gain,1,false,pBust);
   }
 
@@ -1367,7 +1380,11 @@ const SHOPTOK={
   pendu:{t:'−1<small>carte</small>',c:'#e0524f'},
   magicien:{t:'IDÉAL',c:'#9be84a'},
   roue:{t:'ÉD<small>?</small>',c:'#a64dff'},
+  soin:{t:'+<small>$$$</small>',c:'#9be84a'},
+  assurance:{t:'ASSU<small>R</small>',c:'#3f8bd6'},
+  videur:{t:'+1<small>essai</small>',c:'#19c3c3'},
 };
+function serviceCost(s){return niceRound(s.baseCost*curTable().goal*0.16);}
 let shopOffer=[],rerollCost=5;
 /* prix de boutique indexés sur la profondeur (≈ ta banque) : les cartes
    d'effet restent chères, on ne peut pas en acheter plein d'un coup */
@@ -1415,24 +1432,29 @@ function rollShop(){
   const tarots=TAROT_POOL.map(t=>({type:'tarot',data:t}));
   const pool=relics.concat(tarots);
   for(let i=pool.length-1;i>0;i--){const j=rndInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
-  shopOffer=pool.slice(0,Math.min(4,pool.length));
+  shopOffer=pool.slice(0,3);
+  // un SERVICE de régulation toujours proposé (soin/assurance/seconde chance)
+  const svc=SERVICE_POOL[rndInt(SERVICE_POOL.length)];
+  shopOffer.push({type:'service',data:svc});
   renderShop();
 }
 function renderShop(){
   const box=$('shopItems');box.innerHTML='';
   if(!shopOffer.length){box.innerHTML='<p style="color:var(--muted)">Rien à acheter ici.</p>';}
   shopOffer.forEach((it,i)=>{
-    const r=it.data,isTarot=it.type==='tarot';
+    const r=it.data,isTarot=it.type==='tarot',isSvc=it.type==='service';
     const d=document.createElement('div');d.className='shopItem'+(it.bought?' bought':'');
-    const tag=isTarot
+    const tag=isSvc
+      ?'<span style="font-size:9px;color:var(--teal)">✚ SERVICE</span>'
+      :isTarot
       ?'<span style="font-size:9px;color:var(--grape)">★ CARTE</span>'
       :'<span style="font-size:9px;color:var(--yellow)">◆ RELIQUE</span>';
     const tk=SHOPTOK[r.id]||{t:'?',c:'#ffce3a'};
     d.innerHTML=`<div class="shopTok" style="color:${tk.c}">${tk.t}</div><div class="sInfo"><div class="nm">${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
-    const cost=itemCost(r);
-    const b=document.createElement('button');b.className='btn '+(isTarot?'b-purple':'b-gold');
+    const cost=isSvc?serviceCost(r):itemCost(r);
+    const b=document.createElement('button');b.className='btn '+(isSvc?'b-teal':isTarot?'b-purple':'b-gold');
     b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=abbr(cost)+' $';
-    const slotFull=isTarot?G.consumables.length>=consumableSlots():G.relics.length>=5;
+    const slotFull=isSvc?false:isTarot?G.consumables.length>=consumableSlots():G.relics.length>=5;
     if(it.bought||G.bank<cost||slotFull)b.disabled=true;
     if(slotFull&&!it.bought)b.textContent='PLEIN';
     b.onclick=()=>buyShopItem(i,d,b);
@@ -1442,9 +1464,11 @@ function renderShop(){
 }
 function buyShopItem(i,el,btn){
   const it=shopOffer[i];if(!it||it.bought)return;const r=it.data;
-  const cost=itemCost(r);
+  const cost=it.type==='service'?serviceCost(r):itemCost(r);
   if(G.bank<cost)return;
-  if(it.type==='tarot'){
+  if(it.type==='service'){
+    G.bank-=cost;const msg=r.apply();if(msg)popText(r.name.toUpperCase(),msg);
+  }else if(it.type==='tarot'){
     if(G.consumables.length>=consumableSlots()){popText('SLOTS PLEINS','');return;}
     G.bank-=cost;G.consumables.push(r);
   }else{
@@ -1472,7 +1496,7 @@ function leaveShop(){
   G.table=RUN[G.tableIdx];
   // droit d'entrée de zone : absorbe une partie des jetons (anti boule de neige)
   if(G.table.entry){G.bank=Math.max(0,G.bank-G.table.entry);popText("DROIT D'ENTRÉE",'−'+abbr(G.table.entry)+' $');}
-  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;
+  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;
   clampBet();
   G.tableStartBank=G.bank;
   applyHandIncome();
@@ -1504,7 +1528,7 @@ function retryTable(){
   $('loseScreen').classList.remove('show');
   buildShoe();
   G.bank=Math.max(G.tableStartBank||0,curTable().cap);   // on repart au capital conseillé de la table
-  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;
+  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;
   clampBet();
   applyHandIncome();
   renderAll();renderHands();renderPressure();
