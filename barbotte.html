@@ -19,6 +19,8 @@
   --pc:polygon(0 6px,2px 6px,2px 4px,4px 4px,4px 2px,6px 2px,6px 0,calc(100% - 6px) 0,calc(100% - 6px) 2px,calc(100% - 4px) 2px,calc(100% - 4px) 4px,calc(100% - 2px) 4px,calc(100% - 2px) 6px,100% 6px,100% calc(100% - 6px),calc(100% - 2px) calc(100% - 6px),calc(100% - 2px) calc(100% - 4px),calc(100% - 4px) calc(100% - 4px),calc(100% - 4px) calc(100% - 2px),calc(100% - 6px) calc(100% - 2px),calc(100% - 6px) 100%,6px 100%,6px calc(100% - 2px),4px calc(100% - 2px),4px calc(100% - 4px),2px calc(100% - 4px),2px calc(100% - 6px),0 calc(100% - 6px));
   /* octogone pixel chunky (dés/cartes) : marches de 3px */
   --diepc:polygon(0 9px,3px 9px,3px 6px,6px 6px,6px 3px,9px 3px,9px 0,calc(100% - 9px) 0,calc(100% - 9px) 3px,calc(100% - 6px) 3px,calc(100% - 6px) 6px,calc(100% - 3px) 6px,calc(100% - 3px) 9px,100% 9px,100% calc(100% - 9px),calc(100% - 3px) calc(100% - 9px),calc(100% - 3px) calc(100% - 6px),calc(100% - 6px) calc(100% - 6px),calc(100% - 6px) calc(100% - 3px),calc(100% - 9px) calc(100% - 3px),calc(100% - 9px) 100%,9px 100%,9px calc(100% - 3px),6px calc(100% - 3px),6px calc(100% - 6px),3px calc(100% - 6px),3px calc(100% - 9px),0 calc(100% - 9px));
+  /* coins arrondis pixel pour les dés — r8 */
+  --rd:polygon(0 8px,1px 8px,1px 5px,2px 5px,2px 3px,3px 3px,3px 2px,5px 2px,5px 1px,8px 1px,8px 0,calc(100% - 8px) 0,calc(100% - 8px) 1px,calc(100% - 5px) 1px,calc(100% - 5px) 2px,calc(100% - 3px) 2px,calc(100% - 3px) 3px,calc(100% - 2px) 3px,calc(100% - 2px) 5px,calc(100% - 1px) 5px,calc(100% - 1px) 8px,100% 8px,100% calc(100% - 8px),calc(100% - 1px) calc(100% - 8px),calc(100% - 1px) calc(100% - 5px),calc(100% - 2px) calc(100% - 5px),calc(100% - 2px) calc(100% - 3px),calc(100% - 3px) calc(100% - 3px),calc(100% - 3px) calc(100% - 2px),calc(100% - 5px) calc(100% - 2px),calc(100% - 5px) calc(100% - 1px),calc(100% - 8px) calc(100% - 1px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 1px),5px calc(100% - 1px),5px calc(100% - 2px),3px calc(100% - 2px),3px calc(100% - 3px),2px calc(100% - 3px),2px calc(100% - 5px),1px calc(100% - 5px),1px calc(100% - 8px),0 calc(100% - 8px));
   /* point de dé : carré aux coins rognés de 2px */
   --pippc:polygon(0 2px,2px 2px,2px 0,calc(100% - 2px) 0,calc(100% - 2px) 2px,100% 2px,100% calc(100% - 2px),calc(100% - 2px) calc(100% - 2px),calc(100% - 2px) 100%,2px 100%,2px calc(100% - 2px),0 calc(100% - 2px));
 }
@@ -75,8 +77,8 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
 /* dés pixel — petits points distincts, une seule ligne */
 #dice{display:flex;gap:9px;justify-content:center;flex-wrap:nowrap;z-index:1}
 .dieSlot{transform-origin:center center;will-change:transform}
-.die{width:52px;height:52px;background:var(--ink);position:relative;clip-path:var(--pc);filter:drop-shadow(3px 4px 0 rgba(0,0,0,.45))}
-.die::before{content:"";position:absolute;inset:2px;background:var(--paper);clip-path:var(--pc)}
+.die{width:52px;height:52px;background:var(--ink);position:relative;clip-path:var(--rd);filter:drop-shadow(3px 4px 0 rgba(0,0,0,.45))}
+.die::before{content:"";position:absolute;inset:2px;background:var(--paper);clip-path:var(--rd)}
 #dice.five .die{width:44px;height:44px}
 .die .pip{position:absolute;width:9px;height:9px;background:var(--ink);clip-path:var(--pippc);transform:translate(-50%,-50%)}
 #dice.five .die .pip{width:8px;height:8px}

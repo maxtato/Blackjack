@@ -16,6 +16,8 @@
   --felt:#1d9e90;--cardW:#f4ecd8;--inkCard:#1a1430;--suitRed:#d8413e;
   --r:13px;--rS:9px;--bd:3px;--sh:5px 5px 0 var(--ink);--shS:3px 3px 0 var(--ink);
   --pc:polygon(0 6px,2px 6px,2px 4px,4px 4px,4px 2px,6px 2px,6px 0,calc(100% - 6px) 0,calc(100% - 6px) 2px,calc(100% - 4px) 2px,calc(100% - 4px) 4px,calc(100% - 2px) 4px,calc(100% - 2px) 6px,100% 6px,100% calc(100% - 6px),calc(100% - 2px) calc(100% - 6px),calc(100% - 2px) calc(100% - 4px),calc(100% - 4px) calc(100% - 4px),calc(100% - 4px) calc(100% - 2px),calc(100% - 6px) calc(100% - 2px),calc(100% - 6px) 100%,6px 100%,6px calc(100% - 2px),4px calc(100% - 2px),4px calc(100% - 4px),2px calc(100% - 4px),2px calc(100% - 6px),0 calc(100% - 6px));
+  /* coins arrondis pixel pour les cartes — r5 */
+  --rc:polygon(0 5px,1px 5px,1px 2px,2px 2px,2px 1px,5px 1px,5px 0,calc(100% - 5px) 0,calc(100% - 5px) 1px,calc(100% - 2px) 1px,calc(100% - 2px) 2px,calc(100% - 1px) 2px,calc(100% - 1px) 5px,100% 5px,100% calc(100% - 5px),calc(100% - 1px) calc(100% - 5px),calc(100% - 1px) calc(100% - 2px),calc(100% - 2px) calc(100% - 2px),calc(100% - 2px) calc(100% - 1px),calc(100% - 5px) calc(100% - 1px),calc(100% - 5px) 100%,5px 100%,5px calc(100% - 1px),2px calc(100% - 1px),2px calc(100% - 2px),1px calc(100% - 2px),1px calc(100% - 5px),0 calc(100% - 5px));
   /* octogone pixel chunky (cartes) : marches de 3px */
   --diepc:polygon(0 9px,3px 9px,3px 6px,6px 6px,6px 3px,9px 3px,9px 0,calc(100% - 9px) 0,calc(100% - 9px) 3px,calc(100% - 6px) 3px,calc(100% - 6px) 6px,calc(100% - 3px) 6px,calc(100% - 3px) 9px,100% 9px,100% calc(100% - 9px),calc(100% - 3px) calc(100% - 9px),calc(100% - 3px) calc(100% - 6px),calc(100% - 6px) calc(100% - 6px),calc(100% - 6px) calc(100% - 3px),calc(100% - 9px) calc(100% - 3px),calc(100% - 9px) 100%,9px 100%,9px calc(100% - 3px),6px calc(100% - 3px),6px calc(100% - 6px),3px calc(100% - 6px),3px calc(100% - 9px),0 calc(100% - 9px));
 }
@@ -71,11 +73,11 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
 #msg b{color:var(--gold)}
 
 /* cards */
-.card{width:44px;height:62px;background:var(--ink);color:var(--inkCard);position:relative;display:flex;align-items:center;justify-content:center;clip-path:var(--pc);filter:drop-shadow(3px 3px 0 var(--ink));flex:0 0 auto}
-.card::before{content:"";position:absolute;inset:2px;background:var(--cardW);clip-path:var(--pc);z-index:-1}
+.card{width:44px;height:62px;background:var(--ink);color:var(--inkCard);position:relative;display:flex;align-items:center;justify-content:center;clip-path:var(--rc);filter:drop-shadow(3px 3px 0 var(--ink));flex:0 0 auto}
+.card::before{content:"";position:absolute;inset:2px;background:var(--cardW);clip-path:var(--rc);z-index:-1}
 .card.red{color:var(--suitRed)}
 .card.back{background:var(--ink)}
-.card.back::before{content:"";position:absolute;inset:2px;clip-path:var(--pc);background:#243a6e;background-image:repeating-linear-gradient(45deg,rgba(244,236,216,.32) 0 1px,transparent 1px 4px),repeating-linear-gradient(-45deg,rgba(244,236,216,.32) 0 1px,transparent 1px 4px);box-shadow:inset 0 0 0 1px #f4ecd8,inset 0 0 0 2px #243a6e,inset 0 0 0 3px #f4ecd8}
+.card.back::before{content:"";position:absolute;inset:2px;clip-path:var(--rc);background:#243a6e;background-image:repeating-linear-gradient(45deg,rgba(244,236,216,.32) 0 1px,transparent 1px 4px),repeating-linear-gradient(-45deg,rgba(244,236,216,.32) 0 1px,transparent 1px 4px);box-shadow:inset 0 0 0 1px #f4ecd8,inset 0 0 0 2px #243a6e,inset 0 0 0 3px #f4ecd8}
 .card .cn{position:absolute;top:2px;left:3px;font-weight:700;font-size:12px;line-height:1;font-family:'Jersey 15',monospace}
 .card .cn.br{top:auto;left:auto;bottom:2px;right:3px;transform:rotate(180deg)}
 .card .pip{display:flex}
