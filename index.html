@@ -1414,7 +1414,7 @@ function openShop(){
     nextBtn.style.display='';
     const locked=(G.runStars||0)<nx.need;
     const feeTxt=nx.entry?` · droit d'entrée ${abbr(nx.entry)} $`:'';
-    $('shopNext').textContent=`${nx.n} · obj. ${abbr(nx.goal)} $${feeTxt}`;
+    $('shopNext').textContent=`${nx.n} · obj. ${abbr(nx.goal)} $ · conseillé ${abbr(nx.cap)} $${feeTxt}`;
     if(locked){
       nextBtn.disabled=true;
       $('shopGate').textContent=`🔒 Table suivante : ${nx.need}✦ requis (tu as ${G.runStars||0}✦). Vise mieux que survivre.`;
@@ -1544,9 +1544,19 @@ function updateRecord(depth){
 }
 
 /* ---------- fin de descente : cagnotte → réputation ---------- */
+/* COFFRE : à l'encaissement, les jetons restants se convertissent en réputation,
+   à taux DÉGRESSIF et PLAFONNÉ → un gros tas ne donne pas une réput proportionnelle. */
+function coffreBonus(bank){
+  const tiers=[[200,0.05],[500,0.02],[Infinity,0.008]];
+  let rep=0,prev=0;
+  for(const [cap,rate] of tiers){const slice=Math.max(0,Math.min(bank,cap)-prev);rep+=slice*rate;prev=cap;if(bank<=cap)break;}
+  return Math.min(40,Math.round(rep));   // plafond dur : 40 ★
+}
 function endRun(cashout){
   $('shop').classList.remove('show');$('loseScreen').classList.remove('show');
-  const gained=repOnEnd(cashout);
+  const baseGain=repOnEnd(cashout);
+  const coffre=cashout?coffreBonus(G.bank):0;   // coffre seulement si on encaisse
+  const gained=baseGain+coffre;
   META.rep+=gained;
   updateRecord(G.tableIdx+1);
   saveMeta();
@@ -1558,7 +1568,7 @@ function endRun(cashout){
       ?`Tu pars avec la cagnotte avant que ça tourne mal.`
       :`Tu repars quand même avec la moitié de ta cagnotte.`)+
     `<br><br>Tables tenues : <b>${depth}</b> · Jetons : <b>${abbr(G.bank)} $</b>`+
-    `<br>Réputation gagnée : <b>★${abbr(gained)}</b> &nbsp;→&nbsp; total <b>★${abbr(META.rep)}</b>`+
+    `<br>Réputation : <b>★${abbr(baseGain)}</b>`+(coffre?` <span style="color:var(--muted)">+ coffre ★${abbr(coffre)}</span>`:'')+` &nbsp;→&nbsp; total <b>★${abbr(META.rep)}</b>`+
     `<br><span style="color:var(--muted)">Record : ${META.record.depth} tables · ${abbr(META.record.chips)} $</span>`;
   $('endScreen').classList.add('show');
 }
