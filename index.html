@@ -454,6 +454,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .chip{border:none;border-radius:0;clip-path:var(--pc);background:var(--panelDk2);box-shadow:none;color:#fff;font-size:19px}
 .chip::before{display:none}
 .chip.on{background:var(--gold);color:#3a2a00;box-shadow:none}
+/* mise verrouillée pendant une main : non cliquable, jetons non choisis estompés */
+.chip.locked{cursor:default;pointer-events:none}
+.chip.locked:not(.on){opacity:.35}
 /* texte foncé (boutons or/teal, jeton actif) -> ombre gris clair au lieu de noir */
 .b-gold,.b-teal,.chip.on{text-shadow:1px 1px 0 #a89f86}
 /* MENUS / OVERLAYS — blocs sans contour */
@@ -1142,11 +1145,12 @@ function renderChips(){
     const le=opts.filter(v=>v<=G.bet);
     G.bet=le.length?le[le.length-1]:opts[0];
   }
+  const locked=(G.phase!=='bet');     // mise verrouillée dès qu'une main est lancée
   opts.forEach(v=>{
     const b=document.createElement('div');
-    b.className='chip'+(G.bet===v?' on':'');
+    b.className='chip'+(G.bet===v?' on':'')+(locked?' locked':'');
     b.textContent=abbr(v);
-    b.onclick=()=>{G.bet=v;renderChips();renderActions();renderMult();};
+    if(!locked)b.onclick=()=>{G.bet=v;renderChips();renderActions();renderMult();};
     wrap.appendChild(b);
   });
 }
