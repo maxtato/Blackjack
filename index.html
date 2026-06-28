@@ -427,6 +427,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #scorebox .seg.chips .v{font-size:18px;color:#fff;font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,.4);white-space:nowrap}
 #scorebox .seg.mult .v{font-size:18px;color:var(--gold);font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,.4);white-space:nowrap}
 #scorebox.hot{box-shadow:0 0 0 2px var(--gold)}
+.stat.goal.hit{animation:goalHit .6s ease-out}
+.stat.goal.hit .v{color:var(--gold)}
+@keyframes goalHit{0%{transform:scale(1);box-shadow:0 0 0 0 var(--gold)}30%{transform:scale(1.14);box-shadow:0 0 0 3px var(--gold)}100%{transform:scale(1);box-shadow:0 0 0 0 transparent}}
 .zone{position:relative;z-index:1}#center{position:relative;z-index:1}#feltMark{display:none}
 /* BOTTOM — bloc gris pleine largeur avec tous les boutons de mise */
 #bottombar{display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--panel);box-shadow:0 -5px 10px rgba(0,0,0,.42),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -2px 0 rgba(0,0,0,.32);padding:11px 12px calc(20px + env(safe-area-inset-bottom,0px))}
@@ -634,7 +637,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <button class="btn b-gold menu" onclick="startGame()">COMMENCER LA NUIT</button>
     <div class="howto" id="howto">
       <div>→ Chaque table : joue <span class="k">toutes les mains</span>, mise dans la <span class="k">limite imposée</span>, atteins l'<span class="k">objectif final</span>.</div>
-      <div>→ Décroche des <span class="k">étoiles ✦</span> (survie · objectif · maîtrise) : elles ouvrent les <span class="d">boss</span> et les zones profondes.</div>
+      <div>→ Décroche des <span class="k">étoiles ✦</span> (objectif · confort · maîtrise) : elles ouvrent les <span class="d">boss</span> et les zones profondes.</div>
       <div>→ <span class="k">9 tables · 3 zones · un boss tous les 3 niveaux.</span> Après un boss : <span class="k">encaisser</span> ta réputation ou <span class="d">replonger</span>.</div>
     </div>
   </div>
@@ -789,23 +792,24 @@ const RUN=[
   /* ZONE 2 — La Pression */
   {n:'Cave humide',   zone:2, mains:5, min:10, max:40,  cap:300,  goal:560,  master:760,  rule:'mute',   entry:150, need:3,           ruleText:'Croupier muet · droit d’entrée 150'},
   {n:'Salon rouge',   zone:2, mains:6, min:15, max:50,  cap:450,  goal:820,  master:1080, rule:null,     entry:0,   need:0,           ruleText:'Salon feutré'},
-  {n:'Le Banquier',   zone:2, mains:6, min:20, max:60,  cap:650,  goal:1150, master:1500, rule:'depart', entry:0,   need:8, boss:true, ruleText:'BOSS · table déjà chaude (+30 %)'},
+  {n:'Le Banquier',   zone:2, mains:6, min:20, max:60,  cap:650,  goal:1150, master:1500, rule:'depart', entry:0,   need:6, boss:true, ruleText:'BOSS · table déjà chaude (+30 %)'},
   /* ZONE 3 — Casino profond */
-  {n:'Fosse aux as',  zone:3, mains:6, min:25, max:80,  cap:900,  goal:1650, master:2150, rule:null,     entry:400, need:10,          ruleText:'Casino profond · droit d’entrée 400'},
+  {n:'Fosse aux as',  zone:3, mains:6, min:25, max:80,  cap:900,  goal:1650, master:2150, rule:null,     entry:400, need:8,          ruleText:'Casino profond · droit d’entrée 400'},
   {n:'Table maudite', zone:3, mains:7, min:30, max:100, cap:1300, goal:2350, master:3000, rule:'gros',   entry:0,   need:0,           ruleText:'Croupier impitoyable (18)'},
-  {n:'La Faucheuse',  zone:3, mains:7, min:40, max:120, cap:1800, goal:3200, master:4100, rule:'sec',    entry:0,   need:18,boss:true, ruleText:'BOSS FINAL · égalité = défaite'},
+  {n:'La Faucheuse',  zone:3, mains:7, min:40, max:120, cap:1800, goal:3200, master:4100, rule:'sec',    entry:0,   need:11,boss:true, ruleText:'BOSS FINAL · égalité = défaite'},
 ];
 const RUN_LEN=RUN.length;
 const ZONE_NAMES={1:'Initiation',2:'La Pression',3:'Casino profond'};
 const ZONE_FELT={1:'#138f86',2:'#7c3a9e',3:'#a52f55'};
 const ZONE_MULTCAP={1:4,2:6,3:9};                 // plafond de multiplicateur par zone
 function curTable(){return RUN[Math.min(G.tableIdx,RUN_LEN-1)];}
-/* étoiles d'une table selon le capital final (la maîtrise = capital ≥ master) */
+/* étoiles : il FAUT atteindre l'objectif pour valider la table.
+   0★ = objectif manqué (table ratée) · 1★ objectif · 2★ confort · 3★ maîtrise */
 function starsFor(t,bank){
-  if(bank<t.min)return 0;          // à sec : table non validée
-  if(bank>=t.master)return 3;
-  if(bank>=t.goal)return 2;
-  return 1;                        // survie
+  if(bank<t.goal)return 0;                                  // objectif manqué → non validée
+  if(bank>=t.master)return 3;                               // maîtrise
+  if(bank>=t.goal+(t.master-t.goal)*0.5)return 2;           // belle marge
+  return 1;                                                 // objectif tout juste
 }
 /* réputation d'une table validée : indexée sur la zone, les étoiles, le boss —
    jamais sur le tas de jetons. Petit bonus de risque maîtrisé. */
@@ -880,7 +884,7 @@ function announceEd(c){if(c&&c.ed)popText('CARTE '+ED_NAME[c.ed],ED_INFO[c.ed]);
 let G={};
 function freshGame(){
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
-     peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,insurance:false,
+     peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,insurance:false,objHit:false,
      phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0]};
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));
   G.tableStartBank=G.bank;
@@ -1305,6 +1309,7 @@ function resolve(mode){
     if(mult>1||r.bonusChips>0)sfx.combo();
     flashScore();showWord('win',gain,mult,isNat);
     if(lines.length){$('tip').innerHTML=lines.map(l=>l[0]+' '+l[1]).join('  ·  ');$('tip').style.color='var(--gold)';}
+    if(!G.objHit&&G.bank>=G.table.goal){G.objHit=true;setTimeout(objectiveReached,360);}   // 1ʳᵉ fois qu'on franchit l'objectif
   }else if(outcome==='push'){
     let pg=0;if(hasRelic('diplomate')){pg=Math.floor(G.bet*0.5);G.bank+=pg;}
     G.bank+=G.bet;gain=pg;sfx.push();showWord('push',pg,1);
@@ -1338,7 +1343,7 @@ function nextHandOrEnd(){
 function finishTable(){
   const t=G.table;
   const stars=starsFor(t,G.bank);
-  if(stars===0){onTableLost('À SEC','Tu finis sous le capital minimum de la table.');return;}
+  if(stars===0){onTableLost('OBJECTIF MANQUÉ','Tu finis sous l’objectif de gain de la table.');return;}
   G.tableStars[G.tableIdx]=stars;
   G.runStars=G.tableStars.reduce((a,b)=>a+(b||0),0);
   const reward=tableRep(t,stars,G.tableMaxPressure||0);
@@ -1496,7 +1501,7 @@ function leaveShop(){
   G.table=RUN[G.tableIdx];
   // droit d'entrée de zone : absorbe une partie des jetons (anti boule de neige)
   if(G.table.entry){G.bank=Math.max(0,G.bank-G.table.entry);popText("DROIT D'ENTRÉE",'−'+abbr(G.table.entry)+' $');}
-  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;
+  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;
   clampBet();
   G.tableStartBank=G.bank;
   applyHandIncome();
@@ -1528,7 +1533,7 @@ function retryTable(){
   $('loseScreen').classList.remove('show');
   buildShoe();
   G.bank=Math.max(G.tableStartBank||0,curTable().cap);   // on repart au capital conseillé de la table
-  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;
+  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;
   clampBet();
   applyHandIncome();
   renderAll();renderHands();renderPressure();
@@ -1607,6 +1612,16 @@ function popText(txt,sub){
   clearTimeout(textTimer);textTimer=setTimeout(()=>{$('tip').textContent='';},1400);
 }
 function flashScore(){const s=$('scorePanel');s.classList.remove('pop');void s.offsetWidth;s.classList.add('pop');}
+/* animation quand on franchit l'objectif de gain de la table */
+function objectiveReached(){
+  const p=$('multPop');
+  if(p){p.className='win';p.querySelector('.m').textContent='OBJECTIF !';p.querySelector('.t').textContent='✦ table validée';
+    p.classList.remove('go');void p.offsetWidth;p.classList.add('go');}
+  flashScreen('win');coinBurst(18);shake(12);
+  try{sfx.win&&sfx.win();sfx.combo&&sfx.combo();}catch(e){}
+  const sb=$('scorebox');if(sb){sb.classList.add('hot');setTimeout(()=>sb.classList.remove('hot'),1500);}
+  const gv=$('goalVal');if(gv&&gv.parentElement){const b=gv.parentElement;b.classList.add('hit');setTimeout(()=>b.classList.remove('hit'),1500);}
+}
 
 let shakeAmt=0;
 function shake(n){shakeAmt=Math.max(shakeAmt,n);}
