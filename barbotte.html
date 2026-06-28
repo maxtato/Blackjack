@@ -75,7 +75,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
 /* dés pixel — petits points distincts, une seule ligne */
 #dice{display:flex;gap:9px;justify-content:center;flex-wrap:nowrap;z-index:1}
 .dieSlot{transform-origin:center center;will-change:transform}
-.die{width:52px;height:52px;background:var(--ink);position:relative;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.42))}
+.die{width:52px;height:52px;background:var(--ink);position:relative;clip-path:var(--pc);filter:drop-shadow(2px 3px 0 rgba(0,0,0,.42))}
 .die::before{content:"";position:absolute;inset:2px;background:var(--paper);clip-path:var(--pc)}
 #dice.five .die{width:44px;height:44px}
 .die .pip{position:absolute;width:9px;height:9px;background:var(--ink);clip-path:var(--pippc);transform:translate(-50%,-50%)}

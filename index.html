@@ -134,7 +134,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .hand{display:flex;justify-content:center;flex-wrap:wrap;gap:3px;min-height:80px;align-items:center}
 
 /* ===== CARDS ===== */
-.card{width:54px;height:76px;background:var(--ink);color:var(--inkCard);position:relative;display:flex;align-items:center;justify-content:center;filter:drop-shadow(3px 5px 0 rgba(0,0,0,.45));animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife 3.6s ease-in-out var(--cd,0s) infinite}
+.card{width:54px;height:76px;background:var(--ink);color:var(--inkCard);position:relative;display:flex;align-items:center;justify-content:center;clip-path:var(--pc);filter:drop-shadow(3px 5px 0 rgba(0,0,0,.45));animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife 3.6s ease-in-out var(--cd,0s) infinite}
 .card::before{content:"";position:absolute;inset:2px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);clip-path:var(--pc);z-index:-1}
 .card.red{color:var(--suitRed)}
 .card .pip{display:flex;align-items:center;justify-content:center}

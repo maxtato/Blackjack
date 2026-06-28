@@ -83,7 +83,7 @@ body{font-family:'Jersey 15',monospace;font-weight:500;background:#241544;color:
 @keyframes warnPulse{0%,100%{transform:scale(1);color:var(--gold)}50%{transform:scale(1.3);color:#fff}}
 
 /* cards */
-.card{width:46px;height:65px;background:var(--ink);color:var(--inkCard);position:relative;display:flex;align-items:center;justify-content:center;filter:drop-shadow(3px 3px 0 var(--ink));flex:0 0 auto;transform-origin:center bottom;will-change:transform}
+.card{width:46px;height:65px;background:var(--ink);color:var(--inkCard);position:relative;display:flex;align-items:center;justify-content:center;clip-path:var(--pc);filter:drop-shadow(3px 3px 0 var(--ink));flex:0 0 auto;transform-origin:center bottom;will-change:transform}
 .card::before{content:"";position:absolute;inset:2px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);clip-path:var(--pc);z-index:-1}
 .card.red{color:var(--suitRed)}
 .card.back{background:var(--ink)}
