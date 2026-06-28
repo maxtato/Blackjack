@@ -134,7 +134,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .hand{display:flex;justify-content:center;flex-wrap:wrap;gap:3px;min-height:80px;align-items:center}
 
 /* ===== CARDS ===== */
-.card{width:54px;height:76px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);color:var(--inkCard);border:3px solid var(--ink);border-radius:8px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:3px 5px 0 rgba(0,0,0,.45);animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife 3.6s ease-in-out var(--cd,0s) infinite}
+.card{width:54px;height:76px;background:var(--ink);color:var(--inkCard);position:relative;display:flex;align-items:center;justify-content:center;clip-path:var(--pc);filter:drop-shadow(3px 5px 0 rgba(0,0,0,.45));animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,cardLife 3.6s ease-in-out var(--cd,0s) infinite}
+.card::before{content:"";position:absolute;inset:2px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);clip-path:var(--pc);z-index:-1}
 .card.red{color:var(--suitRed)}
 .card .pip{display:flex;align-items:center;justify-content:center}
 .card .corner{position:absolute;display:flex;flex-direction:column;align-items:center;line-height:1;gap:0}
@@ -143,8 +144,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .card .tl{top:2px;left:3px}
 .card .br{bottom:2px;right:3px;transform:rotate(180deg)}
 .card.back .pip,.card.back .corner,.card.back .edtag{display:none}
-.card.back{background:#fdf3df;border-color:var(--ink)}
-.card.back::before{content:"";position:absolute;inset:3px;border-radius:4px;z-index:1}
+.card.back{background:var(--ink)}
+.card.back::before{content:"";position:absolute;inset:2px;clip-path:var(--pc);z-index:-1}
 /* dos de carte sélectionnables (comme de vraies cartes) */
 .card.back.cb9::before{background:#b5302e;background-image:repeating-linear-gradient(45deg,rgba(253,243,223,.42) 0 1px,transparent 1px 4px),repeating-linear-gradient(-45deg,rgba(253,243,223,.42) 0 1px,transparent 1px 4px);box-shadow:inset 0 0 0 1px #fdf3df,inset 0 0 0 2px #b5302e,inset 0 0 0 3px #fdf3df}
 .card.back.cb9::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:19px;height:29px;border-radius:50%;z-index:2;background:radial-gradient(circle at 50% 50%,#fdf3df 0 2px,transparent 2.5px),#b5302e;box-shadow:0 0 0 1px #fdf3df,0 0 0 3px #b5302e,0 0 0 4px #fdf3df}
@@ -180,10 +181,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 
 /* ===== ÉDITIONS ===== */
 .card.foil,.card.holo,.card.poly{overflow:hidden}
-.card.foil::before,.card.holo::before,.card.poly::before{content:"";position:absolute;inset:0;border-radius:5px;pointer-events:none;mix-blend-mode:screen}
-.card.foil::before{background:linear-gradient(125deg,transparent 38%,rgba(150,215,255,.95) 50%,transparent 62%);background-size:260% 260%;animation:edSweep 2.4s linear infinite;opacity:.7}
-.card.holo::before{background:linear-gradient(125deg,rgba(255,70,200,.55),rgba(120,120,255,.45) 45%,rgba(255,120,70,.5) 90%);background-size:260% 260%;animation:edSweep 3.1s linear infinite;opacity:.6}
-.card.poly::before{background:linear-gradient(125deg,#ff004c,#ff8a1e,#ffd11a,#8ee61e,#19c3c3,#a24cf0,#ff3ea5);background-size:340% 340%;animation:edPoly 3.4s linear infinite;opacity:.55}
+.card.foil::after,.card.holo::after,.card.poly::after{content:"";position:absolute;inset:2px;clip-path:var(--pc);pointer-events:none;mix-blend-mode:screen;z-index:1}
+.card.foil::after{background:linear-gradient(125deg,transparent 38%,rgba(150,215,255,.95) 50%,transparent 62%);background-size:260% 260%;animation:edSweep 2.4s linear infinite;opacity:.7}
+.card.holo::after{background:linear-gradient(125deg,rgba(255,70,200,.55),rgba(120,120,255,.45) 45%,rgba(255,120,70,.5) 90%);background-size:260% 260%;animation:edSweep 3.1s linear infinite;opacity:.6}
+.card.poly::after{background:linear-gradient(125deg,#ff004c,#ff8a1e,#ffd11a,#8ee61e,#19c3c3,#a24cf0,#ff3ea5);background-size:340% 340%;animation:edPoly 3.4s linear infinite;opacity:.55}
 @keyframes edSweep{0%{background-position:130% 0}100%{background-position:-30% 0}}
 @keyframes edPoly{0%{background-position:0% 50%}100%{background-position:340% 50%}}
 .card .edtag{position:absolute;top:2px;left:50%;transform:translateX(-50%);font-size:7px;font-weight:700;line-height:1;letter-spacing:.04em;padding:1px 3px;border-radius:2px;z-index:3;color:#1a1430}
@@ -320,6 +321,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   --gold:#e8b84a;--yellow:#e8b84a;--orange:#f0902a;--blue:#3f8bd6;--blueDk:#2f6cb0;
   --red:#e0524f;--redDk:#b23330;--teal:#34b6a8;--tealDk:#1d7d73;--grape:#9a5cd0;--purpleDk:#6a2fb0;--lime:#7ec943;--magenta:#e0524f;
   --pc:polygon(0 6px,2px 6px,2px 4px,4px 4px,4px 2px,6px 2px,6px 0,calc(100% - 6px) 0,calc(100% - 6px) 2px,calc(100% - 4px) 2px,calc(100% - 4px) 4px,calc(100% - 2px) 4px,calc(100% - 2px) 6px,100% 6px,100% calc(100% - 6px),calc(100% - 2px) calc(100% - 6px),calc(100% - 2px) calc(100% - 4px),calc(100% - 4px) calc(100% - 4px),calc(100% - 4px) calc(100% - 2px),calc(100% - 6px) calc(100% - 2px),calc(100% - 6px) 100%,6px 100%,6px calc(100% - 2px),4px calc(100% - 2px),4px calc(100% - 4px),2px calc(100% - 4px),2px calc(100% - 6px),0 calc(100% - 6px));
+  /* octogone pixel chunky (cartes) : marches de 3px */
+  --diepc:polygon(0 9px,3px 9px,3px 6px,6px 6px,6px 3px,9px 3px,9px 0,calc(100% - 9px) 0,calc(100% - 9px) 3px,calc(100% - 6px) 3px,calc(100% - 6px) 6px,calc(100% - 3px) 6px,calc(100% - 3px) 9px,100% 9px,100% calc(100% - 9px),calc(100% - 3px) calc(100% - 9px),calc(100% - 3px) calc(100% - 6px),calc(100% - 6px) calc(100% - 6px),calc(100% - 6px) calc(100% - 3px),calc(100% - 9px) calc(100% - 3px),calc(100% - 9px) 100%,9px 100%,9px calc(100% - 3px),6px calc(100% - 3px),6px calc(100% - 6px),3px calc(100% - 6px),3px calc(100% - 9px),0 calc(100% - 9px));
 }
 *{image-rendering:pixelated}
 #bg{background:#241544}
