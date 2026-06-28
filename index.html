@@ -323,8 +323,6 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   --pc:polygon(0 6px,2px 6px,2px 4px,4px 4px,4px 2px,6px 2px,6px 0,calc(100% - 6px) 0,calc(100% - 6px) 2px,calc(100% - 4px) 2px,calc(100% - 4px) 4px,calc(100% - 2px) 4px,calc(100% - 2px) 6px,100% 6px,100% calc(100% - 6px),calc(100% - 2px) calc(100% - 6px),calc(100% - 2px) calc(100% - 4px),calc(100% - 4px) calc(100% - 4px),calc(100% - 4px) calc(100% - 2px),calc(100% - 6px) calc(100% - 2px),calc(100% - 6px) 100%,6px 100%,6px calc(100% - 2px),4px calc(100% - 2px),4px calc(100% - 4px),2px calc(100% - 4px),2px calc(100% - 6px),0 calc(100% - 6px));
   /* coins arrondis pixel pour les cartes — r5 */
   --rc:polygon(0 5px,1px 5px,1px 2px,2px 2px,2px 1px,5px 1px,5px 0,calc(100% - 5px) 0,calc(100% - 5px) 1px,calc(100% - 2px) 1px,calc(100% - 2px) 2px,calc(100% - 1px) 2px,calc(100% - 1px) 5px,100% 5px,100% calc(100% - 5px),calc(100% - 1px) calc(100% - 5px),calc(100% - 1px) calc(100% - 2px),calc(100% - 2px) calc(100% - 2px),calc(100% - 2px) calc(100% - 1px),calc(100% - 5px) calc(100% - 1px),calc(100% - 5px) 100%,5px 100%,5px calc(100% - 1px),2px calc(100% - 1px),2px calc(100% - 2px),1px calc(100% - 2px),1px calc(100% - 5px),0 calc(100% - 5px));
-  /* octogone pixel chunky (cartes) : marches de 3px */
-  --diepc:polygon(0 9px,3px 9px,3px 6px,6px 6px,6px 3px,9px 3px,9px 0,calc(100% - 9px) 0,calc(100% - 9px) 3px,calc(100% - 6px) 3px,calc(100% - 6px) 6px,calc(100% - 3px) 6px,calc(100% - 3px) 9px,100% 9px,100% calc(100% - 9px),calc(100% - 3px) calc(100% - 9px),calc(100% - 3px) calc(100% - 6px),calc(100% - 6px) calc(100% - 6px),calc(100% - 6px) calc(100% - 3px),calc(100% - 9px) calc(100% - 3px),calc(100% - 9px) 100%,9px 100%,9px calc(100% - 3px),6px calc(100% - 3px),6px calc(100% - 6px),3px calc(100% - 6px),3px calc(100% - 9px),0 calc(100% - 9px));
 }
 *{image-rendering:pixelated}
 #bg{background:#241544}
@@ -630,10 +628,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     </div>
     <div class="shopItems" id="unlockItems"></div>
     <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
-    <button class="btn b-gold menu" onclick="startGame()">TABLE 21 · BLACKJACK</button>
-    <button class="btn menu" id="ginBtn" onclick="location.href='rummy.html'" style="background:linear-gradient(180deg,#b76bff,#7a2fae);margin-top:8px">GIN CLANDESTIN</button>
-    <button class="btn menu" id="barbBtn" onclick="location.href='barbotte.html'" style="background:linear-gradient(180deg,#2bd4c0,#0f8f86);color:#04302d;margin-top:8px">BARBOTTE · DÉS</button>
-    <button class="btn menu" id="pokBtn" onclick="location.href='poker.html'" style="background:linear-gradient(180deg,#e0524f,#b23330);margin-top:8px">TAPIS · POKER</button>
+    <button class="btn b-gold menu" onclick="startGame()">COMMENCER LA NUIT</button>
     <div class="howto" id="howto">
       <div>→ Approche <span class="k">21</span>, bats le croupier, franchis l'objectif.</div>
       <div>→ Puis tente la <span class="k">table suivante</span> (plus gros gains) ou <span class="k">encaisse</span>.</div>
