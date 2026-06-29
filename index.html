@@ -109,7 +109,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .statline b.blue{color:var(--teal)}.statline b.red{color:var(--magenta)}.statline b.gold{color:var(--yellow)}
 
 /* ===== RELICS / JOKERS ===== */
-#relicRow{display:flex;align-items:stretch;gap:8px;flex:0 0 auto;min-height:0;background:linear-gradient(180deg,var(--panelDk),var(--panelDk2));border:var(--bd) solid var(--ink);border-radius:var(--r);padding:7px 9px;box-shadow:var(--sh)}
+#relicRow{display:flex;align-items:stretch;gap:8px;flex:0 0 auto;min-height:0;background:linear-gradient(180deg,var(--panelDk),var(--panelDk2));border:var(--bd) solid var(--ink);border-radius:var(--r);padding:4px 9px;box-shadow:var(--sh)}
 #relics{display:flex;gap:7px;flex:1;overflow-x:auto;align-items:center}
 .joker{flex:0 0 auto;width:38px;height:52px;background:linear-gradient(170deg,#fffdf5,var(--cardW) 70%);border:2px solid var(--ink);border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:var(--shS);position:relative;animation:jokFloat 3.5s ease-in-out infinite}
 .joker:nth-child(2n){animation-delay:-1.2s}.joker:nth-child(3n){animation-delay:-2.4s}
@@ -345,7 +345,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #slotc,#consumeSlots{display:none}
 #app{display:flex;flex-direction:column;gap:0;padding:0;align-items:stretch}
 #topbar,#bottombar{width:100%;flex-shrink:0}
-#mid{width:100%;max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:7px;padding:6px 6px 0;flex:1;min-height:0}
+#mid{width:100%;max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:4px;padding:2px 6px 0;flex:1;min-height:0}
 #effects,#stage{width:100%;flex-shrink:0}
 /* TOP */
 #topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 14px;background:var(--panel);border:none;border-radius:0;clip-path:none;box-shadow:0 5px 10px rgba(0,0,0,.42),inset 0 2px 0 rgba(255,255,255,.07),inset 0 -3px 0 rgba(0,0,0,.32);padding:9px 16px}
@@ -367,7 +367,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .stat .v.warn,#scorebox .seg .v.warn{animation:warnPulse .62s ease-in-out infinite}
 .stat.goal .v.warn{animation:warnPulse .62s ease-in-out infinite}
 /* EFFECTS fan (blocs + ombre carte) */
-#effects{display:flex;justify-content:center;align-items:flex-end;gap:5px;min-height:0;padding:5px 0 0}
+#effects{display:flex;justify-content:center;align-items:flex-end;gap:5px;min-height:0;padding:1px 0 0}
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
 #effects .joker{width:50px;height:48px;animation:cardLife 4.4s ease-in-out infinite;background:#0e1620;border:2px solid #c79100;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:2px;box-shadow:3px 4px 0 rgba(0,0,0,.45);transform-origin:bottom center}
 #effects .ft{font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000}
@@ -384,7 +384,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #effects .tarot:nth-child(even){animation-delay:-1.5s}
 #effects .tarot:nth-child(3n){animation-delay:-2.7s}
 /* STAGE — table bois (rebord double rail + liseré or) ; barres hors du tapis */
-#stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:9px;min-height:0;width:100%;max-width:620px}
+#stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;min-height:0;width:100%;max-width:620px}
 /* barre GAIN → OBJECTIF : dans le bandeau gris du haut. Jaune uni, sans texte.
    Objectif aux 3/4 (dernier quart = dépassement). Montant actuel au-dessus,
    objectif en dessous au repère des 3/4. */
@@ -392,11 +392,12 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #objBar{position:relative;width:100%;height:18px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:#0a1c17}
 #objFill{position:absolute;inset:0;width:0;background:var(--gold);transition:width .4s cubic-bezier(.2,.8,.2,1)}
 #objBar.full #objFill{animation:pflash .6s linear infinite}
-#objTick{position:absolute;top:0;bottom:0;left:75%;transform:translateX(-50%);width:2px;background:#fff;z-index:2}
+/* repère d'objectif = une aiguille verticale unique (trait) traversant la barre
+   jusqu'au montant : trait et repère parfaitement alignés par construction */
+#objTick{position:absolute;top:18px;height:25px;left:75%;transform:translateX(-50%);width:2px;background:#fff;z-index:4}
 #objCur{position:absolute;top:0;transform:translateX(-50%);font-size:14px;font-weight:700;color:var(--gold);white-space:nowrap;z-index:3}
 #objCur::after{content:"";position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--gold)}
 #objGoal{position:absolute;bottom:0;left:75%;transform:translateX(-50%);font-size:14px;font-weight:700;color:#fff;white-space:nowrap}
-#objGoal::before{content:"";position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:6px solid #fff}
 /* barre de PRESSION : petite, posée en haut du tapis */
 #pBar{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:240px;height:19px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:rgba(8,22,18,.78);z-index:3;box-shadow:none;animation:pbarBuzz .16s steps(1,end) infinite;will-change:transform}
 #pBar .pmeta{font-size:12px!important;letter-spacing:.03em}
@@ -420,10 +421,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #peekBtn.show{display:block}
 #peekBtn:active{transform:translateY(calc(-50% + 2px));filter:brightness(.92)}
 /* FELT = tapis teal, bords relevés, légèrement incliné */
-#felt{position:relative;z-index:0;flex:1;width:100%;max-width:560px;display:flex;background:var(--felt,#138f86);transition:background .5s ease;clip-path:var(--pc);box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.07),inset 0 -4px 0 rgba(0,0,0,.26);padding:12px 8px;transform:none}
+#felt{position:relative;z-index:0;flex:1;width:100%;max-width:560px;display:flex;background:var(--felt,#138f86);transition:background .5s ease;clip-path:var(--pc);box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.07),inset 0 -4px 0 rgba(0,0,0,.26);padding:8px 8px;transform:none}
 #felt::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.13) 2px,transparent 2px);background-size:15px 15px;opacity:.4;pointer-events:none}
 /* tapis seulement derrière les cartes ; moquette visible au-dessus et en dessous */
-#feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:10px;padding:30px 0 0;position:relative;z-index:1;transform:none}
+#feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:23px 0 4px;position:relative;z-index:1;transform:none}
 #feltInner .zone{flex:1;justify-content:center}
 /* angles dorés : petit losange pixel (ombré jaune->marron) + traits courts décalés */
 #felt .fc{position:absolute;width:2px;height:2px;background:transparent;z-index:1;pointer-events:none;box-shadow:6px 0px 0 0 #ffe9a8,4px 2px 0 0 #ffe9a8,6px 2px 0 0 #ffe9a8,8px 2px 0 0 #f6d06a,2px 4px 0 0 #ffe9a8,4px 4px 0 0 #ffe9a8,6px 4px 0 0 #f6d06a,8px 4px 0 0 #efc64e,10px 4px 0 0 #cf9a2e,0px 6px 0 0 #ffe9a8,2px 6px 0 0 #ffe9a8,4px 6px 0 0 #f6d06a,6px 6px 0 0 #efc64e,8px 6px 0 0 #cf9a2e,10px 6px 0 0 #9c6510,12px 6px 0 0 #9c6510,2px 8px 0 0 #f6d06a,4px 8px 0 0 #efc64e,6px 8px 0 0 #cf9a2e,8px 8px 0 0 #9c6510,10px 8px 0 0 #9c6510,4px 10px 0 0 #cf9a2e,6px 10px 0 0 #9c6510,8px 10px 0 0 #9c6510,6px 12px 0 0 #9c6510,16px 6px 0 0 #efc64e,18px 6px 0 0 #cf9a2e,20px 6px 0 0 #9c6510,6px 16px 0 0 #efc64e,6px 18px 0 0 #cf9a2e,6px 20px 0 0 #9c6510}
@@ -596,7 +597,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     </div>
     <div id="objWrap">
       <span id="objCur">0 $</span>
-      <div id="objBar"><div id="objFill"></div><div id="objTick"></div></div>
+      <div id="objBar"><div id="objFill"></div></div>
+      <div id="objTick"></div>
       <span id="objGoal">0 $</span>
     </div>
   </header>
