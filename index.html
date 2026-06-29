@@ -503,7 +503,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .card.placed:not(.jit){animation:cardLife 3.6s ease-in-out var(--cd,0s) infinite}
 
 /* ===== barre grise — concept 2 : tours permanents + MULT réduit + GAIN affiché ===== */
-.stat.turnstat{flex-direction:row;align-items:center;gap:9px;padding:5px 12px 5px 10px;flex:0 0 auto}
+.stat.turnstat{flex-direction:row;align-items:center;justify-content:center;gap:9px;padding:5px 10px;flex:1 1 0;min-width:0}
 .stat.turnstat .tnum{font-size:28px;line-height:.85;color:var(--gold);font-weight:700;text-shadow:2px 2px 0 #000}
 .stat.turnstat .tnum.warn{animation:warnPulse .62s ease-in-out infinite}
 .stat.turnstat .tcol{display:flex;flex-direction:column;align-items:flex-start;line-height:1.08}
@@ -512,14 +512,14 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .stat.turnstat .tpips{display:flex;gap:4px;margin-top:3px}
 .stat.turnstat .tpips i{width:15px;height:5px;background:#0a3a35;border-radius:2px;display:block}
 .stat.turnstat .tpips i.on{background:var(--gold)}
-/* rectangle MISE+MULT (compact) — séparé du rectangle GAIN */
-#topbar #scorebox{flex:0 0 auto}
+/* rectangle MISE+MULT — un peu plus petit que les rectangles TOURS et GAIN */
+#topbar #scorebox{flex:0.82 1 0;min-width:0}
 #scorebox .seg.mult{flex:0 0 auto;padding:6px 8px;box-shadow:inset 2px 0 0 rgba(255,255,255,.09)}
 #scorebox .seg.mult .k{font-size:8.5px}
 #scorebox .seg.mult .v{font-size:13px}
 #scorebox.pop{animation:scorePop .35s ease-out}
 /* rectangle GAIN, distinct */
-.stat.gainstat{flex:1;justify-content:center;gap:0}
+.stat.gainstat{flex:1 1 0;min-width:0;justify-content:center;gap:0}
 .stat.gainstat .v{font-size:20px;color:var(--gold);white-space:nowrap}
 /* barre de gain agrandie (le nombre exact est sur la card GAIN, la barre montre le remplissage) */
 #objWrap{padding:6px 0 18px}
