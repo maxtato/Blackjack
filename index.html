@@ -109,7 +109,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .statline b.blue{color:var(--teal)}.statline b.red{color:var(--magenta)}.statline b.gold{color:var(--yellow)}
 
 /* ===== RELICS / JOKERS ===== */
-#relicRow{display:flex;align-items:stretch;gap:8px;flex:0 0 auto;min-height:0;background:linear-gradient(180deg,var(--panelDk),var(--panelDk2));border:var(--bd) solid var(--ink);border-radius:var(--r);padding:4px 9px;box-shadow:var(--sh)}
+#relicRow{display:flex;align-items:stretch;gap:8px;flex:0 0 auto;min-height:0;background:linear-gradient(180deg,var(--panelDk),var(--panelDk2));border:var(--bd) solid var(--ink);border-radius:var(--r);padding:6px 9px;box-shadow:var(--sh)}
 #relics{display:flex;gap:7px;flex:1;overflow-x:auto;align-items:center}
 .joker{flex:0 0 auto;width:38px;height:52px;background:linear-gradient(170deg,#fffdf5,var(--cardW) 70%);border:2px solid var(--ink);border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:var(--shS);position:relative;animation:jokFloat 3.5s ease-in-out infinite}
 .joker:nth-child(2n){animation-delay:-1.2s}.joker:nth-child(3n){animation-delay:-2.4s}
@@ -345,7 +345,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #slotc,#consumeSlots{display:none}
 #app{display:flex;flex-direction:column;gap:0;padding:0;align-items:stretch}
 #topbar,#bottombar{width:100%;flex-shrink:0}
-#mid{width:100%;max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:4px;padding:2px 6px 0;flex:1;min-height:0}
+#mid{width:100%;max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:6px;padding:4px 6px 0;flex:1;min-height:0}
 #effects,#stage{width:100%;flex-shrink:0}
 /* TOP */
 #topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 14px;background:var(--panel);border:none;border-radius:0;clip-path:none;box-shadow:0 5px 10px rgba(0,0,0,.42),inset 0 2px 0 rgba(255,255,255,.07),inset 0 -3px 0 rgba(0,0,0,.32);padding:9px 16px}
@@ -367,7 +367,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .stat .v.warn,#scorebox .seg .v.warn{animation:warnPulse .62s ease-in-out infinite}
 .stat.goal .v.warn{animation:warnPulse .62s ease-in-out infinite}
 /* EFFECTS fan (blocs + ombre carte) */
-#effects{display:flex;justify-content:center;align-items:flex-end;gap:5px;min-height:0;padding:1px 0 0}
+#effects{display:flex;justify-content:center;align-items:flex-end;gap:5px;min-height:0;padding:7px 0 5px}
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
 #effects .joker{width:50px;height:48px;animation:cardLife 4.4s ease-in-out infinite;background:#0e1620;border:2px solid #c79100;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:2px;box-shadow:3px 4px 0 rgba(0,0,0,.45);transform-origin:bottom center}
 #effects .ft{font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000}
