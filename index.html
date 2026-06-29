@@ -581,7 +581,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
    MISE, MULT, JETONS, valeurs de main, réputation, record). */
 .btn>.W .L,.btn>.blbl .L,#tableName .L,#peekBtn .L,
 .overlay.show .ovpanel h1 .L,
-.zlbl .L,.tstats .v .L,#chips .chip .L,
+.zlbl .L,.tstats .L,#chips .chip .L,
 .repNum .L,.recBox .L{animation:letterShake 1.1s steps(1,end) infinite;animation-delay:var(--d,0s)}
 @keyframes letterShake{
  0%  {transform:translate( .12px,calc(var(--o,0px) - .09px))}
@@ -1852,12 +1852,13 @@ function renderAll(){renderTop();renderRelics();renderConsumables();renderChips(
 /* décale légèrement chaque lettre en hauteur (style) ; mots groupés (insécables)
    pour garder des retours à la ligne propres. Idempotent : déjà traité = ignoré. */
 const LETTER_OFF=[-1,1,-1,1,0,1,-1,1,0,-1,1,-1,0,1,-1];
-function staggerNode(node,ctr){
+function staggerNode(node,ctr,boost){
+  boost=boost||1;
   // amplitude proportionnelle à la taille de police : net sur les titres, léger sur le petit texte
   let scale=1;
   if(node.nodeType===1&&typeof getComputedStyle!=='undefined'){
     const fs=parseFloat(getComputedStyle(node).fontSize)||16;
-    scale=Math.max(0.11,Math.min(0.9,Math.pow(fs/38,1.6)));
+    scale=Math.max(0.11,Math.min(0.9,Math.pow(fs/38,1.6)))*boost;
   }
   const kids=Array.prototype.slice.call(node.childNodes||[]);
   for(const n of kids){
@@ -1882,14 +1883,14 @@ function staggerNode(node,ctr){
       const c=n.classList;
       if(c&&(c.contains('L')||c.contains('W')||c.contains('card')))continue;
       if(n.id==='multPop'||n.id==='center'||n.id==='feltMark')continue;
-      staggerNode(n,ctr);
+      staggerNode(n,ctr,boost);
     }
   }
 }
-function staggerText(el){if(!el||!document.createDocumentFragment)return;staggerNode(el,{i:0});}
+function staggerText(el,boost){if(!el||!document.createDocumentFragment)return;staggerNode(el,{i:0},boost);}
 /* re-applique le décalage à toute l'UI visible (chrome de jeu + overlay affiché) */
 function staggerUI(){
-  staggerText($('topbar'));staggerText($('bottombar'));staggerText($('effects'));staggerText($('peekBtn'));
+  staggerText($('topbar'),3.6);staggerText($('bottombar'));staggerText($('effects'));staggerText($('peekBtn'));
   document.querySelectorAll('#stage .zlbl').forEach(staggerText);
   document.querySelectorAll('.overlay.show .ovpanel').forEach(staggerText);
 }
