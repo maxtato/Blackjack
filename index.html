@@ -498,6 +498,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   100%{transform:perspective(620px) rotateY(0deg) scale(1)}
 }
 @keyframes deal{from{transform:translateY(-34px) rotate(-8deg) scale(.92);opacity:0}60%{opacity:1}to{transform:none;opacity:1}}
+/* carte déjà posée pendant la distribution : pas de re-glissade, juste le souffle */
+.card.placed{animation:cardLife 3.6s ease-in-out var(--cd,0s) infinite}
 </style>
 <style>
 #effects .joker .nm{display:none}
@@ -1028,9 +1030,10 @@ function cardEl(c,opts={}){
   // déphasage propre à chaque carte : l'indice garantit des phases distinctes
   // (pas de collision de hash), le hash ajoute un petit aléa -> mouvement indépendant
   d.style.setProperty('--cd','-'+((opts.idx||0)*0.5+sd2*3).toFixed(3)+'s');
-  if(opts.back){d.classList.add('back',cardBack);return d;}
+  if(opts.back){d.classList.add('back',cardBack);if(opts.placed)d.classList.add('placed');return d;}
   if(c.s==='♥'||c.s==='♦')d.classList.add('red');
   if(G.pressure>=50&&G.phase==='play')d.classList.add('jit');
+  if(opts.placed)d.classList.add('placed');
   if(opts.flip)d.classList.add('flip');
   if(!opts.dealer&&c.ed)d.classList.add(c.ed);
   const cf=c.s==='♣'?1.18:1;                    // le trèfle est plus étroit : on l'agrandit un peu
@@ -1055,17 +1058,24 @@ function fannedCard(c,idx,total,opts){
 }
 function renderHands(reveal=false){
   const dh=$('dHand'),ph=$('pHand');dh.innerHTML='';ph.innerHTML='';
+  const dShown=G.dHand.filter(c=>!c._pending),pShown=G.pHand.filter(c=>!c._pending);
   G.dHand.forEach((c,i)=>{
+    if(c._pending)return;                                         // pas encore distribuée
     const hideMute=(G.table.rule==='mute'&&!reveal);
     const hideHole=(i===1&&!reveal&&G.phase!=='done');
-    const flip=G.doFlip&&reveal&&(G.table.rule==='mute'||i===1);
-    dh.appendChild(fannedCard(c,i,G.dHand.length,{back:hideMute||hideHole,dealer:true,flip}));
+    const back=(c._fd!=null)?c._fd:(hideMute||hideHole);          // _fd : pilotage par la distribution
+    const flip=c._flip||(G.doFlip&&reveal&&(G.table.rule==='mute'||i===1));
+    dh.appendChild(fannedCard(c,i,dShown.length,{back,dealer:true,flip,placed:c._settled}));
   });
-  G.pHand.forEach((c,i)=>ph.appendChild(fannedCard(c,i,G.pHand.length)));
-  $('pVal').textContent=G.pHand.length?handValue(G.pHand).total:'—';
-  if(reveal){$('dVal').textContent=G.dHand.length?handValue(G.dHand).total:'—';}
+  G.pHand.forEach((c,i)=>{
+    if(c._pending)return;
+    ph.appendChild(fannedCard(c,i,pShown.length,{back:c._fd,flip:c._flip,placed:c._settled}));
+  });
+  const pUp=pShown.filter(c=>!c._fd),dUp=dShown.filter(c=>!c._fd);   // valeur : cartes face visible seulement
+  $('pVal').textContent=pUp.length?handValue(pUp).total:'—';
+  if(reveal){$('dVal').textContent=dUp.length?handValue(dUp).total:'—';}
   else if(G.table.rule==='mute'){$('dVal').textContent='?';}
-  else{$('dVal').textContent=G.dHand.length?handValue([G.dHand[0]]).total+' +?':'—';}
+  else{$('dVal').textContent=dUp.length?handValue([dUp[0]]).total+' +?':'—';}
 }
 function renderPressure(){
   const p=G.pressure;
@@ -1227,7 +1237,7 @@ function renderActions(){
   }
   // phases jeu / croupier / résolution : on garde toujours les 3 boutons,
   // désactivés (grisés) quand ce n'est pas notre tour ou que l'action n'est pas dispo.
-  const live=(G.phase==='play');
+  const live=(G.phase==='play'&&!G._dealing);
   const v=G.pHand.length?handValue(G.pHand).total:0;
   const flirt=v>=17&&v<=20;
   if(flirt){
@@ -1267,15 +1277,43 @@ function deal(){
   p0+=Math.round(12*(G.bet-G.table.min)/Math.max(1,G.table.max-G.table.min));   // grosse mise = +pression
   G.phase='play';G.pressure=Math.min(100,p0);G.peekUsed=false;G.insisted=false;G.forced=false;G.magicNext=false;G.maxPressureReached=G.pressure;G.revealed=false;G.doFlip=false;
   G.dHand=[];G.pHand=[];$('tip').textContent='';$('tip').style.color='';
-  G.pHand.push(draw());sfx.card();G.dHand.push(draw());
-  G.pHand.push(draw());sfx.card();G.dHand.push(draw());
-  if(hasRelic('maitresse')&&!G.pHand[0].ed)G.pHand[0].ed='foil';
-  renderAll();renderHands();
+  // on tire les 4 cartes mais on les distribue une par une, en animation
+  const p1=draw(),d1=draw(),p2=draw(),d2=draw();
+  if(hasRelic('maitresse')&&!p1.ed)p1.ed='foil';
+  [p1,p2,d1,d2].forEach(c=>{c._pending=true;});                 // pas encore arrivées
+  G.pHand.push(p1,p2);G.dHand.push(d1,d2);
+  G._dealing=true;
+  renderAll();renderHands();                                     // tapis vide, boutons grisés
+  dealSequence([p1,d1,p2,d2]);
+}
+// distribution animée : carte arrive dos -> se retourne. La 2e du croupier reste dos.
+function dealSequence(order){
+  const ARRIVE=300,FLIP=520;
+  const arrive=(c,stayDown,done)=>{
+    c._pending=false;c._fd=true;c._flip=false;c._settled=false;
+    renderHands();sfx.card();
+    if(stayDown){                                                // arrive dos et y reste (trou du croupier)
+      setTimeout(()=>{c._settled=true;renderHands();done&&done();},FLIP);
+      return;
+    }
+    setTimeout(()=>{                                             // on la retourne
+      c._fd=false;c._flip=true;c._settled=false;renderHands();sfx.flip();
+      setTimeout(()=>{c._flip=false;c._settled=true;renderHands();done&&done();},FLIP);
+    },ARRIVE);
+  };
+  const [p1,d1,p2,d2]=order;
+  arrive(p1,false,()=>{ arrive(d1,false,()=>{ arrive(p2,false,()=>{ arrive(d2,true,finishDeal); }); }); });
+}
+function finishDeal(){
+  G._dealing=false;
+  // on retire les drapeaux transitoires : le jeu reprend son rendu normal
+  [...G.pHand,...G.dHand].forEach(c=>{delete c._pending;delete c._fd;delete c._flip;delete c._settled;});
+  renderActions();
   const ec=G.pHand.find(c=>c.ed);if(ec)announceEd(ec);
-  if(handValue(G.pHand).total===21)setTimeout(()=>playerStand(true),520);
+  if(handValue(G.pHand).total===21)setTimeout(()=>playerStand(true),420);
 }
 function playerHit(forced){
-  if(G.phase!=='play')return;
+  if(G.phase!=='play'||G._dealing)return;
   const c=(G.magicNext&&!forced)?drawIdeal():draw();G.magicNext=false;
   G.pHand.push(c);sfx.card();if(!forced)shake(8);
   renderHands();$('tip').textContent='';
@@ -1288,7 +1326,7 @@ function playerHit(forced){
   renderActions();
 }
 function forcerChance(){
-  if(G.phase!=='play')return;
+  if(G.phase!=='play'||G._dealing)return;
   const c1=draw(),c2=draw();
   const test=c=>{const t=handValue([...G.pHand,c]).total;return t>21?-100:t;};
   const keep=test(c1)>=test(c2)?c1:c2,drop=keep===c1?c2:c1;
@@ -1300,7 +1338,7 @@ function forcerChance(){
   setTimeout(()=>{if(G.phase==='play')renderActions();},650);
 }
 function playerStand(natural){
-  if(G.phase!=='play')return;
+  if(G.phase!=='play'||(G._dealing&&!natural))return;
   G.phase='dealer';renderActions();dealerPlay(natural);
 }
 function dealerPlay(natural){
