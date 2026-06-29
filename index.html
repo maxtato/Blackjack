@@ -512,14 +512,15 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .stat.turnstat .tpips{display:flex;gap:4px;margin-top:3px}
 .stat.turnstat .tpips i{width:15px;height:5px;background:#0a3a35;border-radius:2px;display:block}
 .stat.turnstat .tpips i.on{background:var(--gold)}
-#topbar #scorebox{flex:1}
+/* rectangle MISE+MULT (compact) — séparé du rectangle GAIN */
+#topbar #scorebox{flex:0 0 auto}
 #scorebox .seg.mult{flex:0 0 auto;padding:6px 8px;box-shadow:inset 2px 0 0 rgba(255,255,255,.09)}
 #scorebox .seg.mult .k{font-size:8.5px}
 #scorebox .seg.mult .v{font-size:13px}
-#scorebox .seg.gain{flex:1;box-shadow:inset 2px 0 0 rgba(255,255,255,.09)}
-#scorebox .seg.gain .v{font-size:19px;color:var(--gold);font-weight:700;white-space:nowrap}
-#scorebox .seg.gain .v.warn{animation:warnPulse .62s ease-in-out infinite}
 #scorebox.pop{animation:scorePop .35s ease-out}
+/* rectangle GAIN, distinct */
+.stat.gainstat{flex:1;justify-content:center;gap:0}
+.stat.gainstat .v{font-size:20px;color:var(--gold);white-space:nowrap}
 /* barre de gain agrandie (le nombre exact est sur la card GAIN, la barre montre le remplissage) */
 #objWrap{padding:6px 0 18px}
 #objBar{height:24px}
@@ -656,8 +657,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
       <div id="scorebox">
         <span class="seg chips"><b class="k">MISE</b><span class="v" id="chipsVal">10</span></span>
         <span class="seg mult"><b class="k">MULT</b><span class="v" id="multVal">×1</span></span>
-        <span class="seg gain"><b class="k">GAIN</b><span class="v" id="gainVal">50 $</span></span>
       </div>
+      <div class="stat gainstat" id="gainStat"><span class="lbl">GAIN</span><span class="v" id="gainVal">50 $</span></div>
     </div>
     <div id="objWrap">
       <div id="objBar"><div id="objFill"></div></div>
