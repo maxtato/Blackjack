@@ -138,7 +138,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .card::before{content:"";position:absolute;inset:2px;background:linear-gradient(160deg,#fffef9,var(--cardW) 60%);clip-path:var(--rc);z-index:-1}
 .card.red{color:var(--suitRed)}
 .card .pip{display:flex;align-items:center;justify-content:center}
-.card .corner{position:absolute;display:flex;flex-direction:column;align-items:center;line-height:1;gap:0}
+.card .corner{position:absolute;display:flex;flex-direction:column;align-items:center;line-height:1;gap:2px}
 .card .corner-r{font-family:'Jersey 15',monospace;font-weight:700;font-size:14px}
 .card .suit{display:block}
 .card .tl{top:4px;left:5px}
@@ -367,7 +367,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .stat .v.warn,#scorebox .seg .v.warn{animation:warnPulse .62s ease-in-out infinite}
 .stat.goal .v.warn{animation:warnPulse .62s ease-in-out infinite}
 /* EFFECTS fan (blocs + ombre carte) */
-#effects{display:flex;justify-content:center;align-items:flex-end;gap:5px;min-height:0;padding:7px 0 5px}
+#effects{display:flex;justify-content:center;align-items:flex-end;gap:5px;min-height:0;padding:12px 0 7px}
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
 #effects .joker{width:50px;height:48px;animation:cardLife 4.4s ease-in-out infinite;background:#0e1620;border:2px solid #c79100;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:2px;box-shadow:3px 4px 0 rgba(0,0,0,.45);transform-origin:bottom center}
 #effects .ft{font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000}
