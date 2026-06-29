@@ -489,8 +489,12 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .shopItem .ds{color:var(--muted)}
 </style>
 <style>
-/* ===== retournement de carte + arrivée ===== */
-.card.flip{animation:flipIn .52s cubic-bezier(.25,.85,.35,1) both}
+/* ===== arrivée depuis la droite + retournement ===== */
+/* la carte glisse depuis le bord droit de l'écran et vient se poser au centre */
+.card.arrive{animation:dealR .46s cubic-bezier(.16,.7,.28,1) both}
+@keyframes dealR{0%{transform:translateX(300px) rotate(9deg) scale(.96);opacity:0}45%{opacity:1}100%{transform:none;opacity:1}}
+/* retournement un peu plus doux */
+.card.flip{animation:flipIn .68s cubic-bezier(.3,.8,.35,1) both}
 @keyframes flipIn{
   0%{transform:perspective(620px) rotateY(90deg) scale(1.05);opacity:.12}
   50%{transform:perspective(620px) rotateY(-15deg) scale(1.06);opacity:1}
@@ -498,8 +502,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   100%{transform:perspective(620px) rotateY(0deg) scale(1)}
 }
 @keyframes deal{from{transform:translateY(-34px) rotate(-8deg) scale(.92);opacity:0}60%{opacity:1}to{transform:none;opacity:1}}
-/* carte déjà posée pendant la distribution : pas de re-glissade, juste le souffle */
-.card.placed{animation:cardLife 3.6s ease-in-out var(--cd,0s) infinite}
+/* carte posée : pas de re-glissade ni de re-fondu, juste le souffle (sauf en mode jit) */
+.card.placed:not(.jit){animation:cardLife 3.6s ease-in-out var(--cd,0s) infinite}
 </style>
 <style>
 #effects .joker .nm{display:none}
@@ -1030,11 +1034,12 @@ function cardEl(c,opts={}){
   // déphasage propre à chaque carte : l'indice garantit des phases distinctes
   // (pas de collision de hash), le hash ajoute un petit aléa -> mouvement indépendant
   d.style.setProperty('--cd','-'+((opts.idx||0)*0.5+sd2*3).toFixed(3)+'s');
-  if(opts.back){d.classList.add('back',cardBack);if(opts.placed)d.classList.add('placed');return d;}
+  if(opts.back){d.classList.add('back',cardBack);if(opts.arrive)d.classList.add('arrive');else if(opts.placed)d.classList.add('placed');return d;}
   if(c.s==='♥'||c.s==='♦')d.classList.add('red');
   if(G.pressure>=50&&G.phase==='play')d.classList.add('jit');
-  if(opts.placed)d.classList.add('placed');
-  if(opts.flip)d.classList.add('flip');
+  if(opts.arrive)d.classList.add('arrive');
+  else if(opts.flip)d.classList.add('flip');
+  else if(opts.placed)d.classList.add('placed');
   if(!opts.dealer&&c.ed)d.classList.add(c.ed);
   const cf=c.s==='♣'?1.18:1;                    // le trèfle est plus étroit : on l'agrandit un peu
   const big=suitSVG(c.s,Math.round(24*cf)),sm=suitSVG(c.s,Math.round(8*cf));
@@ -1064,12 +1069,14 @@ function renderHands(reveal=false){
     const hideMute=(G.table.rule==='mute'&&!reveal);
     const hideHole=(i===1&&!reveal&&G.phase!=='done');
     const back=(c._fd!=null)?c._fd:(hideMute||hideHole);          // _fd : pilotage par la distribution
+    const arrive=!!c._arr;                                        // glissade depuis la droite
     const flip=c._flip||(G.doFlip&&reveal&&(G.table.rule==='mute'||i===1));
-    dh.appendChild(fannedCard(c,i,dShown.length,{back,dealer:true,flip,placed:c._settled}));
+    dh.appendChild(fannedCard(c,i,dShown.length,{back,dealer:true,arrive,flip,placed:!arrive&&!flip}));
   });
   G.pHand.forEach((c,i)=>{
     if(c._pending)return;
-    ph.appendChild(fannedCard(c,i,pShown.length,{back:c._fd,flip:c._flip,placed:c._settled}));
+    const arrive=!!c._arr,flip=!!c._flip;
+    ph.appendChild(fannedCard(c,i,pShown.length,{back:c._fd,arrive,flip,placed:!arrive&&!flip}));
   });
   const pUp=pShown.filter(c=>!c._fd),dUp=dShown.filter(c=>!c._fd);   // valeur : cartes face visible seulement
   $('pVal').textContent=pUp.length?handValue(pUp).total:'—';
@@ -1286,28 +1293,30 @@ function deal(){
   renderAll();renderHands();                                     // tapis vide, boutons grisés
   dealSequence([p1,d1,p2,d2]);
 }
-// distribution animée : carte arrive dos -> se retourne. La 2e du croupier reste dos.
+// timings de la distribution animée (glissade depuis la droite + retournement plus doux)
+const CARD_ARRIVE=460,CARD_FLIP=700;
+// anime UNE carte : elle glisse de la droite (dos), se pose, puis se retourne.
+// stayDown : reste dos (trou du croupier). reveal : main du croupier dévoilée.
+function dealCardIn(c,opts,done){
+  const reveal=!!(opts&&opts.reveal);
+  c._pending=false;c._fd=true;c._flip=false;c._arr=true;        // arrive dos depuis la droite
+  renderHands(reveal);sfx.card();
+  setTimeout(()=>{
+    c._arr=false;
+    if(opts&&opts.stayDown){c._fd=true;renderHands(reveal);done&&done();return;}
+    c._fd=false;c._flip=true;renderHands(reveal);sfx.flip();    // on la retourne, plus doucement
+    setTimeout(()=>{c._flip=false;renderHands(reveal);done&&done();},CARD_FLIP);
+  },CARD_ARRIVE);
+}
+// distribution initiale : mes 2 cartes + 2 du croupier, une par une. La 2e du croupier reste dos.
 function dealSequence(order){
-  const ARRIVE=300,FLIP=520;
-  const arrive=(c,stayDown,done)=>{
-    c._pending=false;c._fd=true;c._flip=false;c._settled=false;
-    renderHands();sfx.card();
-    if(stayDown){                                                // arrive dos et y reste (trou du croupier)
-      setTimeout(()=>{c._settled=true;renderHands();done&&done();},FLIP);
-      return;
-    }
-    setTimeout(()=>{                                             // on la retourne
-      c._fd=false;c._flip=true;c._settled=false;renderHands();sfx.flip();
-      setTimeout(()=>{c._flip=false;c._settled=true;renderHands();done&&done();},FLIP);
-    },ARRIVE);
-  };
   const [p1,d1,p2,d2]=order;
-  arrive(p1,false,()=>{ arrive(d1,false,()=>{ arrive(p2,false,()=>{ arrive(d2,true,finishDeal); }); }); });
+  dealCardIn(p1,{},()=>{ dealCardIn(d1,{},()=>{ dealCardIn(p2,{},()=>{ dealCardIn(d2,{stayDown:true},finishDeal); }); }); });
 }
 function finishDeal(){
   G._dealing=false;
   // on retire les drapeaux transitoires : le jeu reprend son rendu normal
-  [...G.pHand,...G.dHand].forEach(c=>{delete c._pending;delete c._fd;delete c._flip;delete c._settled;});
+  [...G.pHand,...G.dHand].forEach(c=>{delete c._pending;delete c._fd;delete c._flip;delete c._arr;});
   renderActions();
   const ec=G.pHand.find(c=>c.ed);if(ec)announceEd(ec);
   if(handValue(G.pHand).total===21)setTimeout(()=>playerStand(true),420);
@@ -1315,27 +1324,36 @@ function finishDeal(){
 function playerHit(forced){
   if(G.phase!=='play'||G._dealing)return;
   const c=(G.magicNext&&!forced)?drawIdeal():draw();G.magicNext=false;
-  G.pHand.push(c);sfx.card();if(!forced)shake(8);
-  renderHands();$('tip').textContent='';
-  addPressure(forced?0:10);updateBustReadout();renderMult();
-  if(c.ed)announceEd(c);
-  const v=handValue(G.pHand).total;
-  if(v>21){setTimeout(()=>resolve('bust'),450);return;}
-  if(v===21){setTimeout(()=>playerStand(),450);return;}
-  if(forced){setTimeout(()=>playerStand(),550);return;}
-  renderActions();
+  c._pending=true;G.pHand.push(c);if(!forced)shake(8);
+  $('tip').textContent='';
+  G._dealing=true;renderActions();                              // boutons grisés pendant l'arrivée
+  dealCardIn(c,{},()=>{
+    G._dealing=false;
+    addPressure(forced?0:10);updateBustReadout();renderMult();
+    if(c.ed)announceEd(c);
+    const v=handValue(G.pHand).total;
+    if(v>21){setTimeout(()=>resolve('bust'),300);return;}
+    if(v===21){setTimeout(()=>playerStand(),300);return;}
+    if(forced){setTimeout(()=>playerStand(),350);return;}
+    renderActions();
+  });
 }
 function forcerChance(){
   if(G.phase!=='play'||G._dealing)return;
   const c1=draw(),c2=draw();
   const test=c=>{const t=handValue([...G.pHand,c]).total;return t>21?-100:t;};
-  const keep=test(c1)>=test(c2)?c1:c2,drop=keep===c1?c2:c1;
-  G.pHand.push(keep);G.insisted=true;sfx.card();sfx.danger();shake(22);
+  const keep=test(c1)>=test(c2)?c1:c2;
+  G.insisted=true;sfx.danger();shake(22);
   popText('FORCÉ',`gardé ${keep.r}${keep.s}`);
-  renderHands();addPressure(26);updateBustReadout();renderMult();
-  const v=handValue(G.pHand).total;
-  if(v>21){setTimeout(()=>resolve('bust'),650);return;}
-  setTimeout(()=>{if(G.phase==='play')renderActions();},650);
+  keep._pending=true;G.pHand.push(keep);
+  G._dealing=true;renderActions();
+  dealCardIn(keep,{},()=>{
+    G._dealing=false;
+    addPressure(26);updateBustReadout();renderMult();
+    const v=handValue(G.pHand).total;
+    if(v>21){setTimeout(()=>resolve('bust'),350);return;}
+    renderActions();
+  });
 }
 function playerStand(natural){
   if(G.phase!=='play'||(G._dealing&&!natural))return;
@@ -1349,10 +1367,12 @@ function dealerPlay(natural){
     const goal=(G.table.rule==='gros')?18:17;
     const hitSoft17=(G.maxPressureReached>=55);
     const mustHit=v.total<goal||(goal===17&&v.total===17&&v.soft&&hitSoft17);
-    if(mustHit){G.dHand.push(draw());sfx.card();renderHands(true);setTimeout(step,520);}
-    else setTimeout(()=>resolve(natural?'natural':'stand'),420);
+    if(mustHit){                                                // le croupier tire : même arrivée animée
+      const c=draw();c._pending=true;G.dHand.push(c);
+      dealCardIn(c,{reveal:true},()=>setTimeout(step,160));
+    } else setTimeout(()=>resolve(natural?'natural':'stand'),420);
   };
-  setTimeout(step,500);
+  setTimeout(step,420);
 }
 
 /* ---------- résolution ---------- */
