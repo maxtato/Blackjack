@@ -490,9 +490,6 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 </style>
 <style>
 /* ===== arrivée depuis la droite + retournement ===== */
-/* la carte file vite depuis le bord droit de l'écran et vient se poser au centre */
-.card.arrive{animation:dealR .2s cubic-bezier(.22,.9,.32,1) both}
-@keyframes dealR{0%{transform:translateX(320px) rotate(9deg) scale(.97);opacity:0}30%{opacity:1}100%{transform:none;opacity:1}}
 /* retournement un peu plus doux */
 .card.flip{animation:flipIn .68s cubic-bezier(.3,.8,.35,1) both}
 @keyframes flipIn{
@@ -504,6 +501,25 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 @keyframes deal{from{transform:translateY(-34px) rotate(-8deg) scale(.92);opacity:0}60%{opacity:1}to{transform:none;opacity:1}}
 /* carte posée : pas de re-glissade ni de re-fondu, juste le souffle (sauf en mode jit) */
 .card.placed:not(.jit){animation:cardLife 3.6s ease-in-out var(--cd,0s) infinite}
+
+/* petit bouton "i" pour ouvrir les règles (écran d'accueil) */
+#rulesBtn{position:absolute;top:12px;right:12px;width:30px;height:30px;z-index:5;background:var(--panelDk2,#0e1620);color:var(--gold);border:2px solid var(--gold);clip-path:var(--pc);font-family:'Jersey 15',monospace;font-weight:700;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:2px 3px 0 rgba(0,0,0,.45)}
+#rulesBtn:active{transform:translate(1px,2px);box-shadow:1px 1px 0 rgba(0,0,0,.45)}
+
+/* annonce du nombre de tours restants, en gros, à chaque main */
+#turnPop{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%) scale(.6);font-family:'Jersey 15',monospace;font-weight:700;font-size:44px;line-height:.9;color:var(--gold);text-shadow:3px 4px 0 #000;opacity:0;pointer-events:none;z-index:6;white-space:nowrap;text-align:center;letter-spacing:.03em}
+#turnPop small{display:block;font-size:.34em;letter-spacing:.14em;color:var(--cream,#fff)}
+#turnPop.go{animation:turnPop 1.3s ease-out both}
+@keyframes turnPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}16%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}28%{transform:translate(-50%,-50%) scale(1)}70%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.04)}}
+
+/* objectif atteint : animation sur la barre (plus de confettis) */
+#objWrap.goalpop{animation:objBump .85s ease-out}
+@keyframes objBump{0%{transform:scale(1)}18%{transform:scale(1.045)}45%{transform:scale(.99)}100%{transform:scale(1)}}
+#objWrap.goalpop #objFill{animation:objGlow .85s ease-out}
+@keyframes objGlow{0%{filter:brightness(1)}25%{filter:brightness(2.1) saturate(1.3)}100%{filter:brightness(1)}}
+#objBar::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 32%,rgba(255,255,255,.9) 50%,transparent 68%);transform:translateX(-130%);opacity:0;pointer-events:none;z-index:5}
+#objWrap.goalpop #objBar::after{animation:objShine .85s ease-out}
+@keyframes objShine{0%{transform:translateX(-130%);opacity:0}20%{opacity:1}100%{transform:translateX(130%);opacity:0}}
 </style>
 <style>
 #effects .joker .nm{display:none}
@@ -624,6 +640,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
         <div id="feltInner">
           <div id="feltMark">21</div>
           <div id="multPop"><div class="burst"></div><span class="m"></span><span class="t"></span></div>
+          <div id="turnPop"></div>
           <div class="zone">
             <div class="zlbl">Croupier<span class="v" id="dVal">—</span></div>
             <div class="hand" id="dHand"></div>
@@ -652,6 +669,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <!-- LA PLANQUE (hub) -->
 <div class="overlay show" id="intro">
   <div class="ovpanel">
+    <button id="rulesBtn" onclick="openRules()" title="Règles du jeu" aria-label="Règles">i</button>
     <h1 class="win">LA PLANQUE</h1>
     <p>Dépense ta <b>réputation</b> en avantages permanents, puis replonge.</p>
     <div class="repBar">
@@ -661,11 +679,23 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <div class="shopItems" id="unlockItems"></div>
     <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
     <button class="btn b-gold menu" onclick="startGame()">COMMENCER LA NUIT</button>
-    <div class="howto" id="howto">
-      <div>→ Chaque table : joue <span class="k">toutes les mains</span>, mise dans la <span class="k">limite imposée</span>, atteins l'<span class="k">objectif final</span>.</div>
-      <div>→ Décroche des <span class="k">étoiles ✦</span> (objectif · confort · maîtrise) : elles ouvrent les <span class="d">boss</span> et les zones profondes.</div>
-      <div>→ <span class="k">9 tables · 3 zones · un boss tous les 3 niveaux.</span> Après un boss : <span class="k">encaisser</span> ta réputation ou <span class="d">replonger</span>.</div>
+  </div>
+</div>
+
+<!-- RÈGLES DÉTAILLÉES -->
+<div class="overlay" id="rulesScreen">
+  <div class="ovpanel">
+    <h1 class="win" style="font-size:22px">RÈGLES</h1>
+    <div class="rules">
+      <div><span class="k">But</span> — bats le croupier à chaque main sans dépasser <span class="k">21</span>. Une figure vaut 10, l'As vaut 1 ou 11.</div>
+      <div><span class="k">La table</span> — joue <span class="k">toutes les mains imposées</span>, mise dans la <span class="k">limite</span> (min–max fixe), et atteins l'<span class="k">objectif de gain</span> avant la dernière main. Sous l'objectif = table perdue.</div>
+      <div><span class="k">Tes coups</span> — <span class="k">TIRER</span> une carte, <span class="k">RESTER</span> sur ta main, ou <span class="k">FORCER LA CHANCE</span> (2 cartes, on garde la meilleure · 1×/table · pression +++).</div>
+      <div><span class="k">Étoiles ✦</span> — chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Elles ouvrent les <span class="d">boss</span> et les zones profondes.</div>
+      <div><span class="k">Pression</span> — monte quand tu prends des risques, redescend quand tu joues posé. Trop haute, le croupier devient plus agressif.</div>
+      <div><span class="k">La descente</span> — <span class="k">9 tables · 3 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">replonger</span> plus profond pour plus gros.</div>
+      <div><span class="k">La Planque</span> — dépense ta <span class="k">réputation ★</span> en avantages permanents (reliques, tarots, éditions) avant de repartir.</div>
     </div>
+    <button class="btn b-gold menu" onclick="closeRules()">FERMER</button>
   </div>
 </div>
 
@@ -1296,20 +1326,19 @@ function deal(){
   renderAll();renderHands();                                     // tapis vide, boutons grisés
   dealSequence([p1,d1,p2,d2]);
 }
-// timings de la distribution animée (glissade depuis la droite + retournement plus doux)
-const CARD_ARRIVE=210,CARD_FLIP=700;
-// anime UNE carte : elle glisse de la droite (dos), se pose, puis se retourne.
+// timings de la distribution animée (la carte apparaît d'un coup, puis se retourne)
+const CARD_HOLD=130,CARD_FLIP=700;
+// anime UNE carte : elle apparaît d'un coup (dos), puis se retourne. Plus de glissade.
 // stayDown : reste dos (trou du croupier). reveal : main du croupier dévoilée.
 function dealCardIn(c,opts,done){
   const reveal=!!(opts&&opts.reveal);
-  c._pending=false;c._fd=true;c._flip=false;c._arr=true;        // arrive dos depuis la droite
+  c._pending=false;c._fd=true;c._flip=false;c._arr=false;       // apparaît d'un coup, dos
   renderHands(reveal);sfx.card();
   setTimeout(()=>{
-    c._arr=false;
     if(opts&&opts.stayDown){c._fd=true;renderHands(reveal);done&&done();return;}
-    c._fd=false;c._flip=true;renderHands(reveal);sfx.flip();    // on la retourne, plus doucement
+    c._fd=false;c._flip=true;renderHands(reveal);sfx.flip();    // on la retourne
     setTimeout(()=>{c._flip=false;renderHands(reveal);done&&done();},CARD_FLIP);
-  },CARD_ARRIVE);
+  },CARD_HOLD);
 }
 // distribution initiale : mes 2 cartes + 2 du croupier, une par une. La 2e du croupier reste dos.
 function dealSequence(order){
@@ -1430,6 +1459,7 @@ function nextHandOrEnd(){
   clampBet();
   applyHandIncome();
   renderAll();renderHands();
+  announceTurn();
 }
 /* fin de table : 0★ = perdue · 1★ survie · 2★ objectif · 3★ maîtrise */
 function finishTable(){
@@ -1599,6 +1629,7 @@ function leaveShop(){
   applyHandIncome();
   if(G.bank<G.table.min){onTableLost('À SEC','Plus de quoi miser le minimum de la table.');return;}
   renderAll();renderHands();renderPressure();
+  announceTurn();
   if(G.table.zone>prevZone){
     sfx.danger();shake(24);flashScreen('win');coinBurst(12);
     popText('ZONE '+G.table.zone+' — '+ZONE_NAMES[G.table.zone],G.table.ruleText);
@@ -1629,6 +1660,7 @@ function retryTable(){
   clampBet();
   applyHandIncome();
   renderAll();renderHands();renderPressure();
+  announceTurn();
 }
 function giveUp(){
   $('loseScreen').classList.remove('show');
@@ -1697,6 +1729,15 @@ function showWord(kind,gain,mult,natural,bust){
   p.querySelector('.m').textContent=word;p.querySelector('.t').textContent=sub;
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
 }
+function openRules(){$('rulesScreen').classList.add('show');}
+function closeRules(){$('rulesScreen').classList.remove('show');}
+// annonce du nombre de tours restants, en gros, au début de chaque main
+function announceTurn(){
+  const el=$('turnPop');if(!el)return;
+  const t=G.table,left=Math.max(1,t.mains-G.hand+1);
+  el.innerHTML = left<=1 ? 'DERNIER<br>TOUR' : left+'<small>TOURS RESTANTS</small>';
+  el.classList.remove('go');void el.offsetWidth;el.classList.add('go');
+}
 let textTimer;
 function popText(txt,sub){
   $('tip').innerHTML=`<span style="color:var(--cream)">${txt}</span>${sub?' · '+sub:''}`;
@@ -1709,7 +1750,9 @@ function objectiveReached(){
   const p=$('multPop');
   if(p){p.className='win';p.querySelector('.m').textContent='OBJECTIF !';p.querySelector('.t').textContent='✦ table validée';
     p.classList.remove('go');void p.offsetWidth;p.classList.add('go');}
-  flashScreen('win');coinBurst(18);shake(12);
+  // animation sur la barre d'objectif (à la place des confettis)
+  const ow=$('objWrap');if(ow){ow.classList.remove('goalpop');void ow.offsetWidth;ow.classList.add('goalpop');setTimeout(()=>ow.classList.remove('goalpop'),900);}
+  flashScreen('win');shake(12);
   try{sfx.win&&sfx.win();sfx.combo&&sfx.combo();}catch(e){}
   const sb=$('scorebox');if(sb){sb.classList.add('hot');setTimeout(()=>sb.classList.remove('hot'),1500);}
   const gv=$('goalVal');if(gv&&gv.parentElement){const b=gv.parentElement;b.classList.add('hit');setTimeout(()=>b.classList.remove('hit'),1500);}
@@ -1847,6 +1890,7 @@ function startGame(){
   $('intro').classList.remove('show');$('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');
   freshGame();buildShoe();
   applyHandIncome();renderAll();renderHands();
+  announceTurn();
 }
 freshGame();buildShoe();renderAll();renderHands();renderBackPicker();renderPlanque();tick();
 </script>
