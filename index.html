@@ -529,6 +529,12 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #objTick{top:6px;height:24px}
 #objGoal{font-size:13.5px;font-weight:700;transform:translate(-50%,4px)}   /* descendu de quelques px sous la barre */
 
+/* étoile pixel (★) : masque SVG -> prend la couleur du texte courant */
+.pxstar{display:inline-block;width:.82em;height:.586em;vertical-align:-.05em;background:currentColor;margin:0 .04em;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%207%205'%3E%3Crect%20x='1'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='1'%20width='3'%20height='1'/%3E%3Crect%20x='0'%20y='2'%20width='7'%20height='1'/%3E%3Crect%20x='2'%20y='3'%20width='3'%20height='1'/%3E%3Crect%20x='1'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='4'%20width='1'%20height='1'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%207%205'%3E%3Crect%20x='1'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='0'%20width='1'%20height='1'/%3E%3Crect%20x='2'%20y='1'%20width='3'%20height='1'/%3E%3Crect%20x='0'%20y='2'%20width='7'%20height='1'/%3E%3Crect%20x='2'%20y='3'%20width='3'%20height='1'/%3E%3Crect%20x='1'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='3'%20y='4'%20width='1'%20height='1'/%3E%3Crect%20x='5'%20y='4'%20width='1'%20height='1'/%3E%3C/svg%3E") center/contain no-repeat}
+.pxstar.e{opacity:.32}
+
 /* petit bouton "i" pour ouvrir les règles (écran d'accueil) */
 /* contour fermé en pixels (technique des cartes : fond doré + ::before en retrait) */
 #rulesBtn{position:absolute;top:12px;right:12px;width:30px;height:30px;z-index:5;background:var(--gold);color:var(--gold);border:none;clip-path:var(--rc);font-family:'Jersey 15',monospace;font-weight:700;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.45))}
@@ -720,7 +726,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <h1 class="win">LA PLANQUE</h1>
     <p>Dépense ta <b>réputation</b> en avantages permanents, puis replonge.</p>
     <div class="repBar">
-      <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl">★ réputation</span></div>
+      <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl"><i class="pxstar"></i> réputation</span></div>
       <div class="recBox">RECORD<br><span style="white-space:nowrap"><b><span id="recDepth">0</span> tables</b> · <b><span id="recChips">0</span> $</b></span></div>
     </div>
     <div class="shopItems" id="unlockItems"></div>
@@ -737,10 +743,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
       <div><span class="k">But</span> — bats le croupier à chaque main sans dépasser <span class="k">21</span>. Une figure vaut 10, l'As vaut 1 ou 11.</div>
       <div><span class="k">La table</span> — joue <span class="k">toutes les mains imposées</span>, mise dans la <span class="k">limite</span> (min–max fixe), et atteins l'<span class="k">objectif de gain</span> avant la dernière main. Sous l'objectif = table perdue.</div>
       <div><span class="k">Tes coups</span> — <span class="k">TIRER</span> une carte, <span class="k">RESTER</span> sur ta main, ou <span class="k">FORCER LA CHANCE</span> (2 cartes, on garde la meilleure · 1×/table · pression +++).</div>
-      <div><span class="k">Étoiles ★</span> — chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Elles ouvrent les <span class="d">boss</span> et les zones profondes.</div>
+      <div><span class="k">Étoiles <i class="pxstar"></i></span> — chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Elles ouvrent les <span class="d">boss</span> et les zones profondes.</div>
       <div><span class="k">Pression</span> — monte quand tu prends des risques, redescend quand tu joues posé. Trop haute, le croupier devient plus agressif.</div>
       <div><span class="k">La descente</span> — <span class="k">9 tables · 3 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">replonger</span> plus profond pour plus gros.</div>
-      <div><span class="k">La Planque</span> — dépense ta <span class="k">réputation ★</span> en avantages permanents (reliques, tarots, éditions) avant de repartir.</div>
+      <div><span class="k">La Planque</span> — dépense ta <span class="k">réputation <i class="pxstar"></i></span> en avantages permanents (reliques, tarots, éditions) avant de repartir.</div>
     </div>
     <button class="btn b-gold menu" onclick="closeRules()">FERMER</button>
   </div>
@@ -763,7 +769,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   <div class="ovpanel">
     <h1 class="win" id="shopTitle" style="font-size:23px">TABLE FRANCHIE</h1>
     <div id="shopStars" style="font-size:24px;letter-spacing:.18em;color:var(--gold);text-align:center;margin:-2px 0 6px"></div>
-    <p>Table <b id="shopDepth">1</b>/9 tenue · <b id="shopBank">0</b> $ en poche · cagnotte <b>★<span id="shopPot">0</span></b> <span style="color:var(--muted)">(+<span id="shopReward">0</span> ★)</span></p>
+    <p>Table <b id="shopDepth">1</b>/9 tenue · <b id="shopBank">0</b> $ en poche · cagnotte <b><i class="pxstar"></i><span id="shopPot">0</span></b> <span style="color:var(--muted)">(+<span id="shopReward">0</span> <i class="pxstar"></i>)</span></p>
     <p id="shopGate" style="font-size:12px;color:var(--muted);margin-top:-4px"></p>
     <div id="shopNextObj" style="font-size:13px;color:var(--cream);background:var(--panelDk2);clip-path:var(--pc);padding:8px 12px;margin:2px 0 9px;text-align:center"></div>
     <div class="shopItems" id="shopItems"></div>
@@ -799,6 +805,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
    TABLE 21 — moteur (identique) + présentation Balatro
    ============================================================ */
 const $=id=>document.getElementById(id);
+const STAR='<i class="pxstar"></i>',STARE='<i class="pxstar e"></i>';   // étoile pixel pleine / vide
 const rndInt=n=>Math.floor(Math.random()*n);
 /* abrège les grands nombres : 1 500 → 1.5K, 2 000 000 → 2M, etc. */
 function abbr(n){
@@ -1213,9 +1220,9 @@ function renderTop(){
   if(t.ruleText)bits.push(t.ruleText);
   bits.push('maîtrise ≥'+abbr(t.master)+' $');
   bits.push('mise '+abbr(t.min)+'–'+abbr(t.max));
-  bits.push('★'+(G.runStars||0));
-  if(G.pot>0)bits.push('cagnotte ★'+abbr(G.pot));
-  $('ruleText').textContent=bits.join('  ·  ');
+  bits.push(STAR+(G.runStars||0));
+  if(G.pot>0)bits.push('cagnotte '+STAR+abbr(G.pot));
+  $('ruleText').innerHTML=bits.join('  ·  ');
   $('ruleText').classList.toggle('boss',!!t.boss);
   $('shoeCount').textContent=G.shoe.length;
   renderObjective();
@@ -1560,7 +1567,7 @@ const SHOPTOK={
   collector:{t:'ÉD<small>×3</small>',c:'#a64dff'},
   maitresse:{t:'FOIL',c:'#7fd2ff'},
   bruleur:{t:'×1.5',c:'#ff9326'},
-  portebonheur:{t:'+1<small>★</small>',c:'#a64dff'},
+  portebonheur:{t:'+1<small>'+STAR+'</small>',c:'#a64dff'},
   diplomate:{t:'=<small>½</small>',c:'#ffce3a'},
   etoile:{t:'−45<small>%</small>',c:'#19c3c3'},
   jugement:{t:'P<small>=0</small>',c:'#19c3c3'},
@@ -1589,12 +1596,12 @@ function openShop(){
   $('shopDepth').textContent=G.tableIdx+1;
   $('shopPot').textContent=abbr(G.pot);
   $('shopReward').textContent=abbr(G.lastReward);
-  $('shopStars').textContent='★'.repeat(G.lastStars||0)+'☆'.repeat(3-(G.lastStars||0))+'  ·  total ★'+(G.runStars||0);
+  $('shopStars').innerHTML=STAR.repeat(G.lastStars||0)+STARE.repeat(3-(G.lastStars||0))+'  ·  total '+STAR+(G.runStars||0);
   const isBoss=!!G.table.boss, last=(G.tableIdx>=RUN_LEN-1);
   $('shopTitle').textContent=last?'CASINO DÉVALISÉ':(isBoss?'BOSS VAINCU':'TABLE FRANCHIE');
   // cash-out seulement aux paliers importants : après un boss (ou fin de run)
   const cb=$('cashBtn');
-  if(isBoss||last){cb.style.display='';cb.innerHTML=(last?'TERMINER<small>':'ENCAISSER<small>')+'★'+abbr(repOnEnd(true))+' réput.</small>';}
+  if(isBoss||last){cb.style.display='';cb.innerHTML=(last?'TERMINER<small>':'ENCAISSER<small>')+STAR+abbr(repOnEnd(true))+' réput.</small>';}
   else{cb.style.display='none';}
   // table suivante : verrou par étoiles + droit d'entrée éventuel
   const nextBtn=$('shopNextBtn'),nextObj=$('shopNextObj');
@@ -1613,7 +1620,7 @@ function openShop(){
     }
     if(locked){
       nextBtn.disabled=true;
-      $('shopGate').textContent=`🔒 Table suivante : ${nx.need}★ requis (tu as ${G.runStars||0}★). Vise mieux que survivre.`;
+      $('shopGate').innerHTML=`🔒 Table suivante : ${nx.need}${STAR} requis (tu as ${G.runStars||0}${STAR}). Vise mieux que survivre.`;
     }else{
       nextBtn.disabled=false;
       $('shopGate').textContent=nx.entry?`Salle plus exclusive — droit d'entrée ${abbr(nx.entry)} $.`:'';
@@ -1643,7 +1650,7 @@ function renderShop(){
     const tag=isSvc
       ?'<span style="font-size:9px;color:var(--teal)">✚ SERVICE</span>'
       :isTarot
-      ?'<span style="font-size:9px;color:var(--grape)">★ CARTE</span>'
+      ?'<span style="font-size:9px;color:var(--grape)">'+STAR+' CARTE</span>'
       :'<span style="font-size:9px;color:var(--yellow)">◆ RELIQUE</span>';
     const tk=SHOPTOK[r.id]||{t:'?',c:'#ffce3a'};
     d.innerHTML=`<div class="shopTok" style="color:${tk.c}">${tk.t}</div><div class="sInfo"><div class="nm">${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
@@ -1685,7 +1692,7 @@ function rerollShop(){
 function leaveShop(){
   const nx=RUN[G.tableIdx+1];
   if(!nx)return;                                   // sécurité : pas de table après la dernière
-  if((G.runStars||0)<nx.need){popText('VERROUILLÉ',nx.need+'★ requis');return;}
+  if((G.runStars||0)<nx.need){popText('VERROUILLÉ',nx.need+STAR+' requis');return;}
   $('shop').classList.remove('show');
   const prevZone=G.table.zone;
   G.tableIdx++;
@@ -1713,9 +1720,9 @@ function cashOut(){
 /* ---------- seconde chance / fin de descente ---------- */
 function openLose(){
   $('loseTitle').textContent=G.loseTitle;
-  $('loseText').innerHTML=G.loseText+`<br><br>Table <b>${G.tableIdx+1}</b> · Cagnotte : <b>★${abbr(G.pot)}</b>`;
+  $('loseText').innerHTML=G.loseText+`<br><br>Table <b>${G.tableIdx+1}</b> · Cagnotte : <b>${STAR}${abbr(G.pot)}</b>`;
   $('retryBtn').innerHTML='SECONDE CHANCE<small>'+G.tokens+' jeton'+(G.tokens>1?'s':'')+' restant'+(G.tokens>1?'s':'')+'</small>';
-  $('giveupBtn').innerHTML='ABANDONNER<small>encaisse ★'+abbr(repOnEnd(false))+'</small>';
+  $('giveupBtn').innerHTML='ABANDONNER<small>encaisse '+STAR+abbr(repOnEnd(false))+'</small>';
   $('loseScreen').classList.add('show');
 }
 /* rejoue la table en cours (sabot neuf, reliques gardées), contre un jeton */
@@ -1766,7 +1773,7 @@ function endRun(cashout){
       ?`Tu pars avec la cagnotte avant que ça tourne mal.`
       :`Tu repars quand même avec la moitié de ta cagnotte.`)+
     `<br><br>Tables tenues : <b>${depth}</b> · Jetons : <b>${abbr(G.bank)} $</b>`+
-    `<br>Réputation : <b>★${abbr(baseGain)}</b>`+(coffre?` <span style="color:var(--muted)">+ coffre ★${abbr(coffre)}</span>`:'')+` &nbsp;→&nbsp; total <b>★${abbr(META.rep)}</b>`+
+    `<br>Réputation : <b>${STAR}${abbr(baseGain)}</b>`+(coffre?` <span style="color:var(--muted)">+ coffre ${STAR}${abbr(coffre)}</span>`:'')+` &nbsp;→&nbsp; total <b>${STAR}${abbr(META.rep)}</b>`+
     `<br><span style="color:var(--muted)">Record : ${META.record.depth} tables · ${abbr(META.record.chips)} $</span>`;
   $('endScreen').classList.add('show');
 }
@@ -1821,7 +1828,7 @@ function flashScore(){const s=$('scorebox');if(!s)return;s.classList.remove('pop
 /* animation quand on franchit l'objectif de gain de la table */
 function objectiveReached(){
   const p=$('multPop');
-  if(p){p.className='win';p.querySelector('.m').textContent='OBJECTIF !';p.querySelector('.t').textContent='★ table validée';
+  if(p){p.className='win';p.querySelector('.m').textContent='OBJECTIF !';p.querySelector('.t').innerHTML=STAR+' table validée';
     p.classList.remove('go');void p.offsetWidth;p.classList.add('go');}
   // animation sur la barre d'objectif (à la place des confettis)
   const ow=$('objWrap');if(ow){ow.classList.remove('goalpop');void ow.offsetWidth;ow.classList.add('goalpop');setTimeout(()=>ow.classList.remove('goalpop'),900);}
@@ -1946,7 +1953,7 @@ function renderPlanque(){
     const b=document.createElement('button');b.className='btn b-gold';
     b.style.cssText='font-size:13px;padding:9px 11px';
     if(maxed){b.textContent='MAX';b.disabled=true;}
-    else{b.textContent='★'+cost;if(META.rep<cost)b.disabled=true;b.onclick=()=>buyUnlock(u.id);}
+    else{b.innerHTML=STAR+cost;if(META.rep<cost)b.disabled=true;b.onclick=()=>buyUnlock(u.id);}
     d.appendChild(b);box.appendChild(d);
   });
 }
