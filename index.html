@@ -746,6 +746,18 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   </div>
 </div>
 
+<!-- CONFIRMATION RECOMMENCER -->
+<div class="overlay" id="confirmRestart">
+  <div class="ovpanel" style="max-width:360px;text-align:center">
+    <h1 class="dead" style="font-size:21px">RECOMMENCER ?</h1>
+    <p>Êtes-vous sûr de vouloir <b>recommencer votre progression</b> ?<br>Tu perds toute ta <b>réputation</b>, tes <b>déblocages</b> et tes <b>records</b>.</p>
+    <div class="shopBtns" style="margin-top:14px;gap:9px">
+      <button class="btn b-teal" onclick="closeRestart()" style="flex:1">ANNULER</button>
+      <button class="btn b-red" onclick="doRestart()" style="flex:1">RECOMMENCER</button>
+    </div>
+  </div>
+</div>
+
 <!-- SHOP -->
 <div class="overlay" id="shop">
   <div class="ovpanel">
@@ -1950,11 +1962,13 @@ function startGame(){
   announceTurn();
 }
 /* tout recommencer depuis zéro : on perd réputation, déblocages et records */
-function restartAll(){
-  if(!confirm("Tout recommencer depuis le départ ?\nTu perds toute ta réputation et tous tes déblocages.")) return;
+function restartAll(){audioInit();$('confirmRestart').classList.add('show');}   // petite fenêtre de confirmation in-game
+function closeRestart(){$('confirmRestart').classList.remove('show');}
+function doRestart(){
   META={rep:0,unlocks:{},record:{depth:0,chips:0}};saveMeta();
   freshGame();buildShoe();renderAll();renderHands();
   renderPlanque();renderBackPicker();
+  $('confirmRestart').classList.remove('show');
   $('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');$('shop').classList.remove('show');
   $('intro').classList.add('show');                       // on revient à La Planque, état neuf
 }
