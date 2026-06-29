@@ -385,15 +385,18 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #effects .tarot:nth-child(3n){animation-delay:-2.7s}
 /* STAGE — table bois (rebord double rail + liseré or) ; barres hors du tapis */
 #stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:9px;min-height:0;width:100%;max-width:620px}
-/* barre de GAIN → OBJECTIF : jaune uni, sans texte ; montant actuel en curseur dessous */
-#objWrap{position:relative;width:100%;max-width:500px;margin:0 auto;z-index:1}
+/* barre GAIN → OBJECTIF : jaune uni, sans texte. L'objectif est aux 3/4 de la barre
+   (le dernier quart sert à visualiser le dépassement). Montant actuel au-dessus
+   (suit le remplissage), objectif en dessous au repère des 3/4. */
+#objWrap{position:relative;width:100%;max-width:500px;margin:0 auto;padding:15px 0;z-index:1;line-height:1}
 #objBar{position:relative;width:100%;height:16px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:#0a1c17}
 #objFill{position:absolute;inset:0;width:0;background:var(--gold);transition:width .4s cubic-bezier(.2,.8,.2,1)}
 #objBar.full #objFill{animation:pflash .6s linear infinite}
-#objMarks{position:relative;height:15px;margin-top:3px;font-size:11px;font-weight:700;line-height:1}
-#objCur{position:absolute;top:0;transform:translateX(-50%);color:var(--gold);white-space:nowrap}
-#objCur::before{content:"";position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:5px solid var(--gold)}
-#objGoal{position:absolute;top:0;right:0;color:var(--muted)}
+#objTick{position:absolute;top:0;bottom:0;left:75%;width:2px;background:rgba(255,255,255,.6);z-index:2}
+#objCur{position:absolute;top:0;transform:translateX(-50%);font-size:11px;font-weight:700;color:var(--gold);white-space:nowrap;z-index:3}
+#objCur::after{content:"";position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--gold)}
+#objGoal{position:absolute;bottom:0;left:75%;transform:translateX(-50%);font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap}
+#objGoal::before{content:"";position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:5px solid var(--muted)}
 /* barre de PRESSION : petite, posée en haut du tapis */
 #pBar{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:150px;height:11px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:rgba(8,22,18,.72);z-index:3;box-shadow:none;animation:pbarBuzz .16s steps(1,end) infinite;will-change:transform}
 #pBar .pmeta{font-size:8.5px!important;letter-spacing:.02em}
@@ -602,8 +605,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 
   <div id="stage">
     <div id="objWrap">
-      <div id="objBar"><div id="objFill"></div></div>
-      <div id="objMarks"><span id="objCur">0 $</span><span id="objGoal">0 $</span></div>
+      <span id="objCur">0 $</span>
+      <div id="objBar"><div id="objFill"></div><div id="objTick"></div></div>
+      <span id="objGoal">0 $</span>
     </div>
     <div id="table">
       <div id="felt">
@@ -1107,10 +1111,11 @@ function renderTop(){
 /* barre de progression GAIN → OBJECTIF (au-dessus du tapis) */
 function renderObjective(){
   const goal=(G.table&&G.table.goal)||1;
-  const pct=Math.max(0,Math.min(100,G.bank/goal*100));
+  const objMax=goal*4/3;                                   // objectif aux 3/4 → reste 1/4 pour le dépassement
+  const pct=Math.max(0,Math.min(100,G.bank/objMax*100));
   const f=$('objFill');if(f)f.style.width=pct+'%';
-  const c=$('objCur');if(c){c.textContent=abbr(G.bank)+' $';c.style.left=Math.max(7,Math.min(88,pct))+'%';}  // curseur sous le bord du remplissage
-  const g=$('objGoal');if(g)g.textContent=abbr(goal)+' $';
+  const c=$('objCur');if(c){c.textContent=abbr(G.bank)+' $';c.style.left=Math.max(7,Math.min(93,pct))+'%';}  // montant actuel au-dessus, suit le remplissage
+  const g=$('objGoal');if(g)g.textContent=abbr(goal)+' $';  // au repère des 3/4
   const bar=$('objBar');if(bar)bar.classList.toggle('full',G.bank>=goal);
 }
 function fanEffects(){
