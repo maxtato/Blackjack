@@ -490,8 +490,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 </style>
 <style>
 /* ===== arrivée depuis la droite + retournement ===== */
-/* retournement un peu plus doux */
-.card.flip{animation:flipIn .68s cubic-bezier(.3,.8,.35,1) both}
+/* retournement accéléré */
+.card.flip{animation:flipIn .42s cubic-bezier(.3,.82,.35,1) both}
 @keyframes flipIn{
   0%{transform:perspective(620px) rotateY(90deg) scale(1.05);opacity:.12}
   50%{transform:perspective(620px) rotateY(-15deg) scale(1.06);opacity:1}
@@ -506,11 +506,20 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #rulesBtn{position:absolute;top:12px;right:12px;width:30px;height:30px;z-index:5;background:var(--panelDk2,#0e1620);color:var(--gold);border:2px solid var(--gold);clip-path:var(--pc);font-family:'Jersey 15',monospace;font-weight:700;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:2px 3px 0 rgba(0,0,0,.45)}
 #rulesBtn:active{transform:translate(1px,2px);box-shadow:1px 1px 0 rgba(0,0,0,.45)}
 
-/* annonce du nombre de tours restants, en gros, à chaque main */
-#turnPop{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%) scale(.6);font-family:'Jersey 15',monospace;font-weight:700;font-size:44px;line-height:.9;color:var(--gold);text-shadow:3px 4px 0 #000;opacity:0;pointer-events:none;z-index:6;white-space:nowrap;text-align:center;letter-spacing:.03em}
-#turnPop small{display:block;font-size:.34em;letter-spacing:.14em;color:var(--cream,#fff)}
-#turnPop.go{animation:turnPop 1.3s ease-out both}
-@keyframes turnPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}16%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}28%{transform:translate(-50%,-50%) scale(1)}70%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.04)}}
+/* annonce de début de main (concept B) : bandeau haut + jeton de revenu séparé, écriture pixel */
+#turnPop{position:absolute;inset:0;pointer-events:none;z-index:7;font-family:'Jersey 15',monospace;image-rendering:pixelated}
+#turnPop .tp-band{position:absolute;top:0;left:0;right:0;background:rgba(6,28,25,.93);padding:9px 12px 10px;text-align:center;box-shadow:0 3px 0 rgba(0,0,0,.3);opacity:0}
+#turnPop .tp-main{font-size:14px;letter-spacing:.05em;color:var(--cream,#fdf3df)}
+#turnPop .tp-pips{display:flex;gap:7px;justify-content:center;margin-top:7px}
+#turnPop .tp-pips i{width:26px;height:6px;background:#0a3a35;border-radius:2px;display:block}
+#turnPop .tp-pips i.on{background:var(--gold)}
+#turnPop .tp-coin{position:absolute;top:54px;right:12px;background:var(--gold);color:#3a2a06;clip-path:var(--pc);padding:6px 11px;text-align:center;box-shadow:3px 4px 0 rgba(0,0,0,.4);opacity:0}
+#turnPop .tp-coin b{font-size:18px;display:block;line-height:1}
+#turnPop .tp-coin span{font-size:10px;letter-spacing:.05em;font-weight:700}
+#turnPop.go .tp-band{animation:tpBand 2.5s cubic-bezier(.2,.9,.3,1) both}
+#turnPop.go .tp-coin{animation:tpCoin 2.5s cubic-bezier(.2,.9,.3,1) both}
+@keyframes tpBand{0%{opacity:0;transform:translateY(-14px)}8%{opacity:1;transform:translateY(0)}85%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}
+@keyframes tpCoin{0%{opacity:0;transform:translateY(-8px) scale(.9)}12%{opacity:0;transform:translateY(-8px) scale(.9)}19%{opacity:1;transform:translateY(0) scale(1.06)}25%{transform:translateY(0) scale(1)}85%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-6px) scale(.95)}}
 
 /* objectif atteint : animation sur la barre (plus de confettis) */
 #objWrap.goalpop{animation:objBump .85s ease-out}
@@ -637,10 +646,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
       <div id="felt">
         <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">FROID</span> · <span id="pPct">0%</span></span></div>
         <span class="fc tl"></span><span class="fc tr"></span><span class="fc bl"></span><span class="fc br"></span>
+        <div id="turnPop"></div>
         <div id="feltInner">
           <div id="feltMark">21</div>
           <div id="multPop"><div class="burst"></div><span class="m"></span><span class="t"></span></div>
-          <div id="turnPop"></div>
           <div class="zone">
             <div class="zlbl">Croupier<span class="v" id="dVal">—</span></div>
             <div class="hand" id="dHand"></div>
@@ -1227,7 +1236,9 @@ function applyHandIncome(){
   if(hasRelic('mecene')){inc+=4;parts.push('Mécène +4');}
   if(hasRelic('usurier')){const u=Math.min(6,Math.floor(G.bank/5));if(u>0){inc+=u;parts.push('Usurier +'+u);}}
   const tip=uLvl('pourboire');if(tip>0){inc+=tip;parts.push('Pourboire +'+tip);}
-  if(inc>0){G.bank+=inc;renderTop();renderChips();popText('REVENU','+'+abbr(inc)+' $ · '+parts.join(' · '));}
+  // on ne montre plus le revenu en pop séparé : il est intégré au panneau de début de main
+  if(inc>0){G.bank+=inc;renderTop();renderChips();G._income={amt:inc,parts:parts.slice()};}
+  else G._income=null;
 }
 /* mises échelonnées : on monte avec la banque (100, 200, 500, 1000…) ;
    on n'affiche que les 4 plus grosses valeurs abordables pour ne pas surcharger */
@@ -1327,7 +1338,8 @@ function deal(){
   dealSequence([p1,d1,p2,d2]);
 }
 // timings de la distribution animée (la carte apparaît d'un coup, puis se retourne)
-const CARD_HOLD=130,CARD_FLIP=700;
+// délai IDENTIQUE pour chaque carte : intervalle = CARD_HOLD + CARD_FLIP entre deux cartes
+const CARD_HOLD=85,CARD_FLIP=420;
 // anime UNE carte : elle apparaît d'un coup (dos), puis se retourne. Plus de glissade.
 // stayDown : reste dos (trou du croupier). reveal : main du croupier dévoilée.
 function dealCardIn(c,opts,done){
@@ -1735,7 +1747,14 @@ function closeRules(){$('rulesScreen').classList.remove('show');}
 function announceTurn(){
   const el=$('turnPop');if(!el)return;
   const t=G.table,left=Math.max(1,t.mains-G.hand+1);
-  el.innerHTML = left<=1 ? 'DERNIER<br>TOUR' : left+'<small>TOURS RESTANTS</small>';
+  let pips='';for(let i=0;i<t.mains;i++)pips+='<i class="'+(i<G.hand?'on':'')+'"></i>';
+  const band=`<div class="tp-band"><div class="tp-main">MAIN ${G.hand} / ${t.mains} — ${left<=1?'DERNIER TOUR':left+' TOURS RESTANTS'}</div><div class="tp-pips">${pips}</div></div>`;
+  let coin='';
+  if(G._income){
+    const lbl=G._income.parts.length===1?G._income.parts[0].replace(/\s*\+.*/,'').toUpperCase():'REVENU';
+    coin=`<div class="tp-coin"><b>+${abbr(G._income.amt)} $</b><span>${lbl}</span></div>`;
+  }
+  el.innerHTML=band+coin;
   el.classList.remove('go');void el.offsetWidth;el.classList.add('go');
 }
 let textTimer;
