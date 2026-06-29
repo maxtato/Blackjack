@@ -490,9 +490,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 </style>
 <style>
 /* ===== arrivée depuis la droite + retournement ===== */
-/* la carte glisse depuis le bord droit de l'écran et vient se poser au centre */
-.card.arrive{animation:dealR .46s cubic-bezier(.16,.7,.28,1) both}
-@keyframes dealR{0%{transform:translateX(300px) rotate(9deg) scale(.96);opacity:0}45%{opacity:1}100%{transform:none;opacity:1}}
+/* la carte file vite depuis le bord droit de l'écran et vient se poser au centre */
+.card.arrive{animation:dealR .2s cubic-bezier(.22,.9,.32,1) both}
+@keyframes dealR{0%{transform:translateX(320px) rotate(9deg) scale(.97);opacity:0}30%{opacity:1}100%{transform:none;opacity:1}}
 /* retournement un peu plus doux */
 .card.flip{animation:flipIn .68s cubic-bezier(.3,.8,.35,1) both}
 @keyframes flipIn{
@@ -1057,6 +1057,9 @@ function fannedCard(c,idx,total,opts){
   const seed=c.r+c.s+idx;
   const jRot=(hashStr(seed+'r')-0.5)*3;         // ±1.5° pour casser la symétrie
   const jY=(hashStr(seed+'y')-0.5)*3;           // ±1.5px
+  // espace horizontal aléatoire entre les cartes : elles ne se chevauchent plus en se retournant
+  // (la carte de droite, arrivée après, peut encore se superposer un tout petit peu)
+  if(idx>0)slot.style.marginLeft=(3+hashStr(seed+'x')*11).toFixed(1)+'px';
   slot.style.transform=`translateY(${(arc+jY).toFixed(1)}px) rotate(${(baseRot+jRot).toFixed(2)}deg)`;
   slot.appendChild(cardEl(c,Object.assign({idx:idx},opts)));
   return slot;
@@ -1294,7 +1297,7 @@ function deal(){
   dealSequence([p1,d1,p2,d2]);
 }
 // timings de la distribution animée (glissade depuis la droite + retournement plus doux)
-const CARD_ARRIVE=460,CARD_FLIP=700;
+const CARD_ARRIVE=210,CARD_FLIP=700;
 // anime UNE carte : elle glisse de la droite (dos), se pose, puis se retourne.
 // stayDown : reste dos (trou du croupier). reveal : main du croupier dévoilée.
 function dealCardIn(c,opts,done){
