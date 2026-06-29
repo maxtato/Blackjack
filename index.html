@@ -525,7 +525,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #objWrap{padding:6px 0 16px}
 #objBar{height:24px}
 #objTick{top:6px;height:24px}
-#objGoal{font-size:13.5px;font-weight:700}
+#objGoal{font-size:13.5px;font-weight:700;transform:translate(-50%,4px)}   /* descendu de quelques px sous la barre */
 
 /* petit bouton "i" pour ouvrir les règles (écran d'accueil) */
 #rulesBtn{position:absolute;top:12px;right:12px;width:30px;height:30px;z-index:5;background:var(--panelDk2,#0e1620);color:var(--gold);border:2px solid var(--gold);clip-path:var(--pc);font-family:'Jersey 15',monospace;font-weight:700;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:2px 3px 0 rgba(0,0,0,.45)}
@@ -1882,6 +1882,7 @@ function staggerNode(node,ctr,boost){
     }else if(n.nodeType===1){
       const c=n.classList;
       if(c&&(c.contains('L')||c.contains('W')||c.contains('card')))continue;
+      if(c&&c.contains('tstats'))continue;                 // les 3 rectangles : décalage amplifié, traités à part
       if(n.id==='multPop'||n.id==='center'||n.id==='feltMark')continue;
       staggerNode(n,ctr,boost);
     }
@@ -1890,7 +1891,9 @@ function staggerNode(node,ctr,boost){
 function staggerText(el,boost){if(!el||!document.createDocumentFragment)return;staggerNode(el,{i:0},boost);}
 /* re-applique le décalage à toute l'UI visible (chrome de jeu + overlay affiché) */
 function staggerUI(){
-  staggerText($('topbar'),3.6);staggerText($('bottombar'));staggerText($('effects'));staggerText($('peekBtn'));
+  staggerText($('topbar'));                                          // décalage normal : nom de table, règle, barre de gain
+  document.querySelectorAll('#topbar .tstats').forEach(el=>staggerText(el,3.6));   // décalage amplifié seulement sur les 3 rectangles
+  staggerText($('bottombar'));staggerText($('effects'));staggerText($('peekBtn'));
   document.querySelectorAll('#stage .zlbl').forEach(staggerText);
   document.querySelectorAll('.overlay.show .ovpanel').forEach(staggerText);
 }
