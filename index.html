@@ -414,7 +414,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #pBar .pmeta{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:700;color:#fff;text-shadow:1px 1px 0 #000;z-index:1;letter-spacing:.04em}
 #pBar.tick #pFill{animation:pflash .5s linear infinite}
 /* TABLE = simple conteneur (plus de bois) */
-#table{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;max-width:580px;position:relative;padding:46px 3px;border:none;border-radius:0;background:none;overflow:visible;box-shadow:none}
+#table{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;max-width:580px;position:relative;padding:14px 3px 40px;border:none;border-radius:0;background:none;overflow:visible;box-shadow:none}
 #table::before,#table::after{display:none!important}
 /* petit bouton VOIR (lunettes) : posé sur le coin du tapis, hors de la rangée d'actions */
 #peekBtn{position:absolute;top:50%;right:12px;transform:translateY(-50%);z-index:6;display:none;font-family:'Jersey 15',monospace;font-weight:700;font-size:17px;letter-spacing:.05em;color:#fff;background:#54565e;border:none;clip-path:var(--pc);padding:13px 16px;line-height:1;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.4);animation:btnTwitch 1.1s steps(1,end) infinite}
@@ -531,20 +531,13 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #rulesBtn{position:absolute;top:12px;right:12px;width:30px;height:30px;z-index:5;background:var(--panelDk2,#0e1620);color:var(--gold);border:2px solid var(--gold);clip-path:var(--pc);font-family:'Jersey 15',monospace;font-weight:700;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:2px 3px 0 rgba(0,0,0,.45)}
 #rulesBtn:active{transform:translate(1px,2px);box-shadow:1px 1px 0 rgba(0,0,0,.45)}
 
-/* annonce de début de main (concept B) : bandeau haut + jeton de revenu séparé, écriture pixel */
+/* petit jeton de revenu (pourboire/mécène) en début de main, en haut à droite du tapis */
 #turnPop{position:absolute;inset:0;pointer-events:none;z-index:7;font-family:'Jersey 15',monospace;image-rendering:pixelated}
-#turnPop .tp-band{position:absolute;top:0;left:0;right:0;background:rgba(6,28,25,.93);padding:9px 12px 10px;text-align:center;box-shadow:0 3px 0 rgba(0,0,0,.3);opacity:0}
-#turnPop .tp-main{font-size:14px;letter-spacing:.05em;color:var(--cream,#fdf3df)}
-#turnPop .tp-pips{display:flex;gap:7px;justify-content:center;margin-top:7px}
-#turnPop .tp-pips i{width:26px;height:6px;background:#0a3a35;border-radius:2px;display:block}
-#turnPop .tp-pips i.on{background:var(--gold)}
-#turnPop .tp-coin{position:absolute;top:54px;right:12px;background:var(--gold);color:#3a2a06;clip-path:var(--pc);padding:6px 11px;text-align:center;box-shadow:3px 4px 0 rgba(0,0,0,.4);opacity:0}
+#turnPop .tp-coin{position:absolute;top:10px;right:12px;background:var(--gold);color:#3a2a06;clip-path:var(--pc);padding:6px 11px;text-align:center;box-shadow:3px 4px 0 rgba(0,0,0,.4);opacity:0}
 #turnPop .tp-coin b{font-size:18px;display:block;line-height:1}
 #turnPop .tp-coin span{font-size:10px;letter-spacing:.05em;font-weight:700}
-#turnPop.go .tp-band{animation:tpBand 2.5s cubic-bezier(.2,.9,.3,1) both}
-#turnPop.go .tp-coin{animation:tpCoin 2.5s cubic-bezier(.2,.9,.3,1) both}
-@keyframes tpBand{0%{opacity:0;transform:translateY(-14px)}8%{opacity:1;transform:translateY(0)}85%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}
-@keyframes tpCoin{0%{opacity:0;transform:translateY(-8px) scale(.9)}12%{opacity:0;transform:translateY(-8px) scale(.9)}19%{opacity:1;transform:translateY(0) scale(1.06)}25%{transform:translateY(0) scale(1)}85%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-6px) scale(.95)}}
+#turnPop.go .tp-coin{animation:tpCoin 2.2s cubic-bezier(.2,.9,.3,1) both}
+@keyframes tpCoin{0%{opacity:0;transform:translateY(-8px) scale(.9)}12%{opacity:0;transform:translateY(-8px) scale(.9)}19%{opacity:1;transform:translateY(0) scale(1.06)}25%{transform:translateY(0) scale(1)}82%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-6px) scale(.95)}}
 
 /* objectif atteint : animation sur la barre (plus de confettis) */
 #objWrap.goalpop{animation:objBump .85s ease-out}
@@ -1131,7 +1124,7 @@ function fannedCard(c,idx,total,opts){
   const jY=(hashStr(seed+'y')-0.5)*3;           // ±1.5px
   // espace horizontal aléatoire entre les cartes : elles ne se chevauchent plus en se retournant
   // (la carte de droite, arrivée après, peut encore se superposer un tout petit peu)
-  if(idx>0)slot.style.marginLeft=(3+hashStr(seed+'x')*11).toFixed(1)+'px';
+  if(idx>0)slot.style.marginLeft=(hashStr(seed+'x')*5-3).toFixed(1)+'px';   // cartes rapprochées, léger aléa (chevauchement léger ok)
   slot.style.transform=`translateY(${(arc+jY).toFixed(1)}px) rotate(${(baseRot+jRot).toFixed(2)}deg)`;
   slot.appendChild(cardEl(c,Object.assign({idx:idx},opts)));
   return slot;
@@ -1777,17 +1770,13 @@ function showWord(kind,gain,mult,natural,bust){
 function openRules(){$('rulesScreen').classList.add('show');}
 function closeRules(){$('rulesScreen').classList.remove('show');}
 // annonce du nombre de tours restants, en gros, au début de chaque main
+// le nombre de tours est désormais permanent dans la barre du haut :
+// on ne garde qu'un petit jeton de revenu (pourboire/mécène) au début de la main
 function announceTurn(){
   const el=$('turnPop');if(!el)return;
-  const t=G.table,left=Math.max(1,t.mains-G.hand+1);
-  let pips='';for(let i=0;i<t.mains;i++)pips+='<i class="'+(i<G.hand?'on':'')+'"></i>';
-  const band=`<div class="tp-band"><div class="tp-main">MAIN ${G.hand} / ${t.mains} — ${left<=1?'DERNIER TOUR':left+' TOURS RESTANTS'}</div><div class="tp-pips">${pips}</div></div>`;
-  let coin='';
-  if(G._income){
-    const lbl=G._income.parts.length===1?G._income.parts[0].replace(/\s*\+.*/,'').toUpperCase():'REVENU';
-    coin=`<div class="tp-coin"><b>+${abbr(G._income.amt)} $</b><span>${lbl}</span></div>`;
-  }
-  el.innerHTML=band+coin;
+  if(!G._income){el.innerHTML='';return;}
+  const lbl=G._income.parts.length===1?G._income.parts[0].replace(/\s*\+.*/,'').toUpperCase():'REVENU';
+  el.innerHTML=`<div class="tp-coin"><b>+${abbr(G._income.amt)} $</b><span>${lbl}</span></div>`;
   el.classList.remove('go');void el.offsetWidth;el.classList.add('go');
 }
 let textTimer;
