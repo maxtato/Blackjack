@@ -502,6 +502,30 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* carte posée : pas de re-glissade ni de re-fondu, juste le souffle (sauf en mode jit) */
 .card.placed:not(.jit){animation:cardLife 3.6s ease-in-out var(--cd,0s) infinite}
 
+/* ===== barre grise — concept 2 : tours permanents + MULT réduit + GAIN affiché ===== */
+.stat.turnstat{flex-direction:row;align-items:center;gap:9px;padding:5px 12px 5px 10px;flex:0 0 auto}
+.stat.turnstat .tnum{font-size:28px;line-height:.85;color:var(--gold);font-weight:700;text-shadow:2px 2px 0 #000}
+.stat.turnstat .tnum.warn{animation:warnPulse .62s ease-in-out infinite}
+.stat.turnstat .tcol{display:flex;flex-direction:column;align-items:flex-start;line-height:1.08}
+.stat.turnstat .tt{font-size:11px;letter-spacing:.08em;color:#fff;font-weight:700}
+.stat.turnstat .ts{font-size:10px;color:var(--muted)}
+.stat.turnstat .tpips{display:flex;gap:4px;margin-top:3px}
+.stat.turnstat .tpips i{width:15px;height:5px;background:#0a3a35;border-radius:2px;display:block}
+.stat.turnstat .tpips i.on{background:var(--gold)}
+#topbar #scorebox{flex:1}
+#scorebox .seg.mult{flex:0 0 auto;padding:6px 8px;box-shadow:inset 2px 0 0 rgba(255,255,255,.09)}
+#scorebox .seg.mult .k{font-size:8.5px}
+#scorebox .seg.mult .v{font-size:13px}
+#scorebox .seg.gain{flex:1;box-shadow:inset 2px 0 0 rgba(255,255,255,.09)}
+#scorebox .seg.gain .v{font-size:19px;color:var(--gold);font-weight:700;white-space:nowrap}
+#scorebox .seg.gain .v.warn{animation:warnPulse .62s ease-in-out infinite}
+#scorebox.pop{animation:scorePop .35s ease-out}
+/* barre de gain agrandie (le nombre exact est sur la card GAIN, la barre montre le remplissage) */
+#objWrap{padding:6px 0 18px}
+#objBar{height:24px}
+#objTick{top:6px;height:24px}
+#objGoal{font-size:17px}
+
 /* petit bouton "i" pour ouvrir les règles (écran d'accueil) */
 #rulesBtn{position:absolute;top:12px;right:12px;width:30px;height:30px;z-index:5;background:var(--panelDk2,#0e1620);color:var(--gold);border:2px solid var(--gold);clip-path:var(--pc);font-family:'Jersey 15',monospace;font-weight:700;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:2px 3px 0 rgba(0,0,0,.45)}
 #rulesBtn:active{transform:translate(1px,2px);box-shadow:1px 1px 0 rgba(0,0,0,.45)}
@@ -621,13 +645,21 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   <header id="topbar">
     <div class="tname"><span id="tableName">Arrière-salle</span><span class="rule" id="ruleText"></span></div>
     <div class="tstats">
-      <div class="stat tours"><span class="lbl">TOURS</span><span class="v" id="handsLeftBig">5</span></div>
-      <div class="stat goal"><span class="lbl">OBJECTIF</span><span class="v">$<span id="goalVal">100</span></span></div>
-      <div id="scorebox"><span class="seg chips"><b class="k">MISE</b><span class="v" id="chipsVal">10</span></span><span class="seg mult"><b class="k">MULT</b><span class="v" id="multVal">×1</span></span></div>
-      <div class="stat bank" id="scorePanel"><span class="lbl">JETONS</span><span class="v">$<span id="bankBig">50</span></span></div>
+      <div class="stat turnstat" id="turnStat">
+        <span class="tnum" id="turnNum">4</span>
+        <span class="tcol">
+          <span class="tt">TOURS</span>
+          <span class="ts">main <span id="mainNum">1</span>/<span id="mainMax">4</span></span>
+          <span class="tpips" id="turnPips"></span>
+        </span>
+      </div>
+      <div id="scorebox">
+        <span class="seg chips"><b class="k">MISE</b><span class="v" id="chipsVal">10</span></span>
+        <span class="seg mult"><b class="k">MULT</b><span class="v" id="multVal">×1</span></span>
+        <span class="seg gain"><b class="k">GAIN</b><span class="v" id="gainVal">50 $</span></span>
+      </div>
     </div>
     <div id="objWrap">
-      <span id="objCur">0 $</span>
       <div id="objBar"><div id="objFill"></div></div>
       <div id="objTick"></div>
       <span id="objGoal">0 $</span>
@@ -1151,11 +1183,11 @@ function renderTop(){
   $('handNum').textContent=G.hand;$('handMax').textContent=t.mains;
   const left=t.mains-G.hand+1;
   $('handsLeft').textContent=left;
-  $('handsLeftBig').textContent=left;
-  $('handsLeftBig').classList.toggle('warn',left===1);          // dernier tour : ça clignote
-  $('bankBig').textContent=abbr(G.bank);
-  $('bankBig').parentElement.classList.toggle('warn',G.bank<t.min*3); // banque vraiment basse
-  $('goalVal').textContent=abbr(t.goal);
+  // bandeau « tours » permanent (concept 2)
+  const tn=$('turnNum');if(tn){tn.textContent=left;tn.classList.toggle('warn',left===1);}
+  const mn=$('mainNum');if(mn)mn.textContent=G.hand;
+  const mx=$('mainMax');if(mx)mx.textContent=t.mains;
+  const tp=$('turnPips');if(tp){let h='';for(let i=0;i<t.mains;i++)h+='<i class="'+(i<G.hand?'on':'')+'"></i>';tp.innerHTML=h;}
   document.documentElement.style.setProperty('--felt',ZONE_FELT[t.zone]||'#138f86');   // tapis coloré par zone
   $('tableName').textContent=t.n+' · zone '+t.zone+' '+ZONE_NAMES[t.zone]+' · '+(G.tableIdx+1)+'/'+RUN_LEN;
   const bits=[];
@@ -1175,8 +1207,8 @@ function renderObjective(){
   const objMax=goal*4/3;                                   // objectif aux 3/4 → reste 1/4 pour le dépassement
   const pct=Math.max(0,Math.min(100,G.bank/objMax*100));
   const f=$('objFill');if(f)f.style.width=pct+'%';
-  const c=$('objCur');if(c){c.textContent=abbr(G.bank)+' $';c.style.left=Math.max(7,Math.min(93,pct))+'%';}  // montant actuel au-dessus, suit le remplissage
-  const g=$('objGoal');if(g)g.textContent=abbr(goal)+' $';  // au repère des 3/4
+  const g=$('objGoal');if(g)g.textContent=abbr(goal)+' $';  // objectif au repère des 3/4
+  const gv=$('gainVal');if(gv){gv.textContent=abbr(G.bank)+' $';gv.classList.toggle('warn',!!(G.table&&G.bank<G.table.min*3));}  // gain courant affiché « pour de vrai »
   const bar=$('objBar');if(bar)bar.classList.toggle('full',G.bank>=goal);
 }
 function fanEffects(){
@@ -1763,7 +1795,7 @@ function popText(txt,sub){
   $('tip').style.color='var(--gold)';
   clearTimeout(textTimer);textTimer=setTimeout(()=>{$('tip').textContent='';},1400);
 }
-function flashScore(){const s=$('scorePanel');s.classList.remove('pop');void s.offsetWidth;s.classList.add('pop');}
+function flashScore(){const s=$('scorebox');if(!s)return;s.classList.remove('pop');void s.offsetWidth;s.classList.add('pop');setTimeout(()=>s.classList.remove('pop'),360);}
 /* animation quand on franchit l'objectif de gain de la table */
 function objectiveReached(){
   const p=$('multPop');
@@ -1774,7 +1806,6 @@ function objectiveReached(){
   flashScreen('win');shake(12);
   try{sfx.win&&sfx.win();sfx.combo&&sfx.combo();}catch(e){}
   const sb=$('scorebox');if(sb){sb.classList.add('hot');setTimeout(()=>sb.classList.remove('hot'),1500);}
-  const gv=$('goalVal');if(gv&&gv.parentElement){const b=gv.parentElement;b.classList.add('hit');setTimeout(()=>b.classList.remove('hit'),1500);}
 }
 
 let shakeAmt=0;
@@ -1783,7 +1814,7 @@ function shake(n){shakeAmt=Math.max(shakeAmt,n);}
 /* ---- effets visuels ---- */
 function flashScreen(kind){const f=$('fx');f.classList.remove('win','lose');void f.offsetWidth;f.classList.add(kind);setTimeout(()=>f.classList.remove(kind),500);}
 function slamBox(){const s=$('scorebox');s.classList.remove('slam');void s.offsetWidth;s.classList.add('slam');}
-function badFlash(){const s=$('scorePanel');s.classList.remove('bad');void s.offsetWidth;s.classList.add('bad');setTimeout(()=>s.classList.remove('bad'),520);}
+function badFlash(){const s=$('scorebox');if(!s)return;s.classList.remove('bad');void s.offsetWidth;s.classList.add('bad');setTimeout(()=>s.classList.remove('bad'),520);}
 function coinBurst(n){
   const cont=$('particles'),cx=innerWidth/2,cy=innerHeight*0.5;
   for(let i=0;i<n;i++){
