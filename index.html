@@ -493,7 +493,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <style>
 /* ===== arrivée depuis la droite + retournement ===== */
 /* retournement COMPLET : carte à deux faces (dos -> face) qui pivote de 180° */
-.flipwrap{position:relative;width:56px;height:78px;transform-style:preserve-3d;animation:flip180 .58s cubic-bezier(.35,.05,.3,1) both}
+.flipwrap{position:relative;width:56px;height:78px;transform-style:preserve-3d;animation:flip180 .4s cubic-bezier(.35,.05,.3,1) both}
 .flipwrap .card{position:absolute;inset:0;width:100%;height:100%;margin:0;animation:none;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .flipwrap .card.front{transform:rotateY(180deg)}
 @keyframes flip180{
@@ -1188,7 +1188,8 @@ function renderHands(reveal=false){
     const arrive=!!c._arr,flip=!!c._flip;
     ph.appendChild(fannedCard(c,i,pShown.length,{back:c._fd,arrive,flip,placed:!arrive&&!flip}));
   });
-  const pUp=pShown.filter(c=>!c._fd),dUp=dShown.filter(c=>!c._fd);   // valeur : cartes face visible seulement
+  // valeur : on ne compte la carte qu'une fois RETOURNÉE (ni dos _fd, ni en cours de retournement _flip)
+  const pUp=pShown.filter(c=>!c._fd&&!c._flip),dUp=dShown.filter(c=>!c._fd&&!c._flip);
   $('pVal').textContent=pUp.length?handValue(pUp).total:'—';
   if(reveal){$('dVal').textContent=dUp.length?handValue(dUp).total:'—';}
   else if(G.table.rule==='mute'){$('dVal').textContent='?';}
@@ -1407,7 +1408,7 @@ function deal(){
 }
 // timings de la distribution animée (la carte apparaît d'un coup, puis se retourne)
 // délai IDENTIQUE pour chaque carte : intervalle = CARD_HOLD + CARD_FLIP entre deux cartes
-const CARD_HOLD=85,CARD_FLIP=580;
+const CARD_HOLD=85,CARD_FLIP=400;
 // anime UNE carte : elle apparaît d'un coup (dos), puis se retourne. Plus de glissade.
 // stayDown : reste dos (trou du croupier). reveal : main du croupier dévoilée.
 function dealCardIn(c,opts,done){
