@@ -129,7 +129,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #table::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.14) 2px,transparent 2px);background-size:14px 14px;opacity:.7;pointer-events:none}
 #feltMark{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:140px;font-weight:700;color:rgba(255,255,255,.05);letter-spacing:.05em;pointer-events:none;z-index:0;text-shadow:0 3px 0 rgba(0,0,0,.06);white-space:nowrap}
 .zone{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:0;position:relative;z-index:1}
-.zlbl{font-size:13px;letter-spacing:.1em;color:#063b37;text-transform:uppercase;margin-bottom:9px;background:linear-gradient(180deg,#fffdf5,#e9f6f2);padding:3px 11px;border-radius:7px;border:2px solid var(--ink);box-shadow:var(--shS);display:inline-flex;align-items:center}
+/* étiquette en pixels (technique des cartes) : fond encre + ::before clair en retrait, contour fermé */
+.zlbl{position:relative;font-size:13px;letter-spacing:.1em;color:#063b37;text-transform:uppercase;margin-bottom:9px;background:var(--ink);padding:4px 12px;border-radius:0;border:none;clip-path:var(--rc);display:inline-flex;align-items:center}
+.zlbl::before{content:"";position:absolute;inset:2px;background:linear-gradient(180deg,#fffdf5,#e9f6f2);clip-path:var(--rc);z-index:-1}
 .zlbl .v{font-size:18px;color:#0a0a0a;margin-left:9px;min-width:18px;text-align:center}
 .hand{display:flex;justify-content:center;flex-wrap:wrap;gap:3px;min-height:80px;align-items:center}
 
@@ -528,8 +530,17 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #objGoal{font-size:13.5px;font-weight:700;transform:translate(-50%,4px)}   /* descendu de quelques px sous la barre */
 
 /* petit bouton "i" pour ouvrir les règles (écran d'accueil) */
-#rulesBtn{position:absolute;top:12px;right:12px;width:30px;height:30px;z-index:5;background:var(--panelDk2,#0e1620);color:var(--gold);border:2px solid var(--gold);clip-path:var(--pc);font-family:'Jersey 15',monospace;font-weight:700;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:2px 3px 0 rgba(0,0,0,.45)}
-#rulesBtn:active{transform:translate(1px,2px);box-shadow:1px 1px 0 rgba(0,0,0,.45)}
+/* contour fermé en pixels (technique des cartes : fond doré + ::before en retrait) */
+#rulesBtn{position:absolute;top:12px;right:12px;width:30px;height:30px;z-index:5;background:var(--gold);color:var(--gold);border:none;clip-path:var(--rc);font-family:'Jersey 15',monospace;font-weight:700;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.45))}
+#rulesBtn::before{content:"";position:absolute;inset:2px;background:var(--panelDk2,#1b1c21);clip-path:var(--rc);z-index:0}
+#rulesBtn span{position:relative;z-index:1}
+#rulesBtn:active{transform:translate(1px,2px)}
+/* bouton « tout recommencer » : discret, en haut à gauche, face au « i » */
+#restartBtn{position:absolute;top:12px;left:12px;width:30px;height:30px;z-index:5;background:var(--muted,#9fb0a8);color:var(--muted,#9fb0a8);border:none;clip-path:var(--rc);font-family:'Jersey 15',monospace;font-weight:700;font-size:17px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;opacity:.5}
+#restartBtn::before{content:"";position:absolute;inset:2px;background:var(--panelDk2,#1b1c21);clip-path:var(--rc);z-index:0}
+#restartBtn span{position:relative;z-index:1}
+#restartBtn:hover{opacity:.9}
+#restartBtn:active{transform:translate(1px,2px)}
 
 /* petit jeton de revenu (pourboire/mécène) en début de main, en haut à droite du tapis */
 #turnPop{position:absolute;inset:0;pointer-events:none;z-index:7;font-family:'Jersey 15',monospace;image-rendering:pixelated}
@@ -581,7 +592,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
    MISE, MULT, JETONS, valeurs de main, réputation, record). */
 .btn>.W .L,.btn>.blbl .L,#tableName .L,#peekBtn .L,
 .overlay.show .ovpanel h1 .L,
-.zlbl .L,.tstats .L,#chips .chip .L,
+.zlbl .L,.tstats .L,#chips .chip .L,#turnPop .L,
 .repNum .L,.recBox .L{animation:letterShake 1.1s steps(1,end) infinite;animation-delay:var(--d,0s)}
 @keyframes letterShake{
  0%  {transform:translate( .12px,calc(var(--o,0px) - .09px))}
@@ -704,7 +715,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <!-- LA PLANQUE (hub) -->
 <div class="overlay show" id="intro">
   <div class="ovpanel">
-    <button id="rulesBtn" onclick="openRules()" title="Règles du jeu" aria-label="Règles">i</button>
+    <button id="restartBtn" onclick="restartAll()" title="Tout recommencer (perd la réputation)" aria-label="Recommencer"><span>↺</span></button>
+    <button id="rulesBtn" onclick="openRules()" title="Règles du jeu" aria-label="Règles"><span>i</span></button>
     <h1 class="win">LA PLANQUE</h1>
     <p>Dépense ta <b>réputation</b> en avantages permanents, puis replonge.</p>
     <div class="repBar">
@@ -731,6 +743,18 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
       <div><span class="k">La Planque</span> — dépense ta <span class="k">réputation ★</span> en avantages permanents (reliques, tarots, éditions) avant de repartir.</div>
     </div>
     <button class="btn b-gold menu" onclick="closeRules()">FERMER</button>
+  </div>
+</div>
+
+<!-- CONFIRMATION RECOMMENCER -->
+<div class="overlay" id="confirmRestart">
+  <div class="ovpanel" style="max-width:360px;text-align:center">
+    <h1 class="dead" style="font-size:21px">RECOMMENCER ?</h1>
+    <p>Êtes-vous sûr de vouloir <b>recommencer votre progression</b> ?<br>Tu perds toute ta <b>réputation</b>, tes <b>déblocages</b> et tes <b>records</b>.</p>
+    <div class="shopBtns" style="margin-top:14px;gap:9px">
+      <button class="btn b-teal" onclick="closeRestart()" style="flex:1">ANNULER</button>
+      <button class="btn b-red" onclick="doRestart()" style="flex:1">RECOMMENCER</button>
+    </div>
   </div>
 </div>
 
@@ -1777,6 +1801,7 @@ function announceTurn(){
   if(!G._income){el.innerHTML='';return;}
   const lbl=G._income.parts.length===1?G._income.parts[0].replace(/\s*\+.*/,'').toUpperCase():'REVENU';
   el.innerHTML=`<div class="tp-coin"><b>+${abbr(G._income.amt)} $</b><span>${lbl}</span></div>`;
+  staggerText(el,3.6);                       // lettres décalées en hauteur comme le reste
   el.classList.remove('go');void el.offsetWidth;el.classList.add('go');
 }
 let textTimer;
@@ -1935,6 +1960,17 @@ function startGame(){
   freshGame();buildShoe();
   applyHandIncome();renderAll();renderHands();
   announceTurn();
+}
+/* tout recommencer depuis zéro : on perd réputation, déblocages et records */
+function restartAll(){audioInit();$('confirmRestart').classList.add('show');}   // petite fenêtre de confirmation in-game
+function closeRestart(){$('confirmRestart').classList.remove('show');}
+function doRestart(){
+  META={rep:0,unlocks:{},record:{depth:0,chips:0}};saveMeta();
+  freshGame();buildShoe();renderAll();renderHands();
+  renderPlanque();renderBackPicker();
+  $('confirmRestart').classList.remove('show');
+  $('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');$('shop').classList.remove('show');
+  $('intro').classList.add('show');                       // on revient à La Planque, état neuf
 }
 freshGame();buildShoe();renderAll();renderHands();renderBackPicker();renderPlanque();tick();
 </script>
