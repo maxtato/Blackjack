@@ -369,7 +369,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .stat .v.warn,#scorebox .seg .v.warn{animation:warnPulse .62s ease-in-out infinite}
 .stat.goal .v.warn{animation:warnPulse .62s ease-in-out infinite}
 /* EFFECTS fan (blocs + ombre carte) */
-#effects{display:flex;justify-content:center;align-items:flex-end;gap:5px;min-height:0;padding:12px 0 7px}
+/* on réserve toujours la hauteur d'une rangée de cartes (tarots/reliques) : le tapis ne se décale plus quand elles arrivent */
+#effects{display:flex;justify-content:center;align-items:flex-end;gap:5px;min-height:68px;padding:12px 0 7px}
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
 #effects .joker{width:50px;height:48px;animation:cardLife 4.4s ease-in-out infinite;background:#0e1620;border:2px solid #c79100;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:2px;box-shadow:3px 4px 0 rgba(0,0,0,.45);transform-origin:bottom center}
 #effects .ft{font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000}
@@ -727,7 +728,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <h1 class="win">LA PLANQUE</h1>
     <p>Dépense ta <b>réputation</b> en avantages permanents, puis replonge.</p>
     <div class="repBar">
-      <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl"><i class="pxstar"></i> réputation</span></div>
+      <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl">réputation</span></div>
       <div class="recBox">RECORD<br><span style="white-space:nowrap"><b><span id="recDepth">0</span> tables</b> · <b><span id="recChips">0</span> $</b></span></div>
     </div>
     <div class="shopItems" id="unlockItems"></div>
