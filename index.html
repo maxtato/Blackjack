@@ -1029,8 +1029,7 @@ function freshGame(){
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
      peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,insurance:false,objHit:false,
      phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0]};
-  G.bet=Math.max(G.table.min,Math.min(G.table.max,10));
-  G.betChosen=false;                  // il faut choisir une mise avant de pouvoir miser
+  G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // mise de départ par défaut : 10
   G.tableStartBank=G.bank;
 }
 
@@ -1399,9 +1398,9 @@ function renderChips(){
   opts.forEach(v=>{
     const b=document.createElement('div');
     const tooDear=v>G.bank;            // palier hors budget
-    b.className='chip'+((G.betChosen&&G.bet===v)?' on':'')+((locked||tooDear)?' locked':'');
+    b.className='chip'+(G.bet===v?' on':'')+((locked||tooDear)?' locked':'');
     b.textContent=abbr(v);
-    if(!locked&&!tooDear)b.onclick=()=>{G.bet=v;G.betChosen=true;renderChips();renderActions();renderMult();};
+    if(!locked&&!tooDear)b.onclick=()=>{G.bet=v;renderChips();renderActions();renderMult();};
     wrap.appendChild(b);
   });
 }
@@ -1421,8 +1420,7 @@ function renderActions(){
   };
   if(G.phase==='bet'){
     main.classList.add('betmain');
-    const sub=G.betChosen?`mise ${abbr(G.bet)} $ · main ${G.hand}/${G.table.mains}`:`choisis ta mise · main ${G.hand}/${G.table.mains}`;
-    add(main,'MISER','b-gold span',deal,sub,G.bank<curTable().min||!G.betChosen);
+    add(main,'MISER','b-gold span',deal,`mise ${abbr(G.bet)} $ · main ${G.hand}/${G.table.mains}`,G.bank<curTable().min);
     a.appendChild(main);return;
   }
   // phases jeu / croupier / résolution : on garde toujours les 3 boutons,
@@ -1458,7 +1456,7 @@ function updateBustReadout(){
    DÉROULÉ
    ============================================================ */
 function deal(){
-  audioInit();if(!G.betChosen)return;clampBet();if(G.bank<curTable().min)return;
+  audioInit();clampBet();if(G.bank<curTable().min)return;
   G.bank-=G.bet;
   // pression PERSISTANTE : reportée de la main précédente, refroidie si on joue posé
   let p0;
@@ -1607,7 +1605,7 @@ function nextHandOrEnd(){
   if(G.bank>=G.table.goal){return finishTable();}  // objectif atteint → table gagnée tout de suite
   if(G.bank<G.table.min){return finishTable();}    // à sec : on ne peut plus miser le minimum
   if(G.hand>=G.table.mains){return finishTable();}  // toutes les mains jouées → validation
-  G.hand++;G.phase='bet';G.betChosen=false;G.dHand=[];G.pHand=[];
+  G.hand++;G.phase='bet';G.dHand=[];G.pHand=[];   // la mise garde la dernière valeur jouée
   clampBet();
   applyHandIncome();
   renderAll();renderHands();
@@ -1780,7 +1778,7 @@ function leaveShop(){
   G.table=RUN[G.tableIdx];
   // droit d'entrée de zone : absorbe une partie des jetons (anti boule de neige)
   if(G.table.entry){G.bank=Math.max(0,G.bank-G.table.entry);popText("DROIT D'ENTRÉE",'−'+abbr(G.table.entry)+' $');}
-  G.hand=1;G.phase='bet';G.betChosen=false;G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;
+  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;
   clampBet();
   G.tableStartBank=G.bank;
   applyHandIncome();
@@ -1813,7 +1811,7 @@ function retryTable(){
   $('loseScreen').classList.remove('show');
   buildShoe();
   G.bank=Math.max(G.tableStartBank||0,curTable().cap);   // on repart au capital conseillé de la table
-  G.hand=1;G.phase='bet';G.betChosen=false;G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;
+  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;
   clampBet();
   applyHandIncome();
   renderAll();renderHands();renderPressure();
