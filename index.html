@@ -351,7 +351,13 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #effects,#stage{width:100%;flex-shrink:0}
 /* TOP */
 #topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 14px;background:var(--panel);border:none;border-radius:0;clip-path:none;box-shadow:0 5px 10px rgba(0,0,0,.42),inset 0 2px 0 rgba(255,255,255,.07),inset 0 -3px 0 rgba(0,0,0,.32);padding:9px 16px}
-#topbar .tname{display:flex;flex-direction:column;gap:2px;font-size:20px;font-weight:700;color:var(--paper);text-shadow:1px 1px 0 var(--ink)}
+#topbar .tname{display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;gap:10px;font-size:20px;font-weight:700;color:var(--paper);text-shadow:1px 1px 0 var(--ink)}
+#topbar .tncol{display:flex;flex-direction:column;gap:2px;min-width:0}
+/* compteur de vies (secondes chances) */
+.lives{flex:0 0 auto;display:flex;align-items:center;gap:4px;font-size:15px;font-weight:700;color:var(--red);background:var(--panelDk2);clip-path:var(--pc);padding:4px 10px;text-shadow:1px 1px 0 var(--ink)}
+.lives svg{width:14px;height:14px}
+.lives .lvn{line-height:1}
+.lives.empty{color:var(--muted);opacity:.7}
 #topbar .tname .rule{font-size:11px;color:var(--gold);font-weight:400}
 #topbar .tname .rule.boss{color:var(--red);font-weight:700;letter-spacing:.04em}
 #topbar .tstats{display:flex;gap:5px;align-items:center;flex-wrap:nowrap;width:100%}
@@ -655,7 +661,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <div id="shaker">
 <div id="app">
   <header id="topbar">
-    <div class="tname"><span id="tableName">Arrière-salle</span><span class="rule" id="ruleText"></span></div>
+    <div class="tname"><div class="tncol"><span id="tableName">Arrière-salle</span><span class="rule" id="ruleText"></span></div><div id="lives" class="lives" title="Vies (secondes chances)"></div></div>
     <div class="tstats">
       <div class="stat turnstat" id="turnStat">
         <span class="tnum" id="turnNum">4</span>
@@ -1226,6 +1232,7 @@ function renderTop(){
   const mx=$('mainMax');if(mx)mx.textContent=t.mains;
   const tp=$('turnPips');if(tp){let h='';for(let i=0;i<t.mains;i++)h+='<i class="'+(i<G.hand?'on':'')+'"></i>';tp.innerHTML=h;}
   document.documentElement.style.setProperty('--felt',ZONE_FELT[t.zone]||'#138f86');   // tapis coloré par zone
+  const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=suitSVG('♥',14)+'<span class="lvn">×'+n+'</span>';lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
   $('tableName').textContent=t.n+' · zone '+t.zone+' '+ZONE_NAMES[t.zone]+' · '+(G.tableIdx+1)+'/'+RUN_LEN;
   const bits=[];
   if(t.ruleText)bits.push(t.ruleText);
