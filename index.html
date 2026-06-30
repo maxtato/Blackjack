@@ -330,7 +330,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #bg{background:#241544}
 #pattern{opacity:.42;animation:none}
 /* texture « poils de moquette » : fines fibres verticales (bruit fractal étiré) */
-#bg::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.19;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC45IDAuMTIiIG51bU9jdGF2ZXM9IjIiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48ZmVDb2xvck1hdHJpeCB0eXBlPSJzYXR1cmF0ZSIgdmFsdWVzPSIwIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2YpIi8+PC9zdmc+");background-size:200px 200px}
+#bg::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.5;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='150'%20height='150'%3E%3Cfilter%20id='f'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.9%200.5'%20numOctaves='3'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3CfeGaussianBlur%20stdDeviation='0.1%200.7'/%3E%3C/filter%3E%3Crect%20width='150'%20height='150'%20filter='url(%23f)'/%3E%3C/svg%3E");background-size:150px 150px}
 #vignette{display:none}
 /* AMBIANCE : scanlines CRT retirées */
 #scan{display:none}
@@ -425,10 +425,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #peekBtn:active{transform:translateY(calc(-50% + 2px));filter:brightness(.92)}
 /* FELT = tapis teal, bords relevés, légèrement incliné */
 #felt{position:relative;z-index:0;flex:1;width:100%;max-width:560px;display:flex;background:var(--felt,#138f86);transition:background .5s ease;clip-path:var(--pc);box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.07),inset 0 -4px 0 rgba(0,0,0,.26);padding:8px 8px;transform:none}
-#felt::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.10) 2px,transparent 2px);background-size:15px 15px;opacity:.32;pointer-events:none;z-index:0}
-/* texture de moquette : bruit de grain orienté en fibres (poils) par-dessus le tapis */
-#felt::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='160'%20height='160'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.9%200.55'%20numOctaves='3'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3CfeGaussianBlur%20stdDeviation='0.12%200.7'/%3E%3C/filter%3E%3Crect%20width='160'%20height='160'%20filter='url(%23n)'/%3E%3C/svg%3E");background-size:150px 150px;opacity:.62;mix-blend-mode:overlay}
-/* tapis seulement derrière les cartes ; moquette visible au-dessus et en dessous */
+#felt::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.13) 2px,transparent 2px);background-size:15px 15px;opacity:.4;pointer-events:none}
 #feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:23px 0 4px;position:relative;z-index:1;transform:none}
 #feltInner .zone{flex:1;justify-content:center}
 /* angles dorés : petit losange pixel (ombré jaune->marron) + traits courts décalés */
