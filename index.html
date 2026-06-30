@@ -351,11 +351,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #effects,#stage{width:100%;flex-shrink:0}
 /* TOP */
 #topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 14px;background:var(--panel);border:none;border-radius:0;clip-path:none;box-shadow:0 5px 10px rgba(0,0,0,.42),inset 0 2px 0 rgba(255,255,255,.07),inset 0 -3px 0 rgba(0,0,0,.32);padding:9px 16px}
-#topbar .tname{display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;gap:10px;font-size:20px;font-weight:700;color:var(--paper);text-shadow:1px 1px 0 var(--ink)}
+#topbar .tname{display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;gap:10px;width:100%;font-size:20px;font-weight:700;color:var(--paper);text-shadow:1px 1px 0 var(--ink)}
 #topbar .tncol{display:flex;flex-direction:column;gap:2px;min-width:0}
-/* compteur de vies (secondes chances) */
-.lives{flex:0 0 auto;display:flex;align-items:center;gap:4px;font-size:15px;font-weight:700;color:var(--red);background:var(--panelDk2);clip-path:var(--pc);padding:4px 10px;text-shadow:1px 1px 0 var(--ink)}
-.lives svg{width:14px;height:14px}
+/* compteur de vies (secondes chances) — collé tout à droite */
+.lives{flex:0 0 auto;margin-left:auto;display:flex;align-items:center;gap:5px;font-size:16px;font-weight:700;color:var(--red);background:var(--panelDk2);clip-path:var(--pc);padding:5px 11px;text-shadow:1px 1px 0 var(--ink)}
+.lives svg{height:15px;width:auto}
 .lives .lvn{line-height:1}
 .lives.empty{color:var(--muted);opacity:.7}
 #topbar .tname .rule{font-size:11px;color:var(--gold);font-weight:400}
@@ -557,9 +557,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 
 /* petit jeton de revenu (pourboire/mécène) en début de main, en haut à droite du tapis */
 #turnPop{position:absolute;inset:0;pointer-events:none;z-index:7;font-family:'Jersey 15',monospace;image-rendering:pixelated}
-#turnPop .tp-coin{position:absolute;top:10px;right:12px;background:var(--gold);color:#3a2a06;clip-path:var(--pc);padding:6px 11px;text-align:center;box-shadow:3px 4px 0 rgba(0,0,0,.4);opacity:0}
-#turnPop .tp-coin b{font-size:18px;display:block;line-height:1}
-#turnPop .tp-coin span{font-size:10px;letter-spacing:.05em;font-weight:700}
+#turnPop .tp-coin{position:absolute;top:12px;right:12px;background:var(--gold);color:#3a2a06;clip-path:var(--pc);padding:9px 15px;text-align:center;box-shadow:3px 5px 0 rgba(0,0,0,.4);opacity:0}
+#turnPop .tp-coin b{font-size:27px;display:block;line-height:1}
+#turnPop .tp-coin span{font-size:13px;letter-spacing:.05em;font-weight:700}
 #turnPop.go .tp-coin{animation:tpCoin 2.2s cubic-bezier(.2,.9,.3,1) both}
 @keyframes tpCoin{0%{opacity:0;transform:translateY(-8px) scale(.9)}12%{opacity:0;transform:translateY(-8px) scale(.9)}19%{opacity:1;transform:translateY(0) scale(1.06)}25%{transform:translateY(0) scale(1)}82%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-6px) scale(.95)}}
 
@@ -1128,6 +1128,13 @@ function suitSVG(suit,wpx){
   for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(g[y][x]==='1')r+=`<rect x="${x}" y="${y}" width="1" height="1"/>`;
   return `<svg class="suit" viewBox="0 0 ${w} ${h}" width="${wpx}" height="${(wpx*h/w).toFixed(1)}" shape-rendering="crispEdges" fill="currentColor">${r}</svg>`;
 }
+// cœur dédié au badge de vies (trapu, pointe nette) — n'affecte pas les cartes
+const HEART_LIFE=['011000110','111101111','111111111','111111111','011111110','001111100','000111000','000010000'];
+function heartSVG(hpx){
+  const g=HEART_LIFE,w=g[0].length,h=g.length;let r='';
+  for(let y=0;y<h;y++)for(let x=0;x<g[y].length;x++)if(g[y][x]==='1')r+=`<rect x="${x}" y="${y}" width="1" height="1"/>`;
+  return `<svg class="suit" viewBox="0 0 ${w} ${h}" width="${(hpx*w/h).toFixed(1)}" height="${hpx}" shape-rendering="crispEdges" fill="currentColor">${r}</svg>`;
+}
 function cardEl(c,opts={}){
   const d=document.createElement('div');d.className='card';
   // graine basée sur la position (et la zone) -> chaque carte bouge indépendamment, comme les lettres
@@ -1232,7 +1239,7 @@ function renderTop(){
   const mx=$('mainMax');if(mx)mx.textContent=t.mains;
   const tp=$('turnPips');if(tp){let h='';for(let i=0;i<t.mains;i++)h+='<i class="'+(i<G.hand?'on':'')+'"></i>';tp.innerHTML=h;}
   document.documentElement.style.setProperty('--felt',ZONE_FELT[t.zone]||'#138f86');   // tapis coloré par zone
-  const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=suitSVG('♥',14)+'<span class="lvn">×'+n+'</span>';lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
+  const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=heartSVG(15)+'<span class="lvn">×'+n+'</span>';lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
   $('tableName').textContent=t.n+' · zone '+t.zone+' '+ZONE_NAMES[t.zone]+' · '+(G.tableIdx+1)+'/'+RUN_LEN;
   const bits=[];
   if(t.ruleText)bits.push(t.ruleText);
