@@ -298,6 +298,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .rules{text-align:left;font-size:12.5px;line-height:1.5;color:#fff;margin-bottom:20px;display:flex;flex-direction:column;gap:9px}
 .rules>div{background:rgba(0,0,0,.2);border:2px solid rgba(0,0,0,.3);border-left:4px solid var(--grape);border-radius:8px;padding:8px 11px}
 .rules .k{color:var(--yellow)}.rules .d{color:var(--magenta)}
+/* panneau d'inspection d'une carte (tarot/relique) */
+#inspectBody .inspTok{width:58px;height:80px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;background:#0e1620;border:2px solid currentColor;clip-path:var(--rc);font-family:'Jersey 15',monospace;font-weight:700;font-size:24px;line-height:1;text-align:center;text-shadow:2px 2px 0 #000}
+#inspectActions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 .shopItems{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
 .shopItem{display:flex;justify-content:space-between;align-items:center;gap:12px;background:linear-gradient(180deg,var(--panelDk),var(--panelDk2));border:3px solid var(--ink);border-radius:var(--r);padding:11px 12px;text-align:left;box-shadow:var(--shS);transition:transform .08s}
 .shopItem:hover{transform:translateY(-2px)}
@@ -376,14 +379,14 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .stat.goal .v.warn{animation:warnPulse .62s ease-in-out infinite}
 /* EFFECTS fan (blocs + ombre carte) */
 /* on réserve toujours la hauteur d'une rangée de cartes (tarots/reliques) : le tapis ne se décale plus quand elles arrivent */
-#effects{display:flex;justify-content:center;align-items:flex-end;gap:5px;min-height:68px;padding:12px 0 7px}
+#effects{display:flex;justify-content:center;align-items:flex-end;gap:6px;min-height:76px;padding:8px 0 6px}
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
-#effects .joker{width:50px;height:48px;animation:cardLife 4.4s ease-in-out infinite;background:#0e1620;border:2px solid #c79100;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:2px;box-shadow:3px 4px 0 rgba(0,0,0,.45);transform-origin:bottom center}
+#effects .joker{width:44px;height:62px;cursor:pointer;animation:cardLife 4.4s ease-in-out infinite;background:#0e1620;border:2px solid #c79100;border-radius:0;clip-path:var(--rc);display:flex;align-items:center;justify-content:center;padding:2px;box-shadow:3px 4px 0 rgba(0,0,0,.45);transform-origin:bottom center}
 #effects .ft{font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000}
 #effects .ft small{font-size:9px;font-weight:700;margin-left:.3em}
 #effects .joker:nth-child(2n){animation-delay:-1.5s}#effects .joker:nth-child(3n){animation-delay:-2.9s}
 #effects .joker .ic{font-size:18px}#effects .joker .nm{font-size:7px}
-#effects .tarot{width:50px;height:48px;border-radius:7px;animation:cardLife 4.8s ease-in-out infinite;background:#0e1620;border:2px solid #a64dff;display:flex;align-items:center;justify-content:center;padding:2px;box-shadow:3px 4px 0 rgba(0,0,0,.45);transform-origin:bottom center}
+#effects .tarot{width:44px;height:62px;border-radius:0;clip-path:var(--rc);cursor:pointer;animation:cardLife 4.8s ease-in-out infinite;background:#0e1620;border:2px solid #a64dff;display:flex;align-items:center;justify-content:center;padding:2px;box-shadow:3px 4px 0 rgba(0,0,0,.45);transform-origin:bottom center}
 #effects .tarot:nth-child(2n){animation-delay:-2.2s}
 #effects .tarot .tic{font-size:20px}
 /* mouvement permanent désynchronisé : chaque carte garde son propre délai
@@ -557,9 +560,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 
 /* petit jeton de revenu (pourboire/mécène) en début de main, en haut à droite du tapis */
 #turnPop{position:absolute;inset:0;pointer-events:none;z-index:7;font-family:'Jersey 15',monospace;image-rendering:pixelated}
-#turnPop .tp-coin{position:absolute;top:12px;right:12px;background:var(--gold);color:#3a2a06;clip-path:var(--pc);padding:9px 15px;text-align:center;box-shadow:3px 5px 0 rgba(0,0,0,.4);opacity:0}
+#turnPop .tp-coin{position:absolute;top:12px;right:12px;background:var(--gold);color:#3a2a06;clip-path:var(--pc);padding:7px 12px;text-align:center;box-shadow:3px 5px 0 rgba(0,0,0,.4);opacity:0}
 #turnPop .tp-coin b{font-size:14px;display:flex;align-items:flex-end;justify-content:center;gap:1px;line-height:1;font-weight:700}
-#turnPop .tp-coin b .n{font-size:38px;line-height:.8}
+#turnPop .tp-coin b .n{font-size:31px;line-height:.8}
 #turnPop .tp-coin b .cur{font-size:13px;align-self:flex-start;line-height:1.2}
 #turnPop .tp-coin span{font-size:13px;letter-spacing:.05em;font-weight:700}
 #turnPop.go .tp-coin{animation:tpCoin 2.2s cubic-bezier(.2,.9,.3,1) both}
@@ -761,6 +764,14 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   </div>
 </div>
 
+<!-- INSPECTION D'UNE CARTE (effet + revente) -->
+<div class="overlay" id="inspectScreen" onclick="if(event.target===this)closeInspect()">
+  <div class="ovpanel" style="max-width:340px;text-align:center">
+    <div id="inspectBody"></div>
+    <div id="inspectActions"></div>
+  </div>
+</div>
+
 <!-- CONFIRMATION RECOMMENCER -->
 <div class="overlay" id="confirmRestart">
   <div class="ovpanel" style="max-width:360px;text-align:center">
@@ -959,40 +970,40 @@ function repOnEnd(cashout){
   return base+Math.max(0,depth)*3+(G.runStars|0)*2;
 }
 const RELIC_POOL=[
-  {id:'lunettes',name:'Lunettes',ic:'👓',desc:'Une fois par main : regarde la prochaine carte du sabot.',cost:14},
-  {id:'jeton',name:'Jeton fendu',ic:'🪙',desc:'Tu perds avec un 20 → tu récupères la moitié de ta mise.',cost:10},
-  {id:'clope',name:'Cigarette',ic:'🚬',desc:'La pression monte 30% moins vite. En permanence.',cost:12},
-  {id:'as',name:'As truqué',ic:'🂡',desc:'Gagner une main contenant un As → multiplicateur +1.',cost:16},
-  {id:'froid',name:'Sang-froid',ic:'🧊',desc:'À pression ≥75% au moment de gagner → multiplicateur +1.',cost:16},
-  {id:'compteur',name:'Compteur',ic:'🎯',desc:'Affiche ta probabilité de buster au prochain tirage.',cost:12},
-  {id:'mecene',name:'Mécène',ic:'💵',desc:'+4 jetons au début de chaque main.',cost:15},
-  {id:'usurier',name:'Usurier',ic:'🏦',desc:'Début de main : +1 jeton par tranche de 5 en banque (max +6).',cost:18},
-  {id:'collector',name:'Collectionneur',ic:'🌈',desc:'Les éditions de cartes apparaissent 3× plus souvent.',cost:16},
-  {id:'maitresse',name:'Carte maîtresse',ic:'🎴',desc:'Ta 1ʳᵉ carte de chaque main est FOIL (+jetons bonus).',cost:14},
-  {id:'bruleur',name:'Brûleur',ic:'🔥',desc:'Gagner à pression ≥50% → multiplicateur ×1.5.',cost:17},
-  {id:'portebonheur',name:'Porte-bonheur',ic:'🍀',desc:'+1 emplacement de carte Tarot.',cost:12},
-  {id:'diplomate',name:'Diplomate',ic:'🤝',desc:'Les égalités te paient la moitié de ta mise.',cost:11},
+  {id:'lunettes',name:'Lunettes',ic:'👓',desc:'Relique permanente. Une fois par main, révèle la prochaine carte du sabot avant de décider de tirer.',cost:14},
+  {id:'jeton',name:'Jeton fendu',ic:'🪙',desc:'Relique permanente. Si tu perds une main avec un total de 20, tu récupères la moitié de ta mise.',cost:10},
+  {id:'clope',name:'Cigarette',ic:'🚬',desc:'Relique permanente. La pression monte 30 % moins vite, tout le temps.',cost:12},
+  {id:'as',name:'As truqué',ic:'🂡',desc:'Relique permanente. Quand tu gagnes une main qui contient un As : +1 au multiplicateur.',cost:16},
+  {id:'froid',name:'Sang-froid',ic:'🧊',desc:'Relique permanente. Si tu gagnes une main avec une pression ≥ 75 % : +1 au multiplicateur.',cost:16},
+  {id:'compteur',name:'Compteur',ic:'🎯',desc:'Relique permanente. Affiche en continu ta probabilité de dépasser 21 au prochain tirage.',cost:12},
+  {id:'mecene',name:'Mécène',ic:'💵',desc:'Relique permanente. +4 jetons offerts au début de chaque main.',cost:15},
+  {id:'usurier',name:'Usurier',ic:'🏦',desc:'Relique permanente. Au début de chaque main : +1 jeton par tranche de 5 jetons en banque (jusqu’à +6).',cost:18},
+  {id:'collector',name:'Collectionneur',ic:'🌈',desc:'Relique permanente. Les éditions spéciales (FOIL/HOLO/POLY) apparaissent 3× plus souvent sur tes cartes.',cost:16},
+  {id:'maitresse',name:'Carte maîtresse',ic:'🎴',desc:'Relique permanente. Ta 1ʳᵉ carte de chaque main est FOIL : jetons bonus quand tu gagnes.',cost:14},
+  {id:'bruleur',name:'Brûleur',ic:'🔥',desc:'Relique permanente. Si tu gagnes une main avec une pression ≥ 50 % : gain de la main ×1,5.',cost:17},
+  {id:'portebonheur',name:'Porte-bonheur',ic:'🍀',desc:'Relique permanente. +1 emplacement de carte Tarot (tu peux garder une carte de plus).',cost:12},
+  {id:'diplomate',name:'Diplomate',ic:'🤝',desc:'Relique permanente. En cas d’égalité avec le croupier, tu récupères la moitié de ta mise.',cost:11},
 ];
 
 /* éditions de cartes : foil = jetons bonus, holo = +mult, poly = ×mult */
 const TAROT_POOL=[
-  {id:'etoile',name:"L'Étoile",ic:'❄️',cost:7,desc:'Refroidit la table : pression −45%.',when:'play',
+  {id:'etoile',name:"L'Étoile",ic:'❄️',cost:7,desc:'À jouer pendant la main : baisse la pression de 45 %. Moins de pression, c’est un croupier moins agressif.',when:'play',
     use(){G.pressure=Math.max(0,G.pressure-45);renderPressure();renderMult();return'Table refroidie';}},
-  {id:'jugement',name:'Le Jugement',ic:'⚖️',cost:11,desc:'Annule toute la pression (→0%).',when:'play',
+  {id:'jugement',name:'Le Jugement',ic:'⚖️',cost:11,desc:'À jouer pendant la main : remet la pression à 0 %. Repart sur une table totalement froide.',when:'play',
     use(){G.pressure=0;renderPressure();renderMult();return'Pression annulée';}},
-  {id:'soleil',name:'Le Soleil',ic:'☀️',cost:6,desc:'+18 jetons immédiats.',when:'any',
+  {id:'soleil',name:'Le Soleil',ic:'☀️',cost:6,desc:'Ajoute aussitôt 18 jetons à ta banque, à tout moment.',when:'any',
     use(){G.bank+=18;renderTop();coinBurst(8);return'+18 $';}},
-  {id:'diable',name:'Le Diable',ic:'😈',cost:9,desc:'Rend une de tes cartes POLYCHROME (×1.5 mult).',when:'play',need:'cards',
+  {id:'diable',name:'Le Diable',ic:'😈',cost:9,desc:'À jouer sur ta main : transforme une de tes cartes en POLYCHROME, qui multiplie le gain de la main (×1,5).',when:'play',need:'cards',
     use(){const c=addEditionToHand('poly');return c?('Polychrome : '+c.r+c.s):false;}},
-  {id:'lune',name:'La Lune',ic:'🌙',cost:8,desc:'Rend une de tes cartes HOLOGRAPHIQUE (+1 mult).',when:'play',need:'cards',
+  {id:'lune',name:'La Lune',ic:'🌙',cost:8,desc:'À jouer sur ta main : transforme une de tes cartes en HOLOGRAPHIQUE (+1 au multiplicateur de la main).',when:'play',need:'cards',
     use(){const c=addEditionToHand('holo');return c?('Holo : '+c.r+c.s):false;}},
-  {id:'etoileD',name:"L'Étoile filante",ic:'✨',cost:7,desc:'Rend une de tes cartes FOIL (+jetons bonus).',when:'play',need:'cards',
+  {id:'etoileD',name:"L'Étoile filante",ic:'✨',cost:7,desc:'À jouer sur ta main : transforme une de tes cartes en FOIL, qui rapporte des jetons bonus quand la main est gagnée.',when:'play',need:'cards',
     use(){const c=addEditionToHand('foil');return c?('Foil : '+c.r+c.s):false;}},
-  {id:'pendu',name:'Le Pendu',ic:'🪢',cost:9,desc:'Retire ta dernière carte tirée.',when:'play',need:'extra',
+  {id:'pendu',name:'Le Pendu',ic:'🪢',cost:9,desc:'À jouer pendant la main : annule ta dernière carte tirée (sauve-toi quand tu as tiré la carte de trop).',when:'play',need:'extra',
     use(){const c=G.pHand.pop();renderHands();renderMult();updateBustReadout();renderActions();return'Retiré : '+c.r+c.s;}},
-  {id:'magicien',name:'Le Magicien',ic:'🎩',cost:10,desc:'Ta prochaine carte tirée sera idéale.',when:'play',
+  {id:'magicien',name:'Le Magicien',ic:'🎩',cost:10,desc:'À jouer pendant la main : truque ta prochaine carte tirée, qui sera la meilleure possible pour ta main.',when:'play',
     use(){G.magicNext=true;return'Prochaine carte truquée';}},
-  {id:'roue',name:'La Roue',ic:'🎡',cost:6,desc:'50% : édition aléatoire sur une carte, sinon rien.',when:'play',need:'cards',
+  {id:'roue',name:'La Roue',ic:'🎡',cost:6,desc:'À jouer sur ta main : 1 chance sur 2 d’ajouter une édition aléatoire (FOIL, HOLO ou POLY) à une carte ; sinon, rien.',when:'play',need:'cards',
     use(){if(Math.random()<0.5){const ed=['foil','holo','poly'][rndInt(3)];const c=addEditionToHand(ed);return c?('Édition '+ed.toUpperCase()+' !'):false;}return'Raté…';}},
 ];
 /* SERVICES de boutique : régulateurs économiques, appliqués immédiatement à l'achat
@@ -1248,8 +1259,8 @@ function renderTop(){
   if(t.ruleText)bits.push(t.ruleText);
   bits.push('maîtrise ≥'+abbr(t.master)+' $');
   bits.push('mise '+abbr(t.min)+'–'+abbr(t.max));
-  bits.push(STAR+(G.runStars||0));
-  if(G.pot>0)bits.push('cagnotte '+STAR+abbr(G.pot));
+  bits.push((G.runStars||0)+' étoile'+((G.runStars||0)>1?'s':''));
+  if(G.pot>0)bits.push('cagnotte '+abbr(G.pot));
   $('ruleText').innerHTML=bits.join('  ·  ');
   $('ruleText').classList.toggle('boss',!!t.boss);
   $('shoeCount').textContent=G.shoe.length;
@@ -1272,12 +1283,13 @@ function fanEffects(){
 }
 function renderRelics(){
   const wrap=$('relics');wrap.innerHTML='';
-  G.relics.forEach(r=>{
+  G.relics.forEach((r,idx)=>{
     const d=document.createElement('div');d.className='joker';
     if((r.id==='froid'||r.id==='clope')&&G.pressure>=75)d.classList.add('hot');
     const tk=SHOPTOK[r.id]||{t:r.name,c:'#ffce3a'};
     d.innerHTML=`<span class="ft" style="color:${tk.c}">${tk.t}</span>`;
     d.title=`${r.name} — ${r.desc}`;
+    d.onclick=()=>openInspect('relic',idx);
     wrap.appendChild(d);
   });
   $('slotc').innerHTML=`${G.relics.length}/5<br>reliques`;
@@ -1291,7 +1303,7 @@ function renderConsumables(){
     const tk=SHOPTOK[t.id]||{t:t.name,c:'#a64dff'};
     d.innerHTML=`<span class="ft" style="color:${tk.c}">${tk.t}</span>`;
     d.title=`${t.name} — ${t.desc}`;
-    d.onclick=()=>useConsumable(i,d);
+    d.onclick=()=>openInspect('tarot',i);
     wrap.appendChild(d);
   });
   $('consumeSlots').textContent=`${G.consumables.length}/${consumableSlots()}`;
@@ -1316,6 +1328,46 @@ function useConsumable(i,el){
   if(el)el.classList.add('flash');
   G.consumables.splice(i,1);sfx.buy();popText(t.name,res);
   renderConsumables();
+}
+/* prix de revente : la moitié de ce qu'on a payé (jamais plus cher que l'achat) */
+function sellValue(item){
+  const base=(item&&item._paid!=null)?item._paid:itemCost(item||{cost:0});
+  return Math.max(1,Math.round(base*0.5));
+}
+let inspectRef=null;
+function openInspect(kind,i){
+  const item=kind==='tarot'?G.consumables[i]:G.relics[i];
+  if(!item)return;
+  inspectRef={kind,i};
+  const tk=SHOPTOK[item.id]||{t:item.name,c:'#a64dff'};
+  const tag=kind==='tarot'
+    ?'<span style="color:var(--grape)">CARTE TAROT · à usage unique</span>'
+    :'<span style="color:var(--yellow)">RELIQUE · effet permanent</span>';
+  $('inspectBody').innerHTML=`<div class="inspTok" style="color:${tk.c}">${tk.t}</div>`
+    +`<h1 class="win" style="font-size:24px;margin:0 0 4px">${item.name}</h1>`
+    +`<p style="font-size:10px;letter-spacing:.08em;margin:0 0 12px">${tag}</p>`
+    +`<p style="color:#dfe9ff;font-size:13px;line-height:1.6;margin:0 0 4px">${item.desc}</p>`;
+  const act=$('inspectActions');act.innerHTML='';
+  const mk=(label,cls,fn,dis)=>{const b=document.createElement('button');b.className='btn '+cls;b.style.cssText='font-size:13px;padding:11px 15px';b.innerHTML=label;if(dis)b.disabled=true;else b.onclick=fn;act.appendChild(b);return b;};
+  if(kind==='tarot'){
+    const notYet=(item.when==='play'&&G.phase!=='play');
+    mk('UTILISER','b-purple',()=>{const idx=inspectRef.i;closeInspect();useConsumable(idx);},notYet);
+  }
+  mk('VENDRE +'+abbr(sellValue(item))+' $','b-gold',sellItem);
+  mk('FERMER','b-blue',closeInspect);
+  $('inspectScreen').classList.add('show');
+}
+function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show');inspectRef=null;}
+function sellItem(){
+  if(!inspectRef)return;
+  const {kind,i}=inspectRef;
+  const arr=kind==='tarot'?G.consumables:G.relics;
+  const item=arr[i];if(!item){closeInspect();return;}
+  const val=sellValue(item);
+  G.bank+=val;arr.splice(i,1);sfx.buy();
+  closeInspect();
+  popText('REVENDU',item.name+' · +'+abbr(val)+' $');
+  renderRelics();renderConsumables();renderTop();renderChips();renderActions();
 }
 function applyHandIncome(){
   let inc=0;const parts=[];
@@ -1702,10 +1754,10 @@ function buyShopItem(i,el,btn){
     G.bank-=cost;const msg=r.apply();if(msg)popText(r.name.toUpperCase(),msg);
   }else if(it.type==='tarot'){
     if(G.consumables.length>=consumableSlots()){popText('SLOTS PLEINS','');return;}
-    G.bank-=cost;G.consumables.push(r);
+    G.bank-=cost;G.consumables.push({...r,_paid:cost});
   }else{
     if(G.relics.length>=5){popText('RELIQUES PLEINES','5 max');return;}
-    G.bank-=cost;G.relics.push(r);
+    G.bank-=cost;G.relics.push({...r,_paid:cost});
   }
   it.bought=true;sfx.buy();
   el.classList.add('bought');btn.disabled=true;btn.textContent='ACQUIS';
