@@ -534,7 +534,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #objWrap{padding:6px 0 16px}
 #objBar{height:24px}
 #objTick{top:6px;height:24px}
-#objGoal{font-size:13.5px;font-weight:700;transform:translate(-50%,4px)}   /* descendu de quelques px sous la barre */
+#objGoal{font-size:13.5px;font-weight:700;transform:translate(-50%,1px)}   /* juste sous la barre */
 
 /* symbole réputation : losange contour en pixel (G) -> prend la couleur du texte courant */
 .pxstar{display:inline-block;width:.4em;height:.4em;vertical-align:.14em;background:currentColor;margin:0 .34em;
@@ -558,7 +558,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* petit jeton de revenu (pourboire/mécène) en début de main, en haut à droite du tapis */
 #turnPop{position:absolute;inset:0;pointer-events:none;z-index:7;font-family:'Jersey 15',monospace;image-rendering:pixelated}
 #turnPop .tp-coin{position:absolute;top:12px;right:12px;background:var(--gold);color:#3a2a06;clip-path:var(--pc);padding:9px 15px;text-align:center;box-shadow:3px 5px 0 rgba(0,0,0,.4);opacity:0}
-#turnPop .tp-coin b{font-size:27px;display:block;line-height:1}
+#turnPop .tp-coin b{font-size:15px;display:flex;align-items:center;justify-content:center;gap:1px;line-height:1;font-weight:700}
+#turnPop .tp-coin b .n{font-size:30px;line-height:.9}
+#turnPop .tp-coin b .cur{font-size:13px;align-self:flex-start;margin-top:2px}
 #turnPop .tp-coin span{font-size:13px;letter-spacing:.05em;font-weight:700}
 #turnPop.go .tp-coin{animation:tpCoin 2.2s cubic-bezier(.2,.9,.3,1) both}
 @keyframes tpCoin{0%{opacity:0;transform:translateY(-8px) scale(.9)}12%{opacity:0;transform:translateY(-8px) scale(.9)}19%{opacity:1;transform:translateY(0) scale(1.06)}25%{transform:translateY(0) scale(1)}82%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-6px) scale(.95)}}
@@ -1839,7 +1841,7 @@ function announceTurn(){
   const el=$('turnPop');if(!el)return;
   if(!G._income){el.innerHTML='';return;}
   const lbl=G._income.parts.length===1?G._income.parts[0].replace(/\s*\+.*/,'').toUpperCase():'REVENU';
-  el.innerHTML=`<div class="tp-coin"><b>+${abbr(G._income.amt)} $</b><span>${lbl}</span></div>`;
+  el.innerHTML=`<div class="tp-coin"><b>+<span class="n">${abbr(G._income.amt)}</span><span class="cur">$</span></b><span>${lbl}</span></div>`;
   staggerText(el,3.6);                       // lettres décalées en hauteur comme le reste
   el.classList.remove('go');void el.offsetWidth;el.classList.add('go');
 }
