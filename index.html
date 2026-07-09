@@ -451,16 +451,28 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #peekBtn.show{display:block}
 #peekBtn:active{transform:translateY(calc(-50% + 2px));filter:brightness(.92)}
 /* FELT = tapis teal, bords relevés, légèrement incliné */
-#felt{position:relative;z-index:0;flex:1;width:100%;max-width:560px;display:flex;background:var(--felt,#138f86);transition:background .5s ease;clip-path:var(--pc);box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.07),inset 0 -4px 0 rgba(0,0,0,.26);padding:8px 8px;transform:none}
-#felt::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.13) 2px,transparent 2px);background-size:15px 15px;opacity:.4;pointer-events:none}
-#feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:23px 0 4px;position:relative;z-index:1;transform:none}
+#felt{position:relative;z-index:0;flex:1;width:100%;max-width:560px;display:flex;transition:background .5s ease;clip-path:var(--pc);box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -4px 0 rgba(0,0,0,.3);padding:8px 8px;transform:none;
+  /* pointillé + profondeur radiale (centre plus clair, bords plus sombres) par-dessus la couleur de zone */
+  background:
+    radial-gradient(rgba(0,0,0,.16) 1.5px,transparent 1.7px) 0 0/15px 15px,
+    radial-gradient(130% 112% at 50% 40%,rgba(255,255,255,.07),rgba(0,0,0,.16) 55%,rgba(0,0,0,.42) 100%),
+    var(--felt,#1a4f49)}
+/* liseré ornemental double (deux traits pixel crème, coins octogonaux) */
+#felt::before{content:"";position:absolute;inset:12px;z-index:1;pointer-events:none;clip-path:var(--pc);box-shadow:inset 0 0 0 2px rgba(240,232,210,.16)}
+#felt::after{content:"";position:absolute;inset:17px;z-index:1;pointer-events:none;clip-path:var(--pc);box-shadow:inset 0 0 0 1px rgba(240,232,210,.09)}
+#feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:23px 0 4px;position:relative;z-index:2;transform:none}
 #feltInner .zone{flex:1;justify-content:center}
-/* angles dorés : petit losange pixel (ombré jaune->marron) + traits courts décalés */
-#felt .fc{position:absolute;width:2px;height:2px;background:transparent;z-index:1;pointer-events:none;box-shadow:6px 0px 0 0 #ffe9a8,4px 2px 0 0 #ffe9a8,6px 2px 0 0 #ffe9a8,8px 2px 0 0 #f6d06a,2px 4px 0 0 #ffe9a8,4px 4px 0 0 #ffe9a8,6px 4px 0 0 #f6d06a,8px 4px 0 0 #efc64e,10px 4px 0 0 #cf9a2e,0px 6px 0 0 #ffe9a8,2px 6px 0 0 #ffe9a8,4px 6px 0 0 #f6d06a,6px 6px 0 0 #efc64e,8px 6px 0 0 #cf9a2e,10px 6px 0 0 #9c6510,12px 6px 0 0 #9c6510,2px 8px 0 0 #f6d06a,4px 8px 0 0 #efc64e,6px 8px 0 0 #cf9a2e,8px 8px 0 0 #9c6510,10px 8px 0 0 #9c6510,4px 10px 0 0 #cf9a2e,6px 10px 0 0 #9c6510,8px 10px 0 0 #9c6510,6px 12px 0 0 #9c6510,16px 6px 0 0 #efc64e,18px 6px 0 0 #cf9a2e,20px 6px 0 0 #9c6510,6px 16px 0 0 #efc64e,6px 18px 0 0 #cf9a2e,6px 20px 0 0 #9c6510}
-#felt .fc.tl{top:11px;left:11px}
-#felt .fc.tr{top:11px;right:11px;transform:scaleX(-1)}
-#felt .fc.bl{bottom:11px;left:11px;transform:scaleY(-1)}
-#felt .fc.br{bottom:11px;right:11px;transform:scale(-1,-1)}
+/* ornements dorés : petits losanges pixel pleins (coins, milieux, centre) */
+#felt .fc{position:absolute;width:13px;height:13px;background:var(--gold);z-index:2;pointer-events:none;filter:drop-shadow(0 1px 0 rgba(0,0,0,.45));
+  -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%205%205'%3E%3Crect%20x='2'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='1'%20width='3'%20height='1'/%3E%3Crect%20y='2'%20width='5'%20height='1'/%3E%3Crect%20x='1'%20y='3'%20width='3'%20height='1'/%3E%3Crect%20x='2'%20y='4'%20width='1'%20height='1'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%205%205'%3E%3Crect%20x='2'%20width='1'%20height='1'/%3E%3Crect%20x='1'%20y='1'%20width='3'%20height='1'/%3E%3Crect%20y='2'%20width='5'%20height='1'/%3E%3Crect%20x='1'%20y='3'%20width='3'%20height='1'/%3E%3Crect%20x='2'%20y='4'%20width='1'%20height='1'/%3E%3C/svg%3E") center/contain no-repeat}
+#felt .fc.tl{top:6px;left:6px}
+#felt .fc.tr{top:6px;right:6px}
+#felt .fc.bl{bottom:6px;left:6px}
+#felt .fc.br{bottom:6px;right:6px}
+#felt .fc.tc{top:6px;left:50%;transform:translateX(-50%)}
+#felt .fc.bc{bottom:6px;left:50%;transform:translateX(-50%)}
+#felt .fc.cc{top:50%;left:50%;transform:translate(-50%,-50%);width:11px;height:11px;opacity:.9}
 /* barre mise/mult : EN DESSOUS du tapis */
 #scorebox{position:relative;left:auto;bottom:auto;z-index:1;display:flex;background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;box-shadow:none}
 #scorebox .seg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 6px;gap:3px;background:transparent;min-width:0}
@@ -722,7 +734,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <div id="table">
       <div id="felt">
         <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">FROID</span> · <span id="pPct">0%</span></span></div>
-        <span class="fc tl"></span><span class="fc tr"></span><span class="fc bl"></span><span class="fc br"></span>
+        <span class="fc tl"></span><span class="fc tr"></span><span class="fc bl"></span><span class="fc br"></span><span class="fc tc"></span><span class="fc bc"></span><span class="fc cc"></span>
         <div id="turnPop"></div>
         <div id="feltInner">
           <div id="feltMark">21</div>
@@ -965,7 +977,7 @@ const RUN=[
 ];
 const RUN_LEN=RUN.length;
 const ZONE_NAMES={1:'Initiation',2:'La Pression',3:'Casino profond'};
-const ZONE_FELT={1:'#138f86',2:'#7c3a9e',3:'#a52f55'};
+const ZONE_FELT={1:'#1a4f49',2:'#492868',3:'#742440'};   // tapis profonds et feutrés (style réf.)
 const ZONE_MULTCAP={1:4,2:6,3:9};                 // plafond de multiplicateur par zone
 function curTable(){return RUN[Math.min(G.tableIdx,RUN_LEN-1)];}
 /* étoiles : il FAUT atteindre l'objectif pour valider la table.
