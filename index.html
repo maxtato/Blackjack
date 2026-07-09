@@ -348,15 +348,15 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   --rc:polygon(0 5px,1px 5px,1px 2px,2px 2px,2px 1px,5px 1px,5px 0,calc(100% - 5px) 0,calc(100% - 5px) 1px,calc(100% - 2px) 1px,calc(100% - 2px) 2px,calc(100% - 1px) 2px,calc(100% - 1px) 5px,100% 5px,100% calc(100% - 5px),calc(100% - 1px) calc(100% - 5px),calc(100% - 1px) calc(100% - 2px),calc(100% - 2px) calc(100% - 2px),calc(100% - 2px) calc(100% - 1px),calc(100% - 5px) calc(100% - 1px),calc(100% - 5px) 100%,5px 100%,5px calc(100% - 1px),2px calc(100% - 1px),2px calc(100% - 2px),1px calc(100% - 2px),1px calc(100% - 5px),0 calc(100% - 5px));
 }
 *{image-rendering:pixelated}
-#bg{background:#241544}
-#pattern{opacity:.42;animation:none}
-/* texture « poils de moquette » : fines fibres verticales (bruit fractal étiré) */
-#bg::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.5;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='150'%20height='150'%3E%3Cfilter%20id='f'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.9%200.5'%20numOctaves='3'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3CfeGaussianBlur%20stdDeviation='0.1%200.7'/%3E%3C/filter%3E%3Crect%20width='150'%20height='150'%20filter='url(%23f)'/%3E%3C/svg%3E");background-size:150px 150px}
+/* fond tout noir : plus de moquette (motif, grain, étincelles retirés) */
+#bg{background:#000}
+#pattern{display:none}
+#bg::after{content:none}
 #vignette{display:none}
 /* AMBIANCE : scanlines CRT retirées */
 #scan{display:none}
-/* étincelles flottantes sur la moquette (fond, derrière le jeu) */
-#sparks{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+/* étincelles flottantes sur la moquette : retirées (fond tout noir) */
+#sparks{display:none!important}
 #sparks::before,#sparks::after{content:"";position:absolute;left:0;top:0;width:3px;height:3px;border-radius:1px}
 #sparks::before{box-shadow:811px 245px 0 0 #19c3c3,1342px 551px 0 0 #19c3c3,1183px 750px 0 0 #fff7e6,1356px 171px 0 0 #fff7e6,1350px 48px 0 0 #ffce3a,41px 59px 0 0 #ff4ea8,1256px 663px 0 0 #ff4ea8,86px 506px 0 0 #19c3c3,277px 731px 0 0 #fff7e6,1091px 120px 0 0 #fff7e6,974px 605px 0 0 #fff,1111px 685px 0 0 #ff4ea8,49px 277px 0 0 #fff7e6,896px 314px 0 0 #ffce3a,1074px 256px 0 0 #fff,758px 164px 0 0 #19c3c3,780px 340px 0 0 #ffce3a,1142px 492px 0 0 #ffce3a,975px 481px 0 0 #ffce3a,780px 194px 0 0 #fff7e6,804px 430px 0 0 #19c3c3,401px 370px 0 0 #fff7e6,1048px 165px 0 0 #fff7e6,1156px 495px 0 0 #ff4ea8,1267px 203px 0 0 #19c3c3,535px 517px 0 0 #ff4ea8,315px 157px 0 0 #ff4ea8,0px 232px 0 0 #ff4ea8,1042px 354px 0 0 #ffce3a,692px 208px 0 0 #ffce3a;animation:twk1 4.5s ease-in-out infinite,drift1 11s ease-in-out infinite}
 #sparks::after{box-shadow:1186px 158px 0 0 #fff,482px 592px 0 0 #ff4ea8,137px 566px 0 0 #fff,178px 524px 0 0 #19c3c3,1154px 722px 0 0 #19c3c3,397px 150px 0 0 #ff4ea8,1201px 802px 0 0 #ffce3a,890px 640px 0 0 #ffce3a,643px 488px 0 0 #19c3c3,96px 819px 0 0 #fff,12px 359px 0 0 #ff4ea8,1151px 416px 0 0 #19c3c3,1331px 787px 0 0 #ffce3a,595px 306px 0 0 #fff,392px 765px 0 0 #ffce3a,1051px 212px 0 0 #ff4ea8,515px 184px 0 0 #ff4ea8,1331px 719px 0 0 #fff,1328px 214px 0 0 #ff4ea8,200px 410px 0 0 #fff7e6,519px 268px 0 0 #ff4ea8,1230px 223px 0 0 #fff7e6,873px 28px 0 0 #fff7e6,609px 472px 0 0 #fff7e6;animation:twk2 5.5s ease-in-out infinite,drift2 9s ease-in-out infinite}
