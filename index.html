@@ -454,12 +454,16 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #felt{position:relative;z-index:0;flex:1;width:100%;max-width:560px;display:flex;transition:background .5s ease;clip-path:var(--pc);box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -4px 0 rgba(0,0,0,.3);padding:8px 8px;transform:none;
   /* pointillé + profondeur radiale (centre plus clair, bords plus sombres) par-dessus la couleur de zone */
   background:
-    radial-gradient(rgba(0,0,0,.16) 1.5px,transparent 1.7px) 0 0/15px 15px,
+    radial-gradient(rgba(0,0,0,.16) 1.5px,transparent 1.7px) center/15px 15px,
     radial-gradient(130% 112% at 50% 40%,rgba(255,255,255,.07),rgba(0,0,0,.16) 55%,rgba(0,0,0,.42) 100%),
     var(--felt,#138f86)}
-/* liseré ornemental double (deux traits pixel crème, coins octogonaux) */
-#felt::before{content:"";position:absolute;inset:12px;z-index:1;pointer-events:none;clip-path:var(--pc);box-shadow:inset 0 0 0 2px rgba(240,232,210,.16)}
-#felt::after{content:"";position:absolute;inset:17px;z-index:1;pointer-events:none;clip-path:var(--pc);box-shadow:inset 0 0 0 1px rgba(240,232,210,.09)}
+/* liseré ornemental double (deux traits pixel crème) — interrompu aux angles pour ne pas toucher les losanges */
+#felt::before{content:"";position:absolute;inset:12px;z-index:1;pointer-events:none;box-shadow:inset 0 0 0 2px rgba(240,232,210,.16);
+  -webkit-mask:linear-gradient(90deg,#0000 22px,#000 22px,#000 calc(100% - 22px),#0000 calc(100% - 22px)),linear-gradient(0deg,#0000 22px,#000 22px,#000 calc(100% - 22px),#0000 calc(100% - 22px));
+  mask:linear-gradient(90deg,#0000 22px,#000 22px,#000 calc(100% - 22px),#0000 calc(100% - 22px)),linear-gradient(0deg,#0000 22px,#000 22px,#000 calc(100% - 22px),#0000 calc(100% - 22px))}
+#felt::after{content:"";position:absolute;inset:17px;z-index:1;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(240,232,210,.09);
+  -webkit-mask:linear-gradient(90deg,#0000 17px,#000 17px,#000 calc(100% - 17px),#0000 calc(100% - 17px)),linear-gradient(0deg,#0000 17px,#000 17px,#000 calc(100% - 17px),#0000 calc(100% - 17px));
+  mask:linear-gradient(90deg,#0000 17px,#000 17px,#000 calc(100% - 17px),#0000 calc(100% - 17px)),linear-gradient(0deg,#0000 17px,#000 17px,#000 calc(100% - 17px),#0000 calc(100% - 17px))}
 #feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:23px 0 4px;position:relative;z-index:2;transform:none}
 #feltInner .zone{flex:1;justify-content:center}
 /* ornements dorés : petits losanges pixel pleins (coins, milieux, centre) */
@@ -470,8 +474,6 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #felt .fc.tr{top:6px;right:6px}
 #felt .fc.bl{bottom:6px;left:6px}
 #felt .fc.br{bottom:6px;right:6px}
-#felt .fc.tc{top:6px;left:50%;transform:translateX(-50%)}
-#felt .fc.bc{bottom:6px;left:50%;transform:translateX(-50%)}
 #felt .fc.cc{top:50%;left:50%;transform:translate(-50%,-50%);width:11px;height:11px;opacity:.9;z-index:3}
 /* trait central simple (séparation croupier / toi) : fin, couleur du liseré, coupé autour du losange */
 #feltDiv{position:absolute;left:78px;right:78px;top:50%;transform:translateY(-50%);height:0;z-index:1;pointer-events:none}
@@ -739,7 +741,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <div id="table">
       <div id="felt">
         <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">FROID</span> · <span id="pPct">0%</span></span></div>
-        <span class="fc tl"></span><span class="fc tr"></span><span class="fc bl"></span><span class="fc br"></span><span class="fc tc"></span><span class="fc bc"></span><span class="fc cc"></span>
+        <span class="fc tl"></span><span class="fc tr"></span><span class="fc bl"></span><span class="fc br"></span><span class="fc cc"></span>
         <div id="feltDiv"></div>
         <div id="turnPop"></div>
         <div id="feltInner">
