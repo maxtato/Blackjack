@@ -456,7 +456,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   background:
     radial-gradient(rgba(0,0,0,.16) 1.5px,transparent 1.7px) 0 0/15px 15px,
     radial-gradient(130% 112% at 50% 40%,rgba(255,255,255,.07),rgba(0,0,0,.16) 55%,rgba(0,0,0,.42) 100%),
-    var(--felt,#1a4f49)}
+    var(--felt,#138f86)}
 /* liseré ornemental double (deux traits pixel crème, coins octogonaux) */
 #felt::before{content:"";position:absolute;inset:12px;z-index:1;pointer-events:none;clip-path:var(--pc);box-shadow:inset 0 0 0 2px rgba(240,232,210,.16)}
 #felt::after{content:"";position:absolute;inset:17px;z-index:1;pointer-events:none;clip-path:var(--pc);box-shadow:inset 0 0 0 1px rgba(240,232,210,.09)}
@@ -472,7 +472,14 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #felt .fc.br{bottom:6px;right:6px}
 #felt .fc.tc{top:6px;left:50%;transform:translateX(-50%)}
 #felt .fc.bc{bottom:6px;left:50%;transform:translateX(-50%)}
-#felt .fc.cc{top:50%;left:50%;transform:translate(-50%,-50%);width:11px;height:11px;opacity:.9}
+#felt .fc.cc{top:50%;left:50%;transform:translate(-50%,-50%);width:11px;height:11px;opacity:.9;z-index:3}
+/* deux traits blancs au milieu (séparation croupier / toi), coupés autour du losange central */
+#feltDiv{position:absolute;left:22px;right:22px;top:50%;transform:translateY(-50%);height:0;z-index:1;pointer-events:none}
+#feltDiv::before,#feltDiv::after{content:"";position:absolute;left:0;right:0;height:2px;background:rgba(255,255,255,.6);
+  -webkit-mask:linear-gradient(90deg,#000 calc(50% - 12px),transparent calc(50% - 12px),transparent calc(50% + 12px),#000 calc(50% + 12px));
+  mask:linear-gradient(90deg,#000 calc(50% - 12px),transparent calc(50% - 12px),transparent calc(50% + 12px),#000 calc(50% + 12px))}
+#feltDiv::before{top:-4px}
+#feltDiv::after{top:4px}
 /* barre mise/mult : EN DESSOUS du tapis */
 #scorebox{position:relative;left:auto;bottom:auto;z-index:1;display:flex;background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;box-shadow:none}
 #scorebox .seg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 6px;gap:3px;background:transparent;min-width:0}
@@ -735,6 +742,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
       <div id="felt">
         <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">FROID</span> · <span id="pPct">0%</span></span></div>
         <span class="fc tl"></span><span class="fc tr"></span><span class="fc bl"></span><span class="fc br"></span><span class="fc tc"></span><span class="fc bc"></span><span class="fc cc"></span>
+        <div id="feltDiv"></div>
         <div id="turnPop"></div>
         <div id="feltInner">
           <div id="feltMark">21</div>
@@ -977,7 +985,7 @@ const RUN=[
 ];
 const RUN_LEN=RUN.length;
 const ZONE_NAMES={1:'Initiation',2:'La Pression',3:'Casino profond'};
-const ZONE_FELT={1:'#1a4f49',2:'#492868',3:'#742440'};   // tapis profonds et feutrés (style réf.)
+const ZONE_FELT={1:'#138f86',2:'#7c3a9e',3:'#a52f55'};   // couleurs de tapis d'origine
 const ZONE_MULTCAP={1:4,2:6,3:9};                 // plafond de multiplicateur par zone
 function curTable(){return RUN[Math.min(G.tableIdx,RUN_LEN-1)];}
 /* étoiles : il FAUT atteindre l'objectif pour valider la table.
