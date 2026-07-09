@@ -473,13 +473,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #felt .fc.tc{top:6px;left:50%;transform:translateX(-50%)}
 #felt .fc.bc{bottom:6px;left:50%;transform:translateX(-50%)}
 #felt .fc.cc{top:50%;left:50%;transform:translate(-50%,-50%);width:11px;height:11px;opacity:.9;z-index:3}
-/* deux traits blancs au milieu (séparation croupier / toi), coupés autour du losange central */
-#feltDiv{position:absolute;left:22px;right:22px;top:50%;transform:translateY(-50%);height:0;z-index:1;pointer-events:none}
-#feltDiv::before,#feltDiv::after{content:"";position:absolute;left:0;right:0;height:2px;background:rgba(255,255,255,.6);
+/* trait central simple (séparation croupier / toi) : fin, couleur du liseré, coupé autour du losange */
+#feltDiv{position:absolute;left:78px;right:78px;top:50%;transform:translateY(-50%);height:0;z-index:1;pointer-events:none}
+#feltDiv::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:rgba(240,232,210,.16);
   -webkit-mask:linear-gradient(90deg,#000 calc(50% - 12px),transparent calc(50% - 12px),transparent calc(50% + 12px),#000 calc(50% + 12px));
   mask:linear-gradient(90deg,#000 calc(50% - 12px),transparent calc(50% - 12px),transparent calc(50% + 12px),#000 calc(50% + 12px))}
-#feltDiv::before{top:-4px}
-#feltDiv::after{top:4px}
 /* barre mise/mult : EN DESSOUS du tapis */
 #scorebox{position:relative;left:auto;bottom:auto;z-index:1;display:flex;background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;box-shadow:none}
 #scorebox .seg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 6px;gap:3px;background:transparent;min-width:0}
