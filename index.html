@@ -401,7 +401,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
 #effects .joker{position:relative;width:44px;height:62px;cursor:pointer;animation:cardLife 4.4s ease-in-out infinite;background:#c79100;border:none;border-radius:0;clip-path:var(--rc);display:flex;align-items:center;justify-content:center;padding:2px;box-shadow:3px 4px 0 rgba(0,0,0,.45);transform-origin:bottom center}
 /* intérieur noir en retrait du contour arrondi (marge = couleur d'accent) */
-#effects .joker::before,#effects .tarot::before{content:"";position:absolute;inset:5px;background:#08090d;clip-path:var(--rc);z-index:0}
+#effects .joker::before,#effects .tarot::before{content:"";position:absolute;inset:2px;background:#08090d;clip-path:var(--rc);z-index:0}
 #effects .ft{position:relative;z-index:1;font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000}
 #effects .ft small{font-size:9px;font-weight:700;margin-left:.3em}
 #effects .joker:nth-child(2n){animation-delay:-1.5s}#effects .joker:nth-child(3n){animation-delay:-2.9s}
@@ -453,7 +453,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #peekBtn.show{display:block}
 #peekBtn:active{transform:translateY(calc(-50% + 2px));filter:brightness(.92)}
 /* FELT = tapis teal, bords relevés, légèrement incliné */
-#felt{position:relative;z-index:0;flex:0 1 auto;aspect-ratio:1/1;height:100%;width:auto;max-width:100%;margin:0 auto;display:flex;transition:background .5s ease;clip-path:none;border-radius:16px;box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -4px 0 rgba(0,0,0,.3);padding:8px 8px;transform:none;
+#felt{position:relative;z-index:0;flex:0 1 auto;aspect-ratio:1/1;height:100%;width:auto;max-width:100%;margin:0 auto;display:flex;transition:background .5s ease;clip-path:var(--rc);box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -4px 0 rgba(0,0,0,.3);padding:8px 8px;transform:none;
   /* pointillé + profondeur radiale (centre plus clair, bords plus sombres) par-dessus la couleur de zone */
   background:
     radial-gradient(rgba(0,0,0,.16) 1.5px,transparent 1.7px) center/15px 15px,
