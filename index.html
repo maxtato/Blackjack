@@ -1827,6 +1827,7 @@ function leaveShop(){
   // droit d'entrée de zone : absorbe une partie des jetons (anti boule de neige)
   if(G.table.entry){G.bank=Math.max(0,G.bank-G.table.entry);popText("DROIT D'ENTRÉE",'−'+abbr(G.table.entry)+' $');}
   G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;
+  G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // nouvelle table : on remise à zéro (pas la mise de la table d'avant)
   clampBet();
   G.tableStartBank=G.bank;
   applyHandIncome();
@@ -1860,6 +1861,7 @@ function retryTable(){
   buildShoe();
   G.bank=Math.max(G.tableStartBank||0,curTable().cap);   // on repart au capital conseillé de la table
   G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;
+  G.bet=Math.max(curTable().min,Math.min(curTable().max,10));   // nouvelle tentative : mise remise à zéro
   clampBet();
   applyHandIncome();
   renderAll();renderHands();renderPressure();
