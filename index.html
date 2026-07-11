@@ -372,14 +372,17 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #effects,#stage{width:100%;flex-shrink:0}
 /* TOP */
 #topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 14px;background:var(--panel);border:none;border-radius:0;clip-path:none;box-shadow:0 5px 10px rgba(0,0,0,.42),inset 0 2px 0 rgba(255,255,255,.07),inset 0 -3px 0 rgba(0,0,0,.32);padding:9px 16px}
-#topbar .tname{display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;gap:10px;width:100%;font-size:20px;font-weight:700;color:var(--paper);text-shadow:1px 1px 0 var(--ink)}
-#topbar .tncol{display:flex;flex-direction:column;gap:2px;min-width:0}
+#topbar .tname{display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;gap:10px;width:100%;font-weight:700;color:var(--paper)}
+#topbar .tncol{display:flex;flex-direction:column;min-width:0}
+/* nom de la table : gros, doré, détaché (sans ombre) ; méta et règle en dessous */
+#topbar #tableName{font-size:28px;line-height:1;color:var(--gold);text-shadow:none}
+#topbar .tmeta{font-size:12px;font-weight:400;color:var(--paper);margin-top:8px}
 /* compteur de vies (secondes chances) — collé tout à droite */
 .lives{flex:0 0 auto;margin-left:auto;display:flex;align-items:center;gap:5px;font-size:16px;font-weight:700;color:var(--red);background:var(--panelDk2);clip-path:var(--pc);padding:5px 11px;text-shadow:1px 1px 0 var(--ink)}
 .lives svg{height:15px;width:auto}
 .lives .lvn{line-height:1}
 .lives.empty{color:var(--muted);opacity:.7}
-#topbar .tname .rule{font-size:11px;color:var(--gold);font-weight:400}
+#topbar .tname .rule{font-size:11px;color:var(--muted);font-weight:400;margin-top:2px}
 #topbar .tname .rule.boss{color:var(--red);font-weight:700;letter-spacing:.04em}
 #topbar .tstats{display:flex;gap:5px;align-items:center;flex-wrap:nowrap;width:100%}
 #topbar #scorebox{align-self:center;flex:1.9}
@@ -709,7 +712,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <div id="shaker">
 <div id="app">
   <header id="topbar">
-    <div class="tname"><div class="tncol"><span id="tableName">Arrière-salle</span><span class="rule" id="ruleText"></span></div><div id="lives" class="lives" title="Vies (secondes chances)"></div></div>
+    <div class="tname"><div class="tncol"><span id="tableName">Arrière-salle</span><span class="tmeta" id="tableMeta"></span><span class="rule" id="ruleText"></span></div><div id="lives" class="lives" title="Vies (secondes chances)"></div></div>
     <div class="tstats">
       <div class="stat turnstat" id="turnStat">
         <span class="tnum" id="turnNum">4</span>
@@ -1297,7 +1300,8 @@ function renderTop(){
   const tp=$('turnPips');if(tp){let h='';for(let i=0;i<t.mains;i++)h+='<i class="'+(i<G.hand?'on':'')+'"></i>';tp.innerHTML=h;}
   document.documentElement.style.setProperty('--felt',ZONE_FELT[t.zone]||'#138f86');   // tapis coloré par zone
   const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=heartSVG(15)+'<span class="lvn">×'+n+'</span>';lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
-  $('tableName').textContent=t.n+' · zone '+t.zone+' '+ZONE_NAMES[t.zone]+' · '+(G.tableIdx+1)+'/'+RUN_LEN;
+  $('tableName').textContent=t.n;                                   // nom seul, en gros
+  const tm=$('tableMeta');if(tm)tm.textContent='zone '+t.zone+' · '+ZONE_NAMES[t.zone]+' · '+(G.tableIdx+1)+'/'+RUN_LEN;
   const bits=[];
   if(t.ruleText)bits.push(t.ruleText);
   bits.push('maîtrise ≥'+abbr(t.master)+' $');
