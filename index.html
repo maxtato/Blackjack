@@ -682,8 +682,13 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #effects .joker img.ic{position:relative;z-index:1;width:34px;height:48px;object-fit:contain;image-rendering:pixelated;display:block}
 #effects .tarot img.tic{position:relative;z-index:1;width:34px;height:48px;object-fit:contain;image-rendering:pixelated;display:block}
 .shopico{width:26px;height:26px;object-fit:contain;image-rendering:pixelated;vertical-align:-7px;margin-right:3px}
-.shopItem .shopTok{flex:0 0 auto;width:64px;height:64px;display:flex;align-items:center;justify-content:center;background:#0e1620;clip-path:var(--pc);font-family:'Jersey 15',monospace;font-weight:700;font-size:21px;line-height:1;text-align:center;text-shadow:2px 2px 0 #000}
-.shopItem .shopTok small{font-size:11px;font-weight:700;margin-left:.3em}
+/* jeton boutique : même design que le plateau et le panneau d'inspection */
+.shopItem .shopTok{position:relative;flex:0 0 auto;width:64px;height:64px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;border-radius:0;box-shadow:none;animation:none;overflow:visible}
+.shopItem .shopTok .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:16px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000;max-width:62%;overflow:hidden;white-space:nowrap}
+.shopItem .shopTok .ft small{font-size:10px;font-weight:700;margin-left:.25em}
+/* accent « service » (turquoise) pour le jeton boutique */
+.svc .chpd{background:#34b6a8}
+.svc .chpo,.svc .chpl,.svc .chpdia{background:#8fe3d9}
 .shopItem .sInfo{flex:1;text-align:left}
 /* ===== LA PLANQUE ===== */
 .repBar{display:flex;gap:10px;align-items:stretch;margin-bottom:16px}
@@ -2021,7 +2026,8 @@ function renderShop(){
       ?'<span style="font-size:9px;color:var(--grape)">'+STAR+' CARTE</span>'
       :'<span style="font-size:9px;color:var(--yellow)">◆ RELIQUE</span>';
     const tk=SHOPTOK[r.id]||{t:'?',c:'#ffce3a'};
-    d.innerHTML=`<div class="shopTok" style="color:${tk.c}">${tk.t}</div><div class="sInfo"><div class="nm">${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
+    const chipCls=isSvc?'svc':isTarot?'tarot':'joker';
+    d.innerHTML=`<div class="shopTok ${chipCls}">${chipInner()}<span class="ft" style="color:${tk.c}">${tk.t}</span></div><div class="sInfo"><div class="nm">${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
     const cost=isSvc?serviceCost(r):itemCost(r);
     const b=document.createElement('button');b.className='btn '+(isSvc?'b-teal':isTarot?'b-purple':'b-gold');
     b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=abbr(cost)+' $';
