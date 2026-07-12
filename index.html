@@ -1190,6 +1190,11 @@ function computeMult(mode){
   if(pv===21&&!isNatural){mult*=3;lines.push(['21 PARFAIT','×3']);}
   if(G.pHand.length>=5&&pv<=21){mult*=2;lines.push(['CHARLIE','×2']);}
   if(countRank('7')>=2){mult*=1.5;lines.push(['PAIRE DE 7','×1.5']);}
+  /* bonus de COMPOSITION : récompensent les mains construites (≥3 cartes) */
+  const suits=new Set(G.pHand.map(c=>c.s));
+  if(G.pHand.length>=3&&suits.size===1){mult*=2;lines.push(['♦ COULEUR','×2']);}          // toutes la même enseigne
+  if(isStraight(G.pHand)){mult*=2;lines.push(['⛓ SUITE','×2']);}                            // rangs qui se suivent
+  if(G.pHand.length>=4&&suits.size===4){mult*=1.5;lines.push(['✦ ARC-EN-CIEL','×1.5']);}   // une carte de chaque enseigne
   if(G.insisted){mult*=1.5;lines.push(['INSISTANCE','×1.5']);}
   if(G.pressure>=75){mult*=1.5;lines.push(['PRESSION','×1.5']);}
   if(hasRelic('bruleur')&&G.pressure>=50){mult*=1.5;lines.push(['🔥 BRÛLEUR','×1.5','bruleur']);}
@@ -1209,6 +1214,18 @@ function computeMult(mode){
   return {mult,lines,bonusChips};
 }
 function countRank(r){return G.pHand.filter(c=>c.r===r).length;}
+/* SUITE : ≥3 cartes dont les rangs forment une séquence consécutive (sans doublon) ; l'As peut être bas ou haut */
+const RANK_ORD={A:1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,J:11,Q:12,K:13};
+function isStraight(cards){
+  if(cards.length<3)return false;
+  const ns=[...new Set(cards.map(c=>RANK_ORD[c.r]))];
+  if(ns.length!==cards.length)return false;                    // un rang en double casse la suite
+  const consec=a=>a.every((v,i)=>i===0||v===a[i-1]+1);
+  ns.sort((a,b)=>a-b);
+  if(consec(ns))return true;
+  if(ns.includes(1)){const hi=ns.filter(v=>v!==1).concat(14).sort((a,b)=>a-b);if(consec(hi))return true;}  // As haut (Q-K-A)
+  return false;
+}
 
 /* ============================================================
    RENDU
