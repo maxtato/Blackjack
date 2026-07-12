@@ -1412,7 +1412,21 @@ function fanEffects(){
   ef.forEach((el,i)=>{const rot=(i-mid)*5;const dy=Math.abs(i-mid)*2.2;el.style.translate=`0 ${dy.toFixed(1)}px`;el.style.rotate=`${rot.toFixed(1)}deg`;el.style.zIndex=20-Math.round(Math.abs(i-mid));});
 }
 /* jeton : disque + 12 crans crème (répartis à 30°) + intérieur noir — même markup partout */
-const CHIP_NOTCHES=(()=>{let s='';for(let i=0;i<12;i++){const a=i*Math.PI/6;const x=(50+44*Math.sin(a)).toFixed(2),y=(50-44*Math.cos(a)).toFixed(2);s+=`<i class="chpn" style="left:${x}%;top:${y}%"></i>`;}return s;})();
+/* 12 crans crème : rayon calculé cran par cran pour que le COIN le plus externe
+   du carré soit tangent au contour (Rt %) — jamais au-delà, même en diagonale */
+const CHIP_NOTCHES=(()=>{
+  const Rt=48;                 // rayon-cible du coin externe (contour du jeton ≈ 48,6 %)
+  const h=100*2/46;            // demi-cran en % (cran 4px sur un jeton de 46px)
+  let s='';
+  for(let i=0;i<12;i++){
+    const a=i*Math.PI/6,A=Math.abs(Math.sin(a)),B=Math.abs(Math.cos(a));
+    // R tel que sqrt((R·A+h)²+(R·B+h)²)=Rt  →  coin externe pile sur le contour
+    const R=-h*(A+B)+Math.sqrt(h*h*(A+B)*(A+B)-2*h*h+Rt*Rt);
+    const x=(50+R*Math.sin(a)).toFixed(2),y=(50-R*Math.cos(a)).toFixed(2);
+    s+=`<i class="chpn" style="left:${x}%;top:${y}%"></i>`;
+  }
+  return s;
+})();
 function chipInner(){return '<i class="chps"></i><i class="chpd"></i>'+CHIP_NOTCHES+'<i class="chpb"></i>';}
 function renderRelics(){
   const wrap=$('relics');wrap.innerHTML='';
