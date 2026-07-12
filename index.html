@@ -351,7 +351,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* panneau d'inspection : même jeton, en plus grand */
 #inspectBody .inspCard{position:relative;width:104px;height:104px;margin:0 auto 12px;background:transparent;border:none;border-radius:0;box-shadow:none;animation:none;display:flex;align-items:center;justify-content:center;overflow:visible}
 #inspectBody .inspCard .chps{transform:translate(3px,4px)}
-#inspectBody .inspCard .chpb{inset:12px}
+#inspectBody .inspCard .chpd{inset:4px}
+#inspectBody .inspCard .chpl{inset:12px}
+#inspectBody .inspCard .chpb{inset:15px}
 #inspectBody .inspCard .chpn{width:7px;height:7px}
 #inspectBody .inspCard .ft{position:relative;z-index:4;font-family:'Jersey 15',monospace;font-weight:700;font-size:26px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000}
 #inspectActions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
@@ -440,16 +442,18 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* on réserve toujours la hauteur d'une rangée de cartes (tarots/reliques) : le tapis ne se décale plus quand elles arrivent */
 #effects{display:flex;justify-content:center;align-items:flex-end;gap:6px;min-height:76px;padding:8px 0 6px}
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
-#effects .joker,#effects .tarot{position:relative;width:46px;height:46px;cursor:pointer;animation:cardLife 4.4s ease-in-out infinite;background:transparent;border:none;border-radius:0;box-shadow:none;display:flex;align-items:center;justify-content:center;overflow:visible;transform-origin:bottom center}
+#effects .joker,#effects .tarot{position:relative;width:52px;height:52px;cursor:pointer;animation:cardLife 4.4s ease-in-out infinite;background:transparent;border:none;border-radius:0;box-shadow:none;display:flex;align-items:center;justify-content:center;overflow:visible;transform-origin:bottom center}
 #effects .tarot{animation-duration:4.8s}
 /* JETON pixel : ombre dure (disque décalé) + disque accent (contour fin --disc) + 12 crans crème + intérieur noir — réutilisable (plateau + panneau) */
 .chps{position:absolute;inset:0;clip-path:var(--disc);background:rgba(0,0,0,.5);transform:translate(2px,3px);z-index:0}
-.chpd{position:absolute;inset:0;clip-path:var(--disc);z-index:1}
-.chpn{position:absolute;width:4px;height:4px;background:#f4ecd8;transform:translate(-50%,-50%);z-index:2;pointer-events:none}
-.chpb{position:absolute;inset:6px;clip-path:var(--disc);background:#08090d;z-index:3}
+.chpo{position:absolute;inset:0;clip-path:var(--disc);background:#f4ecd8;z-index:1}                 /* liseret extérieur (crème) */
+.chpd{position:absolute;inset:2px;clip-path:var(--disc);z-index:2}                                  /* bande accent */
+.chpn{position:absolute;width:4px;height:4px;background:#f4ecd8;transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+.chpl{position:absolute;inset:6px;clip-path:var(--disc);background:#f4ecd8;z-index:4}                /* liseret intérieur (crème) */
+.chpb{position:absolute;inset:7.5px;clip-path:var(--disc);background:#08090d;z-index:5}
 .joker .chpd{background:#e8b84a}
 .tarot .chpd{background:#c79bff}
-#effects .ft{position:relative;z-index:4;font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000}
+#effects .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000}
 #effects .ft small{font-size:9px;font-weight:700;margin-left:.3em}
 #effects .joker:nth-child(2n){animation-delay:-1.5s}#effects .joker:nth-child(3n){animation-delay:-2.9s}
 #effects .joker .ic{font-size:18px}#effects .joker .nm{font-size:7px}
@@ -1422,19 +1426,20 @@ function fanEffects(){
 /* 12 crans crème : rayon calculé cran par cran pour que le COIN le plus externe
    du carré soit tangent au contour (Rt %) — jamais au-delà, même en diagonale */
 const CHIP_NOTCHES=(()=>{
-  const Rt=48;                 // rayon-cible du coin externe (contour du jeton ≈ 48,6 %)
-  const h=100*2/46;            // demi-cran en % (cran 4px sur un jeton de 46px)
+  const Rt=45.5;               // rayon-cible du coin externe : sous le liseret extérieur, pas dessus
+  const h=100*2/52;            // demi-cran en % (cran 4px sur un jeton de 52px)
   let s='';
   for(let i=0;i<12;i++){
     const a=i*Math.PI/6,A=Math.abs(Math.sin(a)),B=Math.abs(Math.cos(a));
-    // R tel que sqrt((R·A+h)²+(R·B+h)²)=Rt  →  coin externe pile sur le contour
+    // R tel que sqrt((R·A+h)²+(R·B+h)²)=Rt  →  coin externe tangent, sans déborder
     const R=-h*(A+B)+Math.sqrt(h*h*(A+B)*(A+B)-2*h*h+Rt*Rt);
     const x=(50+R*Math.sin(a)).toFixed(2),y=(50-R*Math.cos(a)).toFixed(2);
     s+=`<i class="chpn" style="left:${x}%;top:${y}%"></i>`;
   }
   return s;
 })();
-function chipInner(){return '<i class="chps"></i><i class="chpd"></i>'+CHIP_NOTCHES+'<i class="chpb"></i>';}
+/* jeton : ombre + liseret ext. crème + bande accent + crans + liseret int. crème + centre noir */
+function chipInner(){return '<i class="chps"></i><i class="chpo"></i><i class="chpd"></i>'+CHIP_NOTCHES+'<i class="chpl"></i><i class="chpb"></i>';}
 function renderRelics(){
   const wrap=$('relics');wrap.innerHTML='';
   G.relics.forEach((r,idx)=>{
