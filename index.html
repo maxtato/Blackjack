@@ -355,7 +355,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #inspectBody .inspCard .chpl{inset:12px}
 #inspectBody .inspCard .chpb{inset:15px}
 #inspectBody .inspCard .chpn{width:7px;height:7px}
-#inspectBody .inspCard .ft{position:relative;z-index:4;font-family:'Jersey 15',monospace;font-weight:700;font-size:26px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000}
+#inspectBody .inspCard .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:24px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000;max-width:62%;overflow:hidden;white-space:nowrap}
 #inspectActions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 .shopItems{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
 .shopItem{display:flex;justify-content:space-between;align-items:center;gap:12px;background:linear-gradient(180deg,var(--panelDk),var(--panelDk2));border:3px solid var(--ink);border-radius:var(--r);padding:11px 12px;text-align:left;box-shadow:var(--shS);transition:transform .08s}
@@ -442,7 +442,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* on réserve toujours la hauteur d'une rangée de cartes (tarots/reliques) : le tapis ne se décale plus quand elles arrivent */
 #effects{display:flex;justify-content:center;align-items:flex-end;gap:6px;min-height:76px;padding:8px 0 6px}
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
-#effects .joker,#effects .tarot{position:relative;width:52px;height:52px;cursor:pointer;animation:cardLife 4.4s ease-in-out infinite;background:transparent;border:none;border-radius:0;box-shadow:none;display:flex;align-items:center;justify-content:center;overflow:visible;transform-origin:bottom center}
+#effects .joker,#effects .tarot{position:relative;width:58px;height:58px;cursor:pointer;animation:cardLife 4.4s ease-in-out infinite;background:transparent;border:none;border-radius:0;box-shadow:none;display:flex;align-items:center;justify-content:center;overflow:visible;transform-origin:bottom center}
 #effects .tarot{animation-duration:4.8s}
 /* JETON pixel : ombre dure (disque décalé) + disque accent (contour fin --disc) + 12 crans crème + intérieur noir — réutilisable (plateau + panneau) */
 .chps{position:absolute;inset:0;clip-path:var(--disc);background:rgba(0,0,0,.5);transform:translate(2px,3px);z-index:0}
@@ -456,8 +456,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* liserets ext.+int. dans la teinte accent vive (variante C) — crans restent crème */
 .joker .chpo,.joker .chpl{background:#ffe08a}
 .tarot .chpo,.tarot .chpl{background:#e6d2ff}
-#effects .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000}
-#effects .ft small{font-size:9px;font-weight:700;margin-left:.3em}
+/* texte borné au centre noir : max-width sous le diamètre du centre → n'empiète jamais sur le liseret intérieur */
+#effects .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000;max-width:64%;overflow:hidden;white-space:nowrap}
+#effects .ft small{font-size:9px;font-weight:700;margin-left:.25em}
 #effects .joker:nth-child(2n){animation-delay:-1.5s}#effects .joker:nth-child(3n){animation-delay:-2.9s}
 #effects .joker .ic{font-size:18px}#effects .joker .nm{font-size:7px}
 #effects .tarot:nth-child(2n){animation-delay:-2.2s}
