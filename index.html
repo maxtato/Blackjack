@@ -239,6 +239,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #multPop.push .burst{background:#3f9bf5}   /* égalité : bleu ciel franc (moins de vert), tranche sur le tapis */
 #multPop.go{animation:popUp 1.3s cubic-bezier(.2,1.5,.4,1) forwards}
 @keyframes popUp{0%{opacity:0;transform:translate(-50%,-30%) scale(.4)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}80%{opacity:1;transform:translate(-50%,-56%) scale(1)}100%{opacity:0;transform:translate(-50%,-74%) scale(1)}}
+/* étiquettes de décompte « à la Balatro » : valeur qui pop sur chaque carte, puis multiplicateurs */
+.sctag{position:absolute;transform:translate(-50%,-50%);pointer-events:none;z-index:42;font-family:'Jersey 15',monospace;font-weight:700;font-size:23px;line-height:1;white-space:nowrap;text-shadow:1px 1px 0 #000,0 0 5px rgba(0,0,0,.55);will-change:transform,opacity}
+.sctag.chip{color:#7fd2ff}
+.sctag.mult{color:#ffe08a;font-size:18px}
+.sctag.mult b{color:#ff5470}
 
 /* ===== DOCK / BET / CONSUMABLES ===== */
 #dock{display:flex;flex-direction:column;gap:8px;flex:0 0 auto}
@@ -1647,15 +1652,17 @@ function resolve(mode){
   let mult=1,lines=[];
   const isNat=(mode==='natural'&&G.pHand.length===2&&pv===21);
 
-  let gain=0;
+  let gain=0,tallyMs=0;
   if(outcome==='win'){
     const r=computeMult(mode);mult=r.mult;lines=r.lines;
     const base=G.bet+r.bonusChips;
-    gain=Math.round(base*mult);G.bank+=G.bet+gain;sfx.win();
-    if(mult>1||r.bonusChips>0)sfx.combo();
-    flashScore();showWord('win',gain,mult,isNat);
+    gain=Math.round(base*mult);G.bank+=G.bet+gain;
     if(lines.length){$('tip').innerHTML=lines.map(l=>l[0]+' '+l[1]).join('  ·  ');$('tip').style.color='var(--gold)';}
-    if(!G.objHit&&G.bank>=G.table.goal){G.objHit=true;setTimeout(objectiveReached,360);}   // 1ʳᵉ fois qu'on franchit l'objectif
+    // décompte animé (carte par carte + multiplicateurs), PUIS l'annonce du gain
+    const finishWin=()=>{sfx.win();if(mult>1||r.bonusChips>0)sfx.combo();
+      flashScore();showWord('win',gain,mult,isNat);
+      if(!G.objHit&&G.bank>=G.table.goal){G.objHit=true;setTimeout(objectiveReached,360);}};   // 1ʳᵉ fois qu'on franchit l'objectif
+    tallyMs=animateScoreTally(mode,lines,finishWin);
   }else if(outcome==='push'){
     let pg=0;if(hasRelic('diplomate')){pg=Math.floor(G.bet*0.5);G.bank+=pg;}
     G.bank+=G.bet;gain=pg;sfx.push();showWord('push',pg,1);
@@ -1671,7 +1678,7 @@ function resolve(mode){
   const drop=pBust?34:(outcome==='lose'?40:(outcome==='push'?22:12));
   G.pressure=Math.max(0,G.pressure-drop);
   renderTop();renderRelics();renderPressure();renderMult();
-  setTimeout(()=>nextHandOrEnd(),1750);
+  setTimeout(()=>nextHandOrEnd(),1750+tallyMs);
 }
 
 /* ---------- progression ---------- */
@@ -1983,6 +1990,55 @@ function popText(txt,sub){
   clearTimeout(textTimer);textTimer=setTimeout(()=>{$('tip').textContent='';},1400);
 }
 function flashScore(){const s=$('scorebox');if(!s)return;s.classList.remove('pop');void s.offsetWidth;s.classList.add('pop');setTimeout(()=>s.classList.remove('pop'),360);}
+/* ---- décompte animé « à la Balatro » : chaque carte rebondit et fait pop sa valeur, puis les multiplicateurs ---- */
+function cardPts(c){if(c.r==='A')return 11;if(c.r==='K'||c.r==='Q'||c.r==='J')return 10;return parseInt(c.r,10)||0;}
+function flyTag(x,y,html,cls){
+  const t=document.createElement('div');t.className='sctag '+(cls||'');t.innerHTML=html;
+  t.style.left=x+'px';t.style.top=y+'px';$('particles').appendChild(t);
+  const a=t.animate([
+    {transform:'translate(-50%,-20%) scale(.5)',opacity:0},
+    {transform:'translate(-50%,-55%) scale(1.08)',opacity:1,offset:.25},
+    {transform:'translate(-50%,-120%) scale(1)',opacity:1,offset:.7},
+    {transform:'translate(-50%,-195%) scale(.9)',opacity:0}
+  ],{duration:900,easing:'cubic-bezier(.25,.7,.3,1)'});
+  a.onfinish=()=>t.remove();
+}
+function bounceEl(el){
+  if(!el)return;
+  el.animate([
+    {transform:'translateY(0) scale(1)'},
+    {transform:'translateY(-15px) scale(1.13)',offset:.4},
+    {transform:'translateY(0) scale(1)'}
+  ],{duration:380,easing:'cubic-bezier(.3,1.5,.5,1)'});
+}
+/* rebondit les cartes une par une (valeur qui pop), puis fait pop chaque multiplicateur ; renvoie la durée totale */
+function animateScoreTally(mode,lines,cb){
+  const slots=[...$('pHand').children];
+  const STEP=155;let t=0;
+  slots.forEach((slot,i)=>{
+    const c=G.pHand[i];if(!c)return;
+    const card=slot.querySelector('.card:not(.back)')||slot.querySelector('.card');
+    setTimeout(()=>{
+      const r=slot.getBoundingClientRect();
+      bounceEl(card);
+      flyTag(r.left+r.width/2,r.top+r.height*0.30,'+'+cardPts(c),'chip');
+      try{blip(420+Math.min(i,6)*70,.05,'square',.06);}catch(e){}
+    },t);
+    t+=STEP;
+  });
+  t+=140;
+  (lines||[]).forEach((ln)=>{
+    setTimeout(()=>{
+      const ph=$('pHand').getBoundingClientRect();
+      flyTag(ph.left+ph.width/2,ph.top-2,ln[0]+' <b>'+ln[1]+'</b>','mult');
+      try{sfx.combo();}catch(e){}
+    },t);
+    t+=210;
+  });
+  const total=t+120;
+  setTimeout(cb,total);
+  return total;
+}
 /* animation quand on franchit l'objectif de gain de la table */
 function objectiveReached(){
   const p=$('multPop');
