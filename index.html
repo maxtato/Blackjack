@@ -1192,15 +1192,15 @@ function computeMult(mode){
   if(countRank('7')>=2){mult*=1.5;lines.push(['PAIRE DE 7','×1.5']);}
   if(G.insisted){mult*=1.5;lines.push(['INSISTANCE','×1.5']);}
   if(G.pressure>=75){mult*=1.5;lines.push(['PRESSION','×1.5']);}
-  if(hasRelic('bruleur')&&G.pressure>=50){mult*=1.5;lines.push(['🔥 BRÛLEUR','×1.5']);}
+  if(hasRelic('bruleur')&&G.pressure>=50){mult*=1.5;lines.push(['🔥 BRÛLEUR','×1.5','bruleur']);}
   /* éditions des cartes en main */
   let foil=0,holo=0,poly=0;
   for(const c of G.pHand){if(c.ed==='foil')foil++;else if(c.ed==='holo')holo++;else if(c.ed==='poly')poly++;}
   if(foil){bonusChips+=foil*3;lines.push(['◇ FOIL','+'+(foil*3)+' jet']);}
   if(holo){mult+=holo;lines.push(['◈ HOLO','+'+holo]);}
   if(poly){const pm=Math.pow(1.5,poly);mult*=pm;lines.push(['◆ POLY','×'+(Math.round(pm*100)/100)]);}
-  if(hasRelic('as')&&G.pHand.some(c=>c.r==='A')){mult+=1;lines.push(['◆ AS TRUQUÉ','+1']);}
-  if(hasRelic('froid')&&G.pressure>=75){mult+=1;lines.push(['◆ SANG-FROID','+1']);}
+  if(hasRelic('as')&&G.pHand.some(c=>c.r==='A')){mult+=1;lines.push(['◆ AS TRUQUÉ','+1','as']);}
+  if(hasRelic('froid')&&G.pressure>=75){mult+=1;lines.push(['◆ SANG-FROID','+1','froid']);}
   /* anti-explosion : rendement décroissant au-delà de ×3, puis plafond de zone */
   const cap=ZONE_MULTCAP[curTable().zone]||9;
   if(mult>3)mult=3+(mult-3)*0.6;            // au-delà de ×3, chaque bonus compte à 60 %
@@ -1400,7 +1400,7 @@ function chipInner(){return '<i class="chps"></i><i class="chpd"></i>'+CHIP_NOTC
 function renderRelics(){
   const wrap=$('relics');wrap.innerHTML='';
   G.relics.forEach((r,idx)=>{
-    const d=document.createElement('div');d.className='joker';
+    const d=document.createElement('div');d.className='joker';d.dataset.relic=r.id;
     if((r.id==='froid'||r.id==='clope')&&G.pressure>=75)d.classList.add('hot');
     const tk=SHOPTOK[r.id]||{t:r.name,c:'#ffce3a'};
     d.innerHTML=`${chipInner()}<span class="ft" style="color:${tk.c}">${tk.t}</span>`;
@@ -2159,6 +2159,16 @@ function bounceEl(el){
     {transform:'translateY(0) scale(1)'}
   ],{duration:380,easing:'cubic-bezier(.3,1.5,.5,1)'});
 }
+/* une relique « se déclenche » : le jeton tressaute et brille (comme un joker de Balatro) */
+function fireRelic(el){
+  if(!el)return;
+  el.animate([
+    {transform:'translateY(0) scale(1) rotate(0deg)',filter:'brightness(1)'},
+    {transform:'translateY(-11px) scale(1.2) rotate(-5deg)',filter:'brightness(1.55) drop-shadow(0 0 7px #ffe08a)',offset:.32},
+    {transform:'translateY(0) scale(1.05) rotate(4deg)',filter:'brightness(1.2) drop-shadow(0 0 4px #ffe08a)',offset:.66},
+    {transform:'translateY(0) scale(1) rotate(0deg)',filter:'brightness(1)'}
+  ],{duration:540,easing:'cubic-bezier(.3,1.4,.5,1)'});
+}
 /* rebondit les cartes une par une (valeur qui pop), puis fait pop chaque multiplicateur ; renvoie la durée totale */
 function animateScoreTally(mode,lines,cb){
   const slots=[...$('pHand').children];
@@ -2177,8 +2187,16 @@ function animateScoreTally(mode,lines,cb){
   t+=140;
   (lines||[]).forEach((ln)=>{
     setTimeout(()=>{
-      const ph=$('pHand').getBoundingClientRect();
-      flyTag(ph.left+ph.width/2,ph.top-2,ln[0]+' <b>'+ln[1]+'</b>','mult');
+      // ligne issue d'une relique → le jeton correspondant se déclenche et l'effet jaillit de lui
+      const relEl=ln[2]?document.querySelector('#relics .joker[data-relic="'+ln[2]+'"]'):null;
+      if(relEl){
+        fireRelic(relEl);
+        const r=relEl.getBoundingClientRect();
+        flyTag(r.left+r.width/2,r.top+r.height*0.15,ln[0]+' <b>'+ln[1]+'</b>','mult');
+      }else{
+        const ph=$('pHand').getBoundingClientRect();
+        flyTag(ph.left+ph.width/2,ph.top-2,ln[0]+' <b>'+ln[1]+'</b>','mult');
+      }
       try{sfx.combo();}catch(e){}
     },t);
     t+=210;
