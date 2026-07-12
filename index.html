@@ -1190,6 +1190,11 @@ function computeMult(mode){
   if(pv===21&&!isNatural){mult*=3;lines.push(['21 PARFAIT','×3']);}
   if(G.pHand.length>=5&&pv<=21){mult*=2;lines.push(['CHARLIE','×2']);}
   if(countRank('7')>=2){mult*=1.5;lines.push(['PAIRE DE 7','×1.5']);}
+  /* bonus de COMPOSITION : récompensent les mains construites (≥3 cartes) */
+  const suits=new Set(G.pHand.map(c=>c.s));
+  if(G.pHand.length>=3&&suits.size===1){mult*=2;lines.push(['♦ COULEUR','×2']);}          // toutes la même enseigne
+  if(isStraight(G.pHand)){mult*=2;lines.push(['⛓ SUITE','×2']);}                            // rangs qui se suivent
+  if(G.pHand.length>=4&&suits.size===4){mult*=1.5;lines.push(['✦ ARC-EN-CIEL','×1.5']);}   // une carte de chaque enseigne
   if(G.insisted){mult*=1.5;lines.push(['INSISTANCE','×1.5']);}
   if(G.pressure>=75){mult*=1.5;lines.push(['PRESSION','×1.5']);}
   if(hasRelic('bruleur')&&G.pressure>=50){mult*=1.5;lines.push(['🔥 BRÛLEUR','×1.5','bruleur']);}
@@ -1209,6 +1214,18 @@ function computeMult(mode){
   return {mult,lines,bonusChips};
 }
 function countRank(r){return G.pHand.filter(c=>c.r===r).length;}
+/* SUITE : ≥3 cartes dont les rangs forment une séquence consécutive (sans doublon) ; l'As peut être bas ou haut */
+const RANK_ORD={A:1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,J:11,Q:12,K:13};
+function isStraight(cards){
+  if(cards.length<3)return false;
+  const ns=[...new Set(cards.map(c=>RANK_ORD[c.r]))];
+  if(ns.length!==cards.length)return false;                    // un rang en double casse la suite
+  const consec=a=>a.every((v,i)=>i===0||v===a[i-1]+1);
+  ns.sort((a,b)=>a-b);
+  if(consec(ns))return true;
+  if(ns.includes(1)){const hi=ns.filter(v=>v!==1).concat(14).sort((a,b)=>a-b);if(consec(hi))return true;}  // As haut (Q-K-A)
+  return false;
+}
 
 /* ============================================================
    RENDU
@@ -1395,7 +1412,21 @@ function fanEffects(){
   ef.forEach((el,i)=>{const rot=(i-mid)*5;const dy=Math.abs(i-mid)*2.2;el.style.translate=`0 ${dy.toFixed(1)}px`;el.style.rotate=`${rot.toFixed(1)}deg`;el.style.zIndex=20-Math.round(Math.abs(i-mid));});
 }
 /* jeton : disque + 12 crans crème (répartis à 30°) + intérieur noir — même markup partout */
-const CHIP_NOTCHES=(()=>{let s='';for(let i=0;i<12;i++){const a=i*Math.PI/6;const x=(50+44*Math.sin(a)).toFixed(2),y=(50-44*Math.cos(a)).toFixed(2);s+=`<i class="chpn" style="left:${x}%;top:${y}%"></i>`;}return s;})();
+/* 12 crans crème : rayon calculé cran par cran pour que le COIN le plus externe
+   du carré soit tangent au contour (Rt %) — jamais au-delà, même en diagonale */
+const CHIP_NOTCHES=(()=>{
+  const Rt=48;                 // rayon-cible du coin externe (contour du jeton ≈ 48,6 %)
+  const h=100*2/46;            // demi-cran en % (cran 4px sur un jeton de 46px)
+  let s='';
+  for(let i=0;i<12;i++){
+    const a=i*Math.PI/6,A=Math.abs(Math.sin(a)),B=Math.abs(Math.cos(a));
+    // R tel que sqrt((R·A+h)²+(R·B+h)²)=Rt  →  coin externe pile sur le contour
+    const R=-h*(A+B)+Math.sqrt(h*h*(A+B)*(A+B)-2*h*h+Rt*Rt);
+    const x=(50+R*Math.sin(a)).toFixed(2),y=(50-R*Math.cos(a)).toFixed(2);
+    s+=`<i class="chpn" style="left:${x}%;top:${y}%"></i>`;
+  }
+  return s;
+})();
 function chipInner(){return '<i class="chps"></i><i class="chpd"></i>'+CHIP_NOTCHES+'<i class="chpb"></i>';}
 function renderRelics(){
   const wrap=$('relics');wrap.innerHTML='';
