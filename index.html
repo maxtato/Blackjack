@@ -355,6 +355,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #inspectBody .inspCard .chpl{inset:12px}
 #inspectBody .inspCard .chpb{inset:15px}
 #inspectBody .inspCard .chpn{width:7px;height:7px}
+#inspectBody .inspCard .chpdia{width:9px;height:9px}
 #inspectBody .inspCard .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:24px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000;max-width:62%;overflow:hidden;white-space:nowrap}
 #inspectActions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 .shopItems{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
@@ -450,7 +451,13 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .chpd{position:absolute;inset:2px;clip-path:var(--disc);z-index:2}                                  /* bande accent */
 .chpn{position:absolute;width:4px;height:4px;background:#f4ecd8;transform:translate(-50%,-50%);z-index:3;pointer-events:none}
 .chpl{position:absolute;inset:6px;clip-path:var(--disc);background:#f4ecd8;z-index:4}                /* liseret intérieur (crème) */
-.chpb{position:absolute;inset:7.5px;clip-path:var(--disc);background:#767c8c;z-index:5}
+.chpb{position:absolute;inset:7.5px;clip-path:var(--disc);background:#08090d;z-index:5}
+/* deux petits losanges décoratifs, au-dessus et au-dessous du texte (teinte accent) */
+.chpdia{position:absolute;left:50%;transform:translateX(-50%) rotate(45deg);width:5px;height:5px;z-index:6;pointer-events:none}
+.chpdia.dtop{top:23%}
+.chpdia.dbot{bottom:23%}
+.joker .chpdia{background:#ffe08a}
+.tarot .chpdia{background:#e6d2ff}
 .joker .chpd{background:#e8b84a}
 .tarot .chpd{background:#c79bff}
 /* liserets ext.+int. dans la teinte accent vive (variante C) — crans restent crème */
@@ -1443,7 +1450,7 @@ const CHIP_NOTCHES=(()=>{
   return s;
 })();
 /* jeton : ombre + liseret ext. crème + bande accent + crans + liseret int. crème + centre noir */
-function chipInner(){return '<i class="chps"></i><i class="chpo"></i><i class="chpd"></i>'+CHIP_NOTCHES+'<i class="chpl"></i><i class="chpb"></i>';}
+function chipInner(){return '<i class="chps"></i><i class="chpo"></i><i class="chpd"></i>'+CHIP_NOTCHES+'<i class="chpl"></i><i class="chpb"></i><i class="chpdia dtop"></i><i class="chpdia dbot"></i>';}
 function renderRelics(){
   const wrap=$('relics');wrap.innerHTML='';
   G.relics.forEach((r,idx)=>{
