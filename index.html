@@ -1103,7 +1103,7 @@ let G={};
 function freshGame(){
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
      peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,insurance:false,objHit:false,
-     phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0]};
+     phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1};
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // valeur interne par défaut
   G.betChosen=false;                                       // il faut choisir une mise sur la 1re table
   G.tableStartBank=G.bank;
@@ -1312,7 +1312,8 @@ function renderMult(){
     const mode=(G.pHand.length===2&&handValue(G.pHand).total===21)?'natural':'stand';
     const r=computeMult(mode);m=r.mult;bonus=r.bonusChips;
   }
-  $('chipsVal').textContent=bonus?(abbr(G.bet)+'+'+bonus):abbr(G.bet);
+  const stake=G.bet*(G.stakeMult||1);
+  $('chipsVal').textContent=bonus?(abbr(stake)+'+'+bonus):abbr(stake);
   $('multVal').textContent=fmtMult(m);
   $('scorebox').classList.toggle('hot',m>1||bonus>0);
 }
@@ -1509,14 +1510,20 @@ function renderActions(){
   const live=(G.phase==='play'&&!G._dealing);
   const v=G.pHand.length?handValue(G.pHand).total:0;
   const flirt=v>=17&&v<=20;
+  // fenêtre de DOUBLER : 2 premières cartes avec un total bas (les vrais coups à doubler : 9/10/11…)
+  // au-dessus de 16 c'est le créneau de FORCER LA CHANCE (doubler un 17-20 est un piège)
+  const canDouble=G.pHand.length===2&&!flirt;
   if(flirt){
     add(main,'RISQUER','b-red',()=>{G.insisted=true;playerHit();},'+bonus si survie',!live);
     add(main,'RESTER','b-blue',playerStand,'garde ta main',!live);
-    add(wide,'FORCER LA CHANCE','b-purple',forcerChance,G.forcedUsed?'déjà utilisé cette table':'2 cartes, garde la meilleure · 1×/table',!live||G.forcedUsed);
   }else{
     add(main,'TIRER','b-gold',()=>playerHit(),'+1 carte',!live);
     add(main,'RESTER','b-blue',playerStand,'garde ta main',!live);
-    add(wide,'FORCER LA CHANCE','b-purple',forcerChance,'2 cartes, garde la meilleure · pression +++',true);
+  }
+  if(canDouble){
+    add(wide,'DOUBLER','b-gold',playerDouble,G.bank<G.bet?'banque insuffisante':'mise ×2 · une seule carte puis reste',!live||G.bank<G.bet);
+  }else{
+    add(wide,'FORCER LA CHANCE','b-purple',forcerChance,(flirt?(G.forcedUsed?'déjà utilisé cette table':'2 cartes, garde la meilleure · 1×/table'):'2 cartes, garde la meilleure · pression +++'),!live||!flirt||G.forcedUsed);
   }
   a.appendChild(main);a.appendChild(wide);
 }
@@ -1538,7 +1545,7 @@ function updateBustReadout(){
    ============================================================ */
 function deal(){
   audioInit();if(!G.betChosen)return;clampBet();if(G.bank<curTable().min)return;
-  G.bank-=G.bet;
+  G.bank-=G.bet;G.stakeMult=1;
   // pression PERSISTANTE : reportée de la main précédente, refroidie si on joue posé
   let p0;
   if(G.hand===1)p0=(G.table.rule==='depart')?30:0;          // table chaude : seulement à l'entrée
@@ -1600,6 +1607,24 @@ function playerHit(forced){
     renderActions();
   });
 }
+/* DOUBLER : sur les 2 premières cartes, double la mise, tire UNE carte, puis reste d'office */
+function playerDouble(){
+  if(G.phase!=='play'||G._dealing||G.pHand.length!==2||G.bank<G.bet)return;
+  G.bank-=G.bet;G.stakeMult=2;
+  sfx.buy();shake(10);coinBurst(6);popText('DOUBLÉ','mise ×2 · une seule carte');
+  renderTop();renderChips();renderMult();
+  const c=G.magicNext?drawIdeal():draw();G.magicNext=false;
+  c._pending=true;G.pHand.push(c);
+  G._dealing=true;renderActions();
+  dealCardIn(c,{},()=>{
+    G._dealing=false;
+    addPressure(14);updateBustReadout();renderMult();
+    if(c.ed)announceEd(c);
+    const v=handValue(G.pHand).total;
+    if(v>21){setTimeout(()=>resolve('bust'),320);return;}
+    setTimeout(()=>playerStand(),340);
+  });
+}
 function forcerChance(){
   if(G.phase!=='play'||G._dealing)return;
   const c1=draw(),c2=draw();
@@ -1651,12 +1676,13 @@ function resolve(mode){
 
   let mult=1,lines=[];
   const isNat=(mode==='natural'&&G.pHand.length===2&&pv===21);
+  const stake=G.bet*(G.stakeMult||1);   // mise engagée (doublée si DOUBLER)
 
   let gain=0,tallyMs=0;
   if(outcome==='win'){
     const r=computeMult(mode);mult=r.mult;lines=r.lines;
-    const base=G.bet+r.bonusChips;
-    gain=Math.round(base*mult);G.bank+=G.bet+gain;
+    const base=stake+r.bonusChips;
+    gain=Math.round(base*mult);G.bank+=stake+gain;
     if(lines.length){$('tip').innerHTML=lines.map(l=>l[0]+' '+l[1]).join('  ·  ');$('tip').style.color='var(--gold)';}
     // décompte animé (carte par carte + multiplicateurs), PUIS l'annonce du gain
     const finishWin=()=>{sfx.win();if(mult>1||r.bonusChips>0)sfx.combo();
@@ -1664,13 +1690,13 @@ function resolve(mode){
       if(!G.objHit&&G.bank>=G.table.goal){G.objHit=true;setTimeout(objectiveReached,360);}};   // 1ʳᵉ fois qu'on franchit l'objectif
     tallyMs=animateScoreTally(mode,lines,finishWin);
   }else if(outcome==='push'){
-    let pg=0;if(hasRelic('diplomate')){pg=Math.floor(G.bet*0.5);G.bank+=pg;}
-    G.bank+=G.bet;gain=pg;sfx.push();showWord('push',pg,1);
+    let pg=0;if(hasRelic('diplomate')){pg=Math.floor(stake*0.5);G.bank+=pg;}
+    G.bank+=stake;gain=pg;sfx.push();showWord('push',pg,1);
   }else{
     let back=0;
-    if(G.insurance){G.insurance=false;back=G.bet;popText('ASSURANCE','perte remboursée');}      // service boutique
-    else if(hasRelic('jeton')&&pv===20&&!pBust){back=Math.floor(G.bet/2);}
-    G.bank+=back;gain=back-G.bet;
+    if(G.insurance){G.insurance=false;back=stake;popText('ASSURANCE','perte remboursée');}      // service boutique
+    else if(hasRelic('jeton')&&pv===20&&!pBust){back=Math.floor(stake/2);}
+    G.bank+=back;gain=back-stake;
     sfx.lose();shake(8);showWord('lose',gain,1,false,pBust);
   }
 
