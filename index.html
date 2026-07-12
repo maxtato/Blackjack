@@ -355,7 +355,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #inspectBody .inspCard .chpl{inset:12px}
 #inspectBody .inspCard .chpb{inset:15px}
 #inspectBody .inspCard .chpn{width:7px;height:7px}
-#inspectBody .inspCard .ft{position:relative;z-index:4;font-family:'Jersey 15',monospace;font-weight:700;font-size:26px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000}
+#inspectBody .inspCard .chpdia{width:6px;height:11px}
+#inspectBody .inspCard .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:24px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000;max-width:62%;overflow:hidden;white-space:nowrap}
 #inspectActions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 .shopItems{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
 .shopItem{display:flex;justify-content:space-between;align-items:center;gap:12px;background:linear-gradient(180deg,var(--panelDk),var(--panelDk2));border:3px solid var(--ink);border-radius:var(--r);padding:11px 12px;text-align:left;box-shadow:var(--shS);transition:transform .08s}
@@ -442,7 +443,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* on réserve toujours la hauteur d'une rangée de cartes (tarots/reliques) : le tapis ne se décale plus quand elles arrivent */
 #effects{display:flex;justify-content:center;align-items:flex-end;gap:6px;min-height:76px;padding:8px 0 6px}
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
-#effects .joker,#effects .tarot{position:relative;width:52px;height:52px;cursor:pointer;animation:cardLife 4.4s ease-in-out infinite;background:transparent;border:none;border-radius:0;box-shadow:none;display:flex;align-items:center;justify-content:center;overflow:visible;transform-origin:bottom center}
+#effects .joker,#effects .tarot{position:relative;width:58px;height:58px;cursor:pointer;animation:cardLife 4.4s ease-in-out infinite;background:transparent;border:none;border-radius:0;box-shadow:none;display:flex;align-items:center;justify-content:center;overflow:visible;transform-origin:bottom center}
 #effects .tarot{animation-duration:4.8s}
 /* JETON pixel : ombre dure (disque décalé) + disque accent (contour fin --disc) + 12 crans crème + intérieur noir — réutilisable (plateau + panneau) */
 .chps{position:absolute;inset:0;clip-path:var(--disc);background:rgba(0,0,0,.5);transform:translate(2px,3px);z-index:0}
@@ -450,14 +451,21 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .chpd{position:absolute;inset:2px;clip-path:var(--disc);z-index:2}                                  /* bande accent */
 .chpn{position:absolute;width:4px;height:4px;background:#f4ecd8;transform:translate(-50%,-50%);z-index:3;pointer-events:none}
 .chpl{position:absolute;inset:6px;clip-path:var(--disc);background:#f4ecd8;z-index:4}                /* liseret intérieur (crème) */
-.chpb{position:absolute;inset:7.5px;clip-path:var(--disc);background:#767c8c;z-index:5}
+.chpb{position:absolute;inset:7.5px;clip-path:var(--disc);background:#08090d;z-index:5}
+/* deux losanges décoratifs FINS (pixel, allongés) au-dessus et au-dessous du texte (teinte accent) */
+.chpdia{position:absolute;left:50%;transform:translateX(-50%);width:4px;height:7px;z-index:6;pointer-events:none;clip-path:polygon(66.67% 10%,66.67% 20%,83.33% 20%,83.33% 40%,100% 40%,100% 60%,83.33% 60%,83.33% 80%,66.67% 80%,66.67% 90%,33.33% 90%,33.33% 80%,16.67% 80%,16.67% 60%,0 60%,0 40%,16.67% 40%,16.67% 20%,33.33% 20%,33.33% 10%)}
+.chpdia.dtop{top:20%}
+.chpdia.dbot{bottom:20%}
+.joker .chpdia{background:#ffe08a}
+.tarot .chpdia{background:#e6d2ff}
 .joker .chpd{background:#e8b84a}
 .tarot .chpd{background:#c79bff}
 /* liserets ext.+int. dans la teinte accent vive (variante C) — crans restent crème */
 .joker .chpo,.joker .chpl{background:#ffe08a}
 .tarot .chpo,.tarot .chpl{background:#e6d2ff}
-#effects .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000}
-#effects .ft small{font-size:9px;font-weight:700;margin-left:.3em}
+/* texte borné au centre noir : max-width sous le diamètre du centre → n'empiète jamais sur le liseret intérieur */
+#effects .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000;max-width:64%;overflow:hidden;white-space:nowrap}
+#effects .ft small{font-size:9px;font-weight:700;margin-left:.25em}
 #effects .joker:nth-child(2n){animation-delay:-1.5s}#effects .joker:nth-child(3n){animation-delay:-2.9s}
 #effects .joker .ic{font-size:18px}#effects .joker .nm{font-size:7px}
 #effects .tarot:nth-child(2n){animation-delay:-2.2s}
@@ -1442,7 +1450,7 @@ const CHIP_NOTCHES=(()=>{
   return s;
 })();
 /* jeton : ombre + liseret ext. crème + bande accent + crans + liseret int. crème + centre noir */
-function chipInner(){return '<i class="chps"></i><i class="chpo"></i><i class="chpd"></i>'+CHIP_NOTCHES+'<i class="chpl"></i><i class="chpb"></i>';}
+function chipInner(){return '<i class="chps"></i><i class="chpo"></i><i class="chpd"></i>'+CHIP_NOTCHES+'<i class="chpl"></i><i class="chpb"></i><i class="chpdia dtop"></i><i class="chpdia dbot"></i>';}
 function renderRelics(){
   const wrap=$('relics');wrap.innerHTML='';
   G.relics.forEach((r,idx)=>{
