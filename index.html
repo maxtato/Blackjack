@@ -2211,12 +2211,14 @@ function cardPts(c){if(c.r==='A')return 11;if(c.r==='K'||c.r==='Q'||c.r==='J')re
 function flyTag(x,y,html,cls){
   const t=document.createElement('div');t.className='sctag '+(cls||'');t.innerHTML=html;
   t.style.left=x+'px';t.style.top=y+'px';$('particles').appendChild(t);
+  // pop rapide, puis reste affiché plus longtemps avant de monter et s'effacer
   const a=t.animate([
     {transform:'translate(-50%,-20%) scale(.5)',opacity:0},
-    {transform:'translate(-50%,-55%) scale(1.08)',opacity:1,offset:.25},
-    {transform:'translate(-50%,-120%) scale(1)',opacity:1,offset:.7},
-    {transform:'translate(-50%,-195%) scale(.9)',opacity:0}
-  ],{duration:900,easing:'cubic-bezier(.25,.7,.3,1)'});
+    {transform:'translate(-50%,-55%) scale(1.1)',opacity:1,offset:.12},
+    {transform:'translate(-50%,-62%) scale(1)',opacity:1,offset:.28},
+    {transform:'translate(-50%,-88%) scale(1)',opacity:1,offset:.78},
+    {transform:'translate(-50%,-150%) scale(.9)',opacity:0}
+  ],{duration:1700,easing:'cubic-bezier(.25,.7,.3,1)'});
   a.onfinish=()=>t.remove();
 }
 function bounceEl(el){
