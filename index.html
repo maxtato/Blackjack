@@ -338,6 +338,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .overlay h1.dead{color:var(--red);text-shadow:3px 3px 0 #000,6px 6px 0 var(--ink)}
 .overlay p{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px}
 .overlay p b{color:#fff}
+/* résumé de run : pastilles sombres, chiffres dorés → bien détachés du panneau */
+.runstats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 0 18px}
+.runstats .rs{background:var(--panelDk2);clip-path:var(--pc);padding:8px 12px;display:flex;flex-direction:column;align-items:center;line-height:1;min-width:82px}
+.runstats .rs .l{font-size:9px;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
+.runstats .rs .v{font-size:19px;font-weight:700;color:var(--gold);text-shadow:1px 1px 0 #000}
 .rules{text-align:left;font-size:12.5px;line-height:1.5;color:#fff;margin-bottom:20px;display:flex;flex-direction:column;gap:9px}
 .rules>div{background:rgba(0,0,0,.2);border:2px solid rgba(0,0,0,.3);border-left:4px solid var(--grape);border-radius:8px;padding:8px 11px}
 .rules .k{color:var(--yellow)}.rules .d{color:var(--magenta)}
@@ -901,6 +906,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
   <div class="ovpanel">
     <h1 id="endTitle"></h1>
     <p id="endText"></p>
+    <div class="runstats" id="endStats"></div>
     <button class="btn b-gold menu" onclick="toPlanque()">RETOUR À LA PLANQUE</button>
   </div>
 </div>
@@ -1113,7 +1119,8 @@ let G={};
 function freshGame(){
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
      peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,insurance:false,objHit:false,
-     phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1,splitActive:false,hands:null,hi:0};
+     phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1,splitActive:false,hands:null,hi:0,
+     stats:{won:0,played:0,bestGain:0,bestMult:1}};
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // valeur interne par défaut
   G.betChosen=false;                                       // il faut choisir une mise sur la 1re table
   G.tableStartBank=G.bank;
@@ -1791,11 +1798,13 @@ function resolve(mode){
   const isNat=(mode==='natural'&&G.pHand.length===2&&pv===21);
   const stake=G.bet*(G.stakeMult||1);   // mise engagée (doublée si DOUBLER)
 
+  if(G.stats){G.stats.played++;}
   let gain=0,tallyMs=0;
   if(outcome==='win'){
     const r=computeMult(mode);mult=r.mult;lines=r.lines;
     const base=stake+r.bonusChips;
     gain=Math.round(base*mult);G.bank+=stake+gain;
+    if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,gain);G.stats.bestMult=Math.max(G.stats.bestMult,mult);}
     if(lines.length){$('tip').innerHTML=lines.map(l=>l[0]+' '+l[1]).join('  ·  ');$('tip').style.color='var(--gold)';}
     // décompte animé (carte par carte + multiplicateurs), PUIS l'annonce du gain
     const finishWin=()=>{sfx.win();if(mult>1||r.bonusChips>0)sfx.combo();
@@ -1834,9 +1843,11 @@ function resolveSplit(){
     else if(pv>dv)outcome='win';else if(pv<dv)outcome='lose';else outcome='push';
     if(outcome==='push'&&G.table.rule==='sec')outcome='lose';
     const stake=G.bet;let g=0;
+    if(G.stats){G.stats.played++;}
     if(outcome==='win'){
       G.pHand=h;const r=computeMult('stand');const base=stake+r.bonusChips;
       g=Math.round(base*r.mult);G.bank+=stake+g;
+      if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,g);G.stats.bestMult=Math.max(G.stats.bestMult,r.mult);}
     }else if(outcome==='push'){
       let pg=0;if(hasRelic('diplomate')){pg=Math.floor(stake*0.5);G.bank+=pg;}
       G.bank+=stake;g=pg;
@@ -2120,6 +2131,11 @@ function endRun(cashout){
     `<br><br>Tables tenues : <b>${depth}</b> · Jetons : <b>${abbr(G.bank)} $</b>`+
     `<br>Réputation : <b>${STAR}${abbr(baseGain)}</b>`+(coffre?` <span style="color:var(--muted)">+ coffre ${STAR}${abbr(coffre)}</span>`:'')+` &nbsp;→&nbsp; total <b>${STAR}${abbr(META.rep)}</b>`+
     `<br><span style="color:var(--muted)">Record : ${META.record.depth} tables · ${abbr(META.record.chips)} $</span>`;
+  const s=G.stats||{won:0,played:0,bestGain:0,bestMult:1};
+  $('endStats').innerHTML=
+    `<div class="rs"><span class="l">MAINS GAGNÉES</span><span class="v">${s.won}/${s.played}</span></div>`+
+    `<div class="rs"><span class="l">MEILLEUR GAIN</span><span class="v">${abbr(s.bestGain)} $</span></div>`+
+    `<div class="rs"><span class="l">MEILLEUR MULT</span><span class="v">${fmtMult(s.bestMult)}</span></div>`;
   $('endScreen').classList.add('show');
 }
 
