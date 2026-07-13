@@ -1443,7 +1443,7 @@ function fanEffects(){
 /* 12 crans crème : rayon calculé cran par cran pour que le COIN le plus externe
    du carré soit tangent au contour (Rt %) — jamais au-delà, même en diagonale */
 const CHIP_NOTCHES=(()=>{
-  const Rc=43;                 // rayon FIXE = milieu exact de la bande accent (entre liseret ext. et int.) → crans pile centrés
+  const Rc=42;                 // rayon FIXE des crans, centré entre liseret extérieur et intérieur (choisi visuellement)
   let s='';
   for(let i=0;i<12;i++){
     const a=i*Math.PI/6;
