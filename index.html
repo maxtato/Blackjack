@@ -250,9 +250,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #multPop.go{animation:popUp 1.3s cubic-bezier(.2,1.5,.4,1) forwards}
 @keyframes popUp{0%{opacity:0;transform:translate(-50%,-30%) scale(.4)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}80%{opacity:1;transform:translate(-50%,-56%) scale(1)}100%{opacity:0;transform:translate(-50%,-74%) scale(1)}}
 /* étiquettes de décompte « à la Balatro » : valeur qui pop sur chaque carte, puis multiplicateurs */
-.sctag{position:absolute;transform:translate(-50%,-50%);pointer-events:none;z-index:42;font-family:'Jersey 15',monospace;font-weight:700;font-size:23px;line-height:1;white-space:nowrap;text-shadow:1px 1px 0 #000,0 0 5px rgba(0,0,0,.55);will-change:transform,opacity}
+/* étiquette de points : petit cadre ajusté au texte (pas une bande large) */
+.sctag{position:absolute;width:max-content;box-sizing:border-box;transform:translate(-50%,-50%);pointer-events:none;z-index:42;font-family:'Jersey 15',monospace;font-weight:700;font-size:20px;line-height:1;white-space:nowrap;text-shadow:1px 1px 0 #000;background:rgba(8,10,16,.86);padding:3px 8px;clip-path:var(--pc);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);will-change:transform,opacity}
 .sctag.chip{color:#7fd2ff}
-.sctag.mult{color:#ffe08a;font-size:18px}
+.sctag.mult{color:#ffe08a;font-size:16px}
 .sctag.mult b{color:#ff5470}
 
 /* ===== DOCK / BET / CONSUMABLES ===== */
@@ -351,11 +352,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* panneau d'inspection : même jeton, en plus grand */
 #inspectBody .inspCard{position:relative;width:104px;height:104px;margin:0 auto 12px;background:transparent;border:none;border-radius:0;box-shadow:none;animation:none;display:flex;align-items:center;justify-content:center;overflow:visible}
 #inspectBody .inspCard .chps{transform:translate(3px,4px)}
-#inspectBody .inspCard .chpd{inset:4px}
-#inspectBody .inspCard .chpl{inset:12px}
-#inspectBody .inspCard .chpb{inset:15px}
 #inspectBody .inspCard .chpdia{width:6px;height:11px}
-#inspectBody .inspCard .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:24px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000;max-width:62%;overflow:hidden;white-space:nowrap}
+#inspectBody .inspCard .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:26px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000;max-width:64%;overflow:hidden;white-space:nowrap}
+#inspectBody .inspCard .ft small{font-size:17px;font-weight:700;margin-left:.2em}
 #inspectActions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 .shopItems{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
 .shopItem{display:flex;justify-content:space-between;align-items:center;gap:12px;background:linear-gradient(180deg,var(--panelDk),var(--panelDk2));border:3px solid var(--ink);border-radius:var(--r);padding:11px 12px;text-align:left;box-shadow:var(--shS);transition:transform .08s}
@@ -447,24 +446,26 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* JETON pixel : ombre dure (disque décalé) + disque accent (contour fin --disc) + 12 crans crème + intérieur noir — réutilisable (plateau + panneau) */
 .chps{position:absolute;inset:0;clip-path:var(--disc);background:rgba(0,0,0,.5);transform:translate(2px,3px);z-index:0}
 .chpo{position:absolute;inset:0;clip-path:var(--disc);background:#f4ecd8;z-index:1}                 /* liseret extérieur (crème) */
-.chpd{position:absolute;inset:2px;clip-path:var(--disc);z-index:2}                                  /* bande accent */
-.chpn{position:absolute;width:7.7%;height:7.7%;background:#f4ecd8;transform:translate(-50%,-50%);z-index:3;pointer-events:none}   /* taille proportionnelle → alignement identique à toutes les tailles de jeton */
-.chpl{position:absolute;inset:6px;clip-path:var(--disc);background:#f4ecd8;z-index:4}                /* liseret intérieur (crème) */
-.chpb{position:absolute;inset:7.5px;clip-path:var(--disc);background:#08090d;z-index:5}
+.chpd{position:absolute;inset:3.5%;clip-path:var(--disc);z-index:2}                                  /* bande accent */
+/* crans : taille en % + rayon fixe (dans le générateur) → anneau régulier, identique à toutes les tailles */
+.chpn{position:absolute;width:5%;height:5%;background:#f4ecd8;transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+.chpl{position:absolute;inset:10.5%;clip-path:var(--disc);background:#f4ecd8;z-index:4}              /* liseret intérieur (crème) */
+.chpb{position:absolute;inset:13%;clip-path:var(--disc);background:#08090d;z-index:5}
 /* deux losanges décoratifs FINS (pixel, allongés) au-dessus et au-dessous du texte (teinte accent) */
 .chpdia{position:absolute;left:50%;transform:translateX(-50%);width:4px;height:7px;z-index:6;pointer-events:none;clip-path:polygon(66.67% 10%,66.67% 20%,83.33% 20%,83.33% 40%,100% 40%,100% 60%,83.33% 60%,83.33% 80%,66.67% 80%,66.67% 90%,33.33% 90%,33.33% 80%,16.67% 80%,16.67% 60%,0 60%,0 40%,16.67% 40%,16.67% 20%,33.33% 20%,33.33% 10%)}
 .chpdia.dtop{top:20%}
 .chpdia.dbot{bottom:20%}
 .joker .chpdia{background:#ffe08a}
 .tarot .chpdia{background:#e6d2ff}
-.joker .chpd{background:#e8b84a}
-.tarot .chpd{background:#c79bff}
+/* bande accent assombrie (foncé B) → les liserets clairs ressortent bien */
+.joker .chpd{background:#bd8c1f}
+.tarot .chpd{background:#8f4fe0}
 /* liserets ext.+int. dans la teinte accent vive (variante C) — crans restent crème */
 .joker .chpo,.joker .chpl{background:#ffe08a}
 .tarot .chpo,.tarot .chpl{background:#e6d2ff}
 /* texte borné au centre noir : max-width sous le diamètre du centre → n'empiète jamais sur le liseret intérieur */
-#effects .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000;max-width:64%;overflow:hidden;white-space:nowrap}
-#effects .ft small{font-size:9px;font-weight:700;margin-left:.25em}
+#effects .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:15px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000;max-width:66%;overflow:hidden;white-space:nowrap}
+#effects .ft small{font-size:12px;font-weight:700;margin-left:.2em}
 #effects .joker:nth-child(2n){animation-delay:-1.5s}#effects .joker:nth-child(3n){animation-delay:-2.9s}
 #effects .joker .ic{font-size:18px}#effects .joker .nm{font-size:7px}
 #effects .tarot:nth-child(2n){animation-delay:-2.2s}
@@ -563,8 +564,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #actions{display:flex;flex-direction:column;gap:9px;height:108px}
 .actMain{display:grid;grid-template-columns:1fr 1fr;gap:9px;flex:1}
 .actMain .span{grid-column:1/-1}
-.actWide{display:flex;flex-direction:row;gap:9px;flex:1}
+.actWide{display:flex;flex-direction:row;gap:9px;flex:1;justify-content:flex-start}
 .actMain>.btn,.actWide>.btn{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 9px}
+/* boutons spéciaux (DOUBLER / FORCER / SÉPARER) : même largeur que TIRER (moitié de rangée), centrés si seuls */
+.actWide>.btn{flex:0 0 calc(50% - 4.5px)}
 /* phase de mise : bouton MISER moins haut, mais centré verticalement au même endroit */
 .actMain.betmain{align-content:center}
 .actMain.betmain>.btn{height:auto;padding:15px 10px}
@@ -683,10 +686,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .shopico{width:26px;height:26px;object-fit:contain;image-rendering:pixelated;vertical-align:-7px;margin-right:3px}
 /* jeton boutique : même design que le plateau et le panneau d'inspection */
 .shopItem .shopTok{position:relative;flex:0 0 auto;width:64px;height:64px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;border-radius:0;box-shadow:none;animation:none;overflow:visible}
-.shopItem .shopTok .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:16px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000;max-width:62%;overflow:hidden;white-space:nowrap}
-.shopItem .shopTok .ft small{font-size:10px;font-weight:700;margin-left:.25em}
+.shopItem .shopTok .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:18px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000;max-width:64%;overflow:hidden;white-space:nowrap}
+.shopItem .shopTok .ft small{font-size:13px;font-weight:700;margin-left:.2em}
 /* accent « service » (turquoise) pour le jeton boutique */
-.svc .chpd{background:#34b6a8}
+.svc .chpd{background:#177b70}
 .svc .chpo,.svc .chpl,.svc .chpdia{background:#8fe3d9}
 .shopItem .sInfo{flex:1;text-align:left}
 /* ===== LA PLANQUE ===== */
@@ -1441,14 +1444,11 @@ function fanEffects(){
 /* 12 crans crème : rayon calculé cran par cran pour que le COIN le plus externe
    du carré soit tangent au contour (Rt %) — jamais au-delà, même en diagonale */
 const CHIP_NOTCHES=(()=>{
-  const Rt=45.5;               // rayon-cible du coin externe : sous le liseret extérieur, pas dessus
-  const h=100*2/52;            // demi-cran en % (cran 4px sur un jeton de 52px)
+  const Rc=42;                 // rayon FIXE des crans, centré entre liseret extérieur et intérieur (choisi visuellement)
   let s='';
   for(let i=0;i<12;i++){
-    const a=i*Math.PI/6,A=Math.abs(Math.sin(a)),B=Math.abs(Math.cos(a));
-    // R tel que sqrt((R·A+h)²+(R·B+h)²)=Rt  →  coin externe tangent, sans déborder
-    const R=-h*(A+B)+Math.sqrt(h*h*(A+B)*(A+B)-2*h*h+Rt*Rt);
-    const x=(50+R*Math.sin(a)).toFixed(2),y=(50-R*Math.cos(a)).toFixed(2);
+    const a=i*Math.PI/6;
+    const x=(50+Rc*Math.sin(a)).toFixed(2),y=(50-Rc*Math.cos(a)).toFixed(2);
     s+=`<i class="chpn" style="left:${x}%;top:${y}%"></i>`;
   }
   return s;
