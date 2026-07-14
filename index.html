@@ -572,6 +572,8 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 #scorebox .k{font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:0}
 #scorebox .seg.chips .v{font-size:18px;color:#fff;font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,.4);white-space:nowrap}
 #scorebox .seg.mult .v{font-size:18px;color:var(--gold);font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,.4);white-space:nowrap}
+/* nombres du header (GAIN/CAGNOTTE, MISE, MULT) sur la ligne de base : moins de décalage que les petits chiffres du bas */
+#gainStat .v,#scorebox .seg .v{font-variant-numeric:lining-nums;font-feature-settings:"lnum" 1}
 #scorebox.hot{box-shadow:0 0 0 2px var(--gold)}
 .stat.goal.hit{animation:goalHit .6s ease-out}
 .stat.goal.hit .v{color:var(--gold)}
