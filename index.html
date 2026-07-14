@@ -448,8 +448,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .chpo{position:absolute;inset:0;clip-path:var(--disc);background:#f4ecd8;z-index:1}                 /* liseret extérieur (crème) */
 .chpd{position:absolute;inset:3.5%;clip-path:var(--disc);z-index:2}                                  /* bande accent */
 /* crans : inserts TRAPÈZE crème (façon tranche de jeton) + courts ticks foncés intercalés (rayons) — rayon fixe + rotation dans le générateur → anneau régulier à toutes les tailles */
-.chpn{position:absolute;width:8%;height:12%;background:#f4ecd8;clip-path:polygon(16% 0,84% 0,100% 100%,0 100%);transform:translate(-50%,-50%);z-index:3;pointer-events:none}
-.chptk{position:absolute;width:2.4%;height:5%;transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+.chpn{position:absolute;width:7.5%;height:12%;background:#f4ecd8;clip-path:polygon(16% 0,84% 0,100% 100%,0 100%);transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+.chptk{position:absolute;width:5%;height:7%;clip-path:polygon(16% 0,84% 0,100% 100%,0 100%);transform:translate(-50%,-50%);z-index:3;pointer-events:none}
 .joker .chptk{background:#6f4e0a}
 .tarot .chptk{background:#5e2aa6}
 .chpl{position:absolute;inset:13%;clip-path:var(--disc);background:#f4ecd8;z-index:4}                /* liseret intérieur (crème) — repoussé pour élargir la bande accent */
@@ -1448,8 +1448,8 @@ function fanEffects(){
 /* 12 crans crème : rayon calculé cran par cran pour que le COIN le plus externe
    du carré soit tangent au contour (Rt %) — jamais au-delà, même en diagonale */
 const CHIP_NOTCHES=(()=>{
-  const Rc=40;                 // rayon des inserts trapèze (centrés dans la bande accent)
-  const Rt=43.5;               // rayon des ticks foncés (plus vers l'extérieur), intercalés à +15°
+  const Rc=40;                 // rayon des inserts trapèze crème (centrés dans la bande accent)
+  const Rt=41;                 // rayon des trapèzes foncés intercalés à +15° (deux tons)
   let s='';
   for(let i=0;i<12;i++){
     const a=i*Math.PI/6;
