@@ -1094,7 +1094,7 @@ const RELIC_POOL=[
   {id:'collector',name:'Collectionneur',ic:'🌈',desc:'Relique permanente. Les éditions spéciales (FOIL/HOLO/POLY) apparaissent 3× plus souvent sur tes cartes.',cost:16},
   {id:'maitresse',name:'Carte maîtresse',ic:'🎴',desc:'Relique permanente. Ta 1ʳᵉ carte de chaque main est FOIL : jetons bonus quand tu gagnes.',cost:14},
   {id:'bruleur',name:'Brûleur',ic:'🔥',desc:'Relique permanente. Si tu gagnes une main avec une pression ≥ 50 % : gain de la main ×1,5.',cost:17},
-  {id:'portebonheur',name:'Porte-bonheur',ic:'🍀',desc:'Relique permanente. +1 emplacement de carte Tarot (tu peux garder une carte de plus).',cost:12},
+  {id:'portebonheur',name:'Porte-bonheur',ic:'🍀',desc:'Relique permanente. +1 emplacement de jeton Tarot (tu peux garder un jeton de plus).',cost:12},
   {id:'diplomate',name:'Diplomate',ic:'🤝',desc:'Relique permanente. En cas d’égalité avec le croupier, tu récupères la moitié de ta mise.',cost:11},
 ];
 
@@ -1535,7 +1535,7 @@ function openInspect(kind,i){
   inspectRef={kind,i};
   const tk=SHOPTOK[item.id]||{t:item.name,c:'#a64dff'};
   const tag=kind==='tarot'
-    ?'<span style="color:var(--grape)">CARTE TAROT · à usage unique</span>'
+    ?'<span style="color:var(--grape)">JETON TAROT · à usage unique</span>'
     :'<span style="color:var(--yellow)">RELIQUE · effet permanent</span>';
   $('inspectBody').innerHTML=`<div class="inspCard ${kind==='tarot'?'tarot':'joker'}">${chipInner()}<span class="ft" style="color:${tk.c}">${tk.t}</span></div>`
     +`<h1 class="win" style="font-size:24px;margin:0 0 4px">${item.name}</h1>`
@@ -2043,7 +2043,7 @@ function renderShop(){
     const tag=isSvc
       ?'<span style="font-size:9px;color:var(--teal)">✚ SERVICE</span>'
       :isTarot
-      ?'<span style="font-size:9px;color:var(--grape)">'+STAR+' CARTE</span>'
+      ?'<span style="font-size:9px;color:var(--grape)">'+STAR+' TAROT</span>'
       :'<span style="font-size:9px;color:var(--yellow)">◆ RELIQUE</span>';
     const tk=SHOPTOK[r.id]||{t:'?',c:'#ffce3a'};
     const chipCls=isSvc?'svc':isTarot?'tarot':'joker';
