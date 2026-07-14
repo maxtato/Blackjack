@@ -448,7 +448,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .chpo{position:absolute;inset:0;clip-path:var(--disc);background:#f4ecd8;z-index:1}                 /* liseret extérieur (crème) */
 .chpd{position:absolute;inset:3.5%;clip-path:var(--disc);z-index:2}                                  /* bande accent */
 /* crans : petits TRAITS radiaux (fins) traversant la bande accent — rayon fixe + rotation dans le générateur → anneau régulier, identique à toutes les tailles */
-.chpn{position:absolute;width:2.4%;height:11%;background:#f4ecd8;transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+.chpn{position:absolute;width:3.3%;height:11%;background:#f4ecd8;transform:translate(-50%,-50%);z-index:3;pointer-events:none}
 .chpl{position:absolute;inset:13%;clip-path:var(--disc);background:#f4ecd8;z-index:4}                /* liseret intérieur (crème) — repoussé pour élargir la bande accent */
 .chpb{position:absolute;inset:15.5%;clip-path:var(--disc);background:#08090d;z-index:5}
 /* deux losanges décoratifs FINS (pixel, allongés) au-dessus et au-dessous du texte (teinte accent) */
@@ -1462,7 +1462,7 @@ function fitChipText(){
   document.querySelectorAll('#effects .ft,#inspectBody .inspCard .ft,.shopItem .shopTok .ft').forEach(ft=>{
     const chip=ft.parentElement;if(!chip)return;
     ft.style.fontSize='';                              // repart de la taille CSS
-    const target=chip.getBoundingClientRect().width*0.66;   // largeur utile du centre noir
+    const target=chip.getBoundingClientRect().width*0.60;   // largeur utile du centre noir (texte un peu plus petit)
     if(!target)return;
     let fs=parseFloat(getComputedStyle(ft).fontSize)||14,g=0;
     // getBoundingClientRect fonctionne sur le span inline (scrollWidth renvoyait 0)
