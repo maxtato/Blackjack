@@ -510,7 +510,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #table{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;max-width:580px;position:relative;padding:6px 3px 6px;border:none;border-radius:0;background:none;overflow:visible;box-shadow:none}
 #table::before,#table::after{display:none!important}
 /* petit bouton VOIR (lunettes) : posé sur le coin du tapis, hors de la rangée d'actions */
-#peekBtn{position:absolute;top:50%;right:12px;transform:translateY(-50%);z-index:6;display:none;font-family:'Jersey 15',monospace;font-weight:700;font-size:17px;letter-spacing:.05em;color:#fff;background:#54565e;border:none;clip-path:var(--pc);padding:13px 16px;line-height:1;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.4);animation:btnTwitch 1.1s steps(1,end) infinite}
+#peekBtn{position:absolute;top:50%;right:12px;transform:translateY(-50%);z-index:6;display:none;font-family:'Jersey 15',monospace;font-weight:700;font-size:17px;letter-spacing:.05em;color:#fff;background:var(--grape);border:none;clip-path:var(--pc);padding:13px 16px;line-height:1;cursor:pointer;box-shadow:0 4px 0 var(--purpleDk);animation:btnTwitch 1.1s steps(1,end) infinite}
 #peekBtn.show{display:block}
 #peekBtn:active{transform:translateY(calc(-50% + 2px));filter:brightness(.92)}
 /* FELT = tapis teal, bords relevés, légèrement incliné */
@@ -662,7 +662,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 
 /* petit jeton de revenu (pourboire/mécène) en début de main, en haut à droite du tapis */
 #turnPop{position:absolute;inset:0;pointer-events:none;z-index:7;font-family:'Jersey 15',monospace;image-rendering:pixelated}
-#turnPop .tp-coin{position:absolute;top:12px;right:12px;background:var(--gold);color:#3a2a06;clip-path:var(--pc);padding:7px 12px;text-align:center;box-shadow:3px 5px 0 rgba(0,0,0,.4);opacity:0}
+#turnPop .tp-coin{position:absolute;top:34px;right:12px;background:var(--gold);color:#3a2a06;clip-path:var(--pc);padding:7px 12px;text-align:center;box-shadow:3px 5px 0 rgba(0,0,0,.4);opacity:0}
 #turnPop .tp-coin b{font-size:14px;display:flex;align-items:flex-end;justify-content:center;gap:1px;line-height:1;font-weight:700}
 #turnPop .tp-coin b .n{font-size:31px;line-height:.8}
 #turnPop .tp-coin b .cur{font-size:13px;align-self:flex-start;line-height:1.2}
@@ -1439,7 +1439,7 @@ function fanEffects(){
   const ef=Array.prototype.slice.call(document.querySelectorAll('#effects .joker,#effects .tarot'));
   const n=ef.length,mid=(n-1)/2;
   ef.forEach((el,i)=>{const rot=(i-mid)*5;const dy=Math.abs(i-mid)*2.2;el.style.translate=`0 ${dy.toFixed(1)}px`;el.style.rotate=`${rot.toFixed(1)}deg`;el.style.zIndex=20-Math.round(Math.abs(i-mid));});
-  fitChipText();
+  scheduleFitChipText();
 }
 /* jeton : disque + 12 crans crème (répartis à 30°) + intérieur noir — même markup partout */
 /* 12 crans crème : rayon calculé cran par cran pour que le COIN le plus externe
@@ -1462,12 +1462,18 @@ function fitChipText(){
   document.querySelectorAll('#effects .ft,#inspectBody .inspCard .ft,.shopItem .shopTok .ft').forEach(ft=>{
     const chip=ft.parentElement;if(!chip)return;
     ft.style.fontSize='';                              // repart de la taille CSS
-    const target=chip.getBoundingClientRect().width*0.60;   // largeur utile du centre noir (texte un peu plus petit)
+    const target=chip.getBoundingClientRect().width*0.52;   // largeur utile du centre noir (texte plus petit)
     if(!target)return;
     let fs=parseFloat(getComputedStyle(ft).fontSize)||14,g=0;
     // getBoundingClientRect fonctionne sur le span inline (scrollWidth renvoyait 0)
-    while(ft.getBoundingClientRect().width>target&&fs>7&&g<40){fs-=0.5;ft.style.fontSize=fs+'px';g++;}
+    while(ft.getBoundingClientRect().width>target&&fs>6&&g<48){fs-=0.5;ft.style.fontSize=fs+'px';g++;}
   });
+}
+/* rejoue l'ajustement après layout + chargement de la police (sinon mesure trop tôt = texte non réduit) */
+function scheduleFitChipText(){
+  fitChipText();
+  requestAnimationFrame(fitChipText);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitChipText);
 }
 function renderRelics(){
   const wrap=$('relics');wrap.innerHTML='';
@@ -1535,7 +1541,7 @@ function openInspect(kind,i){
     +`<h1 class="win" style="font-size:24px;margin:0 0 4px">${item.name}</h1>`
     +`<p style="font-size:10px;letter-spacing:.08em;margin:0 0 12px">${tag}</p>`
     +`<p style="color:#dfe9ff;font-size:13px;line-height:1.6;margin:0 0 4px">${item.desc}</p>`;
-  fitChipText();
+  scheduleFitChipText();
   const act=$('inspectActions');act.innerHTML='';
   const mk=(label,cls,fn,dis)=>{const b=document.createElement('button');b.className='btn '+cls;b.style.cssText='font-size:13px;padding:11px 15px';b.innerHTML=label;if(dis)b.disabled=true;else b.onclick=fn;act.appendChild(b);return b;};
   if(kind==='tarot'){
@@ -2051,7 +2057,7 @@ function renderShop(){
     b.onclick=()=>buyShopItem(i,d,b);
     d.appendChild(b);box.appendChild(d);
   });
-  fitChipText();
+  scheduleFitChipText();
   const rb=$('rerollBtn');if(rb){rb.textContent='RELANCER ('+abbr(rerollCost)+' $)';rb.disabled=G.bank<rerollCost;}
 }
 function buyShopItem(i,el,btn){
