@@ -510,7 +510,7 @@ body.inf #objFill{background:linear-gradient(90deg,var(--grape),#c98bff)}
 body.inf #topbar .tstats{flex-wrap:wrap;gap:8px}
 body.inf #topbar #gainStat{order:-1;flex:1 1 100%;justify-content:center;align-items:center;padding:6px 8px 4px}
 body.inf #topbar #gainStat .lbl{font-size:11px;letter-spacing:.22em;color:var(--muted);display:block;margin-bottom:1px}
-body.inf #topbar #gainStat .v{font-size:38px;line-height:.95;color:var(--gold);text-shadow:2px 3px 0 #000,0 0 16px rgba(255,206,58,.32)}
+body.inf #topbar #gainStat .v{font-size:38px;line-height:.95;color:var(--gold);text-shadow:2px 3px 0 #000,0 0 16px rgba(255,206,58,.32);font-variant-numeric:lining-nums;font-feature-settings:"lnum" 1}   /* chiffres alignés : à cette taille le décalage old-style deviendrait énorme */
 body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-content:center}
 /* barre de PRESSION : petite, posée en haut du tapis */
 #pBar{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:240px;height:19px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:rgba(8,22,18,.78);z-index:3;box-shadow:none;animation:pbarBuzz .16s steps(1,end) infinite;will-change:transform}
