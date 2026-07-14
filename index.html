@@ -452,10 +452,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .chptk{position:absolute;width:5%;height:7%;clip-path:polygon(16% 0,84% 0,100% 100%,0 100%);transform:translate(-50%,-50%);z-index:3;pointer-events:none}
 .joker .chptk{background:#6f4e0a}
 .tarot .chptk{background:#5e2aa6}
+.svc .chptk{background:#0c5249}
 .chpl{position:absolute;inset:13%;clip-path:var(--disc);background:#f4ecd8;z-index:4}                /* liseret intérieur (crème) — repoussé pour élargir la bande accent */
 .chpb{position:absolute;inset:15.5%;clip-path:var(--disc);background:#08090d;z-index:5}
 /* deux losanges décoratifs FINS (pixel, allongés) au-dessus et au-dessous du texte (teinte accent) */
-.chpdia{position:absolute;left:50%;transform:translateX(-50%);width:4px;height:7px;z-index:6;pointer-events:none;clip-path:polygon(66.67% 10%,66.67% 20%,83.33% 20%,83.33% 40%,100% 40%,100% 60%,83.33% 60%,83.33% 80%,66.67% 80%,66.67% 90%,33.33% 90%,33.33% 80%,16.67% 80%,16.67% 60%,0 60%,0 40%,16.67% 40%,16.67% 20%,33.33% 20%,33.33% 10%)}
+.chpdia{position:absolute;left:50%;transform:translateX(-50%);width:6%;height:10%;z-index:6;pointer-events:none;clip-path:polygon(66.67% 10%,66.67% 20%,83.33% 20%,83.33% 40%,100% 40%,100% 60%,83.33% 60%,83.33% 80%,66.67% 80%,66.67% 90%,33.33% 90%,33.33% 80%,16.67% 80%,16.67% 60%,0 60%,0 40%,16.67% 40%,16.67% 20%,33.33% 20%,33.33% 10%)}
 .chpdia.dtop{top:20%}
 .chpdia.dbot{bottom:20%}
 .joker .chpdia{background:#ffe08a}
@@ -1463,16 +1464,18 @@ const CHIP_NOTCHES=(()=>{
 })();
 /* jeton : ombre + liseret ext. crème + bande accent + crans + liseret int. crème + centre noir */
 function chipInner(){return '<i class="chps"></i><i class="chpo"></i><i class="chpd"></i>'+CHIP_NOTCHES+'<i class="chpl"></i><i class="chpb"></i><i class="chpdia dtop"></i><i class="chpdia dbot"></i>';}
-/* ajuste la taille du texte de chaque jeton pour qu'il tienne dans le centre (jamais coupé) */
+/* dimensionne le texte de chaque jeton PROPORTIONNELLEMENT à sa taille (identique en boutique/jeu/détail) :
+   on part d'une taille max (les libellés courts remplissent bien le centre) puis on réduit seulement
+   si le texte est trop large → variation « fun » selon la longueur, cohérente à toutes les échelles */
 function fitChipText(){
   document.querySelectorAll('#effects .ft,#inspectBody .inspCard .ft,.shopItem .shopTok .ft').forEach(ft=>{
     const chip=ft.parentElement;if(!chip)return;
-    ft.style.fontSize='';                              // repart de la taille CSS
-    const target=chip.getBoundingClientRect().width*0.52;   // largeur utile du centre noir (texte plus petit)
-    if(!target)return;
-    let fs=parseFloat(getComputedStyle(ft).fontSize)||14,g=0;
-    // getBoundingClientRect fonctionne sur le span inline (scrollWidth renvoyait 0)
-    while(ft.getBoundingClientRect().width>target&&fs>6&&g<48){fs-=0.5;ft.style.fontSize=fs+'px';g++;}
+    const W=chip.getBoundingClientRect().width;
+    if(!W)return;
+    const target=W*0.60;                 // largeur utile du centre noir
+    let fs=W*0.30, floor=W*0.135, g=0;   // départ = 30% du jeton (max), plancher ≈ libellé très long
+    ft.style.fontSize=fs+'px';
+    while(ft.getBoundingClientRect().width>target&&fs>floor&&g<80){fs-=0.5;ft.style.fontSize=fs+'px';g++;}
   });
 }
 /* rejoue l'ajustement après layout + chargement de la police (sinon mesure trop tôt = texte non réduit) */
