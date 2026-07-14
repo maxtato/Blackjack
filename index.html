@@ -447,8 +447,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .chps{position:absolute;inset:0;clip-path:var(--disc);background:rgba(0,0,0,.5);transform:translate(2px,3px);z-index:0}
 .chpo{position:absolute;inset:0;clip-path:var(--disc);background:#f4ecd8;z-index:1}                 /* liseret extérieur (crème) */
 .chpd{position:absolute;inset:3.5%;clip-path:var(--disc);z-index:2}                                  /* bande accent */
-/* crans : petits TRAITS radiaux (fins) traversant la bande accent — rayon fixe + rotation dans le générateur → anneau régulier, identique à toutes les tailles */
-.chpn{position:absolute;width:6%;height:11%;background:#f4ecd8;transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+/* crans : inserts TRAPÈZE crème (façon tranche de jeton) + courts ticks foncés intercalés (rayons) — rayon fixe + rotation dans le générateur → anneau régulier à toutes les tailles */
+.chpn{position:absolute;width:8%;height:12%;background:#f4ecd8;clip-path:polygon(16% 0,84% 0,100% 100%,0 100%);transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+.chptk{position:absolute;width:2.4%;height:5%;transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+.joker .chptk{background:#6f4e0a}
+.tarot .chptk{background:#5e2aa6}
 .chpl{position:absolute;inset:13%;clip-path:var(--disc);background:#f4ecd8;z-index:4}                /* liseret intérieur (crème) — repoussé pour élargir la bande accent */
 .chpb{position:absolute;inset:15.5%;clip-path:var(--disc);background:#08090d;z-index:5}
 /* deux losanges décoratifs FINS (pixel, allongés) au-dessus et au-dessous du texte (teinte accent) */
@@ -1445,13 +1448,16 @@ function fanEffects(){
 /* 12 crans crème : rayon calculé cran par cran pour que le COIN le plus externe
    du carré soit tangent au contour (Rt %) — jamais au-delà, même en diagonale */
 const CHIP_NOTCHES=(()=>{
-  const Rc=40;                 // rayon FIXE des crans : traits allongés vers l'intérieur (bord extérieur inchangé), rejoignent le liseret intérieur
+  const Rc=40;                 // rayon des inserts trapèze (centrés dans la bande accent)
+  const Rt=43.5;               // rayon des ticks foncés (plus vers l'extérieur), intercalés à +15°
   let s='';
   for(let i=0;i<12;i++){
     const a=i*Math.PI/6;
     const x=(50+Rc*Math.sin(a)).toFixed(2),y=(50-Rc*Math.cos(a)).toFixed(2);
-    const rot=(i*30).toFixed(0);   // trait orienté radialement (pointe vers le centre)
-    s+=`<i class="chpn" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%) rotate(${rot}deg)"></i>`;
+    s+=`<i class="chpn" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%) rotate(${(i*30)}deg)"></i>`;
+    const a2=(i+0.5)*Math.PI/6;
+    const x2=(50+Rt*Math.sin(a2)).toFixed(2),y2=(50-Rt*Math.cos(a2)).toFixed(2);
+    s+=`<i class="chptk" style="left:${x2}%;top:${y2}%;transform:translate(-50%,-50%) rotate(${(i*30+15)}deg)"></i>`;
   }
   return s;
 })();
