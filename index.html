@@ -418,6 +418,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #topbar .tmeta{font-size:12px;font-weight:400;color:var(--paper);margin-top:8px}
 /* compteur de vies (secondes chances) — collé tout à droite */
 .lives{flex:0 0 auto;margin-left:auto;display:flex;align-items:center;gap:5px;font-size:16px;font-weight:700;color:var(--red);background:var(--panelDk2);clip-path:var(--pc);padding:5px 11px;text-shadow:1px 1px 0 var(--ink)}
+/* groupe haut-droit : bouton pause + vies */
+.thead-right{margin-left:auto;flex:0 0 auto;display:flex;align-items:center;gap:8px}
+.thead-right .lives{margin-left:0}
+#pauseBtn{flex:0 0 auto;width:36px;height:30px;background:var(--panelDk2);color:var(--paper);border:none;clip-path:var(--pc);font-family:'Jersey 15',monospace;font-weight:700;font-size:15px;letter-spacing:2px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 0 0 2px;box-shadow:0 3px 0 rgba(0,0,0,.4)}
+#pauseBtn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.4)}
 .lives svg{height:15px;width:auto}
 .lives .lvn{line-height:1}
 .lives.empty{color:var(--muted);opacity:.7}
@@ -781,7 +786,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 <div id="shaker">
 <div id="app">
   <header id="topbar">
-    <div class="tname"><div class="tncol"><span id="tableName">Arrière-salle</span><span class="tmeta" id="tableMeta"></span><span class="rule" id="ruleText"></span></div><div id="lives" class="lives" title="Vies (secondes chances)"></div></div>
+    <div class="tname"><div class="tncol"><span id="tableName">Arrière-salle</span><span class="tmeta" id="tableMeta"></span><span class="rule" id="ruleText"></span></div><div class="thead-right"><button id="pauseBtn" onclick="openPause()" title="Pause" aria-label="Pause">II</button><div id="lives" class="lives" title="Vies (secondes chances)"></div></div></div>
     <div class="tstats">
       <div class="stat turnstat" id="turnStat">
         <span class="tnum" id="turnNum">4</span>
@@ -896,6 +901,19 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     <div class="shopBtns" style="margin-top:14px;gap:9px">
       <button class="btn b-teal" onclick="closeRestart()" style="flex:1">ANNULER</button>
       <button class="btn b-red" onclick="doRestart()" style="flex:1">RECOMMENCER</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAUSE -->
+<div class="overlay" id="pauseScreen">
+  <div class="ovpanel" style="max-width:340px;text-align:center">
+    <h1 class="win" style="font-size:30px">PAUSE</h1>
+    <p style="margin-bottom:16px">La partie est en attente.</p>
+    <div class="shopBtns" style="flex-direction:column;gap:10px">
+      <button class="btn b-teal menu" onclick="resumeGame()" style="width:100%">REPRENDRE</button>
+      <button class="btn b-purple menu" onclick="pauseRules()" style="width:100%">RÈGLES</button>
+      <button class="btn b-blue menu" onclick="quitToMenu()" style="width:100%">RETOUR AU MENU<small>abandonne la partie · tu encaisses ta réputation</small></button>
     </div>
   </div>
 </div>
@@ -2219,7 +2237,13 @@ function showWord(kind,gain,mult,natural,bust){
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
 }
 function openRules(){$('rulesScreen').classList.add('show');}
-function closeRules(){$('rulesScreen').classList.remove('show');}
+function closeRules(){$('rulesScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
+/* ---------- pause en jeu ---------- */
+let pauseReturn=false;
+function openPause(){audioInit();$('pauseScreen').classList.add('show');}
+function resumeGame(){$('pauseScreen').classList.remove('show');}
+function pauseRules(){$('pauseScreen').classList.remove('show');pauseReturn=true;openRules();}   // à la fermeture des règles on revient à la pause
+function quitToMenu(){$('pauseScreen').classList.remove('show');endRun(false);}                   // abandonne : encaisse la réputation puis écran de fin → La Planque
 // annonce du nombre de tours restants, en gros, au début de chaque main
 // le nombre de tours est désormais permanent dans la barre du haut :
 // on ne garde qu'un petit jeton de revenu (pourboire/mécène) au début de la main
