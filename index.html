@@ -1439,7 +1439,7 @@ function fanEffects(){
   const ef=Array.prototype.slice.call(document.querySelectorAll('#effects .joker,#effects .tarot'));
   const n=ef.length,mid=(n-1)/2;
   ef.forEach((el,i)=>{const rot=(i-mid)*5;const dy=Math.abs(i-mid)*2.2;el.style.translate=`0 ${dy.toFixed(1)}px`;el.style.rotate=`${rot.toFixed(1)}deg`;el.style.zIndex=20-Math.round(Math.abs(i-mid));});
-  fitChipText();
+  scheduleFitChipText();
 }
 /* jeton : disque + 12 crans crème (répartis à 30°) + intérieur noir — même markup partout */
 /* 12 crans crème : rayon calculé cran par cran pour que le COIN le plus externe
@@ -1462,12 +1462,18 @@ function fitChipText(){
   document.querySelectorAll('#effects .ft,#inspectBody .inspCard .ft,.shopItem .shopTok .ft').forEach(ft=>{
     const chip=ft.parentElement;if(!chip)return;
     ft.style.fontSize='';                              // repart de la taille CSS
-    const target=chip.getBoundingClientRect().width*0.60;   // largeur utile du centre noir (texte un peu plus petit)
+    const target=chip.getBoundingClientRect().width*0.52;   // largeur utile du centre noir (texte plus petit)
     if(!target)return;
     let fs=parseFloat(getComputedStyle(ft).fontSize)||14,g=0;
     // getBoundingClientRect fonctionne sur le span inline (scrollWidth renvoyait 0)
-    while(ft.getBoundingClientRect().width>target&&fs>7&&g<40){fs-=0.5;ft.style.fontSize=fs+'px';g++;}
+    while(ft.getBoundingClientRect().width>target&&fs>6&&g<48){fs-=0.5;ft.style.fontSize=fs+'px';g++;}
   });
+}
+/* rejoue l'ajustement après layout + chargement de la police (sinon mesure trop tôt = texte non réduit) */
+function scheduleFitChipText(){
+  fitChipText();
+  requestAnimationFrame(fitChipText);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitChipText);
 }
 function renderRelics(){
   const wrap=$('relics');wrap.innerHTML='';
@@ -1535,7 +1541,7 @@ function openInspect(kind,i){
     +`<h1 class="win" style="font-size:24px;margin:0 0 4px">${item.name}</h1>`
     +`<p style="font-size:10px;letter-spacing:.08em;margin:0 0 12px">${tag}</p>`
     +`<p style="color:#dfe9ff;font-size:13px;line-height:1.6;margin:0 0 4px">${item.desc}</p>`;
-  fitChipText();
+  scheduleFitChipText();
   const act=$('inspectActions');act.innerHTML='';
   const mk=(label,cls,fn,dis)=>{const b=document.createElement('button');b.className='btn '+cls;b.style.cssText='font-size:13px;padding:11px 15px';b.innerHTML=label;if(dis)b.disabled=true;else b.onclick=fn;act.appendChild(b);return b;};
   if(kind==='tarot'){
@@ -2051,7 +2057,7 @@ function renderShop(){
     b.onclick=()=>buyShopItem(i,d,b);
     d.appendChild(b);box.appendChild(d);
   });
-  fitChipText();
+  scheduleFitChipText();
   const rb=$('rerollBtn');if(rb){rb.textContent='RELANCER ('+abbr(rerollCost)+' $)';rb.disabled=G.bank<rerollCost;}
 }
 function buyShopItem(i,el,btn){
