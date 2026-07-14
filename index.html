@@ -447,8 +447,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .chps{position:absolute;inset:0;clip-path:var(--disc);background:rgba(0,0,0,.5);transform:translate(2px,3px);z-index:0}
 .chpo{position:absolute;inset:0;clip-path:var(--disc);background:#f4ecd8;z-index:1}                 /* liseret extérieur (crème) */
 .chpd{position:absolute;inset:3.5%;clip-path:var(--disc);z-index:2}                                  /* bande accent */
-/* crans : petits TRAITS radiaux (fins) traversant la bande accent — rayon fixe + rotation dans le générateur → anneau régulier, identique à toutes les tailles */
-.chpn{position:absolute;width:6%;height:11%;background:#f4ecd8;transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+/* crans : inserts TRAPÈZE crème (façon tranche de jeton) + courts ticks foncés intercalés (rayons) — rayon fixe + rotation dans le générateur → anneau régulier à toutes les tailles */
+.chpn{position:absolute;width:7.5%;height:12%;background:#f4ecd8;clip-path:polygon(16% 0,84% 0,100% 100%,0 100%);transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+.chptk{position:absolute;width:5%;height:7%;clip-path:polygon(16% 0,84% 0,100% 100%,0 100%);transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+.joker .chptk{background:#6f4e0a}
+.tarot .chptk{background:#5e2aa6}
 .chpl{position:absolute;inset:13%;clip-path:var(--disc);background:#f4ecd8;z-index:4}                /* liseret intérieur (crème) — repoussé pour élargir la bande accent */
 .chpb{position:absolute;inset:15.5%;clip-path:var(--disc);background:#08090d;z-index:5}
 /* deux losanges décoratifs FINS (pixel, allongés) au-dessus et au-dessous du texte (teinte accent) */
@@ -1094,7 +1097,7 @@ const RELIC_POOL=[
   {id:'collector',name:'Collectionneur',ic:'🌈',desc:'Relique permanente. Les éditions spéciales (FOIL/HOLO/POLY) apparaissent 3× plus souvent sur tes cartes.',cost:16},
   {id:'maitresse',name:'Carte maîtresse',ic:'🎴',desc:'Relique permanente. Ta 1ʳᵉ carte de chaque main est FOIL : jetons bonus quand tu gagnes.',cost:14},
   {id:'bruleur',name:'Brûleur',ic:'🔥',desc:'Relique permanente. Si tu gagnes une main avec une pression ≥ 50 % : gain de la main ×1,5.',cost:17},
-  {id:'portebonheur',name:'Porte-bonheur',ic:'🍀',desc:'Relique permanente. +1 emplacement de carte Tarot (tu peux garder une carte de plus).',cost:12},
+  {id:'portebonheur',name:'Porte-bonheur',ic:'🍀',desc:'Relique permanente. +1 emplacement de jeton Tarot (tu peux garder un jeton de plus).',cost:12},
   {id:'diplomate',name:'Diplomate',ic:'🤝',desc:'Relique permanente. En cas d’égalité avec le croupier, tu récupères la moitié de ta mise.',cost:11},
 ];
 
@@ -1445,13 +1448,16 @@ function fanEffects(){
 /* 12 crans crème : rayon calculé cran par cran pour que le COIN le plus externe
    du carré soit tangent au contour (Rt %) — jamais au-delà, même en diagonale */
 const CHIP_NOTCHES=(()=>{
-  const Rc=40;                 // rayon FIXE des crans : traits allongés vers l'intérieur (bord extérieur inchangé), rejoignent le liseret intérieur
+  const Rc=40;                 // rayon des inserts trapèze crème (centrés dans la bande accent)
+  const Rt=41;                 // rayon des trapèzes foncés intercalés à +15° (deux tons)
   let s='';
   for(let i=0;i<12;i++){
     const a=i*Math.PI/6;
     const x=(50+Rc*Math.sin(a)).toFixed(2),y=(50-Rc*Math.cos(a)).toFixed(2);
-    const rot=(i*30).toFixed(0);   // trait orienté radialement (pointe vers le centre)
-    s+=`<i class="chpn" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%) rotate(${rot}deg)"></i>`;
+    s+=`<i class="chpn" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%) rotate(${(i*30)}deg)"></i>`;
+    const a2=(i+0.5)*Math.PI/6;
+    const x2=(50+Rt*Math.sin(a2)).toFixed(2),y2=(50-Rt*Math.cos(a2)).toFixed(2);
+    s+=`<i class="chptk" style="left:${x2}%;top:${y2}%;transform:translate(-50%,-50%) rotate(${(i*30+15)}deg)"></i>`;
   }
   return s;
 })();
@@ -1535,7 +1541,7 @@ function openInspect(kind,i){
   inspectRef={kind,i};
   const tk=SHOPTOK[item.id]||{t:item.name,c:'#a64dff'};
   const tag=kind==='tarot'
-    ?'<span style="color:var(--grape)">CARTE TAROT · à usage unique</span>'
+    ?'<span style="color:var(--grape)">JETON TAROT · à usage unique</span>'
     :'<span style="color:var(--yellow)">RELIQUE · effet permanent</span>';
   $('inspectBody').innerHTML=`<div class="inspCard ${kind==='tarot'?'tarot':'joker'}">${chipInner()}<span class="ft" style="color:${tk.c}">${tk.t}</span></div>`
     +`<h1 class="win" style="font-size:24px;margin:0 0 4px">${item.name}</h1>`
@@ -2043,7 +2049,7 @@ function renderShop(){
     const tag=isSvc
       ?'<span style="font-size:9px;color:var(--teal)">✚ SERVICE</span>'
       :isTarot
-      ?'<span style="font-size:9px;color:var(--grape)">'+STAR+' CARTE</span>'
+      ?'<span style="font-size:9px;color:var(--grape)">'+STAR+' TAROT</span>'
       :'<span style="font-size:9px;color:var(--yellow)">◆ RELIQUE</span>';
     const tk=SHOPTOK[r.id]||{t:'?',c:'#ffce3a'};
     const chipCls=isSvc?'svc':isTarot?'tarot':'joker';
