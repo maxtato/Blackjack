@@ -1046,15 +1046,15 @@ const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
    ============================================================ */
 const RUN=[
   /* ZONE 1 — Initiation */
-  {n:'Arrière-salle', zone:1, mains:6, min:5,  max:20,  cap:50,   goal:120,  master:180,  rule:null,     entry:0,   need:0,           ruleText:'Initiation'},
+  {n:'Arrière-salle', zone:1, mains:6, min:5,  max:20,  cap:50,   goal:145,  master:205,  rule:null,     entry:0,   need:0,           ruleText:'Initiation'},
   {n:'Table nerveuse',zone:1, mains:7, min:5,  max:25,  cap:130,  goal:220,  master:320,  rule:'nervous',entry:0,   need:0,           ruleText:'La pression monte 2× plus vite'},
   {n:'Le Videur',     zone:1, mains:7, min:10, max:30,  cap:200,  goal:340,  master:460,  rule:'gros',   entry:0,   need:2, boss:true, ruleText:'BOSS · le croupier tire jusqu’à 18'},
   /* ZONE 2 — La Pression */
-  {n:'Cave humide',   zone:2, mains:7, min:10, max:40,  cap:300,  goal:560,  master:760,  rule:'mute',   entry:150, need:3,           ruleText:'Croupier muet · droit d’entrée 150'},
-  {n:'Salon rouge',   zone:2, mains:8, min:15, max:50,  cap:450,  goal:820,  master:1080, rule:null,     entry:0,   need:0,           ruleText:'Salon feutré'},
-  {n:'Le Banquier',   zone:2, mains:8, min:20, max:60,  cap:650,  goal:1150, master:1500, rule:'depart', entry:0,   need:6, boss:true, ruleText:'BOSS · table déjà chaude (+30 %)'},
+  {n:'Cave humide',   zone:2, mains:7, min:10, max:48,  cap:280,  goal:500,  master:700,  rule:'mute',   entry:70,  need:3,           ruleText:'Croupier muet · droit d’entrée 70'},
+  {n:'Salon rouge',   zone:2, mains:8, min:15, max:52,  cap:430,  goal:760,  master:1010, rule:null,     entry:0,   need:0,           ruleText:'Salon feutré'},
+  {n:'Le Banquier',   zone:2, mains:8, min:20, max:62,  cap:640,  goal:1080, master:1420, rule:'depart', entry:0,   need:6, boss:true, ruleText:'BOSS · table déjà chaude (+30 %)'},
   /* ZONE 3 — Casino profond */
-  {n:'Fosse aux as',  zone:3, mains:8, min:25, max:80,  cap:900,  goal:1650, master:2150, rule:null,     entry:400, need:8,          ruleText:'Casino profond · droit d’entrée 400'},
+  {n:'Fosse aux as',  zone:3, mains:8, min:25, max:80,  cap:900,  goal:1580, master:2080, rule:null,     entry:240, need:8,          ruleText:'Casino profond · droit d’entrée 240'},
   {n:'Table maudite', zone:3, mains:9, min:30, max:100, cap:1300, goal:2350, master:3000, rule:'gros',   entry:0,   need:0,           ruleText:'Croupier impitoyable (18)'},
   {n:'La Faucheuse',  zone:3, mains:9, min:40, max:120, cap:1800, goal:3200, master:4100, rule:'sec',    entry:0,   need:11,boss:true, ruleText:'BOSS FINAL · égalité = défaite'},
 ];
