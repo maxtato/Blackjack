@@ -864,8 +864,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
     </div>
     <div class="shopItems" id="unlockItems"></div>
     <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
-    <button class="btn b-gold menu" onclick="startGame()">COMMENCER LA NUIT</button>
-    <button class="btn b-purple menu" onclick="startEndless()" style="margin-top:9px">PLONGÉE INFINIE<small>descente sans fin · un bonus à chaque palier</small></button>
+    <div class="shopBtns" style="gap:10px;margin-top:2px">
+      <button class="btn b-gold menu" onclick="startGame()" style="flex:1">LA NUIT<small>9 tables · la descente</small></button>
+      <button class="btn b-purple menu" onclick="startEndless()" style="flex:1">INFINI<small>sans fin · bonus/palier</small></button>
+    </div>
   </div>
 </div>
 
