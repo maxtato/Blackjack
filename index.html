@@ -2538,7 +2538,7 @@ function staggerText(el,boost){if(!el||!document.createDocumentFragment)return;s
 /* re-applique le décalage à toute l'UI visible (chrome de jeu + overlay affiché) */
 function staggerUI(){
   staggerText($('topbar'));                                          // décalage normal : nom de table, règle, barre de gain
-  document.querySelectorAll('#topbar .tstats').forEach(el=>staggerText(el,3.6));   // décalage amplifié seulement sur les 3 rectangles
+  document.querySelectorAll('#topbar .tstats').forEach(el=>staggerText(el,0.6));   // gros nombres : décalage discret (comme les jetons du bas), pas amplifié
   staggerText($('bottombar'));staggerText($('effects'));staggerText($('peekBtn'));
   document.querySelectorAll('#stage .zlbl').forEach(staggerText);
   // la page d'accueil (#intro) reste figée : on ne la décale/tremble pas
