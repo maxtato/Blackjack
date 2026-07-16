@@ -934,7 +934,7 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
       <div><span class="k">Contrats 📜</span> — chaque table propose un défi optionnel (« gagne une main de 5 cartes »…) qui rapporte des <span class="k">★ bonus</span> dans la cagnotte. Rempli ou non, la table continue normalement.</div>
       <div><span class="k">La descente</span> — <span class="k">9 tables · 3 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">replonger</span> plus profond pour plus gros. Atteins la <span class="k">zone 2</span> deux fois pour débloquer le <span class="k">raccourci</span> (départ direct en zone 2, cagnotte ★ à zéro).</div>
       <div><span class="k">La Planque</span> — dépense ta <span class="k">réputation <i class="pxstar"></i></span> en avantages permanents (reliques, tarots, éditions) avant de repartir.</div>
-      <div><span class="k">La Cagnotte (infini)</span> — pas d'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · une <span class="k">SÉRIE</span> de victoires fait monter le mult (+0,5 par victoire enchaînée) · toutes les 5 mains, une <span class="d">main spéciale</span>. Banqueroute = fin.</div>
+      <div><span class="k">La Cagnotte (infini)</span> — pas d'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · une <span class="k">SÉRIE</span> de victoires fait monter le mult · toutes les 5 mains, une <span class="d">main spéciale</span>. <span class="k">ENCAISSER</span> (pause, ou palier avec <span class="k">+20 %</span>) convertit ta cagnotte en réputation — la <span class="d">banqueroute</span> ne garde que les paliers.</div>
     </div>
     <button class="btn b-gold menu" onclick="closeRules()">FERMER</button>
   </div>
@@ -967,6 +967,7 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
     <p style="margin-bottom:16px">La partie est en attente.</p>
     <div class="shopBtns" style="flex-direction:column;gap:10px">
       <button class="btn b-teal menu" onclick="resumeGame()" style="width:100%">REPRENDRE</button>
+      <button class="btn b-gold menu" id="pauseCash" onclick="cashOutEndless(false)" style="width:100%;display:none">ENCAISSER<small>convertit ta cagnotte en réputation</small></button>
       <button class="btn b-purple menu" onclick="pauseRules()" style="width:100%">RÈGLES</button>
       <button class="btn b-blue menu" onclick="quitToMenu()" style="width:100%">RETOUR AU MENU<small>abandonne la partie · tu encaisses ta réputation</small></button>
     </div>
@@ -1131,6 +1132,7 @@ const UNLOCKS_NUIT=[
   {id:'net',      name:'Filet',     tok:'+1<small>essai</small>', tc:'#3f8bd6', max:3, cost:n=>40+n*30, desc:n=>'Secondes chances de départ : '+(1+n+1)},
   {id:'tarot',    name:'Poche',     tok:'+1<small>slot</small>',  tc:'#a64dff', max:1, cost:n=>70,      desc:n=>'+1 emplacement Tarot permanent'},
   {id:'contact',  name:'Contact',   tok:'+1<small>◆</small>',     tc:'#ffce3a', max:1, cost:n=>90,      desc:n=>'Commence chaque descente avec une relique offerte'},
+  {id:'relic2',   name:'Coffre',    tok:'+3<small>◆</small>',     tc:'#9be84a', max:1, cost:n=>120,     desc:n=>'Débloque 3 reliques RARES en boutique (Talisman, Aimant, Le Phare)'},
 ];
 /* déblocages permanents de LA CAGNOTTE (infini : capital, rente, plafond, élan)
    — on réutilise les ids 'bank'/'pourboire' (stockés à part par mode) pour
@@ -1140,6 +1142,8 @@ const UNLOCKS_INFINI=[
   {id:'pourboire',name:'Rente',       tok:'+$<small>/main</small>',tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' $ à chaque main, en continu'},
   {id:'plafond',  name:'Plafond',     tok:'+%<small>mise</small>', tc:'#a64dff', max:3, cost:n=>45+n*30, desc:n=>'Plafond de mise de départ +'+(10*(n+1))+' %'},
   {id:'elan',     name:'Élan',        tok:'+1<small>palier</small>',tc:'#3f8bd6',max:3, cost:n=>60+n*45, desc:n=>'Démarre directement au palier '+(1+(n+1))},
+  {id:'cashplus', name:'Blanchisseur',tok:'+25<small>%★</small>',  tc:'#19c3c3',max:2, cost:n=>70+n*70, desc:n=>'L\'encaissement de la cagnotte rapporte +'+(25*(n+1))+' %'},
+  {id:'boon2',    name:'Pactes',      tok:'+2<small>bonus</small>',tc:'#a64dff',max:1, cost:n=>110,     desc:n=>'Débloque 2 bonus de palier RARES (Série renforcée, Mains spéciales ×2)'},
 ];
 function unlocksFor(mode){return (mode||MODE)==='infini'?UNLOCKS_INFINI:UNLOCKS_NUIT;}
 function findUnlock(id){return unlocksFor(MODE).find(x=>x.id===id);}
@@ -1147,7 +1151,7 @@ function unlockCost(u){const n=uLvl(u.id);return n>=u.max?null:u.cost(n);}
 /* valeurs de départ d'une descente, dérivées des déblocages */
 function startBank(){return 50+uLvl('bank')*15;}
 function startTokens(){return 1+uLvl('net');}
-function startRelics(){if(uLvl('contact')){const r=RELIC_POOL[rndInt(RELIC_POOL.length)];return [Object.assign({},r)];}return [];}
+function startRelics(){if(uLvl('contact')){const pool=RELIC_POOL.filter(r=>!r.lock||uLvl(r.lock));const r=pool[rndInt(pool.length)];return [Object.assign({},r)];}return [];}
 /* ---------- données ---------- */
 const SUITS=['♠','♥','♦','♣'];
 const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
@@ -1185,6 +1189,13 @@ const ENDLESS_RULETXT={nervous:'La pression monte 2× plus vite',mute:'Croupier 
 /* seuil de cagnotte pour franchir le palier p (0-based) — premier palier vite
    atteint (~2× la banque de départ) puis ×1.6 : la récompense rythme la partie */
 function palierTarget(p){return niceRound(120*Math.pow(1.6,p));}
+/* valeur d'ENCAISSEMENT de la cagnotte : paliers + racine de la banque
+   (rendement dégressif) — la banqueroute (banque ≈ 0) ne garde que les paliers.
+   « Blanchisseur » (Planque infini) améliore le taux. */
+function endlessCashRep(){
+  const base=(G.palier||0)*5+Math.sqrt(Math.max(0,G.bank))*2;
+  return Math.round(base*(1+0.25*uLvl('cashplus')));
+}
 /* niveau de mise (tier) = nombre de paliers franchis ; les mises grimpent */
 function endlessTier(tier){
   const bmax=1+((G.boons&&G.boons.betmax)||0);
@@ -1206,6 +1217,9 @@ const BOONS=[
   {id:'betmax',t:'MISE MAX +25 %',  d:'Ton plafond de mise grimpe : vise plus gros.'},
   {id:'calm',  t:'PRESSION −25 %',  d:'La pression monte moins vite (moins de tirages forcés).'},
   {id:'cash',  t:'+20 % CAGNOTTE',  d:'Injection immédiate dans ta cagnotte.'},
+  /* bonus RARES : proposés seulement après l'achat des « Pactes » à La Planque infini */
+  {id:'serieplus',t:'SÉRIE RENFORCÉE',d:'+0,75 par victoire enchaînée (au lieu de +0,5).',lock:'boon2'},
+  {id:'evt3',     t:'MAINS SPÉCIALES ×2',d:'Une main spéciale toutes les 3 mains (au lieu de 5).',lock:'boon2'},
 ];
 /* mini-événements du mode cagnotte : toutes les 5 mains, la main est SPÉCIALE —
    ça casse la routine et crée des pics de tension/récompense */
@@ -1266,6 +1280,11 @@ function proximityRep(){
   return Math.round(10*Math.max(0,Math.min(1,G.bank/G.table.goal)));
 }
 function repOnEnd(cashout){
+  if(G.endless){                                     // cagnotte : conversion directe, +20 % si on sécurise pile après un palier
+    let r=endlessCashRep();
+    if(cashout&&G._palierCash)r=Math.round(r*1.2);
+    return r;
+  }
   const depth=(G.tableIdx|0)+(G.phase==='done'?1:0);
   const base=cashout?G.pot:Math.floor(G.pot*0.5);
   return base+Math.max(0,depth)*3+(G.runStars|0)*2+(cashout?0:proximityRep());
@@ -1284,6 +1303,10 @@ const RELIC_POOL=[
   {id:'bruleur',name:'Brûleur',ic:'🔥',desc:'Relique permanente. Si tu gagnes une main avec une pression ≥ 50 % : gain de la main ×1,5.',cost:17},
   {id:'portebonheur',name:'Porte-bonheur',ic:'🍀',desc:'Relique permanente. +1 emplacement de jeton Tarot (tu peux garder un jeton de plus).',cost:12},
   {id:'diplomate',name:'Diplomate',ic:'🤝',desc:'Relique permanente. En cas d’égalité avec le croupier, tu récupères la moitié de ta mise.',cost:11},
+  /* reliques RARES : n'apparaissent en boutique qu'après l'achat du « Coffre » à La Planque */
+  {id:'talisman',name:'Talisman',ic:'🧿',desc:'Relique rare. Une fois par table, ta première main perdue est intégralement remboursée.',cost:15,lock:'relic2'},
+  {id:'aimant',name:'Aimant',ic:'🧲',desc:'Relique rare. +1 jeton à chaque carte que tu tires.',cost:12,lock:'relic2'},
+  {id:'phare',name:'Le Phare',ic:'🗼',desc:'Relique rare. CHARLIE (5 cartes sans dépasser) paie ×3 au lieu de ×2.',cost:16,lock:'relic2'},
 ];
 
 /* éditions de cartes : foil = jetons bonus, holo = +mult, poly = ×mult */
@@ -1330,7 +1353,7 @@ function freshGame(){
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
      peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,insurance:false,objHit:false,
      phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1,splitActive:false,hands:null,hi:0,
-     endless:false,palier:0,peak:0,boons:{relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0},streak:0,event:null,contract:null,
+     endless:false,palier:0,peak:0,boons:{relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0},streak:0,event:null,contract:null,_talismanUsed:false,_palierCash:false,
      stats:{won:0,played:0,bestGain:0,bestMult:1}};
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // valeur interne par défaut
   G.betChosen=false;                                       // il faut choisir une mise sur la 1re table
@@ -1407,7 +1430,7 @@ function computeMult(mode){
   const isNatural=(mode==='natural'&&G.pHand.length===2&&pv===21);
   if(isNatural){mult*=1.5;lines.push(['BLACKJACK','×1.5']);}
   if(pv===21&&!isNatural){mult*=3;lines.push(['21 PARFAIT','×3']);}
-  if(G.pHand.length>=5&&pv<=21){mult*=2;lines.push(['CHARLIE','×2']);}
+  if(G.pHand.length>=5&&pv<=21){const cm=hasRelic('phare')?3:2;mult*=cm;lines.push(['CHARLIE','×'+cm,hasRelic('phare')?'phare':undefined]);}
   if(countRank('7')>=2){mult*=1.5;lines.push(['PAIRE DE 7','×1.5']);}
   /* bonus de COMPOSITION : récompensent les mains construites (≥3 cartes) */
   const suits=new Set(G.pHand.map(c=>c.s));
@@ -1426,7 +1449,7 @@ function computeMult(mode){
   if(hasRelic('as')&&G.pHand.some(c=>c.r==='A')){mult+=1;lines.push(['◆ AS TRUQUÉ','+1','as']);}
   if(hasRelic('froid')&&G.pressure>=75){mult+=1;lines.push(['◆ SANG-FROID','+1','froid']);}
   /* mode cagnotte : la SÉRIE de victoires paie — +0,5 par victoire enchaînée (dès 2), perdue = retour à zéro */
-  if(G.endless&&(G.streak||0)>=2){const s=Math.min(G.streak,6);mult+=s*0.5;lines.push(['🔥 SÉRIE '+s,'+'+(s*0.5)]);}
+  if(G.endless&&(G.streak||0)>=2){const s=Math.min(G.streak,6),per=0.5+((G.boons&&G.boons.serieBoost)||0);mult+=s*per;lines.push(['🔥 SÉRIE '+s,'+'+(s*per)]);}
   /* anti-explosion : rendement décroissant au-delà de ×3, puis plafond de zone */
   const cap=(ZONE_MULTCAP[curTable().zone]||9)+((G.boons&&G.boons.mult)||0);
   if(mult>3)mult=3+(mult-3)*0.6;            // au-delà de ×3, chaque bonus compte à 60 %
@@ -1650,6 +1673,7 @@ function renderTop(){
   if(t.ruleText)bits.push(t.ruleText);
   if(G.endless){
     bits.push('mise '+abbr(t.min)+'–'+abbr(t.max));
+    bits.push('vaut ★'+abbr(endlessCashRep())+' en pause');       // la tension : sécuriser ou replonger
     bits.push('record '+abbr(Math.max(G.peak||0,G.bank))+' $');
   }else{
     bits.push('maîtrise ≥'+abbr(t.master)+' $');
@@ -1977,6 +2001,7 @@ function playerHit(forced){
   G._dealing=true;renderActions();                              // boutons grisés pendant l'arrivée
   dealCardIn(c,{},()=>{
     G._dealing=false;
+    if(hasRelic('aimant')){G.bank+=1;renderTop();}              // 🧲 +1 $ par carte tirée
     addPressure(forced?0:10);updateBustReadout();renderMult();
     if(c.ed)announceEd(c);
     const v=handValue(G.pHand).total;
@@ -2122,6 +2147,7 @@ function resolve(mode){
   }else{
     let back=0;
     if(G.insurance){G.insurance=false;back=stake;popText('ASSURANCE','perte remboursée');}      // service boutique
+    else if(hasRelic('talisman')&&!G._talismanUsed){G._talismanUsed=true;back=stake;popText('🧿 TALISMAN','première perte remboursée');}
     else if(hasRelic('jeton')&&pv===20&&!pBust){back=Math.floor(stake/2);}
     G.bank+=back;gain=back-stake;
     sfx.lose();shake(8);showWord('lose',gain,1,false,pBust);
@@ -2190,7 +2216,8 @@ function nextHandOrEnd(){
     if(G.bank<G.table.min)return endlessBust();     // banqueroute = fin
     if(G.bank>=palierTarget(G.palier||0))return reachPalier();   // palier franchi → bonus + mises ↑
     G.hand++;G.phase='bet';G.dHand=[];G.pHand=[];
-    G.event=(G.hand%5===0)?ENDLESS_EVENTS[rndInt(ENDLESS_EVENTS.length)]:null;   // main spéciale toutes les 5 mains
+    const cadence=(G.boons&&G.boons.evt3)?3:5;                                   // « Mains spéciales ×2 » resserre le rythme
+    G.event=(G.hand%cadence===0)?ENDLESS_EVENTS[rndInt(ENDLESS_EVENTS.length)]:null;   // main spéciale régulière
     clampBet();applyHandIncome();renderAll();renderHands();announceTurn();
     if(G.event)popText(G.event.ic+' '+G.event.t,G.event.d);
     return;
@@ -2241,6 +2268,9 @@ const SHOPTOK={
   bruleur:{t:'×1.5',c:'#ff9326'},
   portebonheur:{t:'+1<small>'+STAR+'</small>',c:'#a64dff'},
   diplomate:{t:'=<small>½</small>',c:'#ffce3a'},
+  talisman:{t:'1<small>VIE</small>',c:'#19c3c3'},
+  aimant:{t:'+1<small>$/carte</small>',c:'#ffce3a'},
+  phare:{t:'C<small>×3</small>',c:'#ff9326'},
   etoile:{t:'−45<small>%</small>',c:'#19c3c3'},
   jugement:{t:'P<small>=0</small>',c:'#19c3c3'},
   soleil:{t:'+18<small>$</small>',c:'#ffce3a'},
@@ -2303,7 +2333,7 @@ function openShop(){
 }
 function rollShop(){
   const owned=new Set(G.relics.map(r=>r.id));
-  const relics=RELIC_POOL.filter(r=>!owned.has(r.id)).map(r=>({type:'relic',data:r}));
+  const relics=RELIC_POOL.filter(r=>!owned.has(r.id)&&(!r.lock||uLvl(r.lock))).map(r=>({type:'relic',data:r}));
   const tarots=TAROT_POOL.map(t=>({type:'tarot',data:t}));
   const pool=relics.concat(tarots);
   for(let i=pool.length-1;i>0;i--){const j=rndInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
@@ -2378,7 +2408,7 @@ function leaveShop(){
 function enterTable(prevZone){
   // droit d'entrée de zone : absorbe une partie des jetons (anti boule de neige)
   if(G.table.entry){G.bank=Math.max(0,G.bank-G.table.entry);popText("DROIT D'ENTRÉE",'−'+abbr(G.table.entry)+' $');}
-  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;
+  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;G._talismanUsed=false;
   G.contract=rollContract();                               // nouveau contrat à chaque table
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // nouvelle table : on remise à zéro (pas la mise de la table d'avant)
   G.betChosen=false;                                       // nouvelle table : aucune mise présélectionnée, il faut en choisir une
@@ -2415,7 +2445,7 @@ function retryTable(){
   $('loseScreen').classList.remove('show');
   buildShoe();
   G.bank=Math.max(G.tableStartBank||0,curTable().cap);   // on repart au capital conseillé de la table
-  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;
+  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;G._talismanUsed=false;
   G.bet=Math.max(curTable().min,Math.min(curTable().max,10));   // nouvelle tentative : mise remise à zéro
   G.betChosen=false;                                            // seconde chance : il faut re-choisir une mise
   clampBet();
@@ -2452,7 +2482,7 @@ function endRun(cashout){
   $('shop').classList.remove('show');$('loseScreen').classList.remove('show');
   document.body.classList.remove('inf');
   const baseGain=repOnEnd(cashout);
-  const coffre=cashout?coffreBonus(G.bank):0;   // coffre seulement si on encaisse
+  const coffre=(cashout&&!G.endless)?coffreBonus(G.bank):0;   // coffre : mode nuit seulement (l'infini a sa conversion)
   const prox=cashout?0:proximityRep();
   const gained=baseGain+coffre;
   metaCur().rep+=gained;
@@ -2470,13 +2500,16 @@ function endRun(cashout){
   const recLine=newRec?`<br><b style="color:var(--gold)">🏆 NOUVEAU RECORD !</b> `:'<br>';
   if(G.endless){
     const peak=Math.max(G.peak||0,G.bank);
-    $('endTitle').textContent='CAGNOTTE ÉPUISÉE';
-    $('endTitle').className='dead';
+    $('endTitle').textContent=cashout?'TU ENCAISSES':'CAGNOTTE ÉPUISÉE';
+    $('endTitle').className=cashout?'win':'dead';
     $('endText').innerHTML=
-      `Ta plongée s’arrête.`+
+      (cashout
+        ?`Tu convertis ta cagnotte en réputation${G._palierCash?' — <b style="color:var(--gold)">bonus de palier +20 %</b>':''}.`
+        :`Ta plongée s’arrête.`)+
       `<br><br>Cagnotte max : <b style="color:var(--gold)">${abbr(peak)} $</b> · Palier atteint : <b>${(G.palier||0)+1}</b>`+
-      `<br>Réputation : <b>${STAR}${abbr(baseGain)}</b>`+(coffre?` <span style="color:var(--muted)">+ coffre ${STAR}${abbr(coffre)}</span>`:'')+` &nbsp;→&nbsp; total <b>${STAR}${abbr(metaCur().rep)}</b>`+
+      `<br>Réputation : <b>${STAR}${abbr(baseGain)}</b>`+` &nbsp;→&nbsp; total <b>${STAR}${abbr(metaCur().rep)}</b>`+
       recLine+`<span style="color:var(--muted)">Record : palier ${rec.palier||0} · ${abbr(rec.peak||0)} $</span>`;
+    G._palierCash=false;
   }else{
   const goal=(G.table&&isFinite(G.table.goal))?G.table.goal:0;
   const manque=(!cashout&&goal&&G.bank<goal)?`<br>Il te manquait <b style="color:var(--red)">${abbr(goal-G.bank)} $</b> pour l'objectif`+(prox?` <span style="color:var(--muted)">— prime de proximité ${STAR}${prox}</span>`:'')+`.`:'';
@@ -2529,7 +2562,12 @@ function openRules(){$('rulesScreen').classList.add('show');}
 function closeRules(){$('rulesScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
 /* ---------- pause en jeu ---------- */
 let pauseReturn=false;
-function openPause(){audioInit();$('pauseScreen').classList.add('show');}
+function openPause(){
+  audioInit();
+  const pc=$('pauseCash');
+  if(pc){pc.style.display=G.endless?'':'none';if(G.endless)pc.innerHTML='ENCAISSER '+STAR+abbr(endlessCashRep())+'<small>convertit ta cagnotte en réputation</small>';}
+  $('pauseScreen').classList.add('show');
+}
 function resumeGame(){$('pauseScreen').classList.remove('show');}
 function pauseRules(){$('pauseScreen').classList.remove('show');pauseReturn=true;openRules();}   // à la fermeture des règles on revient à la pause
 function quitToMenu(){$('pauseScreen').classList.remove('show');endRun(false);}                   // abandonne : encaisse la réputation puis écran de fin → La Planque
@@ -2840,14 +2878,22 @@ function reachPalier(){
   G.tableIdx=G.palier;                       // le tier de mise suit le palier
   G.table=endlessTier(G.tableIdx);
   sfx.win&&sfx.win();flashScreen('win');shake(14);coinBurst(12);
-  const pool=BOONS.slice();
+  const pool=BOONS.filter(b=>(!b.lock||uLvl(b.lock))&&!(b.id==='evt3'&&G.boons&&G.boons.evt3)&&!(b.id==='serieplus'&&G.boons&&G.boons.serieBoost>=0.5));
   for(let i=pool.length-1;i>0;i--){const j=rndInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
   const pick=pool.slice(0,3);
   $('palierNum').textContent=G.palier;
   $('palierBoons').innerHTML=pick.map(b=>
     `<button class="btn b-purple menu" onclick="applyBoon('${b.id}')" style="width:100%">${b.t}<small>${b.d}</small></button>`
-  ).join('');
+  ).join('')+
+    // le dilemme : replonger avec un bonus, ou sécuriser AVEC prime de palier
+    `<button class="btn b-gold menu" onclick="cashOutEndless(true)" style="width:100%;margin-top:6px">ENCAISSER ${STAR}${abbr(Math.round(endlessCashRep()*1.2))}<small>s'arrêter ici · bonus de palier +20 %</small></button>`;
   $('palierScreen').classList.add('show');
+}
+/* encaissement volontaire de la cagnotte (depuis l'écran palier avec bonus, ou la pause sans) */
+function cashOutEndless(fromPalier){
+  G._palierCash=!!fromPalier;
+  $('palierScreen').classList.remove('show');$('pauseScreen').classList.remove('show');
+  endRun(true);
 }
 function applyBoon(id){
   if(!G.boons)G.boons={relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0};
@@ -2856,6 +2902,8 @@ function applyBoon(id){
   else if(id==='betmax')G.boons.betmax+=0.25;
   else if(id==='calm')G.boons.calm=Math.min(0.75,(G.boons.calm||0)+0.25);
   else if(id==='cash'){G.bank+=Math.round(G.bank*0.2);}
+  else if(id==='serieplus')G.boons.serieBoost=Math.min(0.5,(G.boons.serieBoost||0)+0.25);
+  else if(id==='evt3')G.boons.evt3=true;
   sfx.buy&&sfx.buy();coinBurst(8);
   $('palierScreen').classList.remove('show');
   G.table=endlessTier(G.tableIdx);                        // reflète le bonus (ex. mise max)
