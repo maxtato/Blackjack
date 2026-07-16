@@ -1211,7 +1211,7 @@ const ZONE_MULTCAP={1:4,2:6,3:9};                 // plafond de multiplicateur p
 const ENDLESS_RULETXT={nervous:'La pression monte 2× plus vite',mute:'Croupier muet',gros:'Le croupier tire jusqu’à 18',depart:'Table déjà chaude (+30 %)',sec:'Égalité = défaite'};
 /* seuil de cagnotte pour franchir le palier p (0-based) — premier palier vite
    atteint (~2× la banque de départ) puis ×1.6 : la récompense rythme la partie */
-function palierTarget(p){return niceRound(120*Math.pow(1.6,p));}
+function palierTarget(p){return niceRound(150*Math.pow(2,p));}
 /* valeur d'ENCAISSEMENT de la cagnotte : paliers + racine de la banque
    (rendement dégressif) — la banqueroute (banque ≈ 0) ne garde que les paliers.
    « Blanchisseur » (Planque infini) améliore le taux. */
