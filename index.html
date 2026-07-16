@@ -670,10 +670,10 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 
 /* petit bouton "i" pour ouvrir les règles (écran d'accueil) */
 /* contour fermé en pixels (technique des cartes : fond doré + ::before en retrait) */
-#rulesBtn{position:absolute;top:12px;right:12px;width:30px;height:30px;z-index:5;background:var(--gold);color:var(--gold);border:none;clip-path:var(--rc);font-family:'Jersey 15',monospace;font-weight:700;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.45))}
-#rulesBtn::before{content:"";position:absolute;inset:2px;background:var(--panelDk2,#1b1c21);clip-path:var(--rc);z-index:0}
-#rulesBtn span{position:relative;z-index:1}
-#rulesBtn:active{transform:translate(1px,2px)}
+#rulesBtn,#rulesBtn0{position:absolute;top:12px;right:12px;width:30px;height:30px;z-index:5;background:var(--gold);color:var(--gold);border:none;clip-path:var(--rc);font-family:'Jersey 15',monospace;font-weight:700;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.45))}
+#rulesBtn::before,#rulesBtn0::before{content:"";position:absolute;inset:2px;background:var(--panelDk2,#1b1c21);clip-path:var(--rc);z-index:0}
+#rulesBtn span,#rulesBtn0 span{position:relative;z-index:1}
+#rulesBtn:active,#rulesBtn0:active{transform:translate(1px,2px)}
 /* bouton « tout recommencer » : discret, en haut à gauche, face au « i » */
 #restartBtn{position:absolute;top:12px;left:12px;width:30px;height:30px;z-index:5;background:var(--muted,#9fb0a8);color:var(--muted,#9fb0a8);border:none;clip-path:var(--rc);font-family:'Jersey 15',monospace;font-weight:700;font-size:17px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;opacity:.5}
 #restartBtn::before{content:"";position:absolute;inset:2px;background:var(--panelDk2,#1b1c21);clip-path:var(--rc);z-index:0}
@@ -741,13 +741,13 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 .zlbl .L,.tstats .L,#chips .chip .L,#turnPop .L,
 .repNum .L,.recBox .L{animation:letterShake 1.1s steps(1,end) infinite;animation-delay:var(--d,0s)}
 @keyframes letterShake{
- 0%  {transform:translate( .12px,calc(var(--o,0px) - .09px))}
- 16% {transform:translate(-.12px,calc(var(--o,0px) + .09px))}
- 33% {transform:translate( .09px,calc(var(--o,0px) + .12px))}
- 50% {transform:translate(-.09px,calc(var(--o,0px) - .12px))}
- 66% {transform:translate( .12px,calc(var(--o,0px) + .06px))}
- 83% {transform:translate(-.12px,calc(var(--o,0px) - .06px))}
- 100%{transform:translate( .12px,calc(var(--o,0px) - .09px))}
+ 0%  {transform:translate( .2px,calc(var(--o,0px) - .15px))}
+ 16% {transform:translate(-.2px,calc(var(--o,0px) + .15px))}
+ 33% {transform:translate( .15px,calc(var(--o,0px) + .2px))}
+ 50% {transform:translate(-.15px,calc(var(--o,0px) - .2px))}
+ 66% {transform:translate( .2px,calc(var(--o,0px) + .1px))}
+ 83% {transform:translate(-.2px,calc(var(--o,0px) - .1px))}
+ 100%{transform:translate( .2px,calc(var(--o,0px) - .15px))}
 }
 /* overlays : centrés mais défilables si trop hauts (jamais coupés) */
 .overlay{justify-content:flex-start;overflow-y:auto}
@@ -769,10 +769,19 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 #unlockItems .shopTok{width:46px;height:46px;font-size:16px}
 #unlockItems .nm{font-size:13px}
 #unlockItems .ds{font-size:10px;margin-top:2px;line-height:1.3}
-/* page d'accueil FIGÉE : aucun flottement/tremblement, tout est en place dès le départ */
-#intro .btn{animation:none}
+/* étiquette de mode en haut de La Planque */
+.planqueMode{display:inline-block;font-size:12px;letter-spacing:.14em;padding:3px 12px;border-radius:999px;margin:0 auto 6px;clip-path:var(--pc)}
+.planqueMode.nuit{background:rgba(255,206,58,.14);color:var(--gold)}
+.planqueMode.inf{background:rgba(166,77,255,.16);color:var(--grape)}
+/* menu principal : rappel des records/réputation de chaque mode */
+.menuRecs{margin-top:14px;display:flex;flex-direction:column;gap:6px}
+.mrec{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:11px;background:var(--panelDk2);clip-path:var(--pc);padding:7px 12px}
+.mrl{letter-spacing:.12em;font-size:12px}
+.mrv{color:var(--muted)}
+/* pages figées (menu + planque) : aucun flottement/tremblement, tout en place dès le départ */
+#intro .btn,#modeMenu .btn{animation:none}
 #intro .bpCard{animation:none}
-#intro h1{animation:none}
+#intro h1,#modeMenu h1{animation:none}
 .backPick{margin:2px 0 10px}
 .bpLabel{margin-bottom:7px}
 /* dos de carte sur 2 lignes (4 + 4) */
@@ -863,22 +872,37 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 </div>
 </div>
 
-<!-- LA PLANQUE (hub) -->
-<div class="overlay show" id="intro">
+<!-- MENU PRINCIPAL (choix du mode) -->
+<div class="overlay show" id="modeMenu">
   <div class="ovpanel">
-    <button id="restartBtn" onclick="restartAll()" title="Tout recommencer (perd la réputation)" aria-label="Recommencer"><span>↺</span></button>
+    <button id="rulesBtn0" onclick="openRules()" title="Règles du jeu" aria-label="Règles"><span>i</span></button>
+    <h1 class="win" style="letter-spacing:.04em">TABLE 21</h1>
+    <p>Choisis ton mode de jeu. Chaque mode a <b>sa Planque</b> et sa <b>réputation</b>.</p>
+    <div class="shopBtns" style="flex-direction:column;gap:12px;margin-top:8px">
+      <button class="btn b-gold menu" onclick="chooseMode('nuit')" style="width:100%">LA NUIT<small>9 tables · la descente · reliques &amp; tarots</small></button>
+      <button class="btn b-purple menu" onclick="chooseMode('infini')" style="width:100%">LA CAGNOTTE<small>sans fin · blackjack pur · monte les paliers</small></button>
+    </div>
+    <div class="menuRecs" id="menuRecords"></div>
+  </div>
+</div>
+
+<!-- LA PLANQUE (hub, propre au mode choisi) -->
+<div class="overlay" id="intro">
+  <div class="ovpanel">
+    <button id="restartBtn" onclick="restartAll()" title="Recommencer ce mode (perd la réputation du mode)" aria-label="Recommencer"><span>↺</span></button>
     <button id="rulesBtn" onclick="openRules()" title="Règles du jeu" aria-label="Règles"><span>i</span></button>
-    <h1 class="win">LA PLANQUE</h1>
-    <p>Dépense ta <b>réputation</b> en avantages permanents, puis replonge.</p>
+    <div class="planqueMode nuit" id="planqueMode">🌙 LA NUIT</div>
+    <h1 class="win" id="planqueTitle">LA PLANQUE</h1>
+    <p id="planqueSub">Dépense ta <b>réputation</b> en avantages permanents, puis replonge.</p>
     <div class="repBar">
       <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl">réputation</span></div>
-      <div class="recBox">RECORD<br><span style="white-space:nowrap"><b><span id="recDepth">0</span> tables</b> · <b><span id="recChips">0</span> $</b></span></div>
+      <div class="recBox" id="recBox">RECORD<br><span style="white-space:nowrap"><b>0 tables</b> · <b>0 $</b></span></div>
     </div>
     <div class="shopItems" id="unlockItems"></div>
     <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
     <div class="shopBtns" style="gap:10px;margin-top:2px">
-      <button class="btn b-gold menu" onclick="startGame()" style="flex:1">LA NUIT<small>9 tables · la descente</small></button>
-      <button class="btn b-purple menu" onclick="startEndless()" style="flex:1">INFINI<small>sans fin · bonus/palier</small></button>
+      <button class="btn b-teal menu" onclick="openMenu()" style="flex:0 0 auto">← MENU</button>
+      <button class="btn b-gold menu" id="planqueLaunch" onclick="launchMode()" style="flex:1">DESCENDRE<small>la nuit · 9 tables</small></button>
     </div>
   </div>
 </div>
@@ -912,7 +936,7 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 <div class="overlay" id="confirmRestart">
   <div class="ovpanel" style="max-width:360px;text-align:center">
     <h1 class="dead" style="font-size:21px">RECOMMENCER ?</h1>
-    <p>Êtes-vous sûr de vouloir <b>recommencer votre progression</b> ?<br>Tu perds toute ta <b>réputation</b>, tes <b>déblocages</b> et tes <b>records</b>.</p>
+    <p>Êtes-vous sûr de vouloir <b>recommencer la progression de ce mode</b> ?<br>Tu perds la <b>réputation</b>, les <b>déblocages</b> et le <b>record</b> de ce mode uniquement.</p>
     <div class="shopBtns" style="margin-top:14px;gap:9px">
       <button class="btn b-teal" onclick="closeRestart()" style="flex:1">ANNULER</button>
       <button class="btn b-red" onclick="doRestart()" style="flex:1">RECOMMENCER</button>
@@ -1054,24 +1078,55 @@ function renderBackPicker(){
   });
 }
 
-/* ---------- méta-progression (réputation, déblocages, record) ---------- */
+/* ---------- méta-progression : DEUX économies séparées (nuit / infini) ----------
+   Chaque mode a SA réputation, SES déblocages et SON record. La Planque n'affiche
+   donc que les objets utiles au mode qu'on vient jouer. */
+function blankMeta(){return {
+  nuit:  {rep:0,unlocks:{},record:{depth:0,chips:0}},
+  infini:{rep:0,unlocks:{},record:{peak:0,palier:0}}
+};}
 function loadMeta(){
   try{const v=JSON.parse(localStorage.getItem('t21meta'));
-    if(v&&typeof v==='object')return {rep:v.rep|0,unlocks:v.unlocks||{},record:{depth:(v.record&&v.record.depth)|0,chips:(v.record&&v.record.chips)|0}};
+    if(v&&typeof v==='object'){
+      if(v.nuit&&v.infini){                                   // nouveau format à deux modes
+        return {
+          nuit:  {rep:v.nuit.rep|0,  unlocks:v.nuit.unlocks||{},  record:{depth:(v.nuit.record&&v.nuit.record.depth)|0,chips:(v.nuit.record&&v.nuit.record.chips)|0}},
+          infini:{rep:v.infini.rep|0,unlocks:v.infini.unlocks||{},record:{peak:(v.infini.record&&v.infini.record.peak)|0,palier:(v.infini.record&&v.infini.record.palier)|0}}
+        };
+      }
+      // ancien format {rep,unlocks,record} : tout va dans « la nuit », l'infini repart vierge
+      const m=blankMeta();
+      m.nuit.rep=v.rep|0;m.nuit.unlocks=v.unlocks||{};
+      m.nuit.record={depth:(v.record&&v.record.depth)|0,chips:(v.record&&v.record.chips)|0};
+      return m;
+    }
   }catch(e){}
-  return {rep:0,unlocks:{},record:{depth:0,chips:0}};
+  return blankMeta();
 }
 let META=loadMeta();
+let MODE='nuit';                                              // mode courant, fixé au choix dans le menu principal
+function metaCur(){return META[MODE]||META.nuit;}
 function saveMeta(){try{localStorage.setItem('t21meta',JSON.stringify(META));}catch(e){}}
-function uLvl(id){return META.unlocks[id]|0;}
-/* déblocages permanents achetés en réputation à la planque */
-const UNLOCKS=[
+function uLvl(id){return (metaCur().unlocks[id])|0;}
+/* déblocages permanents de LA NUIT (descente : reliques, tarots, vies) */
+const UNLOCKS_NUIT=[
   {id:'bank',     name:'Pécule',    tok:'+$',                     tc:'#ffce3a', max:5, cost:n=>15+n*15, desc:n=>'Jetons de départ +'+(15*(n+1))},
   {id:'pourboire',name:'Pourboire', tok:'+$<small>/main</small>', tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' jeton(s) au début de chaque main'},
   {id:'net',      name:'Filet',     tok:'+1<small>essai</small>', tc:'#3f8bd6', max:3, cost:n=>40+n*30, desc:n=>'Secondes chances de départ : '+(1+n+1)},
   {id:'tarot',    name:'Poche',     tok:'+1<small>slot</small>',  tc:'#a64dff', max:1, cost:n=>70,      desc:n=>'+1 emplacement Tarot permanent'},
   {id:'contact',  name:'Contact',   tok:'+1<small>◆</small>',     tc:'#ffce3a', max:1, cost:n=>90,      desc:n=>'Commence chaque descente avec une relique offerte'},
 ];
+/* déblocages permanents de LA CAGNOTTE (infini : capital, rente, plafond, élan)
+   — on réutilise les ids 'bank'/'pourboire' (stockés à part par mode) pour
+   profiter de startBank()/applyHandIncome() sans code spécifique. */
+const UNLOCKS_INFINI=[
+  {id:'bank',     name:'Mise de fond',tok:'+$',                    tc:'#ffce3a', max:5, cost:n=>15+n*15, desc:n=>'Cagnotte de départ +'+(15*(n+1))},
+  {id:'pourboire',name:'Rente',       tok:'+$<small>/main</small>',tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' $ à chaque main, en continu'},
+  {id:'plafond',  name:'Plafond',     tok:'+%<small>mise</small>', tc:'#a64dff', max:3, cost:n=>45+n*30, desc:n=>'Plafond de mise de départ +'+(10*(n+1))+' %'},
+  {id:'elan',     name:'Élan',        tok:'+1<small>palier</small>',tc:'#3f8bd6',max:3, cost:n=>60+n*45, desc:n=>'Démarre directement au palier '+(1+(n+1))},
+];
+function unlocksFor(mode){return (mode||MODE)==='infini'?UNLOCKS_INFINI:UNLOCKS_NUIT;}
+function findUnlock(id){return unlocksFor(MODE).find(x=>x.id===id);}
 function unlockCost(u){const n=uLvl(u.id);return n>=u.max?null:u.cost(n);}
 /* valeurs de départ d'une descente, dérivées des déblocages */
 function startBank(){return 50+uLvl('bank')*15;}
@@ -2258,8 +2313,14 @@ function giveUp(){
   endRun(false);
 }
 function updateRecord(depth){
-  if(depth>META.record.depth)META.record.depth=depth;
-  if(G.bank>META.record.chips)META.record.chips=G.bank;
+  const r=metaCur().record;
+  if(MODE==='infini'){
+    r.peak=Math.max(r.peak||0,G.bank);
+    r.palier=Math.max(r.palier||0,(G.palier||0)+1);
+  }else{
+    if(depth>(r.depth||0))r.depth=depth;
+    if(G.bank>(r.chips||0))r.chips=G.bank;
+  }
   saveMeta();
 }
 
@@ -2278,10 +2339,11 @@ function endRun(cashout){
   const baseGain=repOnEnd(cashout);
   const coffre=cashout?coffreBonus(G.bank):0;   // coffre seulement si on encaisse
   const gained=baseGain+coffre;
-  META.rep+=gained;
+  metaCur().rep+=gained;
   updateRecord(G.tableIdx+1);
   saveMeta();
   const depth=G.tableIdx+1;
+  const rec=metaCur().record;
   if(G.endless){
     const peak=Math.max(G.peak||0,G.bank);
     $('endTitle').textContent='CAGNOTTE ÉPUISÉE';
@@ -2289,8 +2351,8 @@ function endRun(cashout){
     $('endText').innerHTML=
       `Ta plongée s’arrête.`+
       `<br><br>Cagnotte max : <b style="color:var(--gold)">${abbr(peak)} $</b> · Palier atteint : <b>${(G.palier||0)+1}</b>`+
-      `<br>Réputation : <b>${STAR}${abbr(baseGain)}</b>`+(coffre?` <span style="color:var(--muted)">+ coffre ${STAR}${abbr(coffre)}</span>`:'')+` &nbsp;→&nbsp; total <b>${STAR}${abbr(META.rep)}</b>`+
-      `<br><span style="color:var(--muted)">Record : ${META.record.depth} tables · ${abbr(META.record.chips)} $</span>`;
+      `<br>Réputation : <b>${STAR}${abbr(baseGain)}</b>`+(coffre?` <span style="color:var(--muted)">+ coffre ${STAR}${abbr(coffre)}</span>`:'')+` &nbsp;→&nbsp; total <b>${STAR}${abbr(metaCur().rep)}</b>`+
+      `<br><span style="color:var(--muted)">Record : palier ${rec.palier||0} · ${abbr(rec.peak||0)} $</span>`;
   }else{
   $('endTitle').textContent=cashout?'TU ENCAISSES':'FIN DE LA NUIT';
   $('endTitle').className=cashout?'win':'dead';
@@ -2299,8 +2361,8 @@ function endRun(cashout){
       ?`Tu pars avec la cagnotte avant que ça tourne mal.`
       :`Tu repars quand même avec la moitié de ta cagnotte.`)+
     `<br><br>Tables tenues : <b>${depth}</b> · Jetons : <b>${abbr(G.bank)} $</b>`+
-    `<br>Réputation : <b>${STAR}${abbr(baseGain)}</b>`+(coffre?` <span style="color:var(--muted)">+ coffre ${STAR}${abbr(coffre)}</span>`:'')+` &nbsp;→&nbsp; total <b>${STAR}${abbr(META.rep)}</b>`+
-    `<br><span style="color:var(--muted)">Record : ${META.record.depth} tables · ${abbr(META.record.chips)} $</span>`;
+    `<br>Réputation : <b>${STAR}${abbr(baseGain)}</b>`+(coffre?` <span style="color:var(--muted)">+ coffre ${STAR}${abbr(coffre)}</span>`:'')+` &nbsp;→&nbsp; total <b>${STAR}${abbr(metaCur().rep)}</b>`+
+    `<br><span style="color:var(--muted)">Record : ${rec.depth||0} tables · ${abbr(rec.chips||0)} $</span>`;
   }
   const s=G.stats||{won:0,played:0,bestGain:0,bestMult:1};
   $('endStats').innerHTML=
@@ -2542,16 +2604,47 @@ function staggerUI(){
   staggerText($('bottombar'));staggerText($('effects'));staggerText($('peekBtn'));
   document.querySelectorAll('#stage .zlbl').forEach(staggerText);
   // la page d'accueil (#intro) reste figée : on ne la décale/tremble pas
-  document.querySelectorAll('.overlay.show .ovpanel').forEach(p=>{if(!p.closest('#intro'))staggerText(p);});
+  document.querySelectorAll('.overlay.show .ovpanel').forEach(p=>{if(!p.closest('#intro')&&!p.closest('#modeMenu'))staggerText(p);});
 }
 
-/* ---------- LA PLANQUE (hub de méta-progression) ---------- */
+/* ---------- MENU PRINCIPAL (choix du mode) ---------- */
+function renderMenu(){
+  const n=META.nuit.record,i=META.infini.record;
+  const el=$('menuRecords');if(!el)return;
+  el.innerHTML=
+    `<div class="mrec"><span class="mrl" style="color:var(--gold)">LA NUIT</span><span class="mrv">${STAR}${abbr(META.nuit.rep)} · record ${n.depth||0} tables</span></div>`+
+    `<div class="mrec"><span class="mrl" style="color:var(--grape)">LA CAGNOTTE</span><span class="mrv">${STAR}${abbr(META.infini.rep)} · record palier ${i.palier||0}</span></div>`;
+}
+function openMenu(){
+  document.body.classList.remove('inf');
+  ['intro','endScreen','loseScreen','shop','pauseScreen','palierScreen','confirmRestart'].forEach(id=>$(id).classList.remove('show'));
+  renderMenu();
+  $('modeMenu').classList.add('show');
+}
+function chooseMode(m){
+  audioInit();
+  MODE=(m==='infini')?'infini':'nuit';
+  $('modeMenu').classList.remove('show');
+  renderPlanque();renderBackPicker();
+  $('intro').classList.add('show');
+}
+function launchMode(){ if(MODE==='infini')startEndless(); else startGame(); }
+
+/* ---------- LA PLANQUE (hub de méta-progression, propre au mode courant) ---------- */
 function renderPlanque(){
-  $('repBal').textContent=abbr(META.rep);
-  $('recDepth').textContent=META.record.depth;
-  $('recChips').textContent=abbr(META.record.chips);
+  const m=metaCur(),inf=MODE==='infini';
+  $('repBal').textContent=abbr(m.rep);
+  const pt=$('planqueTitle');if(pt)pt.textContent='LA PLANQUE';
+  const ps=$('planqueSub');if(ps)ps.innerHTML=inf
+    ?`Améliore ta <b>Cagnotte</b> avec ta <b>réputation</b>, puis replonge sans fin.`
+    :`Dépense ta <b>réputation</b> en avantages permanents, puis replonge dans <b>la nuit</b>.`;
+  const tag=$('planqueMode');if(tag){tag.textContent=inf?'∞ LA CAGNOTTE':'🌙 LA NUIT';tag.className='planqueMode '+(inf?'inf':'nuit');}
+  const rb=$('recBox');if(rb)rb.innerHTML=inf
+    ?`RECORD<br><span style="white-space:nowrap"><b>palier ${m.record.palier||0}</b> · <b>${abbr(m.record.peak||0)} $</b></span>`
+    :`RECORD<br><span style="white-space:nowrap"><b>${m.record.depth||0} tables</b> · <b>${abbr(m.record.chips||0)} $</b></span>`;
+  const lb=$('planqueLaunch');if(lb){lb.className='btn menu '+(inf?'b-purple':'b-gold');lb.innerHTML=inf?'PLONGER<small>la cagnotte · sans fin</small>':'DESCENDRE<small>la nuit · 9 tables</small>';}
   const box=$('unlockItems');box.innerHTML='';
-  UNLOCKS.forEach(u=>{
+  unlocksFor(MODE).forEach(u=>{
     const lvl=uLvl(u.id),cost=unlockCost(u),maxed=cost===null;
     const d=document.createElement('div');d.className='shopItem'+(maxed?' bought':'');
     const dots=u.max>1?` <span class="ulvl">${'●'.repeat(lvl)}${'○'.repeat(u.max-lvl)}</span>`:(lvl?' <span class="ulvl">●</span>':'');
@@ -2560,14 +2653,14 @@ function renderPlanque(){
     const b=document.createElement('button');b.className='btn b-gold';
     b.style.cssText='font-size:13px;padding:9px 11px';
     if(maxed){b.textContent='MAX';b.disabled=true;}
-    else{b.innerHTML=STAR+cost;if(META.rep<cost)b.disabled=true;b.onclick=()=>buyUnlock(u.id);}
+    else{b.innerHTML=STAR+cost;if(m.rep<cost)b.disabled=true;b.onclick=()=>buyUnlock(u.id);}
     d.appendChild(b);box.appendChild(d);
   });
 }
 function buyUnlock(id){
-  const u=UNLOCKS.find(x=>x.id===id);if(!u)return;
-  const cost=unlockCost(u);if(cost===null||META.rep<cost)return;
-  META.rep-=cost;META.unlocks[id]=uLvl(id)+1;saveMeta();sfx.buy();
+  const u=findUnlock(id);if(!u)return;
+  const cost=unlockCost(u),m=metaCur();if(cost===null||m.rep<cost)return;
+  m.rep-=cost;m.unlocks[id]=uLvl(id)+1;saveMeta();sfx.buy();
   renderPlanque();
 }
 function toPlanque(){
@@ -2578,7 +2671,7 @@ function toPlanque(){
 }
 
 function startGame(){
-  audioInit();
+  audioInit();MODE='nuit';
   document.body.classList.remove('inf');
   $('intro').classList.remove('show');$('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');
   freshGame();buildShoe();
@@ -2587,11 +2680,14 @@ function startGame(){
 }
 /* MODE INFINI « CAGNOTTE » : blackjack pur, on accumule tant qu'on peut miser */
 function startEndless(){
-  audioInit();
+  audioInit();MODE='infini';
   $('intro').classList.remove('show');$('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');
   freshGame();
-  G.endless=true;G.palier=0;G.tableIdx=0;G.table=endlessTier(0);
-  G.relics=[];G.consumables=[];G.tokens=0;                 // pas de relique/tarot/vie en infini
+  const elan=uLvl('elan'),plaf=uLvl('plafond');             // déblocages permanents de l'infini
+  G.endless=true;G.palier=elan;G.tableIdx=elan;
+  G.relics=[];G.consumables=[];G.tokens=0;                  // pas de relique/tarot/vie en infini
+  G.boons={relic:0,tarot:0,mult:0,income:0,betmax:plaf*0.1,calm:0};
+  G.table=endlessTier(G.tableIdx);
   G.peak=G.bank;
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));G.tableStartBank=G.bank;
   document.body.classList.add('inf');
@@ -2634,18 +2730,18 @@ function endlessBust(){
   G.loseTitle='BANQUEROUTE';G.loseText='Plus de quoi miser. Ta cagnotte s’arrête ici.';
   endRun(false);
 }
-/* tout recommencer depuis zéro : on perd réputation, déblocages et records */
+/* recommencer la progression DU MODE COURANT : on perd sa réputation, ses déblocages et son record */
 function restartAll(){audioInit();$('confirmRestart').classList.add('show');}   // petite fenêtre de confirmation in-game
 function closeRestart(){$('confirmRestart').classList.remove('show');}
 function doRestart(){
-  META={rep:0,unlocks:{},record:{depth:0,chips:0}};saveMeta();
+  META[MODE]=blankMeta()[MODE];saveMeta();
   freshGame();buildShoe();renderAll();renderHands();
   renderPlanque();renderBackPicker();
   $('confirmRestart').classList.remove('show');
   $('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');$('shop').classList.remove('show');
-  $('intro').classList.add('show');                       // on revient à La Planque, état neuf
+  $('intro').classList.add('show');                       // on reste dans La Planque du mode, état neuf
 }
-freshGame();buildShoe();renderAll();renderHands();renderBackPicker();renderPlanque();tick();
+freshGame();buildShoe();renderAll();renderHands();renderBackPicker();renderPlanque();renderMenu();tick();
 </script>
 </body>
 </html>
