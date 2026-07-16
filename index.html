@@ -1455,22 +1455,22 @@ function computeMult(mode){
   if(countRank('7')>=2){mult*=1.5;lines.push(['PAIRE DE 7','×1.5']);}
   /* bonus de COMPOSITION : récompensent les mains construites (≥3 cartes) */
   const suits=new Set(G.pHand.map(c=>c.s));
-  if(G.pHand.length>=3&&suits.size===1){mult*=2;lines.push([PXI('couleur')+'COULEUR','×2']);}          // toutes la même enseigne
-  if(isStraight(G.pHand)){mult*=2;lines.push([PXI('suite')+'SUITE','×2']);}                            // rangs qui se suivent
-  if(G.pHand.length>=4&&suits.size===4){mult*=1.5;lines.push([PXI('arc')+'ARC-EN-CIEL','×1.5']);}   // une carte de chaque enseigne
+  if(G.pHand.length>=3&&suits.size===1){mult*=2;lines.push([PXI('couleur')+' COULEUR','×2']);}          // toutes la même enseigne
+  if(isStraight(G.pHand)){mult*=2;lines.push([PXI('suite')+' SUITE','×2']);}                            // rangs qui se suivent
+  if(G.pHand.length>=4&&suits.size===4){mult*=1.5;lines.push([PXI('arc')+' ARC-EN-CIEL','×1.5']);}   // une carte de chaque enseigne
   if(G.insisted){mult*=1.5;lines.push(['INSISTANCE','×1.5']);}
   if(G.pressure>=75){mult*=1.5;lines.push(['PRESSION','×1.5']);}
   if(hasRelic('bruleur')&&G.pressure>=50){mult*=1.5;lines.push(['BRÛLEUR','×1.5','bruleur']);}
   /* éditions des cartes en main */
   let foil=0,holo=0,poly=0;
   for(const c of G.pHand){if(c.ed==='foil')foil++;else if(c.ed==='holo')holo++;else if(c.ed==='poly')poly++;}
-  if(foil){bonusChips+=foil*3;lines.push([PXI('diamond')+'FOIL','+'+(foil*3)+' jet']);}
-  if(holo){mult+=holo;lines.push([PXI('diamond')+'HOLO','+'+holo]);}
-  if(poly){const pm=Math.pow(1.5,poly);mult*=pm;lines.push([PXI('diamond')+'POLY','×'+(Math.round(pm*100)/100)]);}
+  if(foil){bonusChips+=foil*3;lines.push([PXI('diamond')+' FOIL','+'+(foil*3)+' jet']);}
+  if(holo){mult+=holo;lines.push([PXI('diamond')+' HOLO','+'+holo]);}
+  if(poly){const pm=Math.pow(1.5,poly);mult*=pm;lines.push([PXI('diamond')+' POLY','×'+(Math.round(pm*100)/100)]);}
   if(hasRelic('as')&&G.pHand.some(c=>c.r==='A')){mult+=1;lines.push(['AS TRUQUÉ','+1','as']);}
   if(hasRelic('froid')&&G.pressure>=75){mult+=1;lines.push(['SANG-FROID','+1','froid']);}
   /* mode cagnotte : la SÉRIE de victoires paie — +0,5 par victoire enchaînée (dès 2), perdue = retour à zéro */
-  if(G.endless&&(G.streak||0)>=2){const s=Math.min(G.streak,6),per=0.5+((G.boons&&G.boons.serieBoost)||0);mult+=s*per;lines.push([PXI('fire')+'SÉRIE '+s,'+'+(s*per)]);}
+  if(G.endless&&(G.streak||0)>=2){const s=Math.min(G.streak,6),per=0.5+((G.boons&&G.boons.serieBoost)||0);mult+=s*per;lines.push([PXI('fire')+' SÉRIE '+s,'+'+(s*per)]);}
   /* anti-explosion : rendement décroissant au-delà de ×3, puis plafond de zone */
   const cap=(ZONE_MULTCAP[curTable().zone]||9)+((G.boons&&G.boons.mult)||0);
   if(mult>3)mult=3+(mult-3)*0.6;            // au-delà de ×3, chaque bonus compte à 60 %
@@ -1653,7 +1653,7 @@ function comboHints(){
   if(n>=4&&suits.size===4)on.push('ARC-EN-CIEL ×1.5');
   if(G.insisted)on.push('INSISTANCE ×1.5');
   if(G.pressure>=75)on.push('PRESSION ×1.5');
-  if(G.endless&&(G.streak||0)>=2)on.push(PXI('fire')+'SÉRIE '+Math.min(G.streak,6)+' +'+(Math.min(G.streak,6)*0.5));
+  if(G.endless&&(G.streak||0)>=2)on.push(PXI('fire')+' SÉRIE '+Math.min(G.streak,6)+' +'+(Math.min(G.streak,6)*0.5));
   /* --- à portée (une carte / un cran) --- */
   if(v<21&&v>=11&&21-v<=10)soon.push('21 PARFAIT ×3 · à '+(21-v));
   if(n===4&&v<=20)soon.push('CHARLIE ×2 · +1 carte');
@@ -2153,7 +2153,7 @@ function resolve(mode){
     const r=computeMult(mode);mult=r.mult;lines=r.lines;
     const base=stake+r.bonusChips;
     gain=Math.round(base*mult);
-    if(G.endless&&G.event&&G.event.id==='doree'){gain*=2;lines.push([PXI('doree')+'DORÉE','×2']);}
+    if(G.endless&&G.event&&G.event.id==='doree'){gain*=2;lines.push([PXI('doree')+' DORÉE','×2']);}
     G.bank+=stake+gain;
     if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,gain);G.stats.bestMult=Math.max(G.stats.bestMult,mult);}
     if(lines.length){$('tip').innerHTML=lines.map(l=>l[0]+' '+l[1]).join('  ·  ');$('tip').style.color='var(--gold)';}
