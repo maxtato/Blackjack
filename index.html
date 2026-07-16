@@ -233,8 +233,14 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .card .edtag.poly{background:#ffce3a}
 
 /* ===== CENTER / TIP ===== */
-#center{min-height:20px;display:flex;align-items:center;justify-content:center;margin:2px 0;position:relative;z-index:1}
+#center{min-height:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;margin:2px 0;position:relative;z-index:1}
 #tip{font-size:14px;color:#eafff;color:#f3fffe;text-shadow:1px 1px 0 var(--ink);text-align:center;min-height:14px;line-height:1.35;background:rgba(6,40,38,.55);padding:3px 10px;border-radius:7px;border:2px solid rgba(0,0,0,.3);max-width:90%}
+#tip:empty{display:none}
+/* pastilles de combos : acquis (allumé) / à portée (éteint) / événement (violet) */
+#comboRow{display:none;flex-wrap:wrap;gap:4px;justify-content:center;max-width:94%}
+.cpill{font-style:normal;font-size:10px;letter-spacing:.05em;line-height:1;padding:4px 8px;background:rgba(4,28,26,.72);color:var(--muted);border:2px solid rgba(0,0,0,.35);border-radius:6px;white-space:nowrap}
+.cpill.on{color:var(--gold);border-color:rgba(255,206,58,.55);background:rgba(60,44,4,.6)}
+.cpill.evt{color:#e6d2ff;border-color:rgba(166,77,255,.6);background:rgba(52,20,86,.65)}
 #tip:empty{display:none}
 
 /* ===== MULTPOP / WORD ===== */
@@ -689,6 +695,11 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 #turnPop .tp-coin b .cur{font-size:13px;align-self:flex-start;line-height:1.2}
 #turnPop .tp-coin span{font-size:13px;letter-spacing:.05em;font-weight:700}
 #turnPop.go .tp-coin{animation:tpCoin 2.2s cubic-bezier(.2,.9,.3,1) both}
+/* bandeau MAIN SPÉCIALE (mode cagnotte) : reste affiché toute la main */
+#turnPop .tp-evt{position:absolute;top:34px;left:50%;transform:translateX(-50%);background:#3a1560;color:#e6d2ff;clip-path:var(--pc);padding:7px 13px;font-size:13px;font-weight:700;letter-spacing:.06em;white-space:nowrap;box-shadow:3px 5px 0 rgba(0,0,0,.4);opacity:0}
+#turnPop .tp-evt small{font-size:11px;font-weight:400;color:#c9a6ff}
+#turnPop.go .tp-evt{animation:tpEvt .5s ease-out both}
+@keyframes tpEvt{0%{opacity:0;transform:translateX(-50%) translateY(-8px) scale(.9)}60%{opacity:1;transform:translateX(-50%) translateY(0) scale(1.05)}100%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
 @keyframes tpCoin{0%{opacity:0;transform:translateY(-8px) scale(.9)}12%{opacity:0;transform:translateY(-8px) scale(.9)}19%{opacity:1;transform:translateY(0) scale(1.06)}25%{transform:translateY(0) scale(1)}82%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-6px) scale(.95)}}
 
 /* objectif atteint : animation sur la barre (plus de confettis) */
@@ -851,7 +862,7 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
             <div class="zlbl">Croupier<span class="v" id="dVal">—</span></div>
             <div class="hand" id="dHand"></div>
           </div>
-          <div id="center"><div id="tip"></div></div>
+          <div id="center"><div id="tip"></div><div id="comboRow"></div></div>
           <div class="zone">
             <div class="zlbl">Toi<span class="v" id="pVal">—</span></div>
             <div class="hand" id="pHand"></div>
@@ -916,9 +927,11 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
       <div><span class="k">La table</span> — joue <span class="k">toutes les mains imposées</span>, mise dans la <span class="k">limite</span> (min–max fixe), et atteins l'<span class="k">objectif de gain</span> avant la dernière main. Sous l'objectif = table perdue.</div>
       <div><span class="k">Tes coups</span> — <span class="k">TIRER</span> une carte, <span class="k">RESTER</span> sur ta main, ou <span class="k">FORCER LA CHANCE</span> (2 cartes, on garde la meilleure · 1×/table · pression +++).</div>
       <div><span class="k">Étoiles <i class="pxstar"></i></span> — chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Elles ouvrent les <span class="d">boss</span> et les zones profondes.</div>
+      <div><span class="k">Combos</span> — le vrai jeu : <span class="k">construis</span> tes mains, ne te contente pas de battre le croupier. <span class="k">21 PARFAIT ×3</span> · <span class="k">CHARLIE</span> (5 cartes) <span class="k">×2</span> · <span class="k">COULEUR</span> (3+ même enseigne) <span class="k">×2</span> · <span class="k">SUITE</span> (3+ rangs qui se suivent) <span class="k">×2</span> · BLACKJACK ×1.5 · PAIRE DE 7 ×1.5 · ARC-EN-CIEL (4 enseignes) ×1.5 · PRESSION ≥75 % ×1.5. Les pastilles sur le tapis montrent ce qui est acquis et à portée.</div>
       <div><span class="k">Pression</span> — monte quand tu prends des risques, redescend quand tu joues posé. Trop haute, le croupier devient plus agressif.</div>
       <div><span class="k">La descente</span> — <span class="k">9 tables · 3 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">replonger</span> plus profond pour plus gros.</div>
       <div><span class="k">La Planque</span> — dépense ta <span class="k">réputation <i class="pxstar"></i></span> en avantages permanents (reliques, tarots, éditions) avant de repartir.</div>
+      <div><span class="k">La Cagnotte (infini)</span> — pas d'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · une <span class="k">SÉRIE</span> de victoires fait monter le mult (+0,5 par victoire enchaînée) · toutes les 5 mains, une <span class="d">main spéciale</span>. Banqueroute = fin.</div>
     </div>
     <button class="btn b-gold menu" onclick="closeRules()">FERMER</button>
   </div>
@@ -1166,8 +1179,9 @@ const ZONE_MULTCAP={1:4,2:6,3:9};                 // plafond de multiplicateur p
    franchi, et on choisit alors un BONUS. Banqueroute = fin.
    ============================================================ */
 const ENDLESS_RULETXT={nervous:'La pression monte 2× plus vite',mute:'Croupier muet',gros:'Le croupier tire jusqu’à 18',depart:'Table déjà chaude (+30 %)',sec:'Égalité = défaite'};
-/* seuil de cagnotte pour franchir le palier p (0-based) */
-function palierTarget(p){return niceRound(250*Math.pow(1.9,p));}
+/* seuil de cagnotte pour franchir le palier p (0-based) — premier palier vite
+   atteint (~2× la banque de départ) puis ×1.6 : la récompense rythme la partie */
+function palierTarget(p){return niceRound(120*Math.pow(1.6,p));}
 /* niveau de mise (tier) = nombre de paliers franchis ; les mises grimpent */
 function endlessTier(tier){
   const bmax=1+((G.boons&&G.boons.betmax)||0);
@@ -1189,6 +1203,14 @@ const BOONS=[
   {id:'betmax',t:'MISE MAX +25 %',  d:'Ton plafond de mise grimpe : vise plus gros.'},
   {id:'calm',  t:'PRESSION −25 %',  d:'La pression monte moins vite (moins de tirages forcés).'},
   {id:'cash',  t:'+20 % CAGNOTTE',  d:'Injection immédiate dans ta cagnotte.'},
+];
+/* mini-événements du mode cagnotte : toutes les 5 mains, la main est SPÉCIALE —
+   ça casse la routine et crée des pics de tension/récompense */
+const ENDLESS_EVENTS=[
+  {id:'doree',   ic:'✨', t:'MAIN DORÉE',        d:'gains doublés sur cette main'},
+  {id:'forcee',  ic:'⚠',  t:'MISE FORCÉE',       d:'mise max obligatoire'},
+  {id:'pompette',ic:'🍸', t:'CROUPIER POMPETTE', d:'le croupier s’arrête à 16'},
+  {id:'etoile',  ic:'◈',  t:'CARTE ÉTOILÉE',     d:'ta 1ʳᵉ carte est HOLO (+1 mult)'},
 ];
 /* étoiles : il FAUT atteindre l'objectif pour valider la table.
    0★ = objectif manqué (table ratée) · 1★ objectif · 2★ confort · 3★ maîtrise */
@@ -1273,7 +1295,7 @@ function freshGame(){
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
      peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,insurance:false,objHit:false,
      phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1,splitActive:false,hands:null,hi:0,
-     endless:false,palier:0,peak:0,boons:{relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0},
+     endless:false,palier:0,peak:0,boons:{relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0},streak:0,event:null,
      stats:{won:0,played:0,bestGain:0,bestMult:1}};
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // valeur interne par défaut
   G.betChosen=false;                                       // il faut choisir une mise sur la 1re table
@@ -1368,6 +1390,8 @@ function computeMult(mode){
   if(poly){const pm=Math.pow(1.5,poly);mult*=pm;lines.push(['◆ POLY','×'+(Math.round(pm*100)/100)]);}
   if(hasRelic('as')&&G.pHand.some(c=>c.r==='A')){mult+=1;lines.push(['◆ AS TRUQUÉ','+1','as']);}
   if(hasRelic('froid')&&G.pressure>=75){mult+=1;lines.push(['◆ SANG-FROID','+1','froid']);}
+  /* mode cagnotte : la SÉRIE de victoires paie — +0,5 par victoire enchaînée (dès 2), perdue = retour à zéro */
+  if(G.endless&&(G.streak||0)>=2){const s=Math.min(G.streak,6);mult+=s*0.5;lines.push(['🔥 SÉRIE '+s,'+'+(s*0.5)]);}
   /* anti-explosion : rendement décroissant au-delà de ×3, puis plafond de zone */
   const cap=(ZONE_MULTCAP[curTable().zone]||9)+((G.boons&&G.boons.mult)||0);
   if(mult>3)mult=3+(mult-3)*0.6;            // au-delà de ×3, chaque bonus compte à 60 %
@@ -1531,6 +1555,44 @@ function renderMult(){
   $('chipsVal').textContent=bonus?(abbr(stake)+'+'+bonus):abbr(stake);
   $('multVal').textContent=fmtMult(m);
   $('scorebox').classList.toggle('hot',m>1||bonus>0);
+  renderCombos();
+}
+/* ---------- combos visibles : ce que ta main vaut DÉJÀ, et ce qui est À PORTÉE ----------
+   Le vrai jeu est de CONSTRUIRE ses mains ; ces pastilles l'enseignent en jouant. */
+function comboHints(){
+  const on=[],soon=[];
+  const h=G.pHand,n=h.length,v=handValue(h).total;
+  const suits=new Set(h.map(c=>c.s));
+  const sevens=h.filter(c=>c.r==='7').length;
+  /* --- déjà acquis (s'appliquent si tu gagnes la main) --- */
+  if(v===21&&n===2)on.push('BLACKJACK ×1.5');
+  if(v===21&&n>2)on.push('21 PARFAIT ×3');
+  if(n>=5&&v<=21)on.push('CHARLIE ×2');
+  if(sevens>=2)on.push('PAIRE DE 7 ×1.5');
+  if(n>=3&&suits.size===1)on.push('COULEUR ×2');
+  if(isStraight(h))on.push('SUITE ×2');
+  if(n>=4&&suits.size===4)on.push('ARC-EN-CIEL ×1.5');
+  if(G.insisted)on.push('INSISTANCE ×1.5');
+  if(G.pressure>=75)on.push('PRESSION ×1.5');
+  if(G.endless&&(G.streak||0)>=2)on.push('🔥 SÉRIE '+Math.min(G.streak,6)+' +'+(Math.min(G.streak,6)*0.5));
+  /* --- à portée (une carte / un cran) --- */
+  if(v<21&&v>=11&&21-v<=10)soon.push('21 PARFAIT ×3 · à '+(21-v));
+  if(n===4&&v<=20)soon.push('CHARLIE ×2 · +1 carte');
+  if(n===2&&suits.size===1)soon.push('COULEUR ×2 · +1 '+h[0].s);
+  if(n===3&&suits.size===3)soon.push('ARC-EN-CIEL ×1.5 · +1 carte');
+  if(sevens===1&&n<=3)soon.push('PAIRE DE 7 · tire un 7');
+  if(!isStraight(h)&&n>=2&&n<=4&&RANKS.some(r=>isStraight(h.concat([{r,s:'♠'}]))))soon.push('SUITE ×2 · possible');
+  if(G.pressure>=55&&G.pressure<75)soon.push('PRESSION 75 % = ×1.5');
+  return {on,soon};
+}
+function renderCombos(){
+  const row=$('comboRow');if(!row)return;
+  if(G.phase!=='play'||!G.pHand.length||G._dealing){row.innerHTML='';row.style.display='none';return;}
+  const {on,soon}=comboHints();
+  const pills=on.map(t=>`<i class="cpill on">${t}</i>`).concat(soon.map(t=>`<i class="cpill">${t}</i>`)).slice(0,4);
+  if(G.endless&&G.event)pills.unshift(`<i class="cpill evt">${G.event.ic} ${G.event.t}</i>`);
+  row.innerHTML=pills.join('');
+  row.style.display=pills.length?'flex':'none';
 }
 function renderTop(){
   const t=G.table;
@@ -1735,7 +1797,12 @@ function applyHandIncome(){
 function betChoices(){
   const t=curTable(),span=t.max-t.min;
   const raw=span<=0?[t.min]:[t.min,t.min+Math.round(span/3),t.min+Math.round(2*span/3),t.max];
-  return [...new Set(raw)].sort((a,b)=>a-b);
+  const opts=[...new Set(raw)].sort((a,b)=>a-b);
+  if(G.endless&&G.event&&G.event.id==='forcee'){                 // MISE FORCÉE : un seul choix, le plus haut abordable
+    const aff=opts.filter(v=>v<=G.bank);
+    return [aff.length?aff[aff.length-1]:opts[0]];
+  }
+  return opts;
 }
 function clampBet(){
   const t=curTable();
@@ -1830,6 +1897,7 @@ function deal(){
   // on tire les 4 cartes mais on les distribue une par une, en animation
   const p1=draw(),d1=draw(),p2=draw(),d2=draw();
   if(hasRelic('maitresse')&&!p1.ed)p1.ed='foil';
+  if(G.endless&&G.event&&G.event.id==='etoile'&&!p1.ed)p1.ed='holo';   // CARTE ÉTOILÉE
   [p1,p2,d1,d2].forEach(c=>{c._pending=true;});                 // pas encore arrivées
   G.pHand.push(p1,p2);G.dHand.push(d1,d2);
   G._dealing=true;
@@ -1860,7 +1928,7 @@ function finishDeal(){
   G._dealing=false;
   // on retire les drapeaux transitoires : le jeu reprend son rendu normal
   [...G.pHand,...G.dHand].forEach(c=>{delete c._pending;delete c._fd;delete c._flip;delete c._arr;});
-  renderActions();
+  renderActions();renderMult();
   const ec=G.pHand.find(c=>c.ed);if(ec)announceEd(ec);
   if(handValue(G.pHand).total===21)setTimeout(()=>playerStand(true),420);
 }
@@ -1968,7 +2036,7 @@ function dealerPlay(natural){
   renderHands(true);G.doFlip=false;
   const step=()=>{
     const v=handValue(G.dHand);
-    const goal=(G.table.rule==='gros')?18:17;
+    const goal=(G.endless&&G.event&&G.event.id==='pompette')?16:((G.table.rule==='gros')?18:17);
     const hitSoft17=(G.maxPressureReached>=55);
     const mustHit=v.total<goal||(goal===17&&v.total===17&&v.soft&&hitSoft17);
     if(mustHit){                                                // le croupier tire : même arrivée animée
@@ -2001,7 +2069,9 @@ function resolve(mode){
   if(outcome==='win'){
     const r=computeMult(mode);mult=r.mult;lines=r.lines;
     const base=stake+r.bonusChips;
-    gain=Math.round(base*mult);G.bank+=stake+gain;
+    gain=Math.round(base*mult);
+    if(G.endless&&G.event&&G.event.id==='doree'){gain*=2;lines.push(['✨ DORÉE','×2']);}
+    G.bank+=stake+gain;
     if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,gain);G.stats.bestMult=Math.max(G.stats.bestMult,mult);}
     if(lines.length){$('tip').innerHTML=lines.map(l=>l[0]+' '+l[1]).join('  ·  ');$('tip').style.color='var(--gold)';}
     // décompte animé (carte par carte + multiplicateurs), PUIS l'annonce du gain
@@ -2020,6 +2090,8 @@ function resolve(mode){
     sfx.lose();shake(8);showWord('lose',gain,1,false,pBust);
   }
 
+  // série (mode cagnotte) : comptée APRÈS le calcul du mult → l'aperçu live correspond au payout
+  if(G.endless){if(outcome==='win')G.streak=(G.streak||0)+1;else if(outcome==='lose')G.streak=0;}
   // la pression PERSISTE dans la table : elle retombe après un revers, peu après un gain
   const drop=pBust?34:(outcome==='lose'?40:(outcome==='push'?22:12));
   G.pressure=Math.max(0,G.pressure-drop);
@@ -2063,6 +2135,7 @@ function resolveSplit(){
   showWord(kind,Math.abs(net),1);
   $('tip').innerHTML=summary.join('  ·  ');$('tip').style.color='var(--gold)';
   if(net>0&&!G.objHit&&G.bank>=G.table.goal){G.objHit=true;setTimeout(objectiveReached,360);}
+  if(G.endless){if(net>0)G.streak=(G.streak||0)+1;else if(net<0)G.streak=0;}
   const drop=net<0?40:(net>0?12:22);
   G.pressure=Math.max(0,G.pressure-drop);
   renderTop();renderRelics();renderPressure();renderMult();
@@ -2078,7 +2151,9 @@ function nextHandOrEnd(){
     if(G.bank<G.table.min)return endlessBust();     // banqueroute = fin
     if(G.bank>=palierTarget(G.palier||0))return reachPalier();   // palier franchi → bonus + mises ↑
     G.hand++;G.phase='bet';G.dHand=[];G.pHand=[];
+    G.event=(G.hand%5===0)?ENDLESS_EVENTS[rndInt(ENDLESS_EVENTS.length)]:null;   // main spéciale toutes les 5 mains
     clampBet();applyHandIncome();renderAll();renderHands();announceTurn();
+    if(G.event)popText(G.event.ic+' '+G.event.t,G.event.d);
     return;
   }
   if(G.bank>=G.table.goal){return finishTable();}  // objectif atteint → table gagnée tout de suite
@@ -2412,9 +2487,14 @@ function quitToMenu(){$('pauseScreen').classList.remove('show');endRun(false);} 
 // on ne garde qu'un petit jeton de revenu (pourboire/mécène) au début de la main
 function announceTurn(){
   const el=$('turnPop');if(!el)return;
-  if(!G._income){el.innerHTML='';return;}
-  const lbl=G._income.parts.length===1?G._income.parts[0].replace(/\s*\+.*/,'').toUpperCase():'REVENU';
-  el.innerHTML=`<div class="tp-coin"><b>+<span class="n">${abbr(G._income.amt)}</span><span class="cur">$</span></b><span>${lbl}</span></div>`;
+  let h='';
+  if(G._income){
+    const lbl=G._income.parts.length===1?G._income.parts[0].replace(/\s*\+.*/,'').toUpperCase():'REVENU';
+    h+=`<div class="tp-coin"><b>+<span class="n">${abbr(G._income.amt)}</span><span class="cur">$</span></b><span>${lbl}</span></div>`;
+  }
+  if(G.endless&&G.event)h+=`<div class="tp-evt">${G.event.ic} ${G.event.t} · <small>${G.event.d}</small></div>`;   // main spéciale
+  el.innerHTML=h;
+  if(!h)return;
   el.classList.remove('go');void el.offsetWidth;el.classList.add('go');
 }
 let textTimer;
@@ -2721,6 +2801,7 @@ function applyBoon(id){
   sfx.buy&&sfx.buy();coinBurst(8);
   $('palierScreen').classList.remove('show');
   G.table=endlessTier(G.tableIdx);                        // reflète le bonus (ex. mise max)
+  G.event=null;                                           // pas d'événement sur la main de palier
   G.hand++;G.phase='bet';G.dHand=[];G.pHand=[];
   clampBet();applyHandIncome();renderAll();renderHands();announceTurn();
 }
