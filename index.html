@@ -234,14 +234,14 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 
 /* ===== CENTER / TIP ===== */
 #center{min-height:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;margin:2px 0;position:relative;z-index:1}
-#tip{font-size:14px;color:#eafff;color:#f3fffe;text-shadow:1px 1px 0 var(--ink);text-align:center;min-height:14px;line-height:1.35;background:rgba(6,40,38,.55);padding:3px 10px;border-radius:7px;border:2px solid rgba(0,0,0,.3);max-width:90%}
+#tip{font-size:14px;color:#eafff;color:#f3fffe;text-shadow:1px 1px 0 var(--ink);text-align:center;min-height:14px;line-height:1.35;background:rgba(6,40,38,.55);padding:3px 10px;border-radius:0;clip-path:var(--pc);border:none;max-width:90%}
 #tip:empty{display:none}
 /* pastilles de combos : acquis (allumé) / à portée (éteint) / événement (violet) */
 #comboRow{display:none;flex-wrap:wrap;gap:4px;justify-content:center;max-width:94%}
-.cpill{font-style:normal;font-size:10px;letter-spacing:.05em;line-height:1;padding:4px 8px;background:rgba(4,28,26,.72);color:var(--muted);border:2px solid rgba(0,0,0,.35);border-radius:6px;white-space:nowrap}
-.cpill.on{color:var(--gold);border-color:rgba(255,206,58,.55);background:rgba(60,44,4,.6)}
-.cpill.evt{color:#e6d2ff;border-color:rgba(166,77,255,.6);background:rgba(52,20,86,.65)}
-.cpill.ctr{color:#7fe8df;border-color:rgba(31,209,200,.5);background:rgba(8,60,56,.7)}
+.cpill{font-style:normal;font-size:10px;letter-spacing:.05em;line-height:1;padding:4px 8px;background:rgba(4,28,26,.82);color:var(--muted);border:none;border-radius:0;clip-path:var(--pc);white-space:nowrap}
+.cpill.on{color:var(--gold);background:rgba(70,50,4,.85)}
+.cpill.evt{color:#e6d2ff;background:rgba(58,22,96,.85)}
+.cpill.ctr{color:#7fe8df;background:rgba(8,66,60,.85)}
 #tip:empty{display:none}
 
 /* ===== MULTPOP / WORD ===== */
@@ -771,6 +771,7 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 .btn>.W .L,.btn>.blbl .L,#tableName .L,#peekBtn .L,
 .overlay.show .ovpanel h1 .L,
 .zlbl .L,.tstats .L,#chips .chip .L,#turnPop .L,
+#tip .L,#comboRow .L,
 .repNum .L,.recBox .L{animation:letterShake 1.1s steps(1,end) infinite;animation-delay:var(--d,0s)}
 @keyframes letterShake{
  0%  {transform:translate( .2px,calc(var(--o,0px) - .15px))}
@@ -2812,6 +2813,7 @@ function staggerUI(){
   document.querySelectorAll('#topbar .tstats').forEach(el=>staggerText(el,0.6));   // gros nombres : décalage discret (comme les jetons du bas), pas amplifié
   staggerText($('bottombar'));staggerText($('effects'));staggerText($('peekBtn'));
   document.querySelectorAll('#stage .zlbl').forEach(staggerText);
+  staggerText($('tip'));staggerText($('comboRow'));                 // conseil + pastilles combos/bonus : lettres décalées comme le reste
   // la page d'accueil (#intro) reste figée : on ne la décale/tremble pas
   document.querySelectorAll('.overlay.show .ovpanel').forEach(p=>{if(!p.closest('#intro')&&!p.closest('#modeMenu'))staggerText(p);});
 }
