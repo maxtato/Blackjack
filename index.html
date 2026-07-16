@@ -241,6 +241,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .cpill{font-style:normal;font-size:10px;letter-spacing:.05em;line-height:1;padding:4px 8px;background:rgba(4,28,26,.72);color:var(--muted);border:2px solid rgba(0,0,0,.35);border-radius:6px;white-space:nowrap}
 .cpill.on{color:var(--gold);border-color:rgba(255,206,58,.55);background:rgba(60,44,4,.6)}
 .cpill.evt{color:#e6d2ff;border-color:rgba(166,77,255,.6);background:rgba(52,20,86,.65)}
+.cpill.ctr{color:#7fe8df;border-color:rgba(31,209,200,.5);background:rgba(8,60,56,.7)}
 #tip:empty{display:none}
 
 /* ===== MULTPOP / WORD ===== */
@@ -914,6 +915,7 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
     <div class="shopBtns" style="gap:10px;margin-top:2px">
       <button class="btn b-teal menu" onclick="openMenu()" style="flex:0 0 auto">← MENU</button>
       <button class="btn b-gold menu" id="planqueLaunch" onclick="launchMode()" style="flex:1">DESCENDRE<small>la nuit · 9 tables</small></button>
+      <button class="btn b-red menu" id="planqueZ2" onclick="startGame(3)" style="flex:0 0 auto;display:none">ZONE 2<small>raccourci</small></button>
     </div>
   </div>
 </div>
@@ -929,7 +931,8 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
       <div><span class="k">Étoiles <i class="pxstar"></i></span> — chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Elles ouvrent les <span class="d">boss</span> et les zones profondes.</div>
       <div><span class="k">Combos</span> — le vrai jeu : <span class="k">construis</span> tes mains, ne te contente pas de battre le croupier. <span class="k">21 PARFAIT ×3</span> · <span class="k">CHARLIE</span> (5 cartes) <span class="k">×2</span> · <span class="k">COULEUR</span> (3+ même enseigne) <span class="k">×2</span> · <span class="k">SUITE</span> (3+ rangs qui se suivent) <span class="k">×2</span> · BLACKJACK ×1.5 · PAIRE DE 7 ×1.5 · ARC-EN-CIEL (4 enseignes) ×1.5 · PRESSION ≥75 % ×1.5. Les pastilles sur le tapis montrent ce qui est acquis et à portée.</div>
       <div><span class="k">Pression</span> — monte quand tu prends des risques, redescend quand tu joues posé. Trop haute, le croupier devient plus agressif.</div>
-      <div><span class="k">La descente</span> — <span class="k">9 tables · 3 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">replonger</span> plus profond pour plus gros.</div>
+      <div><span class="k">Contrats 📜</span> — chaque table propose un défi optionnel (« gagne une main de 5 cartes »…) qui rapporte des <span class="k">★ bonus</span> dans la cagnotte. Rempli ou non, la table continue normalement.</div>
+      <div><span class="k">La descente</span> — <span class="k">9 tables · 3 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">replonger</span> plus profond pour plus gros. Atteins la <span class="k">zone 2</span> deux fois pour débloquer le <span class="k">raccourci</span> (départ direct en zone 2, cagnotte ★ à zéro).</div>
       <div><span class="k">La Planque</span> — dépense ta <span class="k">réputation <i class="pxstar"></i></span> en avantages permanents (reliques, tarots, éditions) avant de repartir.</div>
       <div><span class="k">La Cagnotte (infini)</span> — pas d'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · une <span class="k">SÉRIE</span> de victoires fait monter le mult (+0,5 par victoire enchaînée) · toutes les 5 mains, une <span class="d">main spéciale</span>. Banqueroute = fin.</div>
     </div>
@@ -1095,7 +1098,7 @@ function renderBackPicker(){
    Chaque mode a SA réputation, SES déblocages et SON record. La Planque n'affiche
    donc que les objets utiles au mode qu'on vient jouer. */
 function blankMeta(){return {
-  nuit:  {rep:0,unlocks:{},record:{depth:0,chips:0}},
+  nuit:  {rep:0,unlocks:{},record:{depth:0,chips:0},zone2Runs:0},
   infini:{rep:0,unlocks:{},record:{peak:0,palier:0}}
 };}
 function loadMeta(){
@@ -1103,7 +1106,7 @@ function loadMeta(){
     if(v&&typeof v==='object'){
       if(v.nuit&&v.infini){                                   // nouveau format à deux modes
         return {
-          nuit:  {rep:v.nuit.rep|0,  unlocks:v.nuit.unlocks||{},  record:{depth:(v.nuit.record&&v.nuit.record.depth)|0,chips:(v.nuit.record&&v.nuit.record.chips)|0}},
+          nuit:  {rep:v.nuit.rep|0,  unlocks:v.nuit.unlocks||{},  record:{depth:(v.nuit.record&&v.nuit.record.depth)|0,chips:(v.nuit.record&&v.nuit.record.chips)|0},zone2Runs:v.nuit.zone2Runs|0},
           infini:{rep:v.infini.rep|0,unlocks:v.infini.unlocks||{},record:{peak:(v.infini.record&&v.infini.record.peak)|0,palier:(v.infini.record&&v.infini.record.palier)|0}}
         };
       }
@@ -1212,6 +1215,33 @@ const ENDLESS_EVENTS=[
   {id:'pompette',ic:'🍸', t:'CROUPIER POMPETTE', d:'le croupier s’arrête à 16'},
   {id:'etoile',  ic:'◈',  t:'CARTE ÉTOILÉE',     d:'ta 1ʳᵉ carte est HOLO (+1 mult)'},
 ];
+/* CONTRATS (mode nuit) : un défi optionnel par table — le remplir rapporte des ★
+   bonus dans la cagnotte. Pousse à jouer AUTREMENT, pas juste à battre le croupier. */
+const CONTRACTS=[
+  {id:'c5',    txt:'gagne une main de 5 cartes',       chk:o=>o.n>=5},
+  {id:'c21',   txt:'gagne avec un 21 parfait',         chk:o=>o.pv===21&&o.n>2},
+  {id:'cpress',txt:'gagne à pression ≥ 75 %',          chk:o=>o.press>=75},
+  {id:'cmult', txt:'gagne une main à ×3 ou plus',      chk:o=>o.mult>=3},
+  {id:'cdbl',  txt:'gagne une main DOUBLÉE',           chk:o=>o.dbl},
+  {id:'csuite',txt:'gagne avec une SUITE',             chk:o=>o.suite},
+  {id:'ccoul', txt:'gagne avec une COULEUR',           chk:o=>o.coul},
+];
+function rollContract(){
+  if(G.endless)return null;
+  const c=CONTRACTS[rndInt(CONTRACTS.length)];
+  return {id:c.id,txt:c.txt,reward:10+((G.table&&G.table.zone)|0)*5,done:false};
+}
+/* appelé sur chaque main GAGNÉE (mult = multiplicateur payé) */
+function checkContract(mult){
+  const c=G.contract;if(!c||c.done||G.endless)return;
+  const h=G.pHand,n=h.length,pv=handValue(h).total,suits=new Set(h.map(x=>x.s));
+  const o={n,pv,press:G.pressure,mult:mult||1,dbl:(G.stakeMult||1)>=2,suite:isStraight(h),coul:n>=3&&suits.size===1};
+  const def=CONTRACTS.find(x=>x.id===c.id);
+  if(def&&def.chk(o)){
+    c.done=true;G.pot+=c.reward;
+    setTimeout(()=>{sfx.combo&&sfx.combo();coinBurst(8);popText('📜 CONTRAT REMPLI','+'+c.reward+' ★');renderTop();},1500);
+  }
+}
 /* étoiles : il FAUT atteindre l'objectif pour valider la table.
    0★ = objectif manqué (table ratée) · 1★ objectif · 2★ confort · 3★ maîtrise */
 function starsFor(t,bank){
@@ -1229,11 +1259,16 @@ function tableRep(t,stars,maxPressure){
   return rep;
 }
 /* réputation totale en fin de run : cagnotte (entière si encaisse, moitié sinon)
-   + prime d'effort (tables tenues), pour qu'une run ratée serve toujours */
+   + prime d'effort (tables tenues) + prime de PROXIMITÉ (près du but sur la
+   table perdue) — une run ratée sert toujours, et « presque » paie un peu */
+function proximityRep(){
+  if(G.endless||!G.table||!isFinite(G.table.goal)||G.bank>=G.table.goal)return 0;
+  return Math.round(10*Math.max(0,Math.min(1,G.bank/G.table.goal)));
+}
 function repOnEnd(cashout){
   const depth=(G.tableIdx|0)+(G.phase==='done'?1:0);
   const base=cashout?G.pot:Math.floor(G.pot*0.5);
-  return base+Math.max(0,depth)*3+(G.runStars|0)*2;
+  return base+Math.max(0,depth)*3+(G.runStars|0)*2+(cashout?0:proximityRep());
 }
 const RELIC_POOL=[
   {id:'lunettes',name:'Lunettes',ic:'👓',desc:'Relique permanente. Une fois par main, révèle la prochaine carte du sabot avant de décider de tirer.',cost:14},
@@ -1295,7 +1330,7 @@ function freshGame(){
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
      peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,insurance:false,objHit:false,
      phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1,splitActive:false,hands:null,hi:0,
-     endless:false,palier:0,peak:0,boons:{relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0},streak:0,event:null,
+     endless:false,palier:0,peak:0,boons:{relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0},streak:0,event:null,contract:null,
      stats:{won:0,played:0,bestGain:0,bestMult:1}};
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // valeur interne par défaut
   G.betChosen=false;                                       // il faut choisir une mise sur la 1re table
@@ -1591,6 +1626,7 @@ function renderCombos(){
   const {on,soon}=comboHints();
   const pills=on.map(t=>`<i class="cpill on">${t}</i>`).concat(soon.map(t=>`<i class="cpill">${t}</i>`)).slice(0,4);
   if(G.endless&&G.event)pills.unshift(`<i class="cpill evt">${G.event.ic} ${G.event.t}</i>`);
+  if(!G.endless&&G.contract&&!G.contract.done)pills.push(`<i class="cpill ctr">📜 ${G.contract.txt}</i>`);
   row.innerHTML=pills.join('');
   row.style.display=pills.length?'flex':'none';
 }
@@ -1620,6 +1656,7 @@ function renderTop(){
     bits.push('mise '+abbr(t.min)+'–'+abbr(t.max));
     bits.push((G.runStars||0)+' étoile'+((G.runStars||0)>1?'s':''));
     if(G.pot>0)bits.push('cagnotte '+abbr(G.pot));
+    if(G.contract)bits.push(G.contract.done?('✓ contrat rempli'):('📜 '+G.contract.txt+' (+'+G.contract.reward+'★)'));
   }
   $('ruleText').innerHTML=bits.join('  ·  ');
   $('ruleText').classList.toggle('boss',!!t.boss);
@@ -2090,6 +2127,7 @@ function resolve(mode){
     sfx.lose();shake(8);showWord('lose',gain,1,false,pBust);
   }
 
+  if(outcome==='win')checkContract(mult);                 // contrat de table (mode nuit)
   // série (mode cagnotte) : comptée APRÈS le calcul du mult → l'aperçu live correspond au payout
   if(G.endless){if(outcome==='win')G.streak=(G.streak||0)+1;else if(outcome==='lose')G.streak=0;}
   // la pression PERSISTE dans la table : elle retombe après un revers, peu après un gain
@@ -2117,6 +2155,7 @@ function resolveSplit(){
     if(outcome==='win'){
       G.pHand=h;const r=computeMult('stand');const base=stake+r.bonusChips;
       g=Math.round(base*r.mult);G.bank+=stake+g;
+      checkContract(r.mult);
       if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,g);G.stats.bestMult=Math.max(G.stats.bestMult,r.mult);}
     }else if(outcome==='push'){
       let pg=0;if(hasRelic('diplomate')){pg=Math.floor(stake*0.5);G.bank+=pg;}
@@ -2169,7 +2208,7 @@ function nextHandOrEnd(){
 function finishTable(){
   const t=G.table;
   const stars=starsFor(t,G.bank);
-  if(stars===0){onTableLost('OBJECTIF MANQUÉ','Tu finis sous l’objectif de gain de la table.');return;}
+  if(stars===0){onTableLost('OBJECTIF MANQUÉ',`Tu finis sous l’objectif de gain de la table — il te manquait <b style="color:var(--red)">${abbr(t.goal-G.bank)} $</b>.`);return;}
   G.tableStars[G.tableIdx]=stars;
   G.runStars=G.tableStars.reduce((a,b)=>a+(b||0),0);
   const reward=tableRep(t,stars,G.tableMaxPressure||0);
@@ -2340,6 +2379,7 @@ function enterTable(prevZone){
   // droit d'entrée de zone : absorbe une partie des jetons (anti boule de neige)
   if(G.table.entry){G.bank=Math.max(0,G.bank-G.table.entry);popText("DROIT D'ENTRÉE",'−'+abbr(G.table.entry)+' $');}
   G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;
+  G.contract=rollContract();                               // nouveau contrat à chaque table
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // nouvelle table : on remise à zéro (pas la mise de la table d'avant)
   G.betChosen=false;                                       // nouvelle table : aucune mise présélectionnée, il faut en choisir une
   clampBet();
@@ -2413,12 +2453,21 @@ function endRun(cashout){
   document.body.classList.remove('inf');
   const baseGain=repOnEnd(cashout);
   const coffre=cashout?coffreBonus(G.bank):0;   // coffre seulement si on encaisse
+  const prox=cashout?0:proximityRep();
   const gained=baseGain+coffre;
   metaCur().rep+=gained;
+  // nouveau record ? (comparé AVANT la mise à jour)
+  const recBefore=Object.assign({},metaCur().record);
+  const newRec=G.endless
+    ?Math.max(G.peak||0,G.bank)>(recBefore.peak||0)
+    :(G.tableIdx+1>(recBefore.depth||0)||G.bank>(recBefore.chips||0));
+  // raccourci : atteindre la zone 2 (table 4) compte pour le déblocage « départ en zone 2 »
+  if(!G.endless&&G.tableIdx>=3)META.nuit.zone2Runs=(META.nuit.zone2Runs|0)+1;
   updateRecord(G.tableIdx+1);
   saveMeta();
   const depth=G.tableIdx+1;
   const rec=metaCur().record;
+  const recLine=newRec?`<br><b style="color:var(--gold)">🏆 NOUVEAU RECORD !</b> `:'<br>';
   if(G.endless){
     const peak=Math.max(G.peak||0,G.bank);
     $('endTitle').textContent='CAGNOTTE ÉPUISÉE';
@@ -2427,17 +2476,19 @@ function endRun(cashout){
       `Ta plongée s’arrête.`+
       `<br><br>Cagnotte max : <b style="color:var(--gold)">${abbr(peak)} $</b> · Palier atteint : <b>${(G.palier||0)+1}</b>`+
       `<br>Réputation : <b>${STAR}${abbr(baseGain)}</b>`+(coffre?` <span style="color:var(--muted)">+ coffre ${STAR}${abbr(coffre)}</span>`:'')+` &nbsp;→&nbsp; total <b>${STAR}${abbr(metaCur().rep)}</b>`+
-      `<br><span style="color:var(--muted)">Record : palier ${rec.palier||0} · ${abbr(rec.peak||0)} $</span>`;
+      recLine+`<span style="color:var(--muted)">Record : palier ${rec.palier||0} · ${abbr(rec.peak||0)} $</span>`;
   }else{
+  const goal=(G.table&&isFinite(G.table.goal))?G.table.goal:0;
+  const manque=(!cashout&&goal&&G.bank<goal)?`<br>Il te manquait <b style="color:var(--red)">${abbr(goal-G.bank)} $</b> pour l'objectif`+(prox?` <span style="color:var(--muted)">— prime de proximité ${STAR}${prox}</span>`:'')+`.`:'';
   $('endTitle').textContent=cashout?'TU ENCAISSES':'FIN DE LA NUIT';
   $('endTitle').className=cashout?'win':'dead';
   $('endText').innerHTML=
     (cashout
       ?`Tu pars avec la cagnotte avant que ça tourne mal.`
-      :`Tu repars quand même avec la moitié de ta cagnotte.`)+
+      :`Tu repars quand même avec la moitié de ta cagnotte.`)+manque+
     `<br><br>Tables tenues : <b>${depth}</b> · Jetons : <b>${abbr(G.bank)} $</b>`+
     `<br>Réputation : <b>${STAR}${abbr(baseGain)}</b>`+(coffre?` <span style="color:var(--muted)">+ coffre ${STAR}${abbr(coffre)}</span>`:'')+` &nbsp;→&nbsp; total <b>${STAR}${abbr(metaCur().rep)}</b>`+
-    `<br><span style="color:var(--muted)">Record : ${rec.depth||0} tables · ${abbr(rec.chips||0)} $</span>`;
+    recLine+`<span style="color:var(--muted)">Record : ${rec.depth||0} tables · ${abbr(rec.chips||0)} $</span>`;
   }
   const s=G.stats||{won:0,played:0,bestGain:0,bestMult:1};
   $('endStats').innerHTML=
@@ -2723,6 +2774,7 @@ function renderPlanque(){
     ?`RECORD<br><span style="white-space:nowrap"><b>palier ${m.record.palier||0}</b> · <b>${abbr(m.record.peak||0)} $</b></span>`
     :`RECORD<br><span style="white-space:nowrap"><b>${m.record.depth||0} tables</b> · <b>${abbr(m.record.chips||0)} $</b></span>`;
   const lb=$('planqueLaunch');if(lb){lb.className='btn menu '+(inf?'b-purple':'b-gold');lb.innerHTML=inf?'PLONGER<small>la cagnotte · sans fin</small>':'DESCENDRE<small>la nuit · 9 tables</small>';}
+  const z2=$('planqueZ2');if(z2)z2.style.display=(!inf&&(META.nuit.zone2Runs|0)>=2)?'':'none';   // raccourci débloqué : zone 2 atteinte 2 fois
   const box=$('unlockItems');box.innerHTML='';
   unlocksFor(MODE).forEach(u=>{
     const lvl=uLvl(u.id),cost=unlockCost(u),maxed=cost===null;
@@ -2750,11 +2802,17 @@ function toPlanque(){
   $('intro').classList.add('show');
 }
 
-function startGame(){
+function startGame(fromTable){
   audioInit();MODE='nuit';
   document.body.classList.remove('inf');
   $('intro').classList.remove('show');$('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');
   freshGame();buildShoe();
+  if(fromTable){                                    // RACCOURCI : départ direct en zone 2 (débloqué en l'atteignant 2 fois)
+    G.tableIdx=fromTable;G.table=RUN[fromTable];
+    G.bank=280+(startBank()-50);                    // capital calé sur le conseillé de la table 4 (+ Pécule) ; cagnotte ★ à zéro : le raccourci va plus vite mais rapporte moins
+    enterTable(1);return;
+  }
+  G.contract=rollContract();
   applyHandIncome();renderAll();renderHands();
   announceTurn();
 }
