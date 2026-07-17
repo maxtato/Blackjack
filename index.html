@@ -951,7 +951,7 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
       <div><span class="k">Tes coups</span> — <span class="k">TIRER</span> une carte, <span class="k">RESTER</span> sur ta main, ou <span class="k">FORCER LA CHANCE</span> (2 cartes, on garde la meilleure · 1×/table · pression +++).</div>
       <div><span class="k">Étoiles <i class="pxstar"></i></span> — chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Elles ouvrent les <span class="d">boss</span> et les zones profondes.</div>
       <div><span class="k">Combos</span> — le vrai jeu : <span class="k">construis</span> tes mains, ne te contente pas de battre le croupier. <span class="k">21 PARFAIT ×3</span> · <span class="k">CHARLIE</span> (5 cartes) <span class="k">×2</span> · <span class="k">COULEUR</span> (3+ même enseigne) <span class="k">×2</span> · <span class="k">SUITE</span> (3+ rangs qui se suivent) <span class="k">×2</span> · BLACKJACK ×1.5 · PAIRE DE 7 ×1.5 · ARC-EN-CIEL (4 enseignes) ×1.5 · PRESSION ≥75 % ×1.5. Les pastilles sur le tapis montrent ce qui est acquis et à portée.</div>
-      <div><span class="k">Petits bonus</span> — des coups de pouce au multiplicateur selon la situation : <span class="k">COUR</span> (2+ figures) ×1.5 · <span class="k">FILOU</span> (gagner avec ≤15) ×1.5 · <span class="k">AU POIL</span> (battre le croupier d'un point) ×1.5 · <span class="k">CLUTCH</span> (dernière main de la table) ×1.5 · <span class="k">MAIN PROPRE</span> (gagner sur 2 cartes) ×1.3 · <span class="k">REMONTADA</span> (parti ≤11, fini ≥17) ×1.3 · <span class="k">TAPIS</span> (mise max) ×1.3 · <span class="k">ROUGE</span> / <span class="k">NOIR</span> (une seule couleur) ×1.3.</div>
+      <div><span class="k">Petits bonus</span> — des coups de pouce au multiplicateur selon la situation : <span class="k">COUR</span> (2+ figures) ×1.5 · <span class="k">FILOU</span> (gagner avec ≤15) ×1.5 · <span class="k">AU POIL</span> (battre le croupier d'un point) ×1.5 · <span class="k">CLUTCH</span> (dernière main de la table) ×1.5 · <span class="k">REMONTADA</span> (parti ≤11, fini ≥17) ×1.3.</div>
       <div><span class="k">Pression</span> — monte quand tu prends des risques, redescend quand tu joues posé. Trop haute, le croupier devient plus agressif.</div>
       <div><span class="k">Contrats <i class="pxi pxi-scroll"></i></span> — chaque table propose un défi optionnel (« gagne une main de 5 cartes »…) qui rapporte des <span class="k">★ bonus</span> dans la cagnotte. Rempli ou non, la table continue normalement.</div>
       <div><span class="k">La descente</span> — <span class="k">9 tables · 3 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">replonger</span> plus profond pour plus gros. Atteins la <span class="k">zone 2</span> deux fois pour débloquer le <span class="k">raccourci</span> (départ direct en zone 2, cagnotte ★ à zéro).</div>
@@ -1186,17 +1186,17 @@ const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
    ============================================================ */
 const RUN=[
   /* ZONE 1 — Initiation */
-  {n:'Arrière-salle', zone:1, mains:6, min:5,  max:20,  cap:50,   goal:205, master:290,    rule:null,     entry:0,   need:0,           ruleText:'Initiation'},
-  {n:'Table nerveuse',zone:1, mains:7, min:5,  max:25,  cap:130,  goal:310, master:450,    rule:'nervous',entry:0,   need:0,           ruleText:'La pression monte 2× plus vite'},
-  {n:'Le Videur',     zone:1, mains:7, min:10, max:30,  cap:200,  goal:475, master:645,    rule:'gros',   entry:0,   need:2, boss:true, ruleText:'BOSS · le croupier tire jusqu’à 18'},
+  {n:'Arrière-salle', zone:1, mains:6, min:5,  max:20,  cap:50,   goal:150, master:210,      rule:null,     entry:0,   need:0,           ruleText:'Initiation'},
+  {n:'Table nerveuse',zone:1, mains:7, min:5,  max:25,  cap:130,  goal:220, master:320,      rule:'nervous',entry:0,   need:0,           ruleText:'La pression monte 2× plus vite'},
+  {n:'Le Videur',     zone:1, mains:7, min:10, max:30,  cap:200,  goal:340, master:460,      rule:'gros',   entry:0,   need:2, boss:true, ruleText:'BOSS · le croupier tire jusqu’à 18'},
   /* ZONE 2 — La Pression */
-  {n:'Cave humide',   zone:2, mains:7, min:10, max:48,  cap:280,  goal:700, master:980,    rule:'mute',   entry:70,  need:3,           ruleText:'Croupier muet · droit d’entrée 70'},
-  {n:'Salon rouge',   zone:2, mains:8, min:15, max:52,  cap:430,  goal:1065, master:1415,   rule:null,     entry:0,   need:0,           ruleText:'Salon feutré'},
-  {n:'Le Banquier',   zone:2, mains:8, min:20, max:62,  cap:640,  goal:1510, master:1990,   rule:'depart', entry:0,   need:6, boss:true, ruleText:'BOSS · table déjà chaude (+30 %)'},
+  {n:'Cave humide',   zone:2, mains:7, min:10, max:48,  cap:280,  goal:500, master:700,      rule:'mute',   entry:70,  need:3,           ruleText:'Croupier muet · droit d’entrée 70'},
+  {n:'Salon rouge',   zone:2, mains:8, min:15, max:52,  cap:430,  goal:760, master:1010,     rule:null,     entry:0,   need:0,           ruleText:'Salon feutré'},
+  {n:'Le Banquier',   zone:2, mains:8, min:20, max:62,  cap:640,  goal:1080, master:1420,     rule:'depart', entry:0,   need:6, boss:true, ruleText:'BOSS · table déjà chaude (+30 %)'},
   /* ZONE 3 — Casino profond */
-  {n:'Fosse aux as',  zone:3, mains:8, min:25, max:80,  cap:900,  goal:2210, master:2910,   rule:null,     entry:240, need:8,          ruleText:'Casino profond · droit d’entrée 240'},
-  {n:'Table maudite', zone:3, mains:9, min:30, max:100, cap:1300, goal:3290, master:4200,   rule:'gros',   entry:0,   need:0,           ruleText:'Croupier impitoyable (18)'},
-  {n:'La Faucheuse',  zone:3, mains:9, min:40, max:120, cap:1800, goal:4480, master:5740,   rule:'sec',    entry:0,   need:11,boss:true, ruleText:'BOSS FINAL · égalité = défaite'},
+  {n:'Fosse aux as',  zone:3, mains:8, min:25, max:80,  cap:900,  goal:1580, master:2080,     rule:null,     entry:240, need:8,          ruleText:'Casino profond · droit d’entrée 240'},
+  {n:'Table maudite', zone:3, mains:9, min:30, max:100, cap:1300, goal:2350, master:3000,     rule:'gros',   entry:0,   need:0,           ruleText:'Croupier impitoyable (18)'},
+  {n:'La Faucheuse',  zone:3, mains:9, min:40, max:120, cap:1800, goal:3200, master:4100,     rule:'sec',    entry:0,   need:11,boss:true, ruleText:'BOSS FINAL · égalité = défaite'},
 ];
 const RUN_LEN=RUN.length;
 const ZONE_NAMES={1:'Initiation',2:'La Pression',3:'Casino profond'};
@@ -1211,7 +1211,7 @@ const ZONE_MULTCAP={1:4,2:6,3:9};                 // plafond de multiplicateur p
 const ENDLESS_RULETXT={nervous:'La pression monte 2× plus vite',mute:'Croupier muet',gros:'Le croupier tire jusqu’à 18',depart:'Table déjà chaude (+30 %)',sec:'Égalité = défaite'};
 /* seuil de cagnotte pour franchir le palier p (0-based) — premier palier vite
    atteint (~2× la banque de départ) puis ×1.6 : la récompense rythme la partie */
-function palierTarget(p){return niceRound(120*Math.pow(1.6,p));}
+function palierTarget(p){return niceRound(150*Math.pow(2,p));}
 /* valeur d'ENCAISSEMENT de la cagnotte : paliers + racine de la banque
    (rendement dégressif) — la banqueroute (banque ≈ 0) ne garde que les paliers.
    « Blanchisseur » (Planque infini) améliore le taux. */
@@ -1477,11 +1477,7 @@ function computeMult(mode){
   const figs=G.pHand.filter(c=>c.r==='J'||c.r==='Q'||c.r==='K').length;
   if(figs>=2){mult*=1.5;lines.push(['COUR','×1.5']);}                                   // les figures paient (2+ têtes)
   if(pv<=15){mult*=1.5;lines.push(['FILOU','×1.5']);}                                    // gagner avec un petit total (≤15)
-  if(G.pHand.length===2&&pv<21){mult*=1.3;lines.push(['MAIN PROPRE','×1.3']);}           // gagner en restant sur ses 2 cartes
   if(G.pHand.length>=3&&handValue(G.pHand.slice(0,2)).total<=11&&pv>=17){mult*=1.3;lines.push(['REMONTADA','×1.3']);}  // parti de bas, remonté à 17+
-  if(G.bet>=curTable().max){mult*=1.3;lines.push(['TAPIS','×1.3']);}                     // avoir misé le max de la table
-  if(G.pHand.length>=2&&G.pHand.every(c=>c.s==='♥'||c.s==='♦')){mult*=1.3;lines.push(['ROUGE','×1.3']);}   // que du rouge
-  if(G.pHand.length>=2&&G.pHand.every(c=>c.s==='♠'||c.s==='♣')){mult*=1.3;lines.push(['NOIR','×1.3']);}    // que du noir
   if(!G.endless&&isFinite(G.table.mains)&&G.hand>=G.table.mains){mult*=1.5;lines.push(['CLUTCH','×1.5']);} // dernière main de la table
   if(G.revealed){const dvv=handValue(G.dHand).total; if(pv<=21&&dvv<=21&&pv-dvv===1){mult*=1.5;lines.push(['AU POIL','×1.5']);}} // battre le croupier d'exactement 1
   /* anti-explosion : rendement décroissant au-delà de ×3, puis plafond de zone */
@@ -1670,11 +1666,7 @@ function comboHints(){
   /* petits bonus situationnels prévisibles en direct */
   if(h.filter(c=>c.r==='J'||c.r==='Q'||c.r==='K').length>=2)on.push('COUR ×1.5');
   if(n&&v<=15)on.push('FILOU ×1.5');
-  if(n===2&&v<21)on.push('MAIN PROPRE ×1.3');
   if(n>=3&&handValue(h.slice(0,2)).total<=11&&v>=17)on.push('REMONTADA ×1.3');
-  if(n&&G.bet>=curTable().max)on.push('TAPIS ×1.3');
-  if(n>=2&&h.every(c=>c.s==='♥'||c.s==='♦'))on.push('ROUGE ×1.3');
-  if(n>=2&&h.every(c=>c.s==='♠'||c.s==='♣'))on.push('NOIR ×1.3');
   if(!G.endless&&isFinite(G.table.mains)&&G.hand>=G.table.mains)on.push('CLUTCH ×1.5');
   /* --- à portée (une carte / un cran) --- */
   if(v<21&&v>=11&&21-v<=10)soon.push('21 PARFAIT ×3 · à '+(21-v));
