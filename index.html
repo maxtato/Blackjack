@@ -1719,7 +1719,7 @@ function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les 
   document.documentElement.style.setProperty('--p',(pct/100).toFixed(3));
   const f=$('pFill');if(f)f.style.width=pct+'%';
   const pp=$('pPct');if(pp)pp.textContent=lvl?('NIV '+lvl+' ×'+BARAKA_MULT[lvl]):'FROIDE';
-  const ps=$('pState');if(ps){ps.textContent='BARAKA';ps.style.color=BARAKA_COL[lvl];}
+  const ps=$('pState');if(ps){ps.textContent='BARAKA';ps.style.color='';}
   const bar=$('pBar');if(bar)bar.classList.toggle('tick',lvl>=3);
   const tbl=document.getElementById('table');if(tbl)tbl.classList.toggle('boil',lvl>=3);
   droneToPressure(pct/100);
