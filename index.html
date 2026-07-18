@@ -535,7 +535,7 @@ body.inf #topbar #gainStat .lbl{font-size:11px;letter-spacing:.22em;color:var(--
 body.inf #topbar #gainStat .v{font-size:38px;line-height:.95;color:var(--gold);text-shadow:2px 3px 0 #000,0 0 16px rgba(255,206,58,.32)}
 body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-content:center}
 /* barre de PRESSION : petite, posée en haut du tapis */
-#pBar{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:240px;height:19px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:rgba(8,22,18,.78);z-index:3;box-shadow:none;animation:pbarBuzz .16s steps(1,end) infinite;will-change:transform}
+#pBar{position:absolute;top:3px;left:50%;transform:translateX(-50%);width:240px;height:19px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:rgba(8,22,18,.78);z-index:3;box-shadow:none;animation:pbarBuzz .16s steps(1,end) infinite;will-change:transform}
 #pBar .pmeta{font-size:12px!important;letter-spacing:.03em}
 /* la barre de pression vibre de plus en plus fort à mesure que la pression monte
    (amplitude pilotée par --p, 0 à froid → ~2.4px à fond) */
@@ -570,7 +570,7 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 #felt::after{content:"";position:absolute;inset:17px;z-index:1;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(240,232,210,.09);
   -webkit-mask:linear-gradient(90deg,#0000 17px,#000 17px,#000 calc(100% - 17px),#0000 calc(100% - 17px)),linear-gradient(0deg,#0000 17px,#000 17px,#000 calc(100% - 17px),#0000 calc(100% - 17px));
   mask:linear-gradient(90deg,#0000 17px,#000 17px,#000 calc(100% - 17px),#0000 calc(100% - 17px)),linear-gradient(0deg,#0000 17px,#000 17px,#000 calc(100% - 17px),#0000 calc(100% - 17px))}
-#feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:23px 0 4px;position:relative;z-index:2;transform:none}
+#feltInner{flex:1;width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:15px 0 4px;position:relative;z-index:2;transform:none}
 #feltInner .zone{flex:1;justify-content:center}
 /* ornements dorés : petits losanges pixel pleins (coins, milieux, centre) */
 #felt .fc{position:absolute;width:13px;height:13px;background:var(--gold);z-index:2;pointer-events:none;filter:drop-shadow(0 1px 0 rgba(0,0,0,.45));
