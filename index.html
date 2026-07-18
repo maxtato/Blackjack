@@ -931,7 +931,7 @@ small.sym{margin-left:0!important}
   <div id="stage">
     <div id="table">
       <div id="felt">
-        <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">FROID</span> · <span id="pPct">0%</span></span></div>
+        <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">BARAKA</span><span id="pPct"></span></span></div>
         <div id="feltDeco"></div>
         <div id="turnPop"></div>
         <div id="feltInner">
@@ -1718,7 +1718,7 @@ function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les 
   const pct=barakaPct(),lvl=barakaLevel();
   document.documentElement.style.setProperty('--p',(pct/100).toFixed(3));
   const f=$('pFill');if(f)f.style.width=pct+'%';
-  const pp=$('pPct');if(pp)pp.textContent=lvl?('NIV '+lvl+' ×'+BARAKA_MULT[lvl]):'FROIDE';
+  const pp=$('pPct');if(pp){pp.textContent=lvl?('· NIV '+lvl+' ×'+BARAKA_MULT[lvl]):'';pp.style.display=lvl?'':'none';}
   const ps=$('pState');if(ps){ps.textContent='BARAKA';ps.style.color='';}
   const bar=$('pBar');if(bar)bar.classList.toggle('tick',lvl>=3);
   const tbl=document.getElementById('table');if(tbl)tbl.classList.toggle('boil',lvl>=3);
