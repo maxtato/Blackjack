@@ -204,6 +204,21 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .card.back.cb16::before{background:#fff7e6}
 .card.back.cb16 .bpat{background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,247,230,.5) 0 2deg,transparent 2deg 9deg),#22305f}
 .card.back.cb16::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-72%);width:0;height:0;z-index:2;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:12px solid #ffce3a;filter:drop-shadow(0 7px 0 #ffce3a)}
+/* cb18 — grenat, cible box-shadow pleine carte, anneau calé sur le contour */
+.card.back.cb18::before{background:#fff7e6}
+.card.back.cb18 .bpat{background:#7d1f2f;overflow:hidden}
+.card.back.cb18 .bpat::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:#fff7e6;box-shadow:0 0 0 4px #7d1f2f,0 0 0 6px #fff7e6,0 0 0 10px #7d1f2f,0 0 0 12px #fff7e6,0 0 0 16px #7d1f2f,0 0 0 18px #fff7e6,0 0 0 22px #7d1f2f,0 0 0 24px #fff7e6,0 0 0 28px #7d1f2f,0 0 0 30px #fff7e6,0 0 0 34px #7d1f2f,0 0 0 36px #fff7e6,0 0 0 40px #7d1f2f}
+/* cb19 — améthyste, anneaux concentriques pleine carte */
+.card.back.cb19::before{background:#fff7e6}
+.card.back.cb19 .bpat{background:repeating-radial-gradient(circle at 50% 50%,rgba(255,247,230,.55) 0 1.5px,transparent 1.5px 5px),#5b2a86}
+/* cb22 — charbon, points dorés + étoile 8 branches */
+.card.back.cb22::before{background:#e6c04a}
+.card.back.cb22 .bpat{background:radial-gradient(circle,rgba(230,192,74,.22) 1.4px,transparent 1.9px) 0 0/7px 7px,#1e2128}
+.card.back.cb22::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:26px;height:26px;z-index:2;background:#e6c04a;clip-path:polygon(50% 0,60% 25%,85% 15%,75% 40%,100% 50%,75% 60%,85% 85%,60% 75%,50% 100%,40% 75%,15% 85%,25% 60%,0 50%,25% 40%,15% 15%,40% 25%)}
+/* cb26 — bleu acier, losanges concentriques or */
+.card.back.cb26::before{background:#e6c04a}
+.card.back.cb26 .bpat{background:#26456b}
+.card.back.cb26::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(45deg);width:7px;height:7px;z-index:2;background:#e6c04a;box-shadow:0 0 0 3px #26456b,0 0 0 5px #e6c04a,0 0 0 8px #26456b,0 0 0 10px #e6c04a,0 0 0 13px #26456b,0 0 0 15px #e6c04a}
 /* tressautement des cartes : même mouvement rapide et discret que les lettres */
 @keyframes cardLife{0%{transform:translate(.5px,-.4px) rotate(-.25deg)}16%{transform:translate(-.5px,.4px) rotate(.25deg)}33%{transform:translate(.4px,.5px) rotate(-.15deg)}50%{transform:translate(-.4px,-.5px) rotate(.2deg)}66%{transform:translate(.5px,.3px) rotate(-.2deg)}83%{transform:translate(-.5px,-.3px) rotate(.15deg)}100%{transform:translate(.5px,-.4px) rotate(-.25deg)}}
 @keyframes textLife{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
@@ -1102,7 +1117,7 @@ const sfx={
 };
 
 /* ---------- dos de carte (préférence persistante) ---------- */
-const CARD_BACKS=['cb9','cb10','cb11','cb12','cb13','cb14','cb15','cb16'];
+const CARD_BACKS=['cb9','cb10','cb11','cb12','cb13','cb14','cb15','cb16','cb18','cb19','cb22','cb26'];
 let cardBack=(()=>{try{const v=localStorage.getItem('t21back');return CARD_BACKS.includes(v)?v:'cb9';}catch(e){return 'cb9';}})();
 function setCardBack(cb){cardBack=cb;try{localStorage.setItem('t21back',cb);}catch(e){}renderBackPicker();renderHands();}
 function renderBackPicker(){
