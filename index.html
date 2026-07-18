@@ -626,7 +626,10 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 .stat.goal.hit{animation:goalHit .6s ease-out}
 .stat.goal.hit .v{color:var(--gold)}
 @keyframes goalHit{0%{transform:scale(1);box-shadow:0 0 0 0 var(--gold)}30%{transform:scale(1.14);box-shadow:0 0 0 3px var(--gold)}100%{transform:scale(1);box-shadow:0 0 0 0 transparent}}
-.zone{position:relative;z-index:1}#center{position:relative;z-index:1}#feltMark{display:none}
+.zone{position:relative;z-index:1}
+/* centre (combos/conseil) HORS DU FLUX : centré verticalement, ne pousse plus les cartes quand les combos passent sur 2 lignes */
+#center{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:1;pointer-events:none;margin:0}
+#feltMark{display:none}
 /* BOTTOM — bloc gris pleine largeur avec tous les boutons de mise */
 #bottombar{display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--panel);box-shadow:0 -5px 10px rgba(0,0,0,.42),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -2px 0 rgba(0,0,0,.32);padding:11px 12px calc(20px + env(safe-area-inset-bottom,0px))}
 #bottombar #betRow,#bottombar #actions{width:100%;max-width:600px}
