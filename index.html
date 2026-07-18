@@ -2899,8 +2899,9 @@ function staggerUI(){
   staggerText($('bottombar'));staggerText($('effects'));staggerText($('peekBtn'));
   document.querySelectorAll('#stage .zlbl').forEach(staggerText);
   staggerText($('tip'));staggerText($('comboRow'));                 // conseil + pastilles combos/bonus : lettres décalées comme le reste
-  // la page d'accueil (#intro) reste figée : on ne la décale/tremble pas
   document.querySelectorAll('.overlay.show .ovpanel').forEach(p=>{if(!p.closest('#intro')&&!p.closest('#modeMenu'))staggerText(p);});
+  // menu + Planque restent figés SAUF leur gros titre : lettres décalées qui tressautent comme partout ailleurs
+  document.querySelectorAll('#intro.show .ovpanel h1,#modeMenu.show .ovpanel h1').forEach(staggerText);
 }
 
 /* ---------- MENU PRINCIPAL (choix du mode) ---------- */
