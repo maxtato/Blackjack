@@ -1068,7 +1068,7 @@ const rndInt=n=>Math.floor(Math.random()*n);
 /* abrège les grands nombres : 1 500 → 1.5K, 2 000 000 → 2M, etc. */
 function abbr(n){
   const neg=n<0;n=Math.abs(n);
-  const fix=x=>{const r=Math.round(x*10)/10;return Number.isInteger(r)?''+r:r.toFixed(1);};
+  const fix=x=>{const r=Math.round(x*100)/100;return Number.isInteger(r)?''+r:r.toFixed(2).replace(/0$/,'');};
   let s;
   if(n<1000)s=''+n;
   else if(n<1e6)s=fix(n/1e3)+'K';
