@@ -760,6 +760,8 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 .shopItem .shopTok .ft small{font-size:.72em;font-weight:700;margin-left:.2em}
 /* badges d'amélioration (Planque) : petit texte détaché du nombre */
 .shopTok small{margin-left:.28em}
+/* ...sauf les unités symboles (/, %, $) : collées au nombre */
+small.sym{margin-left:0!important}
 /* accent « service » (turquoise) pour le jeton boutique */
 .svc .chpd{background:#177b70}
 .svc .chpo,.svc .chpl,.svc .chpdia{background:#8fe3d9}
@@ -1170,7 +1172,7 @@ function uLvl(id){return (metaCur().unlocks[id])|0;}
 /* déblocages permanents de LA NUIT (descente : reliques, tarots, vies) */
 const UNLOCKS_NUIT=[
   {id:'bank',     name:'Pécule',    tok:'+$',                     tc:'#ffce3a', max:5, cost:n=>15+n*15, desc:n=>'Jetons de départ +'+(15*(n+1))},
-  {id:'pourboire',name:'Pourboire', tok:'+$<small>/main</small>', tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' jeton(s) au début de chaque main'},
+  {id:'pourboire',name:'Pourboire', tok:'+$<small class="sym">/main</small>', tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' jeton(s) au début de chaque main'},
   {id:'net',      name:'Filet',     tok:'+1 <small>essai</small>', tc:'#3f8bd6', max:3, cost:n=>40+n*30, desc:n=>'Secondes chances de départ : '+(1+n+1)},
   {id:'tarot',    name:'Poche',     tok:'+1 <small>slot</small>',  tc:'#a64dff', max:1, cost:n=>70,      desc:n=>'+1 emplacement Tarot permanent'},
   {id:'contact',  name:'Contact',   tok:'+1<small>◆</small>',     tc:'#ffce3a', max:1, cost:n=>90,      desc:n=>'Commence chaque descente avec une relique offerte'},
@@ -1181,10 +1183,10 @@ const UNLOCKS_NUIT=[
    profiter de startBank()/applyHandIncome() sans code spécifique. */
 const UNLOCKS_INFINI=[
   {id:'bank',     name:'Mise de fond',tok:'+$',                    tc:'#ffce3a', max:5, cost:n=>15+n*15, desc:n=>'Cagnotte de départ +'+(15*(n+1))},
-  {id:'pourboire',name:'Rente',       tok:'+$<small>/main</small>',tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' $ à chaque main, en continu'},
+  {id:'pourboire',name:'Rente',       tok:'+$<small class="sym">/main</small>',tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' $ à chaque main, en continu'},
   {id:'plafond',  name:'Plafond',     tok:'+% <small>mise</small>', tc:'#a64dff', max:3, cost:n=>45+n*30, desc:n=>'Plafond de mise de départ +'+(10*(n+1))+' %'},
   {id:'elan',     name:'Élan',        tok:'+1 <small>palier</small>',tc:'#3f8bd6',max:3, cost:n=>60+n*45, desc:n=>'Démarre directement au palier '+(1+(n+1))},
-  {id:'cashplus', name:'Blanchisseur',tok:'+25<small>%★</small>',  tc:'#19c3c3',max:2, cost:n=>70+n*70, desc:n=>'L\'encaissement de la cagnotte rapporte +'+(25*(n+1))+' %'},
+  {id:'cashplus', name:'Blanchisseur',tok:'+25<small class="sym">%★</small>',  tc:'#19c3c3',max:2, cost:n=>70+n*70, desc:n=>'L\'encaissement de la cagnotte rapporte +'+(25*(n+1))+' %'},
   {id:'boon2',    name:'Pactes',      tok:'+2 <small>bonus</small>',tc:'#a64dff',max:1, cost:n=>110,     desc:n=>'Débloque 2 bonus de palier RARES (Série renforcée, Mains spéciales ×2)'},
 ];
 function unlocksFor(mode){return (mode||MODE)==='infini'?UNLOCKS_INFINI:UNLOCKS_NUIT;}
@@ -2311,30 +2313,30 @@ function onTableLost(title,text){
 const SHOPTOK={
   lunettes:{t:'VOIR',c:'#9be84a'},
   jeton:{t:'½ <small>MISE</small>',c:'#ffce3a'},
-  clope:{t:'−30<small>%</small>',c:'#19c3c3'},
+  clope:{t:'−30<small class="sym">%</small>',c:'#19c3c3'},
   as:{t:'+1<small>×</small>',c:'#ff9326'},
   froid:{t:'+1<small>×</small>',c:'#ff9326'},
-  compteur:{t:'BUST<small>%</small>',c:'#9be84a'},
-  mecene:{t:'+4<small>$</small>',c:'#ffce3a'},
-  usurier:{t:'+1<small>/5$</small>',c:'#ffce3a'},
+  compteur:{t:'BUST<small class="sym">%</small>',c:'#9be84a'},
+  mecene:{t:'+4<small class="sym">$</small>',c:'#ffce3a'},
+  usurier:{t:'+1<small class="sym">/5$</small>',c:'#ffce3a'},
   collector:{t:'ÉD<small>×3</small>',c:'#a64dff'},
   maitresse:{t:'FOIL',c:'#7fd2ff'},
   bruleur:{t:'×1.5',c:'#ff9326'},
   portebonheur:{t:'+1<small>'+STAR+'</small>',c:'#a64dff'},
   diplomate:{t:'=<small>½</small>',c:'#ffce3a'},
   talisman:{t:'1 <small>VIE</small>',c:'#19c3c3'},
-  aimant:{t:'+1<small>$/carte</small>',c:'#ffce3a'},
+  aimant:{t:'+1<small class="sym">$/carte</small>',c:'#ffce3a'},
   phare:{t:'C<small>×3</small>',c:'#ff9326'},
-  etoile:{t:'−45<small>%</small>',c:'#19c3c3'},
+  etoile:{t:'−45<small class="sym">%</small>',c:'#19c3c3'},
   jugement:{t:'P<small>=0</small>',c:'#19c3c3'},
-  soleil:{t:'+18<small>$</small>',c:'#ffce3a'},
+  soleil:{t:'+18<small class="sym">$</small>',c:'#ffce3a'},
   diable:{t:'POLY',c:'#ff7ad9'},
   lune:{t:'HOLO',c:'#b388ff'},
   etoileD:{t:'FOIL',c:'#7fd2ff'},
   pendu:{t:'−1 <small>carte</small>',c:'#e0524f'},
   magicien:{t:'IDÉAL',c:'#9be84a'},
   roue:{t:'ÉD<small>?</small>',c:'#a64dff'},
-  soin:{t:'+<small>$$$</small>',c:'#9be84a'},
+  soin:{t:'+<small class="sym">$$$</small>',c:'#9be84a'},
   assurance:{t:'ASSU<small>R</small>',c:'#3f8bd6'},
   videur:{t:'+1 <small>essai</small>',c:'#19c3c3'},
 };
