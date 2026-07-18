@@ -832,9 +832,9 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 #intro h1,#modeMenu h1{animation:none}
 .backPick{margin:2px 0 10px}
 .bpLabel{margin-bottom:7px}
-/* dos de carte sur 2 lignes (4 + 4) */
-#bpRow{gap:10px;max-width:250px;margin:0 auto}
-#bpRow .bpCard{width:50px;height:71px}
+/* dos de carte : 2 lignes de 6 */
+#bpRow{display:grid;grid-template-columns:repeat(6,auto);gap:8px;justify-content:center;margin:0 auto}
+#bpRow .bpCard{width:46px;height:65px}
 .howto{margin-top:10px;gap:5px;font-size:10px}
 .howto>div{padding:6px 9px}
 </style>
