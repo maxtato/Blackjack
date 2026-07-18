@@ -624,9 +624,12 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 .b-red{background:var(--red)}
 .b-purple{background:var(--grape)}
 .b-teal{background:var(--teal);color:#04302d}
-.chip{border:none;border-radius:0;clip-path:var(--pc);background:var(--panelDk2);box-shadow:none;color:#fff;font-size:19px}
-.chip::before{display:none}
-.chip.on{background:var(--gold);color:#3a2a00;box-shadow:none}
+/* jeton = contour uni (couleur --bd, de plus en plus foncée selon la mise) + fond noir ; rempli du contour quand sélectionné */
+.chip{border:none;border-radius:0;clip-path:var(--pc);background:var(--bd,#e8b84a);box-shadow:none;color:#fff;font-size:19px}
+.chip::before{content:"";display:block;position:absolute;inset:3px;clip-path:var(--pc);background:var(--panelDk2);border:none;border-radius:0;z-index:0}
+.chip>span{position:relative;z-index:1}
+.chip.on::before{background:var(--bd,#e8b84a)}
+.chip.on{background:var(--bd,#e8b84a);color:#2a1e00;box-shadow:none}
 /* mise verrouillée pendant une main : non cliquable, jetons non choisis estompés */
 .chip.locked{cursor:default;pointer-events:none}
 .chip.locked:not(.on){opacity:.35}
@@ -1068,7 +1071,7 @@ const rndInt=n=>Math.floor(Math.random()*n);
 /* abrège les grands nombres : 1 500 → 1.5K, 2 000 000 → 2M, etc. */
 function abbr(n){
   const neg=n<0;n=Math.abs(n);
-  const fix=x=>{const r=Math.round(x*10)/10;return Number.isInteger(r)?''+r:r.toFixed(1);};
+  const fix=x=>{const r=Math.round(x*100)/100;return Number.isInteger(r)?''+r:r.toFixed(2).replace(/0$/,'');};
   let s;
   if(n<1000)s=''+n;
   else if(n<1e6)s=fix(n/1e3)+'K';
@@ -1921,15 +1924,23 @@ function clampBet(){
   // on ne peut pas miser plus que son capital : on retombe sur le plus gros palier abordable
   if(G.bet>G.bank){const aff=betChoices().filter(v=>v<=G.bank);G.bet=aff.length?aff[aff.length-1]:t.min;}
 }
+/* contour du jeton : jaune pâle (petite mise) → jaune foncé (grosse mise), réparti régulièrement sur la rangée */
+function betChipColor(i,n){
+  const a=[247,230,168],z=[125,88,16];               // #f7e6a8 → #7d5810
+  const t=n<=1?0:i/(n-1);
+  const c=a.map((v,k)=>Math.round(v+(z[k]-v)*t));
+  return 'rgb('+c[0]+','+c[1]+','+c[2]+')';
+}
 function renderChips(){
   const wrap=$('chips');wrap.innerHTML='';
   const opts=betChoices();clampBet();
   const locked=(G.phase!=='bet');     // mise verrouillée dès qu'une main est lancée
-  opts.forEach(v=>{
+  opts.forEach((v,i)=>{
     const b=document.createElement('div');
     const tooDear=v>G.bank;            // palier hors budget
     b.className='chip'+((G.betChosen&&G.bet===v)?' on':'')+((locked||tooDear)?' locked':'');
-    b.textContent=abbr(v);
+    b.style.setProperty('--bd',betChipColor(i,opts.length));
+    b.innerHTML='<span>'+abbr(v)+'</span>';
     if(!locked&&!tooDear)b.onclick=()=>{G.bet=v;G.betChosen=true;renderChips();renderActions();renderMult();};
     wrap.appendChild(b);
   });
