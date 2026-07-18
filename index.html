@@ -602,8 +602,9 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 /* BOTTOM — bloc gris pleine largeur avec tous les boutons de mise */
 #bottombar{display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--panel);box-shadow:0 -5px 10px rgba(0,0,0,.42),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -2px 0 rgba(0,0,0,.32);padding:11px 12px calc(20px + env(safe-area-inset-bottom,0px))}
 #bottombar #betRow,#bottombar #actions{width:100%;max-width:600px}
-#betRow{display:flex;align-items:center;gap:10px;justify-content:center;background:none!important;border:none!important;box-shadow:none!important;padding:0!important}
-#betRow .lbl{font-size:12px;letter-spacing:.06em;color:var(--muted)}
+#betRow{position:relative;display:flex;align-items:center;gap:10px;justify-content:center;background:none!important;border:none!important;box-shadow:none!important;padding:0!important}
+/* label « MISE » hors flux : les jetons restent centrés au milieu de l'écran */
+#betRow .lbl{position:absolute;left:0;top:50%;transform:translateY(-50%);font-size:12px;letter-spacing:.06em;color:var(--muted)}
 #actions{display:flex;flex-direction:column;gap:9px;height:108px}
 .actMain{display:grid;grid-template-columns:1fr 1fr;gap:9px;flex:1}
 .actMain .span{grid-column:1/-1}
