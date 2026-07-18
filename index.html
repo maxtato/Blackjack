@@ -629,7 +629,7 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 .chip::before{content:"";display:block;position:absolute;inset:3px;clip-path:var(--pc);background:var(--panelDk2);border:none;border-radius:0;z-index:0}
 .chip>span{position:relative;z-index:1}
 .chip.on::before{background:var(--bd,#e8b84a)}
-.chip.on{color:#2a1e00;box-shadow:none}
+.chip.on{background:var(--bd,#e8b84a);color:#2a1e00;box-shadow:none}
 /* mise verrouillée pendant une main : non cliquable, jetons non choisis estompés */
 .chip.locked{cursor:default;pointer-events:none}
 .chip.locked:not(.on){opacity:.35}
