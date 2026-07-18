@@ -802,6 +802,12 @@ small.sym{margin-left:0!important}
 .recBox{flex:1;background:var(--panelDk2);clip-path:var(--pc);padding:10px 12px;display:flex;flex-direction:column;justify-content:center;font-size:11px;color:var(--muted);line-height:1.5;text-align:left}
 .recBox b{color:#fff;font-size:13px}
 .ulvl{font-size:11px;color:var(--gold);letter-spacing:1px}
+/* sélecteur de palier de reprise (cagnotte) */
+#palierResume{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 12px;background:var(--panelDk2);clip-path:var(--pc);padding:8px 12px}
+#palierResume .prLbl{font-size:11px;letter-spacing:.08em;color:var(--muted)}
+#palierResume .prVal{font-size:14px;color:var(--grape);font-weight:700;min-width:74px;text-align:center}
+#palierResume .prBtn{background:var(--grape);color:#fff;border:none;clip-path:var(--pc);width:30px;height:26px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+#palierResume .prBtn:disabled{opacity:.3;cursor:default}
 .howto{text-align:left;font-size:11px;line-height:1.5;color:var(--muted);margin-top:16px;display:flex;flex-direction:column;gap:6px}
 .howto>div{background:var(--panelDk2);clip-path:var(--pc);padding:7px 10px;box-shadow:inset 4px 0 0 var(--gold)}
 .howto .k{color:var(--gold)}.howto .d{color:var(--red)}
@@ -979,6 +985,7 @@ small.sym{margin-left:0!important}
       <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl">réputation</span></div>
       <div class="recBox" id="recBox">RECORD<br><span style="white-space:nowrap"><b>0 tables</b> · <b>0 $</b></span></div>
     </div>
+    <div id="palierResume" style="display:none"></div>
     <div class="shopItems" id="unlockItems"></div>
     <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
     <div class="shopBtns" style="gap:10px;margin-top:2px">
@@ -1284,7 +1291,8 @@ const ZONE_MULTCAP={1:4,2:6,3:9};                 // plafond de multiplicateur p
 const ENDLESS_RULETXT={nervous:'La pression monte 2× plus vite',mute:'Croupier muet',gros:'Le croupier tire jusqu’à 18',depart:'Table déjà chaude (+30 %)',sec:'Égalité = défaite'};
 /* seuil de cagnotte pour franchir le palier p (0-based) — premier palier vite
    atteint (~2× la banque de départ) puis ×1.6 : la récompense rythme la partie */
-function palierTarget(p){return niceRound(150*Math.pow(2,p));}
+function palierTarget(p){return niceRound(300*Math.pow(2.2,p));}
+let startPalierIdx=null;   // palier de reprise choisi dans la Planque (index 0-based ; null = défaut = plus loin atteint)
 /* valeur d'ENCAISSEMENT de la cagnotte : paliers + racine de la banque
    (rendement dégressif) — la banqueroute (banque ≈ 0) ne garde que les paliers.
    « Blanchisseur » (Planque infini) améliore le taux. */
@@ -1809,8 +1817,10 @@ function renderObjective(){
     return;
   }
   const goal=(G.table&&G.table.goal)||1;
-  const objMax=goal*4/3;                                   // objectif aux 3/4 → reste 1/4 pour le dépassement
-  const pct=Math.max(0,Math.min(100,G.bank/objMax*100));
+  // la barre repart de ZÉRO à chaque table (progression depuis la banque d'entrée), objectif au repère des 3/4
+  const start=G.tableStartBank||0;
+  const span=Math.max(1,(goal-start)*4/3);
+  const pct=Math.max(0,Math.min(100,(G.bank-start)/span*100));
   const f=$('objFill');if(f)f.style.width=pct+'%';
   const g=$('objGoal');if(g)g.textContent=abbr(goal)+' $';  // objectif au repère des 3/4
   if(gv)gv.classList.toggle('warn',!!(G.table&&G.bank<G.table.min*3));
@@ -1974,10 +1984,13 @@ function betChoices(){
   return opts;
 }
 function clampBet(){
-  const t=curTable();
+  const t=curTable(),opts=betChoices();
   G.bet=Math.max(t.min,Math.min(t.max,G.bet));
+  // toujours calée sur un palier de mise réellement affiché (sinon rien n'apparaît sélectionné)
+  if(!opts.includes(G.bet))G.bet=opts.reduce((a,b)=>Math.abs(b-G.bet)<Math.abs(a-G.bet)?b:a,opts[0]);
   // on ne peut pas miser plus que son capital : on retombe sur le plus gros palier abordable
-  if(G.bet>G.bank){const aff=betChoices().filter(v=>v<=G.bank);G.bet=aff.length?aff[aff.length-1]:t.min;}
+  if(G.bet>G.bank){const aff=opts.filter(v=>v<=G.bank);G.bet=aff.length?aff[aff.length-1]:opts[0];}
+  G.betChosen=true;   // une mise reste toujours sélectionnée et visible à l'écran
 }
 function renderChips(){
   const wrap=$('chips');wrap.innerHTML='';
@@ -2892,6 +2905,7 @@ function renderMenu(){
     `<div class="mrec"><span class="mrl" style="color:var(--grape)">LA CAGNOTTE</span><span class="mrv">${STAR}${abbr(META.infini.rep)} · record palier ${i.palier||0}</span></div>`;
 }
 function openMenu(){
+  startPalierIdx=null;   // au retour menu, la reprise se remet par défaut sur le plus loin atteint
   document.body.classList.remove('inf');
   ['intro','endScreen','loseScreen','shop','pauseScreen','palierScreen','confirmRestart'].forEach(id=>$(id).classList.remove('show'));
   renderMenu();
@@ -2905,6 +2919,7 @@ function chooseMode(m){
   $('intro').classList.add('show');
 }
 function launchMode(){ if(MODE==='infini')startEndless(); else startGame(); }
+function stepResume(d){ startPalierIdx=(startPalierIdx||0)+d; renderPlanque(); }   // ◀ ▶ palier de reprise
 
 /* ---------- LA PLANQUE (hub de méta-progression, propre au mode courant) ---------- */
 function renderPlanque(){
@@ -2918,6 +2933,22 @@ function renderPlanque(){
   const rb=$('recBox');if(rb)rb.innerHTML=inf
     ?`RECORD<br><span style="white-space:nowrap"><b>palier ${m.record.palier||0}</b> · <b>${abbr(m.record.peak||0)} $</b></span>`
     :`RECORD<br><span style="white-space:nowrap"><b>${m.record.depth||0} tables</b> · <b>${abbr(m.record.chips||0)} $</b></span>`;
+  // sélecteur de palier de reprise (mode cagnotte) : reprendre au palier atteint (sauvegardé)
+  const pr=$('palierResume');
+  if(pr){
+    if(inf){
+      const elan=uLvl('elan');
+      const maxIdx=Math.max(elan,Math.max(1,m.record.palier||1)-1);
+      if(startPalierIdx==null)startPalierIdx=maxIdx; else startPalierIdx=Math.min(Math.max(startPalierIdx,elan),maxIdx);
+      if(maxIdx>elan){
+        pr.style.display='';
+        pr.innerHTML='<span class="prLbl">REPRENDRE AU</span>'+
+          '<button class="prBtn" '+(startPalierIdx<=elan?'disabled':'')+' onclick="stepResume(-1)">◀</button>'+
+          '<span class="prVal">Palier '+(startPalierIdx+1)+'</span>'+
+          '<button class="prBtn" '+(startPalierIdx>=maxIdx?'disabled':'')+' onclick="stepResume(1)">▶</button>';
+      } else pr.style.display='none';
+    } else pr.style.display='none';
+  }
   const lb=$('planqueLaunch');if(lb){lb.className='btn menu '+(inf?'b-purple':'b-gold');lb.innerHTML=inf?'PLONGER<small>la cagnotte · sans fin</small>':'DESCENDRE<small>la nuit · 9 tables</small>';}
   const z2=$('planqueZ2');if(z2)z2.style.display=(!inf&&(META.nuit.zone2Runs|0)>=2)?'':'none';   // raccourci débloqué : zone 2 atteinte 2 fois
   const box=$('unlockItems');box.innerHTML='';
@@ -2967,10 +2998,14 @@ function startEndless(){
   $('intro').classList.remove('show');$('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');
   freshGame();
   const elan=uLvl('elan'),plaf=uLvl('plafond');             // déblocages permanents de l'infini
-  G.endless=true;G.palier=elan;G.tableIdx=elan;
+  // palier de reprise : celui choisi dans la Planque (≥ élan), borné au plus loin atteint
+  const maxIdx=Math.max(elan,Math.max(1,metaCur().record.palier||1)-1);
+  const si=Math.min(Math.max((startPalierIdx==null?maxIdx:startPalierIdx),elan),maxIdx);
+  G.endless=true;G.palier=si;G.tableIdx=si;
   G.relics=[];G.consumables=[];G.tokens=0;                  // pas de relique/tarot/vie en infini
   G.boons={relic:0,tarot:0,mult:0,income:0,betmax:plaf*0.1,calm:0};
   G.table=endlessTier(G.tableIdx);
+  if(si>0)G.bank=palierTarget(si-1);                        // reprise : on repart au seuil du palier atteint
   G.peak=G.bank;
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));G.tableStartBank=G.bank;
   document.body.classList.add('inf');
@@ -2984,6 +3019,8 @@ function reachPalier(){
   G.palier=(G.palier||0)+1;
   G.tableIdx=G.palier;                       // le tier de mise suit le palier
   G.table=endlessTier(G.tableIdx);
+  // sauvegarde automatique du palier atteint → on pourra reprendre d'ici même si on meurt/quitte
+  const rr=metaCur().record;rr.palier=Math.max(rr.palier||0,(G.palier||0)+1);saveMeta();
   sfx.win&&sfx.win();flashScreen('win');shake(14);coinBurst(12);
   const pool=BOONS.filter(b=>(!b.lock||uLvl(b.lock))&&!(b.id==='evt3'&&G.boons&&G.boons.evt3)&&!(b.id==='serieplus'&&G.boons&&G.boons.serieBoost>=0.5));
   for(let i=pool.length-1;i>0;i--){const j=rndInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
