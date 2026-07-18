@@ -626,7 +626,10 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 .stat.goal.hit{animation:goalHit .6s ease-out}
 .stat.goal.hit .v{color:var(--gold)}
 @keyframes goalHit{0%{transform:scale(1);box-shadow:0 0 0 0 var(--gold)}30%{transform:scale(1.14);box-shadow:0 0 0 3px var(--gold)}100%{transform:scale(1);box-shadow:0 0 0 0 transparent}}
-.zone{position:relative;z-index:1}#center{position:relative;z-index:1}#feltMark{display:none}
+.zone{position:relative;z-index:1}
+/* centre (combos/conseil) HORS DU FLUX : centré verticalement, ne pousse plus les cartes quand les combos passent sur 2 lignes */
+#center{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:1;pointer-events:none;margin:0}
+#feltMark{display:none}
 /* BOTTOM — bloc gris pleine largeur avec tous les boutons de mise */
 #bottombar{display:flex;flex-direction:column;align-items:center;gap:9px;background:var(--panel);box-shadow:0 -5px 10px rgba(0,0,0,.42),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -2px 0 rgba(0,0,0,.32);padding:11px 12px calc(20px + env(safe-area-inset-bottom,0px))}
 #bottombar #betRow,#bottombar #actions{width:100%;max-width:600px}
@@ -1353,7 +1356,7 @@ function rollContract(){
 function checkContract(mult){
   const c=G.contract;if(!c||c.done||G.endless)return;
   const h=G.pHand,n=h.length,pv=handValue(h).total,suits=new Set(h.map(x=>x.s));
-  const o={n,pv,press:G.pressure,mult:mult||1,dbl:(G.stakeMult||1)>=2,suite:isStraight(h),coul:n>=3&&suits.size===1};
+  const o={n,pv,press:barakaPct(),mult:mult||1,dbl:(G.stakeMult||1)>=2,suite:isStraight(h),coul:n>=3&&suits.size===1};
   const def=CONTRACTS.find(x=>x.id===c.id);
   if(def&&def.chk(o)){
     c.done=true;G.pot+=c.reward;
@@ -1370,10 +1373,10 @@ function starsFor(t,bank){
 }
 /* réputation d'une table validée : indexée sur la zone, les étoiles, le boss —
    jamais sur le tas de jetons. Petit bonus de risque maîtrisé. */
-function tableRep(t,stars,maxPressure){
+function tableRep(t,stars,maxBaraka){
   const base=4+t.zone*6;
   let rep=base+stars*6+(t.boss?40:0);
-  if(stars>=2&&maxPressure>=75)rep+=8;             // risque maîtrisé
+  if(stars>=2&&(maxBaraka||0)>=10)rep+=8;          // baraka menée haut (niv 3+)
   return rep;
 }
 /* réputation totale en fin de run : cagnotte (entière si encaisse, moitié sinon)
@@ -1415,10 +1418,10 @@ const RELIC_POOL=[
 
 /* éditions de cartes : foil = jetons bonus, holo = +mult, poly = ×mult */
 const TAROT_POOL=[
-  {id:'etoile',name:"L'Étoile",ic:'❄️',cost:7,desc:'À jouer pendant la main : baisse la pression de 45 %. Moins de pression, c’est un croupier moins agressif.',when:'play',
-    use(){G.pressure=Math.max(0,G.pressure-45);renderPressure();renderMult();return'Table refroidie';}},
-  {id:'jugement',name:'Le Jugement',ic:'⚖️',cost:11,desc:'À jouer pendant la main : remet la pression à 0 %. Repart sur une table totalement froide.',when:'play',
-    use(){G.pressure=0;renderPressure();renderMult();return'Pression annulée';}},
+  {id:'etoile',name:"L'Étoile",ic:'❄️',cost:7,desc:'À jouer à tout moment : +2 BARAKA tout de suite (fait monter ta veine).',when:'any',
+    use(){addBaraka(2);return'+2 baraka';}},
+  {id:'jugement',name:'Le Jugement',ic:'⚖️',cost:11,desc:'À jouer à tout moment : monte directement d’un niveau de BARAKA.',when:'any',
+    use(){const lvl=barakaLevel();const target=lvl<4?BARAKA_STEPS[lvl]:BARAKA_STEPS[3];addBaraka(Math.max(1,target-(G.baraka||0)));return'BARAKA +1 niveau';}},
   {id:'soleil',name:'Le Soleil',ic:'☀️',cost:6,desc:'Ajoute aussitôt 18 jetons à ta banque, à tout moment.',when:'any',
     use(){G.bank+=18;renderTop();coinBurst(8);return'+18 $';}},
   {id:'diable',name:'Le Diable',ic:'😈',cost:9,desc:'À jouer sur ta main : transforme une de tes cartes en POLYCHROME, qui multiplie le gain de la main (×1,5).',when:'play',need:'cards',
@@ -1455,7 +1458,7 @@ function announceEd(c){if(c&&c.ed)popText('CARTE '+ED_NAME[c.ed],ED_INFO[c.ed]);
 let G={};
 function freshGame(){
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
-     peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,insurance:false,objHit:false,
+     peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,baraka:0,barakaMax:0,insurance:false,objHit:false,
      phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1,splitActive:false,hands:null,hi:0,
      endless:false,palier:0,peak:0,boons:{relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0},streak:0,event:null,contract:null,_talismanUsed:false,_palierCash:false,
      stats:{won:0,played:0,bestGain:0,bestMult:1}};
@@ -1502,21 +1505,28 @@ function bustChance(cards){
   return Math.round(bust/RANKS.length*100);
 }
 
-/* ---------- pression ---------- */
-function addPressure(base){
-  let amt=base;
-  if(G.table.rule==='nervous')amt*=2;
-  if(hasRelic('clope'))amt*=0.7;
-  if(G.boons&&G.boons.calm)amt*=(1-G.boons.calm);   // bonus de palier « pression − »
-  G.pressure=Math.min(100,G.pressure+amt);
-  G.maxPressureReached=Math.max(G.maxPressureReached||0,G.pressure);
-  G.tableMaxPressure=Math.max(G.tableMaxPressure||0,G.pressure);
-  renderPressure();renderMult();
-  if(G.pressure>=100&&G.phase==='play'&&!G.forced){
-    G.forced=true;
-    setTimeout(()=>{if(G.phase==='play'){popText('TIRAGE FORCÉ','');sfx.danger();shake(28);playerHit(true);}},420);
-  }
+/* ---------- BARAKA (remplace la pression) ----------
+   Barre de veine qui persiste entre les mains : monte quand on gagne
+   (coup culotté = +2), retombe à zéro quand on perd. Chaque niveau donne
+   un multiplicateur ET débloque de plus grosses mises. */
+const BARAKA_STEPS=[3,6,10,15];                 // points cumulés pour les niveaux 1..4
+const BARAKA_MULT=[1,1.25,1.5,1.75,2];          // multiplicateur par niveau (0..4)
+const BARAKA_COL=['#9bbfa8','#34b6a8','#e8b84a','#f0902a','#e0524f'];
+function barakaLevel(){let l=0;const b=G.baraka||0;for(const s of BARAKA_STEPS)if(b>=s)l++;return l;}
+function barakaPct(){const b=G.baraka||0,lvl=barakaLevel();if(lvl>=4)return 100;const lo=lvl>0?BARAKA_STEPS[lvl-1]:0,hi=BARAKA_STEPS[lvl];return Math.min(100,(lvl+(b-lo)/(hi-lo))/4*100);}
+function addBaraka(n){G.baraka=Math.max(0,(G.baraka||0)+n);G.barakaMax=Math.max(G.barakaMax||0,G.baraka);G.tableMaxBaraka=Math.max(G.tableMaxBaraka||0,G.baraka);renderPressure();renderMult();}
+function resetBaraka(){G.baraka=0;renderPressure();renderMult();}
+/* coup culotté : gagner de façon osée → +2 baraka au lieu de +1 */
+function isCulotte(pv,mode){
+  if((G.stakeMult||1)>=2)return true;                                                   // doublé
+  if(mode!=='natural'&&pv===21)return true;                                             // 21 parfait
+  if(G.pHand.length>=5&&pv<=21)return true;                                             // Charlie 5 cartes
+  if(pv<=16)return true;                                                                // gagner avec un petit total
+  const dv=handValue(G.dHand).total; if(dv<=21&&pv-dv===1)return true;                  // AU POIL
+  if(G.pHand.length>=3&&handValue(G.pHand.slice(0,2)).total<=11&&pv>=17)return true;    // remontada
+  return false;
 }
+function addPressure(){}                          // ancienne pression neutralisée (remplacée par la BARAKA)
 function pressureState(){
   const p=G.pressure;
   if(p>=100)return['SURCHAUFFE','#ff6f5e'];
@@ -1542,8 +1552,9 @@ function computeMult(mode){
   if(isStraight(G.pHand)){mult*=2;lines.push([PXI('suite')+' SUITE','×2']);}                            // rangs qui se suivent
   if(G.pHand.length>=4&&suits.size===4){mult*=1.5;lines.push([PXI('arc')+' ARC-EN-CIEL','×1.5']);}   // une carte de chaque enseigne
   if(G.insisted){mult*=1.5;lines.push(['INSISTANCE','×1.5']);}
-  if(G.pressure>=75){mult*=1.5;lines.push(['PRESSION','×1.5']);}
-  if(hasRelic('bruleur')&&G.pressure>=50){mult*=1.5;lines.push(['BRÛLEUR','×1.5','bruleur']);}
+  const _bl=barakaLevel();
+  if(_bl>0){mult*=BARAKA_MULT[_bl];lines.push(['BARAKA NIV '+_bl,'×'+BARAKA_MULT[_bl]]);}   // veine en cours
+  if(hasRelic('bruleur')&&_bl>=2){mult*=1.5;lines.push(['BRÛLEUR','×1.5','bruleur']);}
   /* éditions des cartes en main */
   let foil=0,holo=0,poly=0;
   for(const c of G.pHand){if(c.ed==='foil')foil++;else if(c.ed==='holo')holo++;else if(c.ed==='poly')poly++;}
@@ -1551,9 +1562,7 @@ function computeMult(mode){
   if(holo){mult+=holo;lines.push([PXI('diamond')+' HOLO','+'+holo]);}
   if(poly){const pm=Math.pow(1.5,poly);mult*=pm;lines.push([PXI('diamond')+' POLY','×'+(Math.round(pm*100)/100)]);}
   if(hasRelic('as')&&G.pHand.some(c=>c.r==='A')){mult+=1;lines.push(['AS TRUQUÉ','+1','as']);}
-  if(hasRelic('froid')&&G.pressure>=75){mult+=1;lines.push(['SANG-FROID','+1','froid']);}
-  /* mode cagnotte : la SÉRIE de victoires paie — +0,5 par victoire enchaînée (dès 2), perdue = retour à zéro */
-  if(G.endless&&(G.streak||0)>=2){const s=Math.min(G.streak,6),per=0.5+((G.boons&&G.boons.serieBoost)||0);mult+=s*per;lines.push([PXI('fire')+' SÉRIE '+s,'+'+(s*per)]);}
+  if(hasRelic('froid')&&_bl>=3){mult+=1;lines.push(['SANG-FROID','+1','froid']);}
   /* ---- PETITS BONUS SITUATIONNELS : du pep's, en multiplicateur (proportionnel à la mise → facile à équilibrer) ---- */
   const figs=G.pHand.filter(c=>c.r==='J'||c.r==='Q'||c.r==='K').length;
   if(figs>=2){mult*=1.5;lines.push(['COUR','×1.5']);}                                   // les figures paient (2+ têtes)
@@ -1618,7 +1627,7 @@ function cardEl(c,opts={}){
   d.style.setProperty('--cd','-'+((opts.idx||0)*0.5+sd2*3).toFixed(3)+'s');
   if(opts.back){d.classList.add('back',cardBack);d.innerHTML='<i class="bpat"></i>';if(opts.arrive)d.classList.add('arrive');else if(opts.placed)d.classList.add('placed');return d;}
   if(c.s==='♥'||c.s==='♦')d.classList.add('red');
-  if(G.pressure>=50&&G.phase==='play')d.classList.add('jit');
+  if(barakaLevel()>=3&&G.phase==='play')d.classList.add('jit');
   if(opts.arrive)d.classList.add('arrive');
   else if(opts.flip)d.classList.add('flip');
   else if(opts.placed)d.classList.add('placed');
@@ -1705,14 +1714,15 @@ function renderHands(reveal=false){
   else if(G.table.rule==='mute'){$('dVal').textContent='?';}
   else{$('dVal').textContent=dUp.length?handValue([dUp[0]]).total+' +?':'—';}
 }
-function renderPressure(){
-  const p=G.pressure;
-  document.documentElement.style.setProperty('--p',(p/100).toFixed(3));
-  $('pFill').style.width=p+'%';$('pPct').textContent=Math.round(p)+'%';
-  const [st,col]=pressureState();$('pState').textContent=st;$('pState').style.color=col;
-  $('pBar').classList.toggle('tick',p>=60);
-  document.getElementById('table').classList.toggle('boil',p>=75);
-  droneToPressure(p/100);
+function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les appels)
+  const pct=barakaPct(),lvl=barakaLevel();
+  document.documentElement.style.setProperty('--p',(pct/100).toFixed(3));
+  const f=$('pFill');if(f)f.style.width=pct+'%';
+  const pp=$('pPct');if(pp)pp.textContent=lvl?('NIV '+lvl+' ×'+BARAKA_MULT[lvl]):'FROIDE';
+  const ps=$('pState');if(ps){ps.textContent='BARAKA';ps.style.color='';}
+  const bar=$('pBar');if(bar)bar.classList.toggle('tick',lvl>=3);
+  const tbl=document.getElementById('table');if(tbl)tbl.classList.toggle('boil',lvl>=3);
+  droneToPressure(pct/100);
 }
 function renderMult(){
   let m=1,bonus=0;
@@ -1742,8 +1752,7 @@ function comboHints(){
   if(isStraight(h))on.push('SUITE ×2');
   if(n>=4&&suits.size===4)on.push('ARC-EN-CIEL ×1.5');
   if(G.insisted)on.push('INSISTANCE ×1.5');
-  if(G.pressure>=75)on.push('PRESSION ×1.5');
-  if(G.endless&&(G.streak||0)>=2)on.push(PXI('fire')+' SÉRIE '+Math.min(G.streak,6)+' +'+(Math.min(G.streak,6)*0.5));
+  {const bl=barakaLevel();if(bl>0)on.push('BARAKA NIV '+bl+' ×'+BARAKA_MULT[bl]);}
   /* petits bonus situationnels prévisibles en direct */
   if(h.filter(c=>c.r==='J'||c.r==='Q'||c.r==='K').length>=2)on.push('COUR ×1.5');
   if(n&&v<=15)on.push('FILOU ×1.5');
@@ -1756,7 +1765,7 @@ function comboHints(){
   if(n===3&&suits.size===3)soon.push('ARC-EN-CIEL ×1.5 · +1 carte');
   if(sevens===1&&n<=3)soon.push('PAIRE DE 7 · tire un 7');
   if(!isStraight(h)&&n>=2&&n<=4&&RANKS.some(r=>isStraight(h.concat([{r,s:'♠'}]))))soon.push('SUITE ×2 · possible');
-  if(G.pressure>=55&&G.pressure<75)soon.push('PRESSION 75 % = ×1.5');
+  {const bl=barakaLevel();if(bl<4){const need=BARAKA_STEPS[bl]-(G.baraka||0);if(need<=2&&need>0)soon.push('BARAKA NIV '+(bl+1)+' dans '+need);}}
   return {on,soon};
 }
 function renderCombos(){
@@ -1875,7 +1884,7 @@ function renderRelics(){
   const wrap=$('relics');wrap.innerHTML='';
   G.relics.forEach((r,idx)=>{
     const d=document.createElement('div');d.className='joker';d.dataset.relic=r.id;
-    if((r.id==='froid'||r.id==='clope')&&G.pressure>=75)d.classList.add('hot');
+    if((r.id==='froid'||r.id==='clope')&&barakaLevel()>=3)d.classList.add('hot');
     const tk=SHOPTOK[r.id]||{t:r.name,c:'#ffce3a'};
     d.innerHTML=`${chipInner()}<span class="ft" style="color:${tk.c}">${tk.t}</span>`;
     d.title=`${r.name} — ${r.desc}`;
@@ -1974,8 +1983,10 @@ function applyHandIncome(){
    on n'affiche que les 4 plus grosses valeurs abordables pour ne pas surcharger */
 /* paliers de mise FIXES, propres à la table : entre min et max, jamais un % du capital */
 function betChoices(){
-  const t=curTable(),span=t.max-t.min;
-  const raw=span<=0?[t.min]:[t.min,t.min+Math.round(span/3),t.min+Math.round(2*span/3),t.max];
+  const t=curTable();
+  const maxB=niceRound(t.max*(1+0.25*barakaLevel()));   // la BARAKA débloque de plus grosses mises (+25 %/niveau)
+  const span=maxB-t.min;
+  const raw=span<=0?[t.min]:[t.min,t.min+Math.round(span/3),t.min+Math.round(2*span/3),maxB];
   const opts=[...new Set(raw)].sort((a,b)=>a-b);
   if(G.endless&&G.event&&G.event.id==='forcee'){                 // MISE FORCÉE : un seul choix, le plus haut abordable
     const aff=opts.filter(v=>v<=G.bank);
@@ -1984,8 +1995,8 @@ function betChoices(){
   return opts;
 }
 function clampBet(){
-  const t=curTable(),opts=betChoices();
-  G.bet=Math.max(t.min,Math.min(t.max,G.bet));
+  const opts=betChoices();
+  G.bet=Math.max(opts[0],Math.min(opts[opts.length-1],G.bet));
   // toujours calée sur un palier de mise réellement affiché (sinon rien n'apparaît sélectionné)
   if(!opts.includes(G.bet))G.bet=opts.reduce((a,b)=>Math.abs(b-G.bet)<Math.abs(a-G.bet)?b:a,opts[0]);
   // on ne peut pas miser plus que son capital : on retombe sur le plus gros palier abordable
@@ -2220,7 +2231,7 @@ function dealerPlay(natural){
   const step=()=>{
     const v=handValue(G.dHand);
     const goal=(G.endless&&G.event&&G.event.id==='pompette')?16:((G.table.rule==='gros')?18:17);
-    const hitSoft17=(G.maxPressureReached>=55);
+    const hitSoft17=(barakaLevel()>=2);
     const mustHit=v.total<goal||(goal===17&&v.total===17&&v.soft&&hitSoft17);
     if(mustHit){                                                // le croupier tire : même arrivée animée
       const c=draw();c._pending=true;G.dHand.push(c);
@@ -2275,11 +2286,9 @@ function resolve(mode){
   }
 
   if(outcome==='win')checkContract(mult);                 // contrat de table (mode nuit)
-  // série (mode cagnotte) : comptée APRÈS le calcul du mult → l'aperçu live correspond au payout
-  if(G.endless){if(outcome==='win')G.streak=(G.streak||0)+1;else if(outcome==='lose')G.streak=0;}
-  // la pression PERSISTE dans la table : elle retombe après un revers, peu après un gain
-  const drop=pBust?34:(outcome==='lose'?40:(outcome==='push'?22:12));
-  G.pressure=Math.max(0,G.pressure-drop);
+  // BARAKA : gagner remplit la barre (coup culotté = +2), perdre la remet à zéro
+  if(outcome==='win'){const cul=isCulotte(pv,mode);addBaraka(cul?2:1);if(cul)setTimeout(()=>popText('CULOTTÉ !','+2 baraka'),320);}
+  else if(outcome==='lose')resetBaraka();
   renderTop();renderRelics();renderPressure();renderMult();
   setTimeout(()=>nextHandOrEnd(),1750+tallyMs);
 }
@@ -2321,9 +2330,7 @@ function resolveSplit(){
   showWord(kind,Math.abs(net),1);
   $('tip').innerHTML=summary.join('  ·  ');$('tip').style.color='var(--gold)';
   if(net>0&&!G.objHit&&G.bank>=G.table.goal){G.objHit=true;setTimeout(objectiveReached,360);}
-  if(G.endless){if(net>0)G.streak=(G.streak||0)+1;else if(net<0)G.streak=0;}
-  const drop=net<0?40:(net>0?12:22);
-  G.pressure=Math.max(0,G.pressure-drop);
+  if(net>0)addBaraka(1); else if(net<0)resetBaraka();     // BARAKA (mode séparé)
   renderTop();renderRelics();renderPressure();renderMult();
   setTimeout(()=>{G.splitActive=false;G.hands=null;G.hi=0;nextHandOrEnd();},2100);
 }
@@ -2359,7 +2366,7 @@ function finishTable(){
   if(stars===0){onTableLost('OBJECTIF MANQUÉ',`Tu finis sous l’objectif de gain de la table — il te manquait <b style="color:var(--red)">${abbr(t.goal-G.bank)} $</b>.`);return;}
   G.tableStars[G.tableIdx]=stars;
   G.runStars=G.tableStars.reduce((a,b)=>a+(b||0),0);
-  const reward=tableRep(t,stars,G.tableMaxPressure||0);
+  const reward=tableRep(t,stars,G.tableMaxBaraka||0);
   G.pot+=reward;G.lastReward=reward;G.lastStars=stars;
   updateRecord(G.tableIdx+1);
   openShop();
@@ -2529,7 +2536,7 @@ function leaveShop(){
 function enterTable(prevZone){
   // droit d'entrée de zone : absorbe une partie des jetons (anti boule de neige)
   if(G.table.entry){G.bank=Math.max(0,G.bank-G.table.entry);popText("DROIT D'ENTRÉE",'−'+abbr(G.table.entry)+' $');}
-  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;G._talismanUsed=false;
+  G.hand=1;G.phase='bet';G.pressure=0;G.baraka=0;G.tableMaxBaraka=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;G._talismanUsed=false;
   G.contract=rollContract();                               // nouveau contrat à chaque table
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // nouvelle table : on remise à zéro (pas la mise de la table d'avant)
   G.betChosen=false;                                       // nouvelle table : aucune mise présélectionnée, il faut en choisir une
@@ -2566,7 +2573,7 @@ function retryTable(){
   $('loseScreen').classList.remove('show');
   buildShoe();
   G.bank=Math.max(G.tableStartBank||0,curTable().cap);   // on repart au capital conseillé de la table
-  G.hand=1;G.phase='bet';G.pressure=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;G._talismanUsed=false;
+  G.hand=1;G.phase='bet';G.pressure=0;G.baraka=0;G.tableMaxBaraka=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;G._talismanUsed=false;
   G.bet=Math.max(curTable().min,Math.min(curTable().max,10));   // nouvelle tentative : mise remise à zéro
   G.betChosen=false;                                            // seconde chance : il faut re-choisir une mise
   clampBet();
@@ -2828,15 +2835,15 @@ function spawnEmber(){
 }
 
 function tick(){
-  G.maxPressureReached=Math.max(G.maxPressureReached||0,G.pressure);
-  const ambient=G.pressure?Math.pow(G.pressure/100,2)*5:0;
+  const _bpct=barakaPct(),_blv=barakaLevel();
+  const ambient=_blv>=3?Math.pow(_bpct/100,2)*5:0;
   const amt=Math.max(shakeAmt,ambient);
   if(amt>0.2){
     const x=(Math.random()-.5)*amt,y=(Math.random()-.5)*amt;
     $('shaker').style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;
   }else $('shaker').style.transform='';
-  if(G.pressure>=45&&G.phase==='play'&&Math.random()<(G.pressure/100)*0.32)spawnEmber();
-  if(G.pressure>=75&&G.phase==='play'&&(!G._beat||performance.now()-G._beat>680)){G._beat=performance.now();sfx.thump();}
+  if(_blv>=3&&G.phase==='play'&&Math.random()<(_bpct/100)*0.32)spawnEmber();
+  if(_blv>=4&&G.phase==='play'&&(!G._beat||performance.now()-G._beat>680)){G._beat=performance.now();sfx.thump();}
   staggerUI();
   shakeAmt*=0.82;requestAnimationFrame(tick);
 }
