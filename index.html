@@ -969,8 +969,8 @@ small.sym{margin-left:0!important}
     <h1 class="win" style="letter-spacing:.04em">TABLE 21</h1>
     <p>Choisis ton mode de jeu. Chaque mode a <b>sa Planque</b> et sa <b>réputation</b>.</p>
     <div class="shopBtns" style="flex-direction:column;gap:12px;margin-top:8px">
-      <button class="btn b-gold menu" onclick="chooseMode('nuit')" style="width:100%">LA NUIT<small>9 tables · la descente · reliques &amp; tarots</small></button>
-      <button class="btn b-purple menu" onclick="chooseMode('infini')" style="width:100%">LA CAGNOTTE<small>sans fin · blackjack pur · monte les paliers</small></button>
+      <button class="btn b-gold menu" onclick="chooseMode('nuit')" style="width:100%">LE PARCOURS<small>9 tables · une fin · reliques &amp; tarots</small></button>
+      <button class="btn b-purple menu" onclick="chooseMode('infini')" style="width:100%">SANS FIN<small>blackjack pur · monte les paliers</small></button>
     </div>
     <div class="menuRecs" id="menuRecords"></div>
   </div>
@@ -981,9 +981,9 @@ small.sym{margin-left:0!important}
   <div class="ovpanel">
     <button id="restartBtn" onclick="restartAll()" title="Recommencer ce mode (perd la réputation du mode)" aria-label="Recommencer"><span>↺</span></button>
     <button id="rulesBtn" onclick="openRules()" title="Règles du jeu" aria-label="Règles"><span>i</span></button>
-    <div class="planqueMode nuit" id="planqueMode"><i class="pxi pxi-moon"></i> LA NUIT</div>
+    <div class="planqueMode nuit" id="planqueMode"><i class="pxi pxi-moon"></i> LE PARCOURS</div>
     <h1 class="win" id="planqueTitle">LA PLANQUE</h1>
-    <p id="planqueSub">Dépense ta <b>réputation</b> en avantages permanents, puis replonge.</p>
+    <p id="planqueSub">Dépense ta <b>réputation</b> en avantages permanents, puis repars.</p>
     <div class="repBar">
       <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl">réputation</span></div>
       <div class="recBox" id="recBox">RECORD<br><span style="white-space:nowrap"><b>0 tables</b> · <b>0 $</b></span></div>
@@ -993,7 +993,7 @@ small.sym{margin-left:0!important}
     <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
     <div class="shopBtns" style="gap:10px;margin-top:2px">
       <button class="btn b-teal menu" onclick="openMenu()" style="flex:0 0 auto">← MENU</button>
-      <button class="btn b-gold menu" id="planqueLaunch" onclick="launchMode()" style="flex:1">DESCENDRE<small>la nuit · 9 tables</small></button>
+      <button class="btn b-gold menu" id="planqueLaunch" onclick="launchMode()" style="flex:1">COMMENCER<small>le parcours · 9 tables</small></button>
       <button class="btn b-red menu" id="planqueZ2" onclick="startGame(3)" style="flex:0 0 auto;display:none">ZONE 2<small>raccourci</small></button>
     </div>
   </div>
@@ -1012,9 +1012,9 @@ small.sym{margin-left:0!important}
       <div><span class="k">Petits bonus</span> — des coups de pouce au multiplicateur selon la situation : <span class="k">COUR</span> (2+ figures) ×1.5 · <span class="k">FILOU</span> (gagner avec ≤15) ×1.5 · <span class="k">AU POIL</span> (battre le croupier d'un point) ×1.5 · <span class="k">CLUTCH</span> (dernière main de la table) ×1.5 · <span class="k">REMONTADA</span> (parti ≤11, fini ≥17) ×1.3.</div>
       <div><span class="k">Pression</span> — monte quand tu prends des risques, redescend quand tu joues posé. Trop haute, le croupier devient plus agressif.</div>
       <div><span class="k">Contrats <i class="pxi pxi-scroll"></i></span> — chaque table propose un défi optionnel (« gagne une main de 5 cartes »…) qui rapporte des <span class="k">★ bonus</span> dans la cagnotte. Rempli ou non, la table continue normalement.</div>
-      <div><span class="k">La descente</span> — <span class="k">9 tables · 3 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">replonger</span> plus profond pour plus gros. Atteins la <span class="k">zone 2</span> deux fois pour débloquer le <span class="k">raccourci</span> (départ direct en zone 2, cagnotte ★ à zéro).</div>
+      <div><span class="k">Le parcours</span> — <span class="k">9 tables · 3 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">continuer</span> plus loin pour plus gros. Atteins la <span class="k">zone 2</span> deux fois pour débloquer le <span class="k">raccourci</span> (départ direct en zone 2, cagnotte ★ à zéro).</div>
       <div><span class="k">La Planque</span> — dépense ta <span class="k">réputation <i class="pxstar"></i></span> en avantages permanents (reliques, tarots, éditions) avant de repartir.</div>
-      <div><span class="k">La Cagnotte (infini)</span> — pas d'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · une <span class="k">SÉRIE</span> de victoires fait monter le mult · toutes les 5 mains, une <span class="d">main spéciale</span>. <span class="k">ENCAISSER</span> (pause, ou palier avec <span class="k">+20 %</span>) convertit ta cagnotte en réputation — la <span class="d">banqueroute</span> ne garde que les paliers.</div>
+      <div><span class="k">Sans fin</span> — pas d'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · la <span class="k">BARAKA</span> monte avec les victoires et les coups culottés · toutes les 5 mains, une <span class="d">main spéciale</span>. <span class="k">ENCAISSER</span> (pause, ou palier avec <span class="k">+20 %</span>) convertit ta cagnotte en réputation — la <span class="d">banqueroute</span> ne garde que les paliers.</div>
     </div>
     <button class="btn b-gold menu" onclick="closeRules()">FERMER</button>
   </div>
@@ -1058,7 +1058,7 @@ small.sym{margin-left:0!important}
 <div class="overlay" id="palierScreen">
   <div class="ovpanel" style="max-width:360px;text-align:center">
     <h1 class="win" style="font-size:26px">PALIER <span id="palierNum">1</span></h1>
-    <p style="margin-bottom:16px">Choisis une <b>possibilité</b> pour la suite de la descente.</p>
+    <p style="margin-bottom:16px">Choisis une <b>possibilité</b> pour la suite.</p>
     <div class="shopBtns" id="palierBoons" style="flex-direction:column;gap:10px"></div>
   </div>
 </div>
@@ -1212,7 +1212,7 @@ const UNLOCKS_NUIT=[
   {id:'pourboire',name:'Pourboire', tok:'+$<small class="sym">/main</small>', tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' jeton(s) au début de chaque main'},
   {id:'net',      name:'Filet',     tok:'+1 <small>essai</small>', tc:'#3f8bd6', max:3, cost:n=>40+n*30, desc:n=>'Secondes chances de départ : '+(1+n+1)},
   {id:'tarot',    name:'Poche',     tok:'+1 <small>slot</small>',  tc:'#a64dff', max:1, cost:n=>70,      desc:n=>'+1 emplacement Tarot permanent'},
-  {id:'contact',  name:'Contact',   tok:'+1<small>◆</small>',     tc:'#ffce3a', max:1, cost:n=>90,      desc:n=>'Commence chaque descente avec une relique offerte'},
+  {id:'contact',  name:'Contact',   tok:'+1<small>◆</small>',     tc:'#ffce3a', max:1, cost:n=>90,      desc:n=>'Commence chaque parcours avec une relique offerte'},
   {id:'relic2',   name:'Coffre',    tok:'+3<small>◆</small>',     tc:'#9be84a', max:1, cost:n=>120,     desc:n=>'Débloque 3 reliques RARES en boutique (Talisman, Aimant, Le Phare)'},
 ];
 /* déblocages permanents de LA CAGNOTTE (infini : capital, rente, plafond, élan)
@@ -1793,7 +1793,7 @@ function renderTop(){
   applyFelt();   // tapis évolutif : design + couleur selon la table
   const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=heartSVG(15)+'<span class="lvn">×'+n+'</span>';lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
   $('tableName').textContent=t.n;                                   // nom seul, en gros
-  const tm=$('tableMeta');if(tm)tm.textContent=G.endless?('∞ CAGNOTTE · palier '+((G.palier||0)+1)+' · mise '+t.min+'–'+t.max):('zone '+t.zone+' · '+ZONE_NAMES[t.zone]+' · '+(G.tableIdx+1)+'/'+RUN_LEN);
+  const tm=$('tableMeta');if(tm)tm.textContent=G.endless?('∞ SANS FIN · palier '+((G.palier||0)+1)+' · mise '+t.min+'–'+t.max):('zone '+t.zone+' · '+ZONE_NAMES[t.zone]+' · '+(G.tableIdx+1)+'/'+RUN_LEN);
   const bits=[];
   if(t.ruleText)bits.push(t.ruleText);
   if(G.endless){
@@ -2644,7 +2644,7 @@ function endRun(cashout){
   }else{
   const goal=(G.table&&isFinite(G.table.goal))?G.table.goal:0;
   const manque=(!cashout&&goal&&G.bank<goal)?`<br>Il te manquait <b style="color:var(--red)">${abbr(goal-G.bank)} $</b> pour l'objectif`+(prox?` <span style="color:var(--muted)">— prime de proximité ${STAR}${prox}</span>`:'')+`.`:'';
-  $('endTitle').textContent=cashout?'TU ENCAISSES':'FIN DE LA NUIT';
+  $('endTitle').textContent=cashout?'TU ENCAISSES':'FIN DU PARCOURS';
   $('endTitle').className=cashout?'win':'dead';
   $('endText').innerHTML=
     (cashout
@@ -2912,8 +2912,8 @@ function renderMenu(){
   const n=META.nuit.record,i=META.infini.record;
   const el=$('menuRecords');if(!el)return;
   el.innerHTML=
-    `<div class="mrec"><span class="mrl" style="color:var(--gold)">LA NUIT</span><span class="mrv">${STAR}${abbr(META.nuit.rep)} · record ${n.depth||0} tables</span></div>`+
-    `<div class="mrec"><span class="mrl" style="color:var(--grape)">LA CAGNOTTE</span><span class="mrv">${STAR}${abbr(META.infini.rep)} · record palier ${i.palier||0}</span></div>`;
+    `<div class="mrec"><span class="mrl" style="color:var(--gold)">LE PARCOURS</span><span class="mrv">${STAR}${abbr(META.nuit.rep)} · record ${n.depth||0} tables</span></div>`+
+    `<div class="mrec"><span class="mrl" style="color:var(--grape)">SANS FIN</span><span class="mrv">${STAR}${abbr(META.infini.rep)} · record palier ${i.palier||0}</span></div>`;
 }
 function openMenu(){
   startPalierIdx=null;   // au retour menu, la reprise se remet par défaut sur le plus loin atteint
@@ -2938,9 +2938,9 @@ function renderPlanque(){
   $('repBal').textContent=abbr(m.rep);
   const pt=$('planqueTitle');if(pt)pt.textContent='LA PLANQUE';
   const ps=$('planqueSub');if(ps)ps.innerHTML=inf
-    ?`Améliore ta <b>Cagnotte</b> avec ta <b>réputation</b>, puis replonge sans fin.`
-    :`Dépense ta <b>réputation</b> en avantages permanents, puis replonge dans <b>la nuit</b>.`;
-  const tag=$('planqueMode');if(tag){tag.innerHTML=inf?'∞ LA CAGNOTTE':PXI('moon')+' LA NUIT';tag.className='planqueMode '+(inf?'inf':'nuit');}
+    ?`Améliore ta <b>cagnotte</b> avec ta <b>réputation</b>, puis repars.`
+    :`Dépense ta <b>réputation</b> en avantages permanents, puis repars pour un nouveau <b>parcours</b>.`;
+  const tag=$('planqueMode');if(tag){tag.innerHTML=inf?'∞ SANS FIN':PXI('moon')+' LE PARCOURS';tag.className='planqueMode '+(inf?'inf':'nuit');}
   const rb=$('recBox');if(rb)rb.innerHTML=inf
     ?`RECORD<br><span style="white-space:nowrap"><b>palier ${m.record.palier||0}</b> · <b>${abbr(m.record.peak||0)} $</b></span>`
     :`RECORD<br><span style="white-space:nowrap"><b>${m.record.depth||0} tables</b> · <b>${abbr(m.record.chips||0)} $</b></span>`;
@@ -2960,7 +2960,7 @@ function renderPlanque(){
       } else pr.style.display='none';
     } else pr.style.display='none';
   }
-  const lb=$('planqueLaunch');if(lb){lb.className='btn menu '+(inf?'b-purple':'b-gold');lb.innerHTML=inf?'PLONGER<small>la cagnotte · sans fin</small>':'DESCENDRE<small>la nuit · 9 tables</small>';}
+  const lb=$('planqueLaunch');if(lb){lb.className='btn menu '+(inf?'b-purple':'b-gold');lb.innerHTML=inf?'COMMENCER<small>sans fin · blackjack pur</small>':'COMMENCER<small>le parcours · 9 tables</small>';}
   const z2=$('planqueZ2');if(z2)z2.style.display=(!inf&&(META.nuit.zone2Runs|0)>=2)?'':'none';   // raccourci débloqué : zone 2 atteinte 2 fois
   const box=$('unlockItems');box.innerHTML='';
   unlocksFor(MODE).forEach(u=>{
@@ -3023,7 +3023,7 @@ function startEndless(){
   buildShoe();
   applyHandIncome();renderAll();renderHands();
   announceTurn();
-  popText('LA CAGNOTTE','monte aussi haut que possible');
+  popText('SANS FIN','monte aussi haut que possible');
 }
 /* palier de cagnotte franchi : on choisit un bonus + les mises montent d'un cran */
 function reachPalier(){
