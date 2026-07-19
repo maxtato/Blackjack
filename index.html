@@ -1819,9 +1819,9 @@ function renderObjective(){
   // nouvelle table / palier : la barre repart de 0 SANS glisser depuis l'objectif précédent (on coupe la transition le temps de la remettre à zéro)
   const _of=$('objFill'),_snap=_of&&G._objBarIdx!==G.tableIdx;
   if(_snap){_of.style.transition='none';_of.style.width='0%';void _of.offsetWidth;_of.style.transition='';G._objBarIdx=G.tableIdx;}
-  if(G.endless){                                           // barre = progression vers le prochain PALIER
-    const p=G.palier||0,target=palierTarget(p),prev=p>0?palierTarget(p-1):0;
-    const pct=Math.max(0,Math.min(100,(G.bank-prev)/Math.max(1,target-prev)*100));
+  if(G.endless){                                           // barre = cagnotte vers le prochain PALIER (depuis 0, jamais vide tant qu'on a des jetons)
+    const p=G.palier||0,target=palierTarget(p);
+    const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,target)*100));
     const f=$('objFill');if(f)f.style.width=pct+'%';
     const g=$('objGoal');if(g)g.textContent=abbr(target)+' $';
     const bar=$('objBar');if(bar)bar.classList.remove('full');
