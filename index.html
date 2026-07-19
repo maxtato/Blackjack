@@ -541,9 +541,9 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
    (amplitude pilotée par --p, 0 à froid → ~2.4px à fond) */
 @keyframes pbarBuzz{
  0%  {transform:translate(-50%,0)}
- 25% {transform:translate(calc(-50% + var(--p,0)*-2.2px),calc(var(--p,0)*1.2px))}
- 50% {transform:translate(calc(-50% + var(--p,0)*2.2px),calc(var(--p,0)*-1.2px))}
- 75% {transform:translate(calc(-50% + var(--p,0)*-1.4px),calc(var(--p,0)*1.4px))}
+ 25% {transform:translate(calc(-50% + var(--p,0)*-0.9px),calc(var(--p,0)*0.5px))}
+ 50% {transform:translate(calc(-50% + var(--p,0)*0.9px),calc(var(--p,0)*-0.5px))}
+ 75% {transform:translate(calc(-50% + var(--p,0)*-0.6px),calc(var(--p,0)*0.6px))}
  100%{transform:translate(-50%,0)}
 }
 #pFill{position:absolute;inset:0;width:0;background:linear-gradient(90deg,var(--teal) 0 25%,var(--gold) 25% 50%,var(--orange) 50% 75%,var(--red) 75% 100%);background-size:240px 100%;background-position:left center;background-repeat:no-repeat;transition:width .35s cubic-bezier(.2,.8,.2,1)}
@@ -1816,6 +1816,9 @@ function renderTop(){
 function renderObjective(){
   const gv=$('gainVal');if(gv)gv.textContent=abbr(G.bank)+' $';
   const lbl=document.querySelector('#gainStat .lbl');if(lbl)lbl.textContent=G.endless?'CAGNOTTE':'GAIN';
+  // nouvelle table / palier : la barre repart de 0 SANS glisser depuis l'objectif précédent (on coupe la transition le temps de la remettre à zéro)
+  const _of=$('objFill'),_snap=_of&&G._objBarIdx!==G.tableIdx;
+  if(_snap){_of.style.transition='none';_of.style.width='0%';void _of.offsetWidth;_of.style.transition='';G._objBarIdx=G.tableIdx;}
   if(G.endless){                                           // barre = progression vers le prochain PALIER
     const p=G.palier||0,target=palierTarget(p),prev=p>0?palierTarget(p-1):0;
     const pct=Math.max(0,Math.min(100,(G.bank-prev)/Math.max(1,target-prev)*100));
