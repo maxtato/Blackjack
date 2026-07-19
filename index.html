@@ -806,11 +806,12 @@ small.sym{margin-left:0!important}
 .recBox b{color:#fff;font-size:13px}
 .ulvl{font-size:11px;color:var(--gold);letter-spacing:1px}
 /* sélecteur de palier de reprise (cagnotte) */
-#palierResume{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 12px;background:var(--panelDk2);clip-path:var(--pc);padding:8px 12px}
-#palierResume .prLbl{font-size:11px;letter-spacing:.08em;color:var(--muted)}
-#palierResume .prVal{font-size:14px;color:var(--grape);font-weight:700;min-width:74px;text-align:center}
-#palierResume .prBtn{background:var(--grape);color:#fff;border:none;clip-path:var(--pc);width:30px;height:26px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+#palierResume{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 0 14px;background:var(--panelDk2);clip-path:var(--pc);padding:14px 16px}
+#palierResume .prLbl{font-size:15px;letter-spacing:.08em;color:var(--muted)}
+#palierResume .prVal{font-size:20px;color:var(--grape);font-weight:700;min-width:104px;text-align:center}
+#palierResume .prBtn{background:var(--grape);color:#fff;border:none;clip-path:var(--pc);width:37px;height:33px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
 #palierResume .prBtn:disabled{opacity:.3;cursor:default}
+#palierResume .prBtn .ar{display:inline-block;animation:letterShake 1.1s steps(1,end) infinite;animation-delay:var(--d,0s)}
 .howto{text-align:left;font-size:11px;line-height:1.5;color:var(--muted);margin-top:16px;display:flex;flex-direction:column;gap:6px}
 .howto>div{background:var(--panelDk2);clip-path:var(--pc);padding:7px 10px;box-shadow:inset 4px 0 0 var(--gold)}
 .howto .k{color:var(--gold)}.howto .d{color:var(--red)}
@@ -984,11 +985,11 @@ small.sym{margin-left:0!important}
     <div class="planqueMode nuit" id="planqueMode"><i class="pxi pxi-moon"></i> LE PARCOURS</div>
     <h1 class="win" id="planqueTitle">LA PLANQUE</h1>
     <p id="planqueSub">Dépense ta <b>réputation</b> en avantages permanents, puis repars.</p>
+    <div id="palierResume" style="display:none"></div>
     <div class="repBar">
       <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl">réputation</span></div>
       <div class="recBox" id="recBox">RECORD<br><span style="white-space:nowrap"><b>0 tables</b> · <b>0 $</b></span></div>
     </div>
-    <div id="palierResume" style="display:none"></div>
     <div class="shopItems" id="unlockItems"></div>
     <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
     <div class="shopBtns" style="gap:10px;margin-top:2px">
@@ -2954,9 +2955,9 @@ function renderPlanque(){
       if(maxIdx>elan){
         pr.style.display='';
         pr.innerHTML='<span class="prLbl">REPRENDRE AU</span>'+
-          '<button class="prBtn" '+(startPalierIdx<=elan?'disabled':'')+' onclick="stepResume(-1)">◀</button>'+
+          '<button class="prBtn" '+(startPalierIdx<=elan?'disabled':'')+' onclick="stepResume(-1)"><span class="ar" style="--o:-.8px">◀</span></button>'+
           '<span class="prVal">Palier '+(startPalierIdx+1)+'</span>'+
-          '<button class="prBtn" '+(startPalierIdx>=maxIdx?'disabled':'')+' onclick="stepResume(1)">▶</button>';
+          '<button class="prBtn" '+(startPalierIdx>=maxIdx?'disabled':'')+' onclick="stepResume(1)"><span class="ar" style="--o:.8px;--d:.14s">▶</span></button>';
       } else pr.style.display='none';
     } else pr.style.display='none';
   }
