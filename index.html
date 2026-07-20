@@ -1339,7 +1339,7 @@ const ENDLESS_EVENTS=[
   {id:'doree',   ic:'doree',   t:'MAIN DORÉE',        d:'gains doublés sur cette main'},
   {id:'forcee',  ic:'forcee',  t:'MISE FORCÉE',       d:'mise max obligatoire'},
   {id:'pompette',ic:'glass',   t:'CROUPIER POMPETTE', d:'le croupier s’arrête à 16'},
-  {id:'etoile',  ic:'diamond', t:'CARTE ÉTOILÉE',     d:'ta 1ʳᵉ carte est HOLO (+1 mult)'},
+  {id:'etoile',  ic:'diamond', t:'CARTE ÉTOILÉE',     d:'ta 1re carte est HOLO (+1 mult)'},
 ];
 /* CONTRATS (mode nuit) : un défi optionnel par table — le remplir rapporte des ★
    bonus dans la cagnotte. Pousse à jouer AUTREMENT, pas juste à battre le croupier. */
@@ -1411,7 +1411,7 @@ const RELIC_POOL=[
   {id:'mecene',name:'Mécène',ic:'💵',desc:'Relique permanente. +4 jetons offerts au début de chaque main.',cost:15},
   {id:'usurier',name:'Usurier',ic:'🏦',desc:'Relique permanente. Au début de chaque main : +1 jeton par tranche de 5 jetons en banque (jusqu’à +6).',cost:18},
   {id:'collector',name:'Collectionneur',ic:'🌈',desc:'Relique permanente. Les éditions spéciales (FOIL/HOLO/POLY) apparaissent 3× plus souvent sur tes cartes.',cost:16},
-  {id:'maitresse',name:'Carte maîtresse',ic:'🎴',desc:'Relique permanente. Ta 1ʳᵉ carte de chaque main est FOIL : jetons bonus quand tu gagnes.',cost:14},
+  {id:'maitresse',name:'Carte maîtresse',ic:'🎴',desc:'Relique permanente. Ta 1re carte de chaque main est FOIL : jetons bonus quand tu gagnes.',cost:14},
   {id:'bruleur',name:'Brûleur',ic:'🔥',desc:'Relique permanente. Si tu gagnes une main avec une pression ≥ 50 % : gain de la main ×1,5.',cost:17},
   {id:'portebonheur',name:'Porte-bonheur',ic:'🍀',desc:'Relique permanente. +1 emplacement de jeton Tarot (tu peux garder un jeton de plus).',cost:12},
   {id:'diplomate',name:'Diplomate',ic:'🤝',desc:'Relique permanente. En cas d’égalité avec le croupier, tu récupères la moitié de ta mise.',cost:11},
@@ -2279,7 +2279,7 @@ function resolve(mode){
     // décompte animé (carte par carte + multiplicateurs), PUIS l'annonce du gain
     const finishWin=()=>{sfx.win();if(mult>1||r.bonusChips>0)sfx.combo();
       flashScore();showWord('win',gain,mult,isNat);
-      if(!G.objHit&&G.bank>=G.table.goal){G.objHit=true;setTimeout(objectiveReached,360);}};   // 1ʳᵉ fois qu'on franchit l'objectif
+      if(!G.objHit&&G.bank>=G.table.goal){G.objHit=true;setTimeout(objectiveReached,360);}};   // 1re fois qu'on franchit l'objectif
     tallyMs=animateScoreTally(mode,lines,finishWin);
   }else if(outcome==='push'){
     let pg=0;if(hasRelic('diplomate')){pg=Math.floor(stake*0.5);G.bank+=pg;}
