@@ -1307,8 +1307,12 @@ function endlessCashRep(){
 /* niveau de mise (tier) = nombre de paliers franchis ; les mises grimpent */
 function endlessTier(tier){
   const bmax=1+((G.boons&&G.boons.betmax)||0);
-  const min=Math.max(5,niceRound(5*Math.pow(1.5,tier)));
-  const max=Math.max(min*3,niceRound(20*Math.pow(1.5,tier)*bmax));
+  const min=Math.max(5,roundBet(5*Math.pow(1.5,tier)));
+  // la mise max suit l'OBJECTIF du palier (gain à réaliser ÷ ~15) : ~15 mises max pour franchir, constant à tous les paliers.
+  // aux petits paliers l'ancienne échelle 20×1.5^t domine (inchangée) ; dès le palier ~3 la nouvelle prend le relais et grimpe en ×2,2/palier (plus de plafond ~1000).
+  const spanNeed=palierTarget(tier)-(tier>0?palierTarget(tier-1):0);
+  const base=Math.max(20*Math.pow(1.5,tier),spanNeed/15);
+  const max=Math.max(min*3,roundBet(base*bmax));
   const zone=Math.min(9,1+Math.floor(tier/2));
   const rule=tier>=6?'gros':(tier>=3&&tier%2===1?'nervous':null);   // croupier plus dur en montant
   return {n:'Palier '+((G.palier||0)+1),zone,mains:Infinity,min,max,cap:0,goal:Infinity,master:Infinity,
@@ -1988,9 +1992,9 @@ function applyHandIncome(){
 /* paliers de mise FIXES, propres à la table : entre min et max, jamais un % du capital */
 function betChoices(){
   const t=curTable();
-  const maxB=niceRound(t.max*(1+0.25*barakaLevel()));   // la BARAKA débloque de plus grosses mises (+25 %/niveau)
+  const maxB=roundBet(t.max*(1+0.25*barakaLevel()));   // la BARAKA débloque de plus grosses mises (+25 %/niveau)
   const span=maxB-t.min;
-  const raw=span<=0?[t.min]:[t.min,t.min+Math.round(span/3),t.min+Math.round(2*span/3),maxB];
+  const raw=span<=0?[t.min]:[t.min,roundBet(t.min+span/3),roundBet(t.min+2*span/3),maxB];
   const opts=[...new Set(raw)].sort((a,b)=>a-b);
   if(G.endless&&G.event&&G.event.id==='forcee'){                 // MISE FORCÉE : un seul choix, le plus haut abordable
     const aff=opts.filter(v=>v<=G.bank);
@@ -2421,6 +2425,8 @@ let shopOffer=[],rerollCost=5;
 /* prix de boutique indexés sur la profondeur (≈ ta banque) : les cartes
    d'effet restent chères, on ne peut pas en acheter plein d'un coup */
 function niceRound(c){if(c<1000)return Math.max(5,Math.round(c/5)*5);const mag=Math.pow(10,Math.floor(Math.log10(c))-1);return Math.round(c/mag)*mag;}
+/* arrondi « joli » pour les mises : pas d'incrément qui grandit avec la grandeur (5→10→25→50→100→500) pour éviter les 102, 178, 187… */
+function roundBet(v){let s;if(v<50)s=5;else if(v<200)s=10;else if(v<500)s=25;else if(v<2000)s=50;else if(v<10000)s=100;else s=500;return Math.max(5,Math.round(v/s)*s);}
 /* prix de boutique indexés sur l'objectif de la table (pas sur ta richesse) :
    les bons objets restent chers, impossible de tout rafler d'un coup. */
 function shopScale(){return Math.max(1,curTable().goal/100*1.2);}
