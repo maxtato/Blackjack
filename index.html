@@ -1227,7 +1227,7 @@ const UNLOCKS_INFINI=[
   {id:'plafond',  name:'Plafond',     tok:'+% <small>mise</small>', tc:'#a64dff', max:3, cost:n=>45+n*30, desc:n=>'Plafond de mise de départ +'+(10*(n+1))+' %'},
   {id:'elan',     name:'Élan',        tok:'+1 <small>palier</small>',tc:'#3f8bd6',max:3, cost:n=>60+n*45, desc:n=>'Démarre directement au palier '+(1+(n+1))},
   {id:'cashplus', name:'Blanchisseur',tok:'+25<small class="sym">%★</small>',  tc:'#19c3c3',max:2, cost:n=>70+n*70, desc:n=>'L\'encaissement de la cagnotte rapporte +'+(25*(n+1))+' %'},
-  {id:'boon2',    name:'Pactes',      tok:'+2 <small>bonus</small>',tc:'#a64dff',max:1, cost:n=>110,     desc:n=>'Débloque 2 bonus de palier RARES (Série renforcée, Mains spéciales ×2)'},
+  {id:'boon2',    name:'Pactes',      tok:'+2 <small>bonus</small>',tc:'#a64dff',max:1, cost:n=>110,     desc:n=>'Débloque 2 bonus de palier RARES (Baraka dopée, Mains spéciales ×2)'},
 ];
 function unlocksFor(mode){return (mode||MODE)==='infini'?UNLOCKS_INFINI:UNLOCKS_NUIT;}
 function findUnlock(id){return unlocksFor(MODE).find(x=>x.id===id);}
@@ -1329,10 +1329,10 @@ const BOONS=[
   {id:'mult',  t:'+1 PLAFOND MULT', d:'Le multiplicateur peut monter plus haut.'},
   {id:'income',t:'+5 $ / MAIN',     d:'Revenu passif à chaque main.'},
   {id:'betmax',t:'MISE MAX +25 %',  d:'Ton plafond de mise grimpe : vise plus gros.'},
-  {id:'calm',  t:'PRESSION −25 %',  d:'La pression monte moins vite (moins de tirages forcés).'},
+  {id:'filet', t:'FILET BARAKA',    d:'À la défaite, la BARAKA ne retombe pas à zéro : elle perd juste un niveau.'},
   {id:'cash',  t:'+20 % CAGNOTTE',  d:'Injection immédiate dans ta cagnotte.'},
   /* bonus RARES : proposés seulement après l'achat des « Pactes » à La Planque infini */
-  {id:'serieplus',t:'SÉRIE RENFORCÉE',d:'+0,75 par victoire enchaînée (au lieu de +0,5).',lock:'boon2'},
+  {id:'baraplus',t:'BARAKA DOPÉE',  d:'Les coups culottés donnent +1 BARAKA de plus.',lock:'boon2'},
   {id:'evt3',     t:'MAINS SPÉCIALES ×2',d:'Une main spéciale toutes les 3 mains (au lieu de 5).',lock:'boon2'},
 ];
 /* mini-événements du mode cagnotte : toutes les 5 mains, la main est SPÉCIALE —
@@ -1522,7 +1522,7 @@ const BARAKA_COL=['#9bbfa8','#34b6a8','#e8b84a','#f0902a','#e0524f'];
 function barakaLevel(){let l=0;const b=G.baraka||0;for(const s of BARAKA_STEPS)if(b>=s)l++;return l;}
 function barakaPct(){const b=G.baraka||0,lvl=barakaLevel();if(lvl>=4)return 100;const lo=lvl>0?BARAKA_STEPS[lvl-1]:0,hi=BARAKA_STEPS[lvl];return Math.min(100,(lvl+(b-lo)/(hi-lo))/4*100);}
 function addBaraka(n){G.baraka=Math.max(0,(G.baraka||0)+n);G.barakaMax=Math.max(G.barakaMax||0,G.baraka);G.tableMaxBaraka=Math.max(G.tableMaxBaraka||0,G.baraka);renderPressure();renderMult();}
-function resetBaraka(){G.baraka=0;renderPressure();renderMult();}
+function resetBaraka(){if(G.boons&&G.boons.filet){const l=barakaLevel();G.baraka=l>=2?BARAKA_STEPS[l-2]:0;}else G.baraka=0;renderPressure();renderMult();}
 /* coup culotté : gagner de façon osée → +2 baraka au lieu de +1 */
 function isCulotte(pv,mode){
   if((G.stakeMult||1)>=2)return true;                                                   // doublé
@@ -2297,7 +2297,7 @@ function resolve(mode){
 
   if(outcome==='win')checkContract(mult);                 // contrat de table (mode nuit)
   // BARAKA : gagner remplit la barre (coup culotté = +2), perdre la remet à zéro
-  if(outcome==='win'){const cul=isCulotte(pv,mode);addBaraka(cul?2:1);if(cul)setTimeout(()=>popText('CULOTTÉ !','+2 baraka'),320);}
+  if(outcome==='win'){const cul=isCulotte(pv,mode);const culN=2+((G.boons&&G.boons.baraplus)?1:0);addBaraka(cul?culN:1);if(cul)setTimeout(()=>popText('CULOTTÉ !','+'+culN+' baraka'),320);}
   else if(outcome==='lose')resetBaraka();
   renderTop();renderRelics();renderPressure();renderMult();
   setTimeout(()=>nextHandOrEnd(),1750+tallyMs);
@@ -3042,7 +3042,7 @@ function reachPalier(){
   // sauvegarde automatique du palier atteint → on pourra reprendre d'ici même si on meurt/quitte
   const rr=metaCur().record;rr.palier=Math.max(rr.palier||0,(G.palier||0)+1);saveMeta();
   sfx.win&&sfx.win();flashScreen('win');shake(14);coinBurst(12);
-  const pool=BOONS.filter(b=>(!b.lock||uLvl(b.lock))&&!(b.id==='evt3'&&G.boons&&G.boons.evt3)&&!(b.id==='serieplus'&&G.boons&&G.boons.serieBoost>=0.5));
+  const pool=BOONS.filter(b=>(!b.lock||uLvl(b.lock))&&!(b.id==='evt3'&&G.boons&&G.boons.evt3)&&!(b.id==='filet'&&G.boons&&G.boons.filet)&&!(b.id==='baraplus'&&G.boons&&G.boons.baraplus));
   for(let i=pool.length-1;i>0;i--){const j=rndInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
   const pick=pool.slice(0,3);
   $('palierNum').textContent=G.palier;
@@ -3064,9 +3064,9 @@ function applyBoon(id){
   if(id==='mult')G.boons.mult++;
   else if(id==='income')G.boons.income+=5;
   else if(id==='betmax')G.boons.betmax+=0.25;
-  else if(id==='calm')G.boons.calm=Math.min(0.75,(G.boons.calm||0)+0.25);
+  else if(id==='filet')G.boons.filet=true;
   else if(id==='cash'){G.bank+=Math.round(G.bank*0.2);}
-  else if(id==='serieplus')G.boons.serieBoost=Math.min(0.5,(G.boons.serieBoost||0)+0.25);
+  else if(id==='baraplus')G.boons.baraplus=true;
   else if(id==='evt3')G.boons.evt3=true;
   sfx.buy&&sfx.buy();coinBurst(8);
   $('palierScreen').classList.remove('show');
