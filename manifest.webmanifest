@@ -1,7 +1,7 @@
 {
-  "name": "TABLE 21",
-  "short_name": "TABLE 21",
-  "description": "Blackjack roguelite : descends de salle en salle dans un casino clandestin.",
+  "name": "Cold Deck",
+  "short_name": "Cold Deck",
+  "description": "Blackjack roguelite glacé : enchaîne les tables, fais monter la Baraka, encaisse gros.",
   "lang": "fr",
   "start_url": "./",
   "scope": "./",
