@@ -1262,7 +1262,7 @@ const ZONE_NAMES={1:'Initiation',2:'La Pression',3:'Casino profond'};
 const ZONE_FELT={1:'#138f86',2:'#7c3a9e',3:'#a52f55'};   // couleurs de tapis d'origine
 
 /* ====== tapis évolutif ====== */
-const FELT_COLORS=['#138f86','#1c6ea8','#7c3a9e','#7a2f2f'];   // vert original, bleu, violet, bordeaux
+const FELT_COLORS=['#138f86','#1c6ea8','#7c3a9e','#c0356b'];   // vert original, bleu, violet, fuchsia-rouge
 function feltSpokes(count,len,w,gap,off){let s='';const c='rgba(240,232,210,.22)';for(let k=0;k<count;k++)s+='<i style="position:absolute;left:'+(-w/2)+'px;bottom:0;width:'+w+'px;height:'+len+'px;background:'+c+';transform-origin:50% 100%;transform:rotate('+(off+k*(360/count))+'deg) translateY(-'+gap+'px)"></i>';return '<span class="sp">'+s+'</span>';}
 function feltDots(count,r,size){let s='';const c='rgba(240,232,210,.4)';for(let k=0;k<count;k++){const a=k*(360/count)*Math.PI/180;const x=Math.round(Math.sin(a)*r),y=Math.round(-Math.cos(a)*r);s+='<i style="position:absolute;left:calc(50% - '+(size/2)+'px);top:calc(50% - '+(size/2)+'px);width:'+size+'px;height:'+size+'px;background:'+c+';transform:translate('+x+'px,'+y+'px)"></i>';}return '<span class="sp">'+s+'</span>';}
 const _fCorn='<span class="fdDia tl"></span><span class="fdDia tr"></span><span class="fdDia bl"></span><span class="fdDia br"></span>';
