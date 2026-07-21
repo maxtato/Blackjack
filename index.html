@@ -506,13 +506,13 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .chpdia{position:absolute;left:50%;transform:translateX(-50%);width:6%;height:10%;z-index:6;pointer-events:none;clip-path:polygon(66.67% 10%,66.67% 20%,83.33% 20%,83.33% 40%,100% 40%,100% 60%,83.33% 60%,83.33% 80%,66.67% 80%,66.67% 90%,33.33% 90%,33.33% 80%,16.67% 80%,16.67% 60%,0 60%,0 40%,16.67% 40%,16.67% 20%,33.33% 20%,33.33% 10%)}
 .chpdia.dtop{top:20%}
 .chpdia.dbot{bottom:20%}
-.joker .chpdia{background:#ffe08a}
+.joker .chpdia{background:#fff0a8}
 .tarot .chpdia{background:#e6d2ff}
-/* bande accent assombrie (foncé B) → les liserets clairs ressortent bien */
-.joker .chpd{background:#bd8c1f}
-.tarot .chpd{background:#8f4fe0}
+/* bande accent : or clair vif côté effets (moins sombre) · violet un cran plus vif côté tarots */
+.joker .chpd{background:#f0be14}
+.tarot .chpd{background:#a05cf0}
 /* liserets ext.+int. dans la teinte accent vive (variante C) — crans restent crème */
-.joker .chpo,.joker .chpl{background:#ffe08a}
+.joker .chpo,.joker .chpl{background:#fff0a8}
 .tarot .chpo,.tarot .chpl{background:#e6d2ff}
 /* texte borné au centre noir : max-width sous le diamètre du centre → n'empiète jamais sur le liseret intérieur */
 #effects .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:15px;line-height:1.05;text-align:center;text-shadow:1px 1px 0 #000;white-space:nowrap}
@@ -536,12 +536,11 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #objBar{position:relative;width:100%;height:18px;border:none;border-radius:0;clip-path:var(--pc);overflow:hidden;background:#0a1c17}
 #objFill{position:absolute;inset:0;width:0;background:var(--gold);transition:width .4s cubic-bezier(.2,.8,.2,1)}
 #objBar.full #objFill{animation:pflash .6s linear infinite}
-/* repère d'objectif = une aiguille verticale unique (trait) traversant la barre
-   jusqu'au montant : trait et repère parfaitement alignés par construction */
-#objTick{position:absolute;top:18px;height:18px;left:75%;transform:translateX(-50%);width:2px;background:#fff;z-index:4}
+/* plus de repère d'objectif : l'objectif est au BOUT de la barre (comme les paliers en Sans Fin) */
+#objTick{display:none}
 #objCur{position:absolute;top:0;transform:translateX(-50%);font-size:14px;font-weight:700;color:var(--gold);white-space:nowrap;z-index:3}
 #objCur::after{content:"";position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--gold)}
-#objGoal{position:absolute;bottom:0;left:75%;transform:translateX(-50%);font-size:14px;font-weight:700;color:#fff;white-space:nowrap}
+#objGoal{position:absolute;bottom:0;left:auto;right:2px;transform:none;font-size:14px;font-weight:700;color:#fff;white-space:nowrap}
 /* ===== MODE INFINI « CAGNOTTE » : on masque objectif/mains/vies/reliques et on met la cagnotte en avant ===== */
 body.inf #turnStat{display:none}
 body.inf .lives{display:none}
@@ -738,8 +737,7 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 /* barre de gain agrandie (le nombre exact est sur la card GAIN, la barre montre le remplissage) */
 #objWrap{padding:6px 0 16px}
 #objBar{height:24px}
-#objTick{top:6px;height:24px}
-#objGoal{font-size:13.5px;font-weight:700;transform:translate(-50%,1px)}   /* juste sous la barre */
+#objGoal{font-size:13.5px;font-weight:700;transform:translateY(1px)}   /* juste sous la barre, au bout (droite) */
 
 /* symbole réputation : losange contour en pixel (G) -> prend la couleur du texte courant */
 .pxstar{display:inline-block;width:.4em;height:.4em;vertical-align:.14em;background:currentColor;margin:0 .34em;
@@ -1916,12 +1914,12 @@ function renderObjective(){
     return;
   }
   const goal=(G.table&&G.table.goal)||1;
-  // la barre repart de ZÉRO à chaque table (progression depuis la banque d'entrée), objectif au repère des 3/4
+  // la barre repart de ZÉRO à chaque table (progression depuis la banque d'entrée) ; objectif à la FIN de la barre (comme les paliers en Sans Fin)
   const start=G.tableStartBank||0;
-  const span=Math.max(1,(goal-start)*4/3);
+  const span=Math.max(1,(goal-start));
   const pct=Math.max(0,Math.min(100,(G.bank-start)/span*100));
   const f=$('objFill');if(f)f.style.width=pct+'%';
-  const g=$('objGoal');if(g)g.textContent=abbr(goal)+' $';  // objectif au repère des 3/4
+  const g=$('objGoal');if(g)g.textContent=abbr(goal)+' $';  // objectif au bout de la barre
   if(gv)gv.classList.toggle('warn',!!(G.table&&G.bank<G.table.min*3));
   const bar=$('objBar');if(bar)bar.classList.toggle('full',G.bank>=goal);
 }
@@ -3080,11 +3078,12 @@ function openMenu(){
 function chooseMode(m){
   audioInit();
   MODE=(m==='infini')?'infini':'nuit';
+  startPalierIdx=null;                        // la reprise se recale par défaut sur le plus loin atteint
   $('modeMenu').classList.remove('show');
   renderPlanque();renderBackPicker();
   $('intro').classList.add('show');
 }
-function launchMode(){ if(MODE==='infini')startEndless(); else startGame(); }
+function launchMode(){ if(MODE==='infini')startEndless(); else startGame(startPalierIdx>0?startPalierIdx:0); }
 function stepResume(d){ startPalierIdx=(startPalierIdx||0)+d; renderPlanque(); }   // ◀ ▶ palier de reprise
 
 /* ---------- LA PLANQUE (hub de méta-progression, propre au mode courant) ---------- */
@@ -3113,10 +3112,22 @@ function renderPlanque(){
           '<span class="prVal">Palier '+(startPalierIdx+1)+'</span>'+
           '<button class="prBtn" '+(startPalierIdx>=maxIdx?'disabled':'')+' onclick="stepResume(1)"><span class="ar" style="--o:.8px;--d:.14s">▶</span></button>';
       } else pr.style.display='none';
-    } else pr.style.display='none';
+    } else {
+      // PARCOURS : reprendre à une table déjà atteinte (record.depth = plus loin tenu)
+      const maxIdx=Math.max(0,(m.record.depth||0)-1);   // index 0-based de la table la plus loin atteinte
+      if(startPalierIdx==null)startPalierIdx=maxIdx; else startPalierIdx=Math.min(Math.max(startPalierIdx,0),maxIdx);
+      if(maxIdx>=1){
+        pr.style.display='';
+        pr.innerHTML='<span class="prLbl">REPRENDRE À</span>'+
+          '<button class="prBtn" '+(startPalierIdx<=0?'disabled':'')+' onclick="stepResume(-1)"><span class="ar" style="--o:-.8px">◀</span></button>'+
+          '<span class="prVal">Table '+(startPalierIdx+1)+'</span>'+
+          '<button class="prBtn" '+(startPalierIdx>=maxIdx?'disabled':'')+' onclick="stepResume(1)"><span class="ar" style="--o:.8px;--d:.14s">▶</span></button>';
+      } else { pr.style.display='none';startPalierIdx=0; }
+    }
   }
-  const lb=$('planqueLaunch');if(lb){lb.className='btn menu b-gold';lb.innerHTML=inf?'COMMENCER<small>sans fin · blackjack pur</small>':'COMMENCER<small>le parcours · 9 tables</small>';}
-  const z2=$('planqueZ2');if(z2)z2.style.display=(!inf&&(META.nuit.zone2Runs|0)>=2)?'':'none';   // raccourci débloqué : zone 2 atteinte 2 fois
+  const resumeAt=(!inf&&startPalierIdx>0)?startPalierIdx:0;   // table de reprise du parcours (0 = départ normal)
+  const lb=$('planqueLaunch');if(lb){lb.className='btn menu b-gold';lb.innerHTML=inf?'COMMENCER<small>sans fin · blackjack pur</small>':(resumeAt>0?('COMMENCER<small>reprise · table '+(resumeAt+1)+'</small>'):'COMMENCER<small>le parcours · 9 tables</small>');}
+  const z2=$('planqueZ2');if(z2)z2.style.display=(!inf&&(META.nuit.zone2Runs|0)>=2&&(m.record.depth||0)<2)?'':'none';   // remplacé par le sélecteur « REPRENDRE À » dès qu'une table 2+ est atteinte
   const rb2=$('repBal2');if(rb2)rb2.textContent=abbr(m.rep);
   const lead=$('upgradesLead');if(lead)lead.innerHTML=inf
     ?`Renforce ta <b>cagnotte</b> avec ta <b>réputation</b>.`
@@ -3148,6 +3159,7 @@ function buyUnlock(id){
 }
 function toPlanque(){
   document.body.classList.remove('inf');
+  startPalierIdx=null;                       // la reprise se recale par défaut sur le plus loin atteint
   $('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');$('shop').classList.remove('show');
   renderPlanque();renderBackPicker();
   $('intro').classList.add('show');
@@ -3158,9 +3170,10 @@ function startGame(fromTable){
   document.body.classList.remove('inf');
   $('intro').classList.remove('show');$('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');
   freshGame();buildShoe();
-  if(fromTable){                                    // RACCOURCI : départ direct en zone 2 (débloqué en l'atteignant 2 fois)
+  fromTable=Math.max(0,Math.min(fromTable|0,RUN_LEN-1));
+  if(fromTable>0){                                  // REPRISE : départ direct à une table déjà atteinte (ou raccourci zone 2)
     G.tableIdx=fromTable;G.table=RUN[fromTable];
-    G.bank=280+(startBank()-50);                    // capital calé sur le conseillé de la table 4 (+ Pécule) ; cagnotte ★ à zéro : le raccourci va plus vite mais rapporte moins
+    G.bank=(RUN[fromTable].cap||0)+(startBank()-50);   // capital calé sur le conseillé de la table (+ Pécule) ; cagnotte ★ à zéro : on va plus vite mais on rapporte moins
     enterTable(1);return;
   }
   G.contract=rollContract();
