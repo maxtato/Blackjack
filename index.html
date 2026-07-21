@@ -1010,7 +1010,7 @@ small.sym{margin-left:0!important}
       <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl">réputation</span></div>
       <div class="recBox" id="recBox">RECORD<br><span style="white-space:nowrap"><b>0 tables</b> · <b>0 $</b></span></div>
     </div>
-    <div class="shopItems" id="unlockItems"></div>
+    <button class="btn b-purple menu" id="upgradesBtn" onclick="openUpgrades()" style="margin-bottom:18px">AMÉLIORATIONS<small id="upgradesSub">avantages permanents</small></button>
     <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
     <div class="shopBtns" style="gap:10px;margin-top:2px">
       <button class="btn b-teal menu" onclick="openMenu()" style="flex:0 0 auto">← MENU</button>
@@ -1038,6 +1038,19 @@ small.sym{margin-left:0!important}
       <div><span class="rt">SANS FIN</span>Pas d'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · toutes les 5 mains, une <span class="d">main spéciale</span>. <span class="k">ENCAISSER</span> convertit ta cagnotte en réputation — la <span class="d">banqueroute</span> ne garde que les paliers.</div>
     </div>
     <button class="btn b-gold menu" onclick="closeRules()">FERMER</button>
+  </div>
+</div>
+
+<!-- AMÉLIORATIONS (déblocages permanents, sortis de La Planque pour ne pas la saturer) -->
+<div class="overlay" id="upgradesScreen">
+  <div class="ovpanel">
+    <h1 class="win" style="font-size:22px">AMÉLIORATIONS</h1>
+    <p id="upgradesLead" style="margin-top:-2px">Dépense ta <b>réputation</b> en avantages permanents.</p>
+    <div class="repBar" style="margin-bottom:14px">
+      <div class="repBig"><span class="repNum" id="repBal2">0</span><span class="repLbl">réputation</span></div>
+    </div>
+    <div class="shopItems" id="unlockItems"></div>
+    <button class="btn b-gold menu" onclick="closeUpgrades()">FERMER</button>
   </div>
 </div>
 
@@ -2734,6 +2747,8 @@ function showWord(kind,gain,mult,natural,bust){
 }
 function openRules(){$('rulesScreen').classList.add('show');}
 function closeRules(){$('rulesScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
+function openUpgrades(){renderPlanque();$('upgradesScreen').classList.add('show');}   // améliorations : ouvertes depuis La Planque, pour ne pas saturer la page
+function closeUpgrades(){$('upgradesScreen').classList.remove('show');}
 /* ---------- pause en jeu ---------- */
 let pauseReturn=false;
 function openPause(){
@@ -3043,9 +3058,15 @@ function renderPlanque(){
   }
   const lb=$('planqueLaunch');if(lb){lb.className='btn menu '+(inf?'b-purple':'b-gold');lb.innerHTML=inf?'COMMENCER<small>sans fin · blackjack pur</small>':'COMMENCER<small>le parcours · 9 tables</small>';}
   const z2=$('planqueZ2');if(z2)z2.style.display=(!inf&&(META.nuit.zone2Runs|0)>=2)?'':'none';   // raccourci débloqué : zone 2 atteinte 2 fois
+  const rb2=$('repBal2');if(rb2)rb2.textContent=abbr(m.rep);
+  const lead=$('upgradesLead');if(lead)lead.innerHTML=inf
+    ?`Renforce ta <b>cagnotte</b> avec ta <b>réputation</b>.`
+    :`Dépense ta <b>réputation</b> en avantages permanents.`;
   const box=$('unlockItems');box.innerHTML='';
+  let affordable=0,allMax=true;
   unlocksFor(MODE).forEach(u=>{
     const lvl=uLvl(u.id),cost=unlockCost(u),maxed=cost===null;
+    if(!maxed){allMax=false;if(m.rep>=cost)affordable++;}
     const d=document.createElement('div');d.className='shopItem'+(maxed?' bought':'');
     const dots=u.max>1?` <span class="ulvl">${'●'.repeat(lvl)}${'○'.repeat(u.max-lvl)}</span>`:(lvl?' <span class="ulvl">●</span>':'');
     d.innerHTML=`<div class="shopTok" style="color:${u.tc}">${u.tok}</div>`+
@@ -3056,6 +3077,9 @@ function renderPlanque(){
     else{b.innerHTML=STAR+cost;if(m.rep<cost)b.disabled=true;b.onclick=()=>buyUnlock(u.id);}
     d.appendChild(b);box.appendChild(d);
   });
+  // sous-titre du bouton d'ouverture : indique ce qui est achetable maintenant
+  const sub=$('upgradesSub');if(sub)sub.textContent=allMax?'tout au max'
+    :affordable?(affordable+' dispo'+(affordable>1?'s':'')):'avantages permanents';
 }
 function buyUnlock(id){
   const u=findUnlock(id);if(!u)return;
