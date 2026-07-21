@@ -2279,7 +2279,7 @@ function nextSplitHand(){
 function playerDouble(){
   if(G.phase!=='play'||G._dealing||G.pHand.length!==2||G.bank<G.bet)return;
   G.bank-=G.bet;G.stakeMult=2;
-  sfx.buy();shake(10);coinBurst(6);popText('DOUBLÉ','mise ×2 · une seule carte');
+  sfx.buy();shake(10);popText('DOUBLÉ','mise ×2 · une seule carte');   // pas de gerbe de pièces : l'animation de gain est réservée aux victoires
   renderTop();renderChips();renderMult();
   const c=G.magicNext?drawIdeal():draw();G.magicNext=false;
   c._pending=true;G.pHand.push(c);
@@ -2905,19 +2905,28 @@ function objectiveReached(){
   const sb=$('scorebox');if(sb){sb.classList.add('hot');setTimeout(()=>sb.classList.remove('hot'),1500);}
 }
 
+/* une SEULE salve de confettis à la fois : si un jackpot et un record tombent sur la
+   même main, on ignore la 2e (elles se déclenchent à ~0,5 s d'intervalle) */
+let _confettiT=-1e9;   // très négatif : la toute 1re salve part toujours (performance.now() = temps depuis le chargement)
+function bigConfetti(n){
+  const now=(typeof performance!=='undefined'&&performance.now)?performance.now():0;
+  if(now-_confettiT<1300)return false;
+  _confettiT=now;
+  pixelConfetti(n);flashScreen('win');
+  try{sfx.jackpot&&sfx.jackpot();}catch(e){}
+  return true;
+}
 /* fanfare 21 PARFAIT : gros feedback quand on décroche le ×3 */
 function perfectFanfare(){
-  pixelConfetti(22);flashScreen('win');shake(10);
+  bigConfetti(22);shake(10);
   const sb=$('scorebox');if(sb){sb.classList.add('hot');setTimeout(()=>sb.classList.remove('hot'),1200);}
-  try{sfx.jackpot&&sfx.jackpot();}catch(e){}
 }
-/* bannière NOUVEAU RECORD ! */
+/* bannière NOUVEAU RECORD ! (la bannière s'affiche toujours ; les confettis sont mutualisés) */
 function showRecord(gain){
   const p=$('recPop');if(!p)return;
   p.querySelector('.rt').textContent='+'+abbr(gain)+' $';
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
-  pixelConfetti(18);flashScreen('win');
-  try{sfx.jackpot&&sfx.jackpot();}catch(e){}
+  bigConfetti(18);
 }
 
 let shakeAmt=0;
