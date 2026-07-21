@@ -844,6 +844,7 @@ small.sym{margin-left:0!important}
 /* lettres très légèrement désalignées (style) ; mots insécables -> retours à la ligne propres */
 .W{display:inline-block;white-space:nowrap}
 .L{display:inline-block;transform:translateY(var(--o,0))}
+.thouSep{display:inline-block;width:.16em}   /* séparateur de milliers resserré (1 000, 5 438…) */
 /* libellé principal d'un bouton d'action : garde le titre sur sa ligne (les mots
    ne s'empilent pas dans le bouton flex-colonne) et laisse le <small> dessous */
 .blbl{display:inline-block;line-height:1.05}
@@ -3011,7 +3012,13 @@ function staggerNode(node,ctr,boost){
       const frag=document.createDocumentFragment();
       for(const part of txt.split(/(\s+)/)){
         if(part==='')continue;
-        if(!/\S/.test(part)){frag.appendChild(document.createTextNode(part));continue;}
+        if(!/\S/.test(part)){
+          // séparateur de milliers (fine espace U+2009) : largeur fixe et resserrée,
+          // sinon le navigateur insère une espace-mot pleine entre les blocs .W (trop d'air)
+          if(/^ +$/.test(part)){const sp=document.createElement('span');sp.className='thouSep';frag.appendChild(sp);}
+          else frag.appendChild(document.createTextNode(part));
+          continue;
+        }
         const w=document.createElement('span');w.className='W';
         let wj=0;                                       // index DANS le mot → décalage en zigzag (un haut, un bas), pas en escalier
         for(const ch of part){
