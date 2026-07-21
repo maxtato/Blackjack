@@ -853,9 +853,9 @@ small.sym{margin-left:0!important}
 /* overlays : centrés mais défilables si trop hauts (jamais coupés) */
 .overlay{justify-content:flex-start;overflow-y:auto}
 .ovpanel{margin:auto 0}
-/* La Planque = page plein écran (pas un panneau flottant) */
-#intro{padding:0}
-#intro .ovpanel{max-width:none;width:100%;min-height:100%;margin:0;border:none;border-radius:0;clip-path:none;box-shadow:none;display:flex;flex-direction:column;justify-content:center;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px))}
+/* La Planque + menu de démarrage = page plein écran opaque (pas un panneau flottant sur le fond) */
+#intro,#modeMenu{padding:0}
+#intro .ovpanel,#modeMenu .ovpanel{max-width:none;width:100%;min-height:100%;margin:0;border:none;border-radius:0;clip-path:none;box-shadow:none;display:flex;flex-direction:column;justify-content:center;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px))}
 #intro h1{font-size:32px;margin-bottom:7px}
 #intro p{font-size:11px;line-height:1.4;margin-bottom:11px}
 /* blocs réputation / record réduits (moins hauts) */
