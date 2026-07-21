@@ -2858,21 +2858,22 @@ function shake(n){shakeAmt=Math.max(shakeAmt,n);}
 /* confettis pixel : petits carrés colorés (couleurs emblématiques) qui giclent et retombent en tournoyant */
 const CONFETTI_COLS=['#ffce3a','#34b6a8','#c0356b','#9a5cd0','#e0524f','#f4ecd8','#1c6ea8'];
 function pixelConfetti(n){
-  const cont=$('particles');if(!cont)return;const cx=innerWidth/2,cy=innerHeight*0.46;
+  const cont=$('particles');if(!cont)return;const cx=innerWidth/2,cy=innerHeight/2;   // pile au centre de l'écran
   for(let i=0;i<n;i++){
     const c=document.createElement('div');c.className='confetti';
     const sz=6+(i%4)*2;                                    // 6 / 8 / 10 / 12 px
     c.style.width=c.style.height=sz+'px';
     c.style.background=CONFETTI_COLS[i%CONFETTI_COLS.length];
     c.style.left=cx+'px';c.style.top=cy+'px';cont.appendChild(c);
-    const dx=(Math.random()-.5)*innerWidth*0.7;
-    const peak=90+Math.random()*160, fall=innerHeight*0.55+Math.random()*160;
+    const ang=Math.random()*Math.PI*2, dist=70+Math.random()*260;   // éclate dans toutes les directions depuis le centre
+    const bx=Math.cos(ang)*dist, by=Math.sin(ang)*dist;             // point d'explosion
+    const fall=innerHeight*0.5+Math.random()*220;                    // puis retombe doucement
     const rot=(Math.random()*720-360)|0;
     const a=c.animate([
-      {transform:'translate(-50%,-50%) rotate(0deg) scale(.6)',opacity:0},
-      {transform:`translate(calc(-50% + ${dx*.5}px),calc(-50% - ${peak}px)) rotate(${(rot*.5)|0}deg) scale(1)`,opacity:1,offset:.32},
-      {transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${fall}px)) rotate(${rot}deg) scale(.9)`,opacity:0}
-    ],{duration:850+Math.random()*520,easing:'cubic-bezier(.2,.7,.3,1)'});
+      {transform:'translate(-50%,-50%) rotate(0deg) scale(.4)',opacity:0},
+      {transform:`translate(calc(-50% + ${bx.toFixed(0)}px),calc(-50% + ${by.toFixed(0)}px)) rotate(${(rot*.4)|0}deg) scale(1)`,opacity:1,offset:.26},
+      {transform:`translate(calc(-50% + ${(bx*1.1).toFixed(0)}px),calc(-50% + ${(by+fall).toFixed(0)}px)) rotate(${rot}deg) scale(.85)`,opacity:0}
+    ],{duration:1700+Math.random()*900,easing:'cubic-bezier(.15,.72,.3,1)'});   // plus lent (≈1,7–2,6 s)
     a.onfinish=()=>c.remove();
   }
 }
