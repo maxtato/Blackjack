@@ -1914,10 +1914,8 @@ function renderObjective(){
     return;
   }
   const goal=(G.table&&G.table.goal)||1;
-  // la barre repart de ZÉRO à chaque table (progression depuis la banque d'entrée) ; objectif à la FIN de la barre (comme les paliers en Sans Fin)
-  const start=G.tableStartBank||0;
-  const span=Math.max(1,(goal-start));
-  const pct=Math.max(0,Math.min(100,(G.bank-start)/span*100));
+  // barre = jetons ABSOLUS (depuis 0) vers l'objectif, exactement comme les paliers en Sans Fin (bank/target)
+  const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,goal)*100));
   const f=$('objFill');if(f)f.style.width=pct+'%';
   const g=$('objGoal');if(g)g.textContent=abbr(goal)+' $';  // objectif au bout de la barre
   if(gv)gv.classList.toggle('warn',!!(G.table&&G.bank<G.table.min*3));
