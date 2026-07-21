@@ -228,6 +228,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .bpRow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .bpslot{line-height:0;filter:drop-shadow(3px 5px 0 rgba(0,0,0,.45));cursor:pointer}
 .bpCard{width:52px;height:74px;cursor:pointer;animation:cardLife 3.6s ease-in-out var(--cd,0s) infinite}
+/* aperçu du dos sélectionné + bouton CHANGER (La Planque : galerie repliée dans un overlay) */
+.bpCurrent{display:flex;align-items:stretch;gap:12px}
+#bpPreview{flex:0 0 auto;filter:drop-shadow(3px 5px 0 rgba(0,0,0,.45))}
 .bpCard.sel{background:var(--gold)}
 .card.jit{animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,jit .12s linear infinite}
 @keyframes deal{from{transform:translateY(-30px) rotate(-7deg);opacity:0}to{transform:none;opacity:1}}
@@ -1011,7 +1014,12 @@ small.sym{margin-left:0!important}
       <div class="recBox" id="recBox">RECORD<br><span style="white-space:nowrap"><b>0 tables</b> · <b>0 $</b></span></div>
     </div>
     <button class="btn b-purple menu" id="upgradesBtn" onclick="openUpgrades()" style="margin-bottom:18px">AMÉLIORATIONS<small id="upgradesSub">avantages permanents</small></button>
-    <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
+    <div class="backPick"><div class="bpLabel">DOS DE CARTE</div>
+      <div class="bpCurrent">
+        <div class="card back bpCard" id="bpPreview"><i class="bpat"></i></div>
+        <button class="btn b-teal menu" onclick="openBacks()" style="flex:1">CHANGER<small id="bpSub">dos de carte</small></button>
+      </div>
+    </div>
     <div class="shopBtns" style="gap:10px;margin-top:2px">
       <button class="btn b-teal menu" onclick="openMenu()" style="flex:0 0 auto">← MENU</button>
       <button class="btn b-gold menu" id="planqueLaunch" onclick="launchMode()" style="flex:1">COMMENCER<small>le parcours · 9 tables</small></button>
@@ -1051,6 +1059,16 @@ small.sym{margin-left:0!important}
     </div>
     <div class="shopItems" id="unlockItems"></div>
     <button class="btn b-gold menu" onclick="closeUpgrades()">FERMER</button>
+  </div>
+</div>
+
+<!-- DOS DE CARTE (galerie complète, sortie de La Planque pour ne pas la saturer) -->
+<div class="overlay" id="backPickScreen">
+  <div class="ovpanel">
+    <h1 class="win" style="font-size:22px">DOS DE CARTE</h1>
+    <p style="margin-top:-2px">Choisis l'habillage du dos de tes cartes.</p>
+    <div class="bpRow" id="bpRow"></div>
+    <button class="btn b-gold menu" onclick="closeBacks()">FERMER</button>
   </div>
 </div>
 
@@ -1199,6 +1217,11 @@ const CARD_BACKS=['cb9','cb10','cb11','cb12','cb13','cb14','cb15','cb16','cb18',
 let cardBack=(()=>{try{const v=localStorage.getItem('t21back');return CARD_BACKS.includes(v)?v:'cb9';}catch(e){return 'cb9';}})();
 function setCardBack(cb){cardBack=cb;try{localStorage.setItem('t21back',cb);}catch(e){}renderBackPicker();renderHands();}
 function renderBackPicker(){
+  // aperçu du dos sélectionné dans La Planque (la galerie complète vit dans l'overlay)
+  const prev=document.getElementById('bpPreview');
+  if(prev)prev.className='card back '+cardBack+' bpCard';
+  const sub=document.getElementById('bpSub');
+  if(sub)sub.textContent='modèle '+(CARD_BACKS.indexOf(cardBack)+1)+' / '+CARD_BACKS.length;
   const row=document.getElementById('bpRow');if(!row)return;row.innerHTML='';
   CARD_BACKS.forEach((cb,i)=>{
     const slot=document.createElement('div');slot.className='bpslot';
@@ -2749,6 +2772,8 @@ function openRules(){$('rulesScreen').classList.add('show');}
 function closeRules(){$('rulesScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
 function openUpgrades(){renderPlanque();$('upgradesScreen').classList.add('show');}   // améliorations : ouvertes depuis La Planque, pour ne pas saturer la page
 function closeUpgrades(){$('upgradesScreen').classList.remove('show');}
+function openBacks(){renderBackPicker();$('backPickScreen').classList.add('show');}   // galerie des dos de carte : ouverte depuis La Planque
+function closeBacks(){$('backPickScreen').classList.remove('show');}
 /* ---------- pause en jeu ---------- */
 let pauseReturn=false;
 function openPause(){
