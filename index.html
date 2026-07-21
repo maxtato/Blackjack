@@ -228,6 +228,16 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .bpRow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .bpslot{line-height:0;filter:drop-shadow(3px 5px 0 rgba(0,0,0,.45));cursor:pointer}
 .bpCard{width:52px;height:74px;cursor:pointer;animation:cardLife 3.6s ease-in-out var(--cd,0s) infinite}
+/* La Planque : aperçu du dos + flèches ◀▶ pour feuilleter, « tout voir » ouvre la galerie complète */
+.bpCurrent{display:flex;align-items:center;justify-content:center;gap:16px;position:relative}
+.bpPrevWrap{display:flex;flex-direction:column;align-items:center;gap:7px}
+#bpPreview{flex:0 0 auto;filter:drop-shadow(3px 5px 0 rgba(0,0,0,.45))}
+.bpNum{font-size:11px;letter-spacing:.1em;color:var(--muted)}
+.bpArrow{background:var(--panelDk2);color:var(--gold);border:none;clip-path:var(--pc);width:40px;height:56px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.bpArrow .ar{display:inline-block;animation:letterShake 1.1s steps(1,end) infinite;animation-delay:var(--d,0s)}
+.bpArrow:active{transform:translateY(1px)}
+.bpAll{position:absolute;right:0;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:11px;letter-spacing:.06em;cursor:pointer;font-family:inherit;padding:6px 2px}
+.bpAll:hover{color:var(--gold)}
 .bpCard.sel{background:var(--gold)}
 .card.jit{animation:deal .32s cubic-bezier(.2,1.4,.4,1) both,jit .12s linear infinite}
 @keyframes deal{from{transform:translateY(-30px) rotate(-7deg);opacity:0}to{transform:none;opacity:1}}
@@ -1010,8 +1020,18 @@ small.sym{margin-left:0!important}
       <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl">réputation</span></div>
       <div class="recBox" id="recBox">RECORD<br><span style="white-space:nowrap"><b>0 tables</b> · <b>0 $</b></span></div>
     </div>
-    <div class="shopItems" id="unlockItems"></div>
-    <div class="backPick"><div class="bpLabel">DOS DE CARTE</div><div class="bpRow" id="bpRow"></div></div>
+    <button class="btn b-purple menu" id="upgradesBtn" onclick="openUpgrades()" style="margin-bottom:18px">AMÉLIORATIONS<small id="upgradesSub">avantages permanents</small></button>
+    <div class="backPick"><div class="bpLabel">DOS DE CARTE</div>
+      <div class="bpCurrent">
+        <button class="bpArrow" id="bpPrev" onclick="stepBack(-1)" aria-label="Dos précédent"><span class="ar" style="--o:-.8px">◀</span></button>
+        <div class="bpPrevWrap">
+          <div class="card back bpCard" id="bpPreview"><i class="bpat"></i></div>
+          <div class="bpNum" id="bpSub">modèle 1 / 12</div>
+        </div>
+        <button class="bpArrow" id="bpNext" onclick="stepBack(1)" aria-label="Dos suivant"><span class="ar" style="--o:.8px;--d:.14s">▶</span></button>
+        <button class="bpAll" onclick="openBacks()">tout voir ▸</button>
+      </div>
+    </div>
     <div class="shopBtns" style="gap:10px;margin-top:2px">
       <button class="btn b-teal menu" onclick="openMenu()" style="flex:0 0 auto">← MENU</button>
       <button class="btn b-gold menu" id="planqueLaunch" onclick="launchMode()" style="flex:1">COMMENCER<small>le parcours · 9 tables</small></button>
@@ -1038,6 +1058,29 @@ small.sym{margin-left:0!important}
       <div><span class="rt">SANS FIN</span>Pas d'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · toutes les 5 mains, une <span class="d">main spéciale</span>. <span class="k">ENCAISSER</span> convertit ta cagnotte en réputation — la <span class="d">banqueroute</span> ne garde que les paliers.</div>
     </div>
     <button class="btn b-gold menu" onclick="closeRules()">FERMER</button>
+  </div>
+</div>
+
+<!-- AMÉLIORATIONS (déblocages permanents, sortis de La Planque pour ne pas la saturer) -->
+<div class="overlay" id="upgradesScreen">
+  <div class="ovpanel">
+    <h1 class="win" style="font-size:22px">AMÉLIORATIONS</h1>
+    <p id="upgradesLead" style="margin-top:-2px">Dépense ta <b>réputation</b> en avantages permanents.</p>
+    <div class="repBar" style="margin-bottom:14px">
+      <div class="repBig"><span class="repNum" id="repBal2">0</span><span class="repLbl">réputation</span></div>
+    </div>
+    <div class="shopItems" id="unlockItems"></div>
+    <button class="btn b-gold menu" onclick="closeUpgrades()">FERMER</button>
+  </div>
+</div>
+
+<!-- DOS DE CARTE (galerie complète, sortie de La Planque pour ne pas la saturer) -->
+<div class="overlay" id="backPickScreen">
+  <div class="ovpanel">
+    <h1 class="win" style="font-size:22px">DOS DE CARTE</h1>
+    <p style="margin-top:-2px">Choisis l'habillage du dos de tes cartes.</p>
+    <div class="bpRow" id="bpRow"></div>
+    <button class="btn b-gold menu" onclick="closeBacks()">FERMER</button>
   </div>
 </div>
 
@@ -1186,6 +1229,11 @@ const CARD_BACKS=['cb9','cb10','cb11','cb12','cb13','cb14','cb15','cb16','cb18',
 let cardBack=(()=>{try{const v=localStorage.getItem('t21back');return CARD_BACKS.includes(v)?v:'cb9';}catch(e){return 'cb9';}})();
 function setCardBack(cb){cardBack=cb;try{localStorage.setItem('t21back',cb);}catch(e){}renderBackPicker();renderHands();}
 function renderBackPicker(){
+  // aperçu du dos sélectionné dans La Planque (la galerie complète vit dans l'overlay)
+  const prev=document.getElementById('bpPreview');
+  if(prev)prev.className='card back '+cardBack+' bpCard';
+  const sub=document.getElementById('bpSub');
+  if(sub)sub.textContent='modèle '+(CARD_BACKS.indexOf(cardBack)+1)+' / '+CARD_BACKS.length;
   const row=document.getElementById('bpRow');if(!row)return;row.innerHTML='';
   CARD_BACKS.forEach((cb,i)=>{
     const slot=document.createElement('div');slot.className='bpslot';
@@ -2734,6 +2782,14 @@ function showWord(kind,gain,mult,natural,bust){
 }
 function openRules(){$('rulesScreen').classList.add('show');}
 function closeRules(){$('rulesScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
+function openUpgrades(){renderPlanque();$('upgradesScreen').classList.add('show');}   // améliorations : ouvertes depuis La Planque, pour ne pas saturer la page
+function closeUpgrades(){$('upgradesScreen').classList.remove('show');}
+function openBacks(){renderBackPicker();$('backPickScreen').classList.add('show');}   // galerie des dos de carte : ouverte depuis La Planque
+function closeBacks(){$('backPickScreen').classList.remove('show');}
+function stepBack(d){   // feuilleter les dos un par un (◀ ▶), avec bouclage
+  const i=(CARD_BACKS.indexOf(cardBack)+d+CARD_BACKS.length)%CARD_BACKS.length;
+  setCardBack(CARD_BACKS[i]);try{sfx.flip();}catch(e){}
+}
 /* ---------- pause en jeu ---------- */
 let pauseReturn=false;
 function openPause(){
@@ -3043,9 +3099,15 @@ function renderPlanque(){
   }
   const lb=$('planqueLaunch');if(lb){lb.className='btn menu '+(inf?'b-purple':'b-gold');lb.innerHTML=inf?'COMMENCER<small>sans fin · blackjack pur</small>':'COMMENCER<small>le parcours · 9 tables</small>';}
   const z2=$('planqueZ2');if(z2)z2.style.display=(!inf&&(META.nuit.zone2Runs|0)>=2)?'':'none';   // raccourci débloqué : zone 2 atteinte 2 fois
+  const rb2=$('repBal2');if(rb2)rb2.textContent=abbr(m.rep);
+  const lead=$('upgradesLead');if(lead)lead.innerHTML=inf
+    ?`Renforce ta <b>cagnotte</b> avec ta <b>réputation</b>.`
+    :`Dépense ta <b>réputation</b> en avantages permanents.`;
   const box=$('unlockItems');box.innerHTML='';
+  let affordable=0,allMax=true;
   unlocksFor(MODE).forEach(u=>{
     const lvl=uLvl(u.id),cost=unlockCost(u),maxed=cost===null;
+    if(!maxed){allMax=false;if(m.rep>=cost)affordable++;}
     const d=document.createElement('div');d.className='shopItem'+(maxed?' bought':'');
     const dots=u.max>1?` <span class="ulvl">${'●'.repeat(lvl)}${'○'.repeat(u.max-lvl)}</span>`:(lvl?' <span class="ulvl">●</span>':'');
     d.innerHTML=`<div class="shopTok" style="color:${u.tc}">${u.tok}</div>`+
@@ -3056,6 +3118,9 @@ function renderPlanque(){
     else{b.innerHTML=STAR+cost;if(m.rep<cost)b.disabled=true;b.onclick=()=>buyUnlock(u.id);}
     d.appendChild(b);box.appendChild(d);
   });
+  // sous-titre du bouton d'ouverture : indique ce qui est achetable maintenant
+  const sub=$('upgradesSub');if(sub)sub.textContent=allMax?'tout au max'
+    :affordable?(affordable+' dispo'+(affordable>1?'s':'')):'avantages permanents';
 }
 function buyUnlock(id){
   const u=findUnlock(id);if(!u)return;
