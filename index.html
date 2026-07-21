@@ -3178,6 +3178,11 @@ function startGame(fromTable){
   if(fromTable>0){                                  // REPRISE : départ direct à une table déjà atteinte (ou raccourci zone 2)
     G.tableIdx=fromTable;G.table=RUN[fromTable];
     G.bank=(RUN[fromTable].cap||0)+(startBank()-50);   // capital calé sur le conseillé de la table (+ Pécule) ; cagnotte ★ à zéro : on va plus vite mais on rapporte moins
+    // étoiles minimales pour avoir légitimement atteint cette table → les verrous ★ des tables
+    // suivantes restent franchissables (sinon la reprise démarre à 0★ et bloque « table suivante »)
+    let need=RUN[fromTable].need||0;G.tableStars=[];
+    for(let i=0;i<fromTable;i++){const s=Math.min(3,need);G.tableStars[i]=s;need-=s;}
+    G.runStars=G.tableStars.reduce((a,b)=>a+(b||0),0);
     enterTable(1);return;
   }
   G.contract=rollContract();
