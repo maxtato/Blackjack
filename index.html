@@ -232,6 +232,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .bpCurrent{display:flex;align-items:center;justify-content:center;gap:16px;position:relative}
 .bpPrevWrap{display:flex;flex-direction:column;align-items:center;gap:7px}
 #bpPreview{flex:0 0 auto;filter:drop-shadow(3px 5px 0 rgba(0,0,0,.45))}
+#intro #bpPreview{animation:cardLife 3.6s ease-in-out infinite}   /* l'aperçu flotte entre les flèches (le reste de la page reste figé) */
 .bpNum{font-size:11px;letter-spacing:.1em;color:var(--muted)}
 .bpArrow{background:var(--panelDk2);color:var(--gold);border:none;clip-path:var(--pc);width:40px;height:56px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
 .bpArrow .ar{display:inline-block;animation:letterShake 1.1s steps(1,end) infinite;animation-delay:var(--d,0s)}
@@ -1080,7 +1081,7 @@ small.sym{margin-left:0!important}
     <h1 class="win" style="font-size:22px">DOS DE CARTE</h1>
     <p style="margin-top:-2px">Choisis l'habillage du dos de tes cartes.</p>
     <div class="bpRow" id="bpRow"></div>
-    <button class="btn b-gold menu" onclick="closeBacks()">FERMER</button>
+    <button class="btn b-gold menu" onclick="closeBacks()" style="margin-top:22px">FERMER</button>
   </div>
 </div>
 
@@ -3097,7 +3098,7 @@ function renderPlanque(){
       } else pr.style.display='none';
     } else pr.style.display='none';
   }
-  const lb=$('planqueLaunch');if(lb){lb.className='btn menu '+(inf?'b-purple':'b-gold');lb.innerHTML=inf?'COMMENCER<small>sans fin · blackjack pur</small>':'COMMENCER<small>le parcours · 9 tables</small>';}
+  const lb=$('planqueLaunch');if(lb){lb.className='btn menu b-gold';lb.innerHTML=inf?'COMMENCER<small>sans fin · blackjack pur</small>':'COMMENCER<small>le parcours · 9 tables</small>';}
   const z2=$('planqueZ2');if(z2)z2.style.display=(!inf&&(META.nuit.zone2Runs|0)>=2)?'':'none';   // raccourci débloqué : zone 2 atteinte 2 fois
   const rb2=$('repBal2');if(rb2)rb2.textContent=abbr(m.rep);
   const lead=$('upgradesLead');if(lead)lead.innerHTML=inf
