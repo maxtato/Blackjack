@@ -879,6 +879,10 @@ small.sym{margin-left:0!important}
 .planqueMode.nuit{background:rgba(255,206,58,.14);color:var(--gold)}
 .planqueMode.inf{background:rgba(166,77,255,.16);color:var(--grape)}
 /* menu principal : rappel des records/réputation de chaque mode */
+/* logo pic + titre agrandi du menu de démarrage */
+.menuLogo{color:var(--gold);width:88px;margin:0 auto 12px;line-height:0;filter:drop-shadow(3px 4px 0 rgba(0,0,0,.45))}
+.menuLogo svg{width:100%;height:auto;display:block}
+#modeMenu h1.menuTitle{font-size:56px;line-height:.95;margin-bottom:10px}
 .menuRecs{margin-top:14px;display:flex;flex-direction:column;gap:6px}
 .mrec{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:11px;background:var(--panelDk2);clip-path:var(--pc);padding:7px 12px}
 .mrl{letter-spacing:.12em;font-size:12px}
@@ -981,7 +985,8 @@ small.sym{margin-left:0!important}
 <div class="overlay show" id="modeMenu">
   <div class="ovpanel">
     <button id="rulesBtn0" onclick="openRules()" title="Règles du jeu" aria-label="Règles"><span>i</span></button>
-    <h1 class="win" style="letter-spacing:.04em">COLD DECK</h1>
+    <div id="menuLogo" class="menuLogo" aria-hidden="true"></div>
+    <h1 class="win menuTitle" style="letter-spacing:.04em">COLD DECK</h1>
     <p>Choisis ton mode de jeu. Chaque mode a <b>sa Planque</b> et sa <b>réputation</b>.</p>
     <div class="shopBtns" style="flex-direction:column;gap:12px;margin-top:8px">
       <button class="btn b-gold menu" onclick="chooseMode('nuit')" style="width:100%">LE PARCOURS<small>9 tables · une fin · reliques &amp; tarots</small></button>
@@ -2984,6 +2989,7 @@ function staggerUI(){
 /* ---------- MENU PRINCIPAL (choix du mode) ---------- */
 function renderMenu(){
   const n=META.nuit.record,i=META.infini.record;
+  const lg=$('menuLogo');if(lg&&!lg.childElementCount)lg.innerHTML=suitSVG('♠',88);   // logo pic, comme l'icône de l'app
   const el=$('menuRecords');if(!el)return;
   el.innerHTML=
     `<div class="mrec"><span class="mrl" style="color:var(--gold)">LE PARCOURS</span><span class="mrv">${STAR}${abbr(META.nuit.rep)} · record ${n.depth||0} tables</span></div>`+
