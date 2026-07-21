@@ -1188,41 +1188,43 @@ function abbr(n){
 }
 
 /* ---------- audio ---------- */
-const Audio_={ctx:null,drone:null,droneGain:null,started:false};
+const Audio_={ctx:null,started:false};
 function audioInit(){
   if(Audio_.started)return;
   try{
     const C=window.AudioContext||window.webkitAudioContext;Audio_.ctx=new C();
-    const o=Audio_.ctx.createOscillator(),g=Audio_.ctx.createGain();
-    o.type='sawtooth';o.frequency.value=48;g.gain.value=0;
-    o.connect(g);g.connect(Audio_.ctx.destination);o.start();
-    Audio_.drone=o;Audio_.droneGain=g;Audio_.started=true;
+    Audio_.started=true;                         // plus de drone continu : la baraka ne bourdonne plus
   }catch(e){}
 }
-function droneToPressure(p){
-  if(!Audio_.started)return;const t=Audio_.ctx.currentTime;
-  Audio_.drone.frequency.linearRampToValueAtTime(44+p*70,t+.3);
-  Audio_.droneGain.gain.linearRampToValueAtTime(p*0.05,t+.3);
-}
-function blip(f,d,type,v){
+/* petit bip 8-bit : onde carrée (chiptune), enveloppe punchy attaque→tenue→coupure,
+   glissando de hauteur optionnel (slideTo) pour les sons montants/descendants */
+function blip(f,d,type,v,slideTo){
   if(!Audio_.started)return;
   const o=Audio_.ctx.createOscillator(),g=Audio_.ctx.createGain();
-  o.type=type||'square';o.frequency.value=f;g.gain.value=v||0.08;
+  o.type=type||'square';
+  const t=Audio_.ctx.currentTime,vol=v||0.08;
+  o.frequency.setValueAtTime(f,t);
+  if(slideTo)o.frequency.linearRampToValueAtTime(slideTo,t+d);
+  g.gain.setValueAtTime(0,t);
+  g.gain.linearRampToValueAtTime(vol,t+.004);    // attaque quasi instantanée
+  g.gain.setValueAtTime(vol,t+d*.55);            // tenue à plat = grain rétro
+  g.gain.exponentialRampToValueAtTime(.0001,t+d);
   o.connect(g);g.connect(Audio_.ctx.destination);
-  const t=Audio_.ctx.currentTime;g.gain.setValueAtTime(g.gain.value,t);
-  g.gain.exponentialRampToValueAtTime(0.0001,t+d);o.start(t);o.stop(t+d);
+  o.start(t);o.stop(t+d);
 }
+/* arpège : suite de notes carrées jouées en rafale (le son « chiptune » par excellence) */
+function arp(freqs,step,d,v,type){freqs.forEach((f,i)=>setTimeout(()=>blip(f,d,type||'square',v),i*step));}
 const sfx={
-  card(){blip(300+rndInt(60),.05,'square',.05);},
-  win(){blip(440,.07,'triangle',.09);setTimeout(()=>blip(660,.1,'triangle',.09),60);setTimeout(()=>blip(880,.12,'triangle',.08),130);},
-  lose(){blip(180,.12,'sawtooth',.08);setTimeout(()=>blip(110,.22,'sawtooth',.07),80);},
-  push(){blip(300,.1,'sine',.06);},
-  danger(){blip(80,.32,'sawtooth',.12);},
-  buy(){blip(523,.06,'triangle',.08);setTimeout(()=>blip(784,.08,'triangle',.08),60);},
-  combo(){blip(660,.05,'square',.07);setTimeout(()=>blip(990,.08,'square',.07),55);},
-  thump(){blip(64,.16,'sine',.13);setTimeout(()=>blip(52,.2,'sine',.1),130);},
-  flip(){blip(520,.05,'square',.05);setTimeout(()=>blip(380,.07,'square',.05),55);},
-  jackpot(){[523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>blip(f,.14,'triangle',.09),i*70));}
+  card(){blip(160+rndInt(40),.035,'square',.045);},
+  flip(){blip(660,.04,'square',.05);setTimeout(()=>blip(880,.05,'square',.045),42);},
+  win(){arp([523,659,784],46,.09,.08);},                              // do-mi-sol montant
+  combo(){arp([784,1047,1319],38,.06,.07);},                          // étincelle aiguë
+  push(){blip(392,.09,'square',.05);setTimeout(()=>blip(392,.09,'square',.04),95);},
+  lose(){blip(330,.18,'square',.085,130);setTimeout(()=>blip(150,.24,'square',.07,80),110);}, // glissando descendant
+  danger(){blip(130,.3,'square',.11,60);},                            // grondement grave qui plonge
+  buy(){blip(880,.05,'square',.07);setTimeout(()=>blip(1245,.08,'square',.06),52);},           // « ka-ching » 8-bit
+  thump(){blip(70,.14,'triangle',.13);setTimeout(()=>blip(55,.18,'triangle',.1),120);},        // battement de basse (canal triangle NES)
+  jackpot(){arp([523,659,784,1047,1319,1568],58,.12,.08);}
 };
 
 /* ---------- dos de carte (préférence persistante) ---------- */
@@ -1807,7 +1809,6 @@ function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les 
   const ps=$('pState');if(ps){ps.textContent='BARAKA';ps.style.color='';}
   const bar=$('pBar');if(bar)bar.classList.toggle('tick',lvl>=3);
   const tbl=document.getElementById('table');if(tbl)tbl.classList.toggle('boil',lvl>=3);
-  droneToPressure(pct/100);
 }
 function renderMult(){
   let m=1,bonus=0;
