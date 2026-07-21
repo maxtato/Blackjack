@@ -1327,7 +1327,7 @@ const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 const RUN=[
   /* ZONE 1 — Initiation */
   {n:'Arrière-salle', zone:1, mains:6, min:5,  max:20,  cap:50,   goal:150, master:210,      rule:null,     entry:0,   need:0,           ruleText:'Initiation'},
-  {n:'Table nerveuse',zone:1, mains:7, min:5,  max:25,  cap:130,  goal:220, master:320,      rule:'nervous',entry:0,   need:0,           ruleText:'La pression monte 2× plus vite'},
+  {n:'Table nerveuse',zone:1, mains:7, min:5,  max:25,  cap:130,  goal:220, master:320,      rule:'nervous',entry:0,   need:0,           ruleText:'La baraka monte 2× plus vite'},
   {n:'Le Videur',     zone:1, mains:7, min:10, max:30,  cap:200,  goal:340, master:460,      rule:'gros',   entry:0,   need:2, boss:true, ruleText:'BOSS · le croupier tire jusqu’à 18'},
   /* ZONE 2 — La Pression */
   {n:'Cave humide',   zone:2, mains:7, min:10, max:48,  cap:280,  goal:500, master:700,      rule:'mute',   entry:70,  need:3,           ruleText:'Croupier muet · droit d’entrée 70'},
@@ -1373,7 +1373,7 @@ const ZONE_MULTCAP={1:4,2:6,3:9};                 // plafond de multiplicateur p
    miser. Les MISES montent d'un cran à chaque PALIER de cagnotte
    franchi, et on choisit alors un BONUS. Banqueroute = fin.
    ============================================================ */
-const ENDLESS_RULETXT={nervous:'La pression monte 2× plus vite',mute:'Croupier muet',gros:'Le croupier tire jusqu’à 18',depart:'Table déjà chaude (+30 %)',sec:'Égalité = défaite'};
+const ENDLESS_RULETXT={nervous:'La baraka monte 2× plus vite',mute:'Croupier muet',gros:'Le croupier tire jusqu’à 18',depart:'Table déjà chaude (+30 %)',sec:'Égalité = défaite'};
 /* seuil de cagnotte pour franchir le palier p (0-based) — premier palier vite
    atteint (~2× la banque de départ) puis ×1.6 : la récompense rythme la partie */
 function palierTarget(p){return niceRound(300*Math.pow(2.2,p));}
@@ -1427,7 +1427,7 @@ const ENDLESS_EVENTS=[
 const CONTRACTS=[
   {id:'c5',    txt:'gagne une main de 5 cartes',       chk:o=>o.n>=5},
   {id:'c21',   txt:'gagne avec un 21 parfait',         chk:o=>o.pv===21&&o.n>2},
-  {id:'cpress',txt:'gagne à pression ≥ 75 %',          chk:o=>o.press>=75},
+  {id:'cpress',txt:'gagne à baraka ≥ 75 %',            chk:o=>o.press>=75},
   {id:'cmult', txt:'gagne une main à ×3 ou plus',      chk:o=>o.mult>=3},
   {id:'cdbl',  txt:'gagne une main DOUBLÉE',           chk:o=>o.dbl},
   {id:'csuite',txt:'gagne avec une SUITE',             chk:o=>o.suite},
@@ -1485,15 +1485,15 @@ function repOnEnd(cashout){
 const RELIC_POOL=[
   {id:'lunettes',name:'Lunettes',ic:'👓',desc:'Relique permanente. Une fois par main, révèle la prochaine carte du sabot avant de décider de tirer.',cost:14},
   {id:'jeton',name:'Jeton fendu',ic:'🪙',desc:'Relique permanente. Si tu perds une main avec un total de 20, tu récupères la moitié de ta mise.',cost:10},
-  {id:'clope',name:'Cigarette',ic:'🚬',desc:'Relique permanente. La pression monte 30 % moins vite, tout le temps.',cost:12},
+  {id:'clope',name:'Cigarette',ic:'🚬',desc:'Relique permanente. Ta baraka monte 30 % plus vite, tout le temps.',cost:12},
   {id:'as',name:'As truqué',ic:'🂡',desc:'Relique permanente. Quand tu gagnes une main qui contient un As : +1 au multiplicateur.',cost:16},
-  {id:'froid',name:'Sang-froid',ic:'🧊',desc:'Relique permanente. Si tu gagnes une main avec une pression ≥ 75 % : +1 au multiplicateur.',cost:16},
+  {id:'froid',name:'Sang-froid',ic:'🧊',desc:'Relique permanente. Si tu gagnes une main avec une baraka ≥ 75 % : +1 au multiplicateur.',cost:16},
   {id:'compteur',name:'Compteur',ic:'🎯',desc:'Relique permanente. Affiche en continu ta probabilité de dépasser 21 au prochain tirage.',cost:12},
   {id:'mecene',name:'Mécène',ic:'💵',desc:'Relique permanente. +4 jetons offerts au début de chaque main.',cost:15},
   {id:'usurier',name:'Usurier',ic:'🏦',desc:'Relique permanente. Au début de chaque main : +1 jeton par tranche de 5 jetons en banque (jusqu’à +6).',cost:18},
   {id:'collector',name:'Collectionneur',ic:'🌈',desc:'Relique permanente. Les éditions spéciales (FOIL/HOLO/POLY) apparaissent 3× plus souvent sur tes cartes.',cost:16},
   {id:'maitresse',name:'Carte maîtresse',ic:'🎴',desc:'Relique permanente. Ta 1re carte de chaque main est FOIL : jetons bonus quand tu gagnes.',cost:14},
-  {id:'bruleur',name:'Brûleur',ic:'🔥',desc:'Relique permanente. Si tu gagnes une main avec une pression ≥ 50 % : gain de la main ×1,5.',cost:17},
+  {id:'bruleur',name:'Brûleur',ic:'🔥',desc:'Relique permanente. Si tu gagnes une main avec une baraka ≥ 50 % : gain de la main ×1,5.',cost:17},
   {id:'portebonheur',name:'Porte-bonheur',ic:'🍀',desc:'Relique permanente. +1 emplacement de jeton Tarot (tu peux garder un jeton de plus).',cost:12},
   {id:'diplomate',name:'Diplomate',ic:'🤝',desc:'Relique permanente. En cas d’égalité avec le croupier, tu récupères la moitié de ta mise.',cost:11},
   /* reliques RARES : n'apparaissent en boutique qu'après l'achat du « Coffre » à La Planque */
@@ -1600,7 +1600,13 @@ const BARAKA_MULT=[1,1.25,1.5,1.75,2];          // multiplicateur par niveau (0.
 const BARAKA_COL=['#9bbfa8','#34b6a8','#e8b84a','#f0902a','#e0524f'];
 function barakaLevel(){let l=0;const b=G.baraka||0;for(const s of BARAKA_STEPS)if(b>=s)l++;return l;}
 function barakaPct(){const b=G.baraka||0,lvl=barakaLevel();if(lvl>=4)return 100;const lo=lvl>0?BARAKA_STEPS[lvl-1]:0,hi=BARAKA_STEPS[lvl];return Math.min(100,(lvl+(b-lo)/(hi-lo))/4*100);}
-function addBaraka(n){G.baraka=Math.max(0,(G.baraka||0)+n);G.barakaMax=Math.max(G.barakaMax||0,G.baraka);G.tableMaxBaraka=Math.max(G.tableMaxBaraka||0,G.baraka);renderPressure();renderMult();}
+function addBaraka(n){
+  if(n>0){
+    if(hasRelic('clope'))n*=1.3;                       // Cigarette : la baraka monte 30 % plus vite
+    if(G.table&&G.table.rule==='nervous')n*=2;          // Table nerveuse : la baraka monte 2× plus vite
+  }
+  G.baraka=Math.max(0,(G.baraka||0)+n);G.barakaMax=Math.max(G.barakaMax||0,G.baraka);G.tableMaxBaraka=Math.max(G.tableMaxBaraka||0,G.baraka);renderPressure();renderMult();
+}
 function resetBaraka(){if(G.boons&&G.boons.filet){const l=barakaLevel();G.baraka=l>=2?BARAKA_STEPS[l-2]:0;}else G.baraka=0;renderPressure();renderMult();}
 /* coup culotté : gagner de façon osée → +2 baraka au lieu de +1 */
 function isCulotte(pv,mode){
@@ -2476,7 +2482,7 @@ function onTableLost(title,text){
 const SHOPTOK={
   lunettes:{t:'VOIR',c:'#9be84a'},
   jeton:{t:'½ <small>MISE</small>',c:'#ffce3a'},
-  clope:{t:'−30<small class="sym">%</small>',c:'#19c3c3'},
+  clope:{t:'+30<small class="sym">%</small>',c:'#19c3c3'},
   as:{t:'+1<small>×</small>',c:'#ff9326'},
   froid:{t:'+1<small>×</small>',c:'#ff9326'},
   compteur:{t:'BUST<small class="sym">%</small>',c:'#9be84a'},
