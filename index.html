@@ -3080,11 +3080,12 @@ function openMenu(){
 function chooseMode(m){
   audioInit();
   MODE=(m==='infini')?'infini':'nuit';
+  startPalierIdx=null;                        // la reprise se recale par défaut sur le plus loin atteint
   $('modeMenu').classList.remove('show');
   renderPlanque();renderBackPicker();
   $('intro').classList.add('show');
 }
-function launchMode(){ if(MODE==='infini')startEndless(); else startGame(); }
+function launchMode(){ if(MODE==='infini')startEndless(); else startGame(startPalierIdx>0?startPalierIdx:0); }
 function stepResume(d){ startPalierIdx=(startPalierIdx||0)+d; renderPlanque(); }   // ◀ ▶ palier de reprise
 
 /* ---------- LA PLANQUE (hub de méta-progression, propre au mode courant) ---------- */
@@ -3113,10 +3114,22 @@ function renderPlanque(){
           '<span class="prVal">Palier '+(startPalierIdx+1)+'</span>'+
           '<button class="prBtn" '+(startPalierIdx>=maxIdx?'disabled':'')+' onclick="stepResume(1)"><span class="ar" style="--o:.8px;--d:.14s">▶</span></button>';
       } else pr.style.display='none';
-    } else pr.style.display='none';
+    } else {
+      // PARCOURS : reprendre à une table déjà atteinte (record.depth = plus loin tenu)
+      const maxIdx=Math.max(0,(m.record.depth||0)-1);   // index 0-based de la table la plus loin atteinte
+      if(startPalierIdx==null)startPalierIdx=maxIdx; else startPalierIdx=Math.min(Math.max(startPalierIdx,0),maxIdx);
+      if(maxIdx>=1){
+        pr.style.display='';
+        pr.innerHTML='<span class="prLbl">REPRENDRE À</span>'+
+          '<button class="prBtn" '+(startPalierIdx<=0?'disabled':'')+' onclick="stepResume(-1)"><span class="ar" style="--o:-.8px">◀</span></button>'+
+          '<span class="prVal">Table '+(startPalierIdx+1)+'</span>'+
+          '<button class="prBtn" '+(startPalierIdx>=maxIdx?'disabled':'')+' onclick="stepResume(1)"><span class="ar" style="--o:.8px;--d:.14s">▶</span></button>';
+      } else { pr.style.display='none';startPalierIdx=0; }
+    }
   }
-  const lb=$('planqueLaunch');if(lb){lb.className='btn menu b-gold';lb.innerHTML=inf?'COMMENCER<small>sans fin · blackjack pur</small>':'COMMENCER<small>le parcours · 9 tables</small>';}
-  const z2=$('planqueZ2');if(z2)z2.style.display=(!inf&&(META.nuit.zone2Runs|0)>=2)?'':'none';   // raccourci débloqué : zone 2 atteinte 2 fois
+  const resumeAt=(!inf&&startPalierIdx>0)?startPalierIdx:0;   // table de reprise du parcours (0 = départ normal)
+  const lb=$('planqueLaunch');if(lb){lb.className='btn menu b-gold';lb.innerHTML=inf?'COMMENCER<small>sans fin · blackjack pur</small>':(resumeAt>0?('COMMENCER<small>reprise · table '+(resumeAt+1)+'</small>'):'COMMENCER<small>le parcours · 9 tables</small>');}
+  const z2=$('planqueZ2');if(z2)z2.style.display=(!inf&&(META.nuit.zone2Runs|0)>=2&&(m.record.depth||0)<2)?'':'none';   // remplacé par le sélecteur « REPRENDRE À » dès qu'une table 2+ est atteinte
   const rb2=$('repBal2');if(rb2)rb2.textContent=abbr(m.rep);
   const lead=$('upgradesLead');if(lead)lead.innerHTML=inf
     ?`Renforce ta <b>cagnotte</b> avec ta <b>réputation</b>.`
@@ -3148,6 +3161,7 @@ function buyUnlock(id){
 }
 function toPlanque(){
   document.body.classList.remove('inf');
+  startPalierIdx=null;                       // la reprise se recale par défaut sur le plus loin atteint
   $('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');$('shop').classList.remove('show');
   renderPlanque();renderBackPicker();
   $('intro').classList.add('show');
@@ -3158,9 +3172,10 @@ function startGame(fromTable){
   document.body.classList.remove('inf');
   $('intro').classList.remove('show');$('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');
   freshGame();buildShoe();
-  if(fromTable){                                    // RACCOURCI : départ direct en zone 2 (débloqué en l'atteignant 2 fois)
+  fromTable=Math.max(0,Math.min(fromTable|0,RUN_LEN-1));
+  if(fromTable>0){                                  // REPRISE : départ direct à une table déjà atteinte (ou raccourci zone 2)
     G.tableIdx=fromTable;G.table=RUN[fromTable];
-    G.bank=280+(startBank()-50);                    // capital calé sur le conseillé de la table 4 (+ Pécule) ; cagnotte ★ à zéro : le raccourci va plus vite mais rapporte moins
+    G.bank=(RUN[fromTable].cap||0)+(startBank()-50);   // capital calé sur le conseillé de la table (+ Pécule) ; cagnotte ★ à zéro : on va plus vite mais on rapporte moins
     enterTable(1);return;
   }
   G.contract=rollContract();
