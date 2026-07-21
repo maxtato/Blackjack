@@ -860,6 +860,7 @@ small.sym{margin-left:0!important}
 /* La Planque + menu de démarrage = page plein écran opaque (pas un panneau flottant sur le fond) */
 #intro,#modeMenu{padding:0}
 #intro .ovpanel,#modeMenu .ovpanel{max-width:none;width:100%;min-height:100%;margin:0;border:none;border-radius:0;clip-path:none;box-shadow:none;display:flex;flex-direction:column;justify-content:center;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px))}
+#modeMenu .ovpanel{background:#0d0e11}   /* menu de démarrage : fond noir (bandes de record en gris, cf. .menuRecs .mrec) */
 #intro h1{font-size:32px;margin-bottom:7px}
 #intro p{font-size:11px;line-height:1.4;margin-bottom:11px}
 /* blocs réputation / record réduits (moins hauts) */
@@ -880,11 +881,11 @@ small.sym{margin-left:0!important}
 .planqueMode.inf{background:rgba(166,77,255,.16);color:var(--grape)}
 /* menu principal : rappel des records/réputation de chaque mode */
 /* logo pic + titre agrandi du menu de démarrage */
-.menuLogo{color:var(--gold);width:68px;margin:0 auto 12px;line-height:0;animation:textLife 5.6s ease-in-out infinite}   /* sans ombre, même tressautement que les lettres */
+.menuLogo{color:var(--gold);width:68px;margin:0 auto 12px;line-height:0;animation:letterShake 1.1s steps(1,end) infinite}   /* sans ombre, même tressautement (nerveux) que les lettres */
 .menuLogo svg{width:100%;height:auto;display:block}
 #modeMenu h1.menuTitle{font-size:56px;line-height:.95;margin-bottom:10px}
 .menuRecs{margin-top:14px;display:flex;flex-direction:column;gap:6px}
-.mrec{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:11px;background:var(--panelDk2);clip-path:var(--pc);padding:7px 12px}
+.mrec{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:11px;background:#3a3c42;clip-path:var(--pc);padding:7px 12px}
 .mrl{letter-spacing:.12em;font-size:12px}
 .mrv{color:var(--muted)}
 /* pages figées (menu + planque) : aucun flottement/tremblement, tout en place dès le départ */
