@@ -681,8 +681,12 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 .overlay h1{color:var(--gold);text-shadow:2px 2px 0 var(--red),4px 4px 0 var(--ink)}
 .overlay h1.win{color:var(--gold)}.overlay h1.dead{color:var(--red);text-shadow:2px 2px 0 #000,4px 4px 0 var(--ink)}
 .overlay p{color:var(--muted)}.overlay p b{color:#fff}
-.rules>div{background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);border-left:none;box-shadow:inset 4px 0 0 var(--gold)}
-.rules .k{color:var(--gold)}.rules .d{color:var(--red)}
+#rulesScreen{background:#0c1512;backdrop-filter:none}   /* fond plein : plus de tapis qui transparaît derrière les règles */
+.rules{color:#d6d0e6}
+.rules>div{background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);border-left:none;box-shadow:inset 4px 0 0 var(--gold);padding:10px 13px 11px}
+.rules .rt{display:block;color:var(--gold);font-family:'Jersey 15',monospace;font-weight:700;font-size:15px;letter-spacing:.11em;line-height:1;margin-bottom:5px}
+.rules .rt .pxstar{vertical-align:-1px}
+.rules .k{color:#fff;font-weight:700}.rules .d{color:var(--red)}
 .shopItem{background:var(--panelDk2);border:none;border-radius:0;clip-path:var(--pc);box-shadow:none}
 .shopItem .ds{color:var(--muted)}
 </style>
@@ -1015,17 +1019,17 @@ small.sym{margin-left:0!important}
   <div class="ovpanel">
     <h1 class="win" style="font-size:22px">RÈGLES</h1>
     <div class="rules">
-      <div><span class="k">But</span> — bats le croupier à chaque main sans dépasser <span class="k">21</span>. Une figure vaut 10, l'As vaut 1 ou 11.</div>
-      <div><span class="k">La table</span> — joue <span class="k">toutes les mains imposées</span>, mise dans la <span class="k">limite</span> (min–max fixe), et atteins l'<span class="k">objectif de gain</span> avant la dernière main. Sous l'objectif = table perdue.</div>
-      <div><span class="k">Tes coups</span> — <span class="k">TIRER</span> une carte, <span class="k">RESTER</span> sur ta main, ou <span class="k">FORCER LA CHANCE</span> (2 cartes, on garde la meilleure · 1×/table · pression +++).</div>
-      <div><span class="k">Étoiles <i class="pxstar"></i></span> — chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Elles ouvrent les <span class="d">boss</span> et les zones profondes.</div>
-      <div><span class="k">Combos</span> — le vrai jeu : <span class="k">construis</span> tes mains, ne te contente pas de battre le croupier. <span class="k">21 PARFAIT ×3</span> · <span class="k">CHARLIE</span> (5 cartes) <span class="k">×2</span> · <span class="k">COULEUR</span> (3+ même enseigne) <span class="k">×2</span> · <span class="k">SUITE</span> (3+ rangs qui se suivent) <span class="k">×2</span> · BLACKJACK ×1.5 · PAIRE DE 7 ×1.5 · ARC-EN-CIEL (4 enseignes) ×1.5 · PRESSION ≥75 % ×1.5. Les pastilles sur le tapis montrent ce qui est acquis et à portée.</div>
-      <div><span class="k">Petits bonus</span> — des coups de pouce au multiplicateur selon la situation : <span class="k">COUR</span> (2+ figures) ×1.5 · <span class="k">FILOU</span> (gagner avec ≤15) ×1.5 · <span class="k">AU POIL</span> (battre le croupier d'un point) ×1.5 · <span class="k">CLUTCH</span> (dernière main de la table) ×1.5 · <span class="k">REMONTADA</span> (parti ≤11, fini ≥17) ×1.3.</div>
-      <div><span class="k">Pression</span> — monte quand tu prends des risques, redescend quand tu joues posé. Trop haute, le croupier devient plus agressif.</div>
-      <div><span class="k">Contrats <i class="pxi pxi-scroll"></i></span> — chaque table propose un défi optionnel (« gagne une main de 5 cartes »…) qui rapporte des <span class="k">★ bonus</span> dans la cagnotte. Rempli ou non, la table continue normalement.</div>
-      <div><span class="k">Le parcours</span> — <span class="k">9 tables · 3 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">continuer</span> plus loin pour plus gros. Atteins la <span class="k">zone 2</span> deux fois pour débloquer le <span class="k">raccourci</span> (départ direct en zone 2, cagnotte ★ à zéro).</div>
-      <div><span class="k">La Planque</span> — dépense ta <span class="k">réputation <i class="pxstar"></i></span> en avantages permanents (reliques, tarots, éditions) avant de repartir.</div>
-      <div><span class="k">Sans fin</span> — pas d'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · la <span class="k">BARAKA</span> monte avec les victoires et les coups culottés · toutes les 5 mains, une <span class="d">main spéciale</span>. <span class="k">ENCAISSER</span> (pause, ou palier avec <span class="k">+20 %</span>) convertit ta cagnotte en réputation — la <span class="d">banqueroute</span> ne garde que les paliers.</div>
+      <div><span class="rt">BUT</span>Bats le croupier à chaque main sans dépasser <span class="k">21</span>. Une figure vaut 10, l'As vaut 1 ou 11.</div>
+      <div><span class="rt">LA TABLE</span>Joue <span class="k">toutes les mains imposées</span>, mise dans la <span class="k">limite</span> (min–max fixe), et atteins l'<span class="k">objectif de gain</span> avant la dernière main. Sous l'objectif = table perdue.</div>
+      <div><span class="rt">TES COUPS</span><span class="k">TIRER</span> une carte, <span class="k">RESTER</span> sur ta main, ou <span class="k">FORCER LA CHANCE</span> (2 cartes, on garde la meilleure · 1×/table).</div>
+      <div><span class="rt"><i class="pxstar"></i> ÉTOILES</span>Chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Elles ouvrent les <span class="d">boss</span> et les zones profondes.</div>
+      <div><span class="rt">BARAKA</span>Ta barre de <span class="k">veine</span> monte à chaque victoire (<span class="k">coup culotté = +2</span>) et débloque des <span class="k">multiplicateurs</span> de plus en plus forts. Perdre une main la <span class="d">remet à zéro</span>.</div>
+      <div><span class="rt">COMBOS</span>Le vrai jeu : <span class="k">construis</span> tes mains, ne te contente pas de battre le croupier.<br><span class="k">21 PARFAIT ×3</span> · <span class="k">CHARLIE</span> (5 cartes) ×2 · <span class="k">COULEUR</span> (3+ même enseigne) ×2 · <span class="k">SUITE</span> (3+ rangs qui se suivent) ×2 · BLACKJACK ×1.5 · PAIRE DE 7 ×1.5 · ARC-EN-CIEL (4 enseignes) ×1.5.<br>Les pastilles sur le tapis montrent ce qui est acquis et à portée.</div>
+      <div><span class="rt">PETITS BONUS</span>Des coups de pouce au multiplicateur selon la situation : <span class="k">COUR</span> (2+ figures) ×1.5 · <span class="k">FILOU</span> (gagner avec ≤15) ×1.5 · <span class="k">AU POIL</span> (battre le croupier d'un point) ×1.5 · <span class="k">CLUTCH</span> (dernière main) ×1.5 · <span class="k">REMONTADA</span> (parti ≤11, fini ≥17) ×1.3.</div>
+      <div><span class="rt"><i class="pxi pxi-scroll"></i> CONTRATS</span>Chaque table propose un <span class="k">défi optionnel</span> (« gagne une main de 5 cartes »…) qui rapporte des <span class="k">★ bonus</span>. Rempli ou non, la table continue normalement.</div>
+      <div><span class="rt">LE PARCOURS</span><span class="k">9 tables · 3 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">continuer</span> pour plus gros. Atteins la <span class="k">zone 2</span> deux fois pour débloquer le <span class="k">raccourci</span>.</div>
+      <div><span class="rt">LA PLANQUE</span>Dépense ta <span class="k">réputation <i class="pxstar"></i></span> en avantages permanents (reliques, tarots, éditions) avant de repartir.</div>
+      <div><span class="rt">SANS FIN</span>Pas d'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · toutes les 5 mains, une <span class="d">main spéciale</span>. <span class="k">ENCAISSER</span> convertit ta cagnotte en réputation — la <span class="d">banqueroute</span> ne garde que les paliers.</div>
     </div>
     <button class="btn b-gold menu" onclick="closeRules()">FERMER</button>
   </div>
