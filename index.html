@@ -856,7 +856,7 @@ small.sym{margin-left:0!important}
 /* lettres très légèrement désalignées (style) ; mots insécables -> retours à la ligne propres */
 .W{display:inline-block;white-space:nowrap}
 .L{display:inline-block;transform:translateY(var(--o,0))}
-.thouSep{display:inline-block;width:.16em}   /* séparateur de milliers resserré (1 000, 5 438…) */
+.thouSep{display:inline-block;width:.07em}   /* séparateur de milliers resserré (1 000, 5 438…) */
 /* libellé principal d'un bouton d'action : garde le titre sur sa ligne (les mots
    ne s'empilent pas dans le bouton flex-colonne) et laisse le <small> dessous */
 .blbl{display:inline-block;line-height:1.05}
@@ -1191,7 +1191,7 @@ function abbr(n){
   const neg=n<0;n=Math.abs(n);
   const fix=x=>{const r=Math.round(x*100)/100;return Number.isInteger(r)?''+r:r.toFixed(2).replace(/0$/,'');};
   let s;
-  if(n<1e4)s=(''+n).replace(/^(\d)(\d{3})$/,'$1 $2');   // milliers en entier + fin espace (1 000 … 9 999)
+  if(n<1e4)s=(''+n).replace(/^(\d)(\d{3})$/,'$1 $2');   // milliers en entier + fin espace (1 000 … 9 999)
   else if(n<1e6)s=fix(n/1e3)+'K';                   // 10K … 999K
   else if(n<1e9)s=fix(n/1e6)+'M';
   else if(n<1e12)s=fix(n/1e9)+'B';
@@ -1199,6 +1199,9 @@ function abbr(n){
   else s=fix(n/1e15)+'P';
   return (neg?'-':'')+s;
 }
+/* même nombre, mais le séparateur de milliers passe par .thouSep (comme les contextes animés :
+   gains, etc.) → écart identique partout, même dans les pages figées (Planque, menu). À utiliser en innerHTML. */
+function abbrS(n){return abbr(n).replace(/ /g,'<span class="thouSep"></span>');}
 
 /* ---------- audio ---------- */
 const Audio_={ctx:null,started:false};
@@ -3087,7 +3090,7 @@ function staggerNode(node,ctr,boost){
         if(!/\S/.test(part)){
           // séparateur de milliers (fine espace U+2009) : largeur fixe et resserrée,
           // sinon le navigateur insère une espace-mot pleine entre les blocs .W (trop d'air)
-          if(/^ +$/.test(part)){const sp=document.createElement('span');sp.className='thouSep';frag.appendChild(sp);}
+          if(/^ +$/.test(part)){const sp=document.createElement('span');sp.className='thouSep';frag.appendChild(sp);}
           else frag.appendChild(document.createTextNode(part));
           continue;
         }
@@ -3133,8 +3136,8 @@ function renderMenu(){
   const ts=$('menuTourneeSub');if(ts)ts.textContent=RUN_LEN+' tables · une fin · reliques & tarots';   // nombre de tables réel (RUN_LEN), jamais figé
   const el=$('menuRecords');if(!el)return;
   el.innerHTML=
-    `<div class="mrec"><span class="mrl" style="color:var(--gold)">LA TOURNÉE</span><span class="mrv">${STAR}${abbr(META.nuit.rep)} · record ${n.depth||0} tables</span></div>`+
-    `<div class="mrec"><span class="mrl" style="color:var(--grape)">SANS FIN</span><span class="mrv">${STAR}${abbr(META.infini.rep)} · record palier ${i.palier||0}</span></div>`;
+    `<div class="mrec"><span class="mrl" style="color:var(--gold)">LA TOURNÉE</span><span class="mrv">${STAR}${abbrS(META.nuit.rep)} · record ${n.depth||0} tables</span></div>`+
+    `<div class="mrec"><span class="mrl" style="color:var(--grape)">SANS FIN</span><span class="mrv">${STAR}${abbrS(META.infini.rep)} · record palier ${i.palier||0}</span></div>`;
 }
 function openMenu(){
   startPalierIdx=null;   // au retour menu, la reprise se remet par défaut sur le plus loin atteint
@@ -3157,15 +3160,15 @@ function stepResume(d){ startPalierIdx=(startPalierIdx||0)+d; renderPlanque(); }
 /* ---------- LA PLANQUE (hub de méta-progression, propre au mode courant) ---------- */
 function renderPlanque(){
   const m=metaCur(),inf=MODE==='infini';
-  $('repBal').textContent=abbr(m.rep);
+  $('repBal').innerHTML=abbrS(m.rep);
   const pt=$('planqueTitle');if(pt)pt.textContent='LA PLANQUE';
   const ps=$('planqueSub');if(ps)ps.innerHTML=inf
     ?`Améliore ta <b>cagnotte</b> avec ta <b>réputation</b>, puis repars.`
     :`Dépense ta <b>réputation</b> en avantages permanents, puis repars pour une nouvelle <b>tournée</b>.`;
   const tag=$('planqueMode');if(tag){tag.innerHTML=inf?'∞ SANS FIN':PXI('flag')+' LA TOURNÉE';tag.className='planqueMode '+(inf?'inf':'nuit');}
   const rb=$('recBox');if(rb)rb.innerHTML=inf
-    ?`RECORD<br><span style="white-space:nowrap"><b>palier ${m.record.palier||0}</b> · <b>${abbr(m.record.peak||0)} $</b></span>`
-    :`RECORD<br><span style="white-space:nowrap"><b>${m.record.depth||0} tables</b> · <b>${abbr(m.record.chips||0)} $</b></span>`;
+    ?`RECORD<br><span style="white-space:nowrap"><b>palier ${m.record.palier||0}</b> · <b>${abbrS(m.record.peak||0)} $</b></span>`
+    :`RECORD<br><span style="white-space:nowrap"><b>${m.record.depth||0} tables</b> · <b>${abbrS(m.record.chips||0)} $</b></span>`;
   // sélecteur de palier de reprise (mode cagnotte) : reprendre au palier atteint (sauvegardé)
   const pr=$('palierResume');
   if(pr){
