@@ -3129,7 +3129,7 @@ function renderMenu(){
   const n=META.nuit.record,i=META.infini.record;
   // logo intégré : le « O » de COLD devient un disque or contenant un pic noir (construit une fois)
   const mt=document.querySelector('#modeMenu .menuTitle');
-  if(mt&&!mt.querySelector('.logoO'))mt.innerHTML='C<span class="logoO" aria-hidden="true">'+suitSVG('♠',40)+'</span>LD DECK';
+  if(mt&&!mt.querySelector('.logoO'))mt.innerHTML='C<span class="logoO" aria-hidden="true">'+suitSVG('♠',40)+'</span>LD<br>DECK';
   const ts=$('menuTourneeSub');if(ts)ts.textContent=RUN_LEN+' tables · une fin · reliques & tarots';   // nombre de tables réel (RUN_LEN), jamais figé
   const el=$('menuRecords');if(!el)return;
   el.innerHTML=
