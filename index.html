@@ -280,6 +280,9 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 #multPop.win .burst{background:var(--yellow)}
 #multPop.lose .burst{background:var(--red)}
 #multPop.push .burst{background:#3f9bf5}   /* égalité : bleu ciel franc (moins de vert), tranche sur le tapis */
+#multPop.boss .burst{background:var(--red)}
+#multPop.boss .m{color:#fff;text-shadow:0 0 14px rgba(224,82,79,.95),2px 2px 0 #000}
+#multPop.boss .t{color:#ffd7d2}
 #multPop.go{animation:popUp 1.3s cubic-bezier(.2,1.5,.4,1) forwards}
 @keyframes popUp{0%{opacity:0;transform:translate(-50%,-30%) scale(.4)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}80%{opacity:1;transform:translate(-50%,-56%) scale(1)}100%{opacity:0;transform:translate(-50%,-74%) scale(1)}}
 /* bannière NOUVEAU RECORD : bandeau doré qui pop en haut du tapis */
@@ -584,6 +587,11 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
     radial-gradient(rgba(0,0,0,.16) 1.5px,transparent 1.7px) center/15px 15px,
     radial-gradient(130% 112% at 50% 40%,rgba(255,255,255,.07),rgba(0,0,0,.16) 55%,rgba(0,0,0,.42) 100%),
     var(--felt,#138f86)}
+/* TABLE BOSS : le tapis vire au rouge sombre et pulse tant qu'on est sur le boss */
+#felt.bossfelt{--felt:#6e1622;animation:bossThrob 1.25s ease-in-out infinite}
+@keyframes bossThrob{
+ 0%,100%{box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -4px 0 rgba(0,0,0,.3),0 0 0 0 rgba(224,82,79,0)}
+ 50%    {box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -4px 0 rgba(0,0,0,.3),0 0 26px 4px rgba(224,82,79,.55)}}
 /* liseré ornemental double (deux traits pixel crème) — interrompu aux angles pour ne pas toucher les losanges */
 #felt::before{content:"";position:absolute;inset:12px;z-index:1;pointer-events:none;box-shadow:inset 0 0 0 2px rgba(240,232,210,.16);
   -webkit-mask:linear-gradient(90deg,#0000 22px,#000 22px,#000 calc(100% - 22px),#0000 calc(100% - 22px)),linear-gradient(0deg,#0000 22px,#000 22px,#000 calc(100% - 22px),#0000 calc(100% - 22px));
@@ -1338,14 +1346,41 @@ const RUN=[
   /* ZONE 3 — Casino profond */
   {n:'Fosse aux as',  zone:3, mains:10, min:25, max:80,  cap:900,  goal:1580, master:2080,     rule:null,     entry:240, need:8,          ruleText:'Casino profond · droit d’entrée 240'},
   {n:'Table maudite', zone:3, mains:10, min:30, max:100, cap:1300, goal:2350, master:3000,     rule:'gros',   entry:0,   need:0,           ruleText:'Croupier impitoyable (18)'},
-  {n:'La Faucheuse',  zone:3, mains:10, min:40, max:120, cap:1800, goal:3200, master:4100,     rule:'sec',    entry:0,   need:11,boss:true, ruleText:'BOSS FINAL · égalité = défaite'},
+  {n:'La Faucheuse',  zone:3, mains:10, min:40, max:120, cap:1800, goal:3200, master:4100,     rule:'sec',    entry:0,   need:0,           boss:true, ruleText:'BOSS · égalité = défaite'},
 ];
+const ZONE_NAMES={1:'Initiation',2:'La Pression',3:'Casino profond',4:'Cercle rouge',5:'Chambre forte',6:'Les Bas-fonds',7:'Sphère privée',8:'Le Sommet'};
+const ZONE_MULTCAP={1:4,2:6,3:9,4:11,5:13,6:16,7:19,8:24};        // plafond de multiplicateur par zone
+const ZONE_FELT={1:'#138f86',2:'#7c3a9e',3:'#a52f55'};           // héritage
+/* PARCOURS ÉTENDU : après les 3 zones écrites à la main, on génère 5 zones plus profondes
+   (3 tables + boss chacune) → parcours beaucoup plus long, dans l'esprit des paliers de l'infini. */
+(function(){
+  const RTX={nervous:'La baraka monte 2× plus vite',mute:'Croupier muet',gros:'Le croupier tire jusqu’à 18',depart:'Table déjà chaude (+30 %)',sec:'Égalité = défaite'};
+  const DEEP=[
+    {z:4,t:['Salon de jade','Table feutrée','Le Concierge']},
+    {z:5,t:['Antichambre','Coffre à secrets','Le Comptable']},
+    {z:6,t:['Tripot clandestin','Cave aux rats','Le Fossoyeur']},
+    {z:7,t:['Loge dorée','Miroir sans tain','La Croupière']},
+    {z:8,t:['Suite royale','Salle des maîtres','LE PARRAIN']},
+  ];
+  const bossR=['gros','depart','sec'],midR=[null,'nervous','mute'];
+  let cap=1800;
+  DEEP.forEach(zn=>{
+    zn.t.forEach((nm,ti)=>{
+      const boss=(ti===2),last=(zn.z===8&&ti===2);
+      cap=Math.round(cap*1.42/10)*10;
+      const goal=Math.round(cap*1.78/10)*10,master=Math.round(cap*2.35/10)*10;
+      const min=Math.max(40,Math.round(cap*0.03/5)*5),max=Math.round(cap*0.07/5)*5;
+      const rule=last?'sec':(boss?bossR[zn.z%bossR.length]:midR[(ti+zn.z)%midR.length]);
+      const ruleText=last?'BOSS FINAL · égalité = défaite':(boss?'BOSS · '+(RTX[rule]||'affrontement'):(rule?RTX[rule]:'Salle profonde'));
+      const entry=(ti===0&&zn.z%2===1)?Math.round(goal*0.1/10)*10:0;
+      RUN.push({n:nm,zone:zn.z,mains:10,min,max,cap,goal,master,rule,entry,need:0,boss,ruleText});
+    });
+  });
+})();
 const RUN_LEN=RUN.length;
-const ZONE_NAMES={1:'Initiation',2:'La Pression',3:'Casino profond'};
-const ZONE_FELT={1:'#138f86',2:'#7c3a9e',3:'#a52f55'};   // couleurs de tapis d'origine
 
 /* ====== tapis évolutif ====== */
-const FELT_COLORS=['#138f86','#1c6ea8','#7c3a9e','#c0356b'];   // vert original, bleu, violet, fuchsia-rouge
+const FELT_COLORS=['#138f86','#1c6ea8','#7c3a9e','#c0356b','#0f8a5f','#b5651d','#2b4a8c','#8a1c3d'];   // une couleur de tapis par zone (vert, bleu, violet, fuchsia, émeraude, ambre, indigo, lie-de-vin)
 function feltSpokes(count,len,w,gap,off){let s='';const c='rgba(240,232,210,.22)';for(let k=0;k<count;k++)s+='<i style="position:absolute;left:'+(-w/2)+'px;bottom:0;width:'+w+'px;height:'+len+'px;background:'+c+';transform-origin:50% 100%;transform:rotate('+(off+k*(360/count))+'deg) translateY(-'+gap+'px)"></i>';return '<span class="sp">'+s+'</span>';}
 function feltDots(count,r,size){let s='';const c='rgba(240,232,210,.4)';for(let k=0;k<count;k++){const a=k*(360/count)*Math.PI/180;const x=Math.round(Math.sin(a)*r),y=Math.round(-Math.cos(a)*r);s+='<i style="position:absolute;left:calc(50% - '+(size/2)+'px);top:calc(50% - '+(size/2)+'px);width:'+size+'px;height:'+size+'px;background:'+c+';transform:translate('+x+'px,'+y+'px)"></i>';}return '<span class="sp">'+s+'</span>';}
 const _fCorn='<span class="fdDia tl"></span><span class="fdDia tr"></span><span class="fdDia bl"></span><span class="fdDia br"></span>';
@@ -1362,13 +1397,23 @@ const FELT_DESIGNS=[
   ()=>'<span class="fdBrd fdDeco"></span>'+_fBrk+_fCdot+feltDots(8,46,3)+'<span class="fdC fdCtar"></span>',
 ];
 function applyFelt(){
-  const fi=(G.tableIdx||0);
-  const fd=Math.floor(fi/4)%FELT_DESIGNS.length, fc=fi%FELT_COLORS.length;
+  // couleur ET ornement de tapis pilotés par la ZONE : le tapis change quand on franchit une zone
+  const z=((G.table&&G.table.zone)||1)-1;
+  const fc=z%FELT_COLORS.length, fd=z%FELT_DESIGNS.length;
   document.documentElement.style.setProperty('--felt',FELT_COLORS[fc]);
   if(G._feltDesign!==fd){G._feltDesign=fd;const dz=document.getElementById('feltDeco');if(dz)dz.innerHTML=FELT_DESIGNS[fd]();}
+  const felt=document.getElementById('felt');if(felt)felt.classList.toggle('bossfelt',!!(G.table&&G.table.boss));   // tapis rouge sur les tables boss
+}
+/* annonce de BOSS : gros pop rouge au centre du tapis */
+function showBoss(){
+  const p=document.getElementById('multPop');if(!p)return;
+  p.className='boss long';
+  p.querySelector('.m').textContent=(G.endless?'MINI-BOSS':'BOSS');
+  p.querySelector('.t').textContent=G.table.n;
+  p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
 }
 
-const ZONE_MULTCAP={1:4,2:6,3:9};                 // plafond de multiplicateur par zone
+/* ZONE_MULTCAP défini plus haut (avec les zones profondes) */
 /* ============================================================
    MODE INFINI « LA CAGNOTTE » — blackjack pur, sans objectif ni
    limite de mains ni vies. On accumule une cagnotte tant qu'on peut
@@ -2650,7 +2695,12 @@ function enterTable(prevZone){
   if(G.bank<G.table.min){onTableLost('À SEC','Plus de quoi miser le minimum de la table.');return;}
   renderAll();renderHands();renderPressure();
   announceTurn();
-  if(G.table.boss){sfx.danger();shake(16);popText(G.endless?'MINI-BOSS':'TABLE BOSS',G.table.ruleText);}
+  if(G.table.boss){
+    // entrée de BOSS : on la sent — flash rouge, gros pop, tapis rouge (via applyFelt), secousse forte, double grondement
+    sfx.danger();shake(32);flashScreen('lose');showBoss();
+    setTimeout(()=>{try{sfx.danger&&sfx.danger();}catch(e){}shake(18);},180);
+    popText(G.endless?'MINI-BOSS':'BOSS',G.table.ruleText);
+  }
   else if(G.table.zone>prevZone){
     sfx.danger();shake(24);flashScreen('win');coinBurst(12);
     popText('ZONE '+G.table.zone+(ZONE_NAMES[G.table.zone]?' — '+ZONE_NAMES[G.table.zone]:''),G.table.ruleText);
