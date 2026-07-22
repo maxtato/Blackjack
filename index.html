@@ -394,6 +394,8 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* jeton d'inspection : MÊME design que la carte du plateau (cadre + intérieur noir + liseré + pips) */
 /* panneau d'inspection : même jeton, en plus grand */
 #inspectBody .inspCard{position:relative;width:104px;height:104px;margin:0 auto 12px;background:transparent;border:none;border-radius:0;box-shadow:none;animation:none;display:flex;align-items:center;justify-content:center;overflow:visible}
+/* fenêtre d'inspection : ÉTIQUETTE (comme sur le tapis), plus de jeton de poker — fond sombre qui ressort sur le panneau gris */
+#inspectBody .inspCard.tag{width:104px;height:54px;background:#1b1c21;clip-path:var(--pc);box-shadow:2px 3px 0 rgba(0,0,0,.42);overflow:hidden}
 #inspectBody .inspCard .chps{transform:translate(3px,4px)}
 #inspectBody .inspCard .chpdia{width:6px;height:11px}
 #inspectBody .inspCard .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:26px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000;white-space:nowrap}
@@ -2095,7 +2097,7 @@ function openInspect(kind,i){
   const tag=kind==='tarot'
     ?'<span style="color:var(--grape)">JETON TAROT · à usage unique</span>'
     :'<span style="color:var(--yellow)">RELIQUE · effet permanent</span>';
-  $('inspectBody').innerHTML=`<div class="inspCard ${kind==='tarot'?'tarot':'joker'}">${chipInner()}<span class="ft" style="color:${tk.c}">${tk.t}</span></div>`
+  $('inspectBody').innerHTML=`<div class="inspCard tag ${kind==='tarot'?'tarot':'joker'}"><span class="ft" style="color:${tk.c}">${tk.t}</span></div>`
     +`<h1 class="win" style="font-size:24px;margin:0 0 4px">${item.name}</h1>`
     +`<p style="font-size:10px;letter-spacing:.08em;margin:0 0 12px">${tag}</p>`
     +`<p style="color:#dfe9ff;font-size:13px;line-height:1.6;margin:0 0 4px">${item.desc}</p>`;
