@@ -881,7 +881,7 @@ small.sym{margin-left:0!important}
 #intro,#modeMenu{padding:0}
 #intro .ovpanel,#modeMenu .ovpanel{max-width:none;width:100%;min-height:100%;margin:0;border:none;border-radius:0;clip-path:none;box-shadow:none;display:flex;flex-direction:column;justify-content:center;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));animation:none}   /* pages figées : pas d'entrée glissée/zoomée, elles arrivent fixes */
 #modeMenu .ovpanel{background:#0d0e11}   /* menu de démarrage : fond noir (bandes de record en gris, cf. .menuRecs .mrec) */
-#intro h1{font-size:32px;margin-bottom:7px}
+#intro h1{font-size:40px;margin-bottom:18px}
 #intro p{font-size:11px;line-height:1.4;margin-bottom:11px}
 /* blocs réputation / record réduits (moins hauts) */
 .repBar{margin-bottom:11px}
@@ -895,8 +895,8 @@ small.sym{margin-left:0!important}
 #unlockItems .shopTok{width:46px;height:46px;font-size:16px}
 #unlockItems .nm{font-size:13px}
 #unlockItems .ds{font-size:10px;margin-top:2px;line-height:1.3}
-/* étiquette de mode en haut de La Planque */
-.planqueMode{display:inline-block;font-size:12px;letter-spacing:.14em;padding:3px 12px;border-radius:999px;margin:0 auto 6px;clip-path:var(--pc)}
+/* étiquette de mode : discrète, tout en haut de La Planque (entre les boutons ↺ et i) */
+.planqueMode{position:absolute;top:15px;left:50%;transform:translateX(-50%);z-index:5;font-size:10px;letter-spacing:.2em;padding:4px 12px;border-radius:999px;margin:0;clip-path:var(--pc);opacity:.82}
 .planqueMode.nuit{background:rgba(255,206,58,.14);color:var(--gold)}
 .planqueMode.inf{background:rgba(166,77,255,.16);color:var(--grape)}
 /* menu principal : rappel des records/réputation de chaque mode */
