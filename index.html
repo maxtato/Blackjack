@@ -1292,7 +1292,7 @@ function uLvl(id){return (metaCur().unlocks[id])|0;}
 const UNLOCKS_NUIT=[
   {id:'bank',     name:'Pécule',    tok:'+$',                     tc:'#ffce3a', max:5, cost:n=>15+n*15, desc:n=>'Jetons de départ +'+(15*(n+1))},
   {id:'pourboire',name:'Pourboire', tok:'+$<small class="sym">/main</small>', tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' jeton(s) au début de chaque main'},
-  {id:'net',      name:'Filet',     tok:'+1 <small>essai</small>', tc:'#3f8bd6', max:3, cost:n=>40+n*30, desc:n=>'Secondes chances de départ : '+(1+n+1)},
+  {id:'net',      name:'Filet',     tok:'+1 <small>essai</small>', tc:'#3f8bd6', max:3, cost:n=>40+n*30, desc:n=>'Secondes chances de départ : '+(3+n+1)},
   {id:'tarot',    name:'Poche',     tok:'+1 <small>slot</small>',  tc:'#a64dff', max:1, cost:n=>70,      desc:n=>'+1 emplacement Tarot permanent'},
   {id:'contact',  name:'Contact',   tok:'+1<small>◆</small>',     tc:'#ffce3a', max:1, cost:n=>90,      desc:n=>'Commence chaque parcours avec une relique offerte'},
   {id:'relic2',   name:'Coffre',    tok:'+3<small>◆</small>',     tc:'#9be84a', max:1, cost:n=>120,     desc:n=>'Débloque 3 reliques RARES en boutique (Talisman, Aimant, Le Phare)'},
@@ -1313,7 +1313,7 @@ function findUnlock(id){return unlocksFor(MODE).find(x=>x.id===id);}
 function unlockCost(u){const n=uLvl(u.id);return n>=u.max?null:u.cost(n);}
 /* valeurs de départ d'une descente, dérivées des déblocages */
 function startBank(){return 50+uLvl('bank')*15;}
-function startTokens(){return 1+uLvl('net');}
+function startTokens(){return 3+uLvl('net');}   // secondes chances de départ : plus de marge pour le Parcours
 function startRelics(){if(uLvl('contact')){const pool=RELIC_POOL.filter(r=>!r.lock||uLvl(r.lock));const r=pool[rndInt(pool.length)];return [Object.assign({},r)];}return [];}
 /* ---------- données ---------- */
 const SUITS=['♠','♥','♦','♣'];
