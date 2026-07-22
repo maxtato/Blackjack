@@ -1302,8 +1302,8 @@ function checkGainRecord(gain){
 function uLvl(id){return (metaCur().unlocks[id])|0;}
 /* déblocages permanents de LA NUIT (descente : reliques, tarots, vies) */
 const UNLOCKS_NUIT=[
-  {id:'bank',     name:'Pécule',    tok:'+$',                     tc:'#ffce3a', max:5, cost:n=>15+n*15, desc:n=>'Jetons de départ +'+(15*(n+1))},
-  {id:'pourboire',name:'Pourboire', tok:'+$<small class="sym">/main</small>', tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' jeton(s) au début de chaque main'},
+  {id:'bank',     name:'Pécule',    tok:'+$',                     tc:'#ffce3a', max:5, cost:n=>15+n*15, desc:n=>'Argent de départ +'+(15*(n+1))+' $'},
+  {id:'pourboire',name:'Pourboire', tok:'+$<small class="sym">/main</small>', tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' $ au début de chaque main'},
   {id:'net',      name:'Filet',     tok:'+1 <small>essai</small>', tc:'#3f8bd6', max:3, cost:n=>40+n*30, desc:n=>'Secondes chances de départ : '+(3+n+1)},
   {id:'tarot',    name:'Poche',     tok:'+1 <small>slot</small>',  tc:'#a64dff', max:1, cost:n=>70,      desc:n=>'+1 emplacement Tarot permanent'},
   {id:'contact',  name:'Contact',   tok:'+1<small>◆</small>',     tc:'#ffce3a', max:1, cost:n=>90,      desc:n=>'Commence chaque parcours avec une relique offerte'},
@@ -1538,16 +1538,16 @@ const RELIC_POOL=[
   {id:'as',name:'As truqué',ic:'🂡',desc:'Relique permanente. Quand tu gagnes une main qui contient un As : +1 au multiplicateur.',cost:16},
   {id:'froid',name:'Sang-froid',ic:'🧊',desc:'Relique permanente. Si tu gagnes une main avec une baraka ≥ 75 % : +1 au multiplicateur.',cost:16},
   {id:'compteur',name:'Compteur',ic:'🎯',desc:'Relique permanente. Affiche en continu ta probabilité de dépasser 21 au prochain tirage.',cost:12},
-  {id:'mecene',name:'Mécène',ic:'💵',desc:'Relique permanente. +4 jetons offerts au début de chaque main.',cost:15},
-  {id:'usurier',name:'Usurier',ic:'🏦',desc:'Relique permanente. Au début de chaque main : +1 jeton par tranche de 5 jetons en banque (jusqu’à +6).',cost:18},
+  {id:'mecene',name:'Mécène',ic:'💵',desc:'Relique permanente. +4 $ offerts au début de chaque main.',cost:15},
+  {id:'usurier',name:'Usurier',ic:'🏦',desc:'Relique permanente. Au début de chaque main : +1 $ par tranche de 5 $ en banque (jusqu’à +6).',cost:18},
   {id:'collector',name:'Collectionneur',ic:'🌈',desc:'Relique permanente. Les éditions spéciales (FOIL/HOLO/POLY) apparaissent 3× plus souvent sur tes cartes.',cost:16},
-  {id:'maitresse',name:'Carte maîtresse',ic:'🎴',desc:'Relique permanente. Ta 1re carte de chaque main est FOIL : jetons bonus quand tu gagnes.',cost:14},
+  {id:'maitresse',name:'Carte maîtresse',ic:'🎴',desc:'Relique permanente. Ta 1re carte de chaque main est FOIL : de l’argent bonus quand tu gagnes.',cost:14},
   {id:'bruleur',name:'Brûleur',ic:'🔥',desc:'Relique permanente. Si tu gagnes une main avec une baraka ≥ 50 % : gain de la main ×1,5.',cost:17},
   {id:'portebonheur',name:'Porte-bonheur',ic:'🍀',desc:'Relique permanente. +1 emplacement de jeton Tarot (tu peux garder un jeton de plus).',cost:12},
   {id:'diplomate',name:'Diplomate',ic:'🤝',desc:'Relique permanente. En cas d’égalité avec le croupier, tu récupères la moitié de ta mise.',cost:11},
   /* reliques RARES : n'apparaissent en boutique qu'après l'achat du « Coffre » à La Planque */
   {id:'talisman',name:'Talisman',ic:'🧿',desc:'Relique rare. Une fois par table, ta première main perdue est intégralement remboursée.',cost:15,lock:'relic2'},
-  {id:'aimant',name:'Aimant',ic:'🧲',desc:'Relique rare. +1 jeton à chaque carte que tu tires.',cost:12,lock:'relic2'},
+  {id:'aimant',name:'Aimant',ic:'🧲',desc:'Relique rare. +1 $ à chaque carte que tu tires.',cost:12,lock:'relic2'},
   {id:'phare',name:'Le Phare',ic:'🗼',desc:'Relique rare. CHARLIE (5 cartes sans dépasser) paie ×3 au lieu de ×2.',cost:16,lock:'relic2'},
 ];
 
@@ -1557,13 +1557,13 @@ const TAROT_POOL=[
     use(){addBaraka(2);return'+2 baraka';}},
   {id:'jugement',name:'Le Jugement',ic:'⚖️',cost:11,desc:'À jouer à tout moment : monte directement d’un niveau de BARAKA.',when:'any',
     use(){const lvl=barakaLevel();const target=lvl<4?BARAKA_STEPS[lvl]:BARAKA_STEPS[3];addBaraka(Math.max(1,target-(G.baraka||0)));return'BARAKA +1 niveau';}},
-  {id:'soleil',name:'Le Soleil',ic:'☀️',cost:6,desc:'Ajoute aussitôt 18 jetons à ta banque, à tout moment.',when:'any',
+  {id:'soleil',name:'Le Soleil',ic:'☀️',cost:6,desc:'Ajoute aussitôt 18 $ à ta banque, à tout moment.',when:'any',
     use(){G.bank+=18;renderTop();coinBurst(8);return'+18 $';}},
   {id:'diable',name:'Le Diable',ic:'😈',cost:9,desc:'À jouer sur ta main : transforme une de tes cartes en POLYCHROME, qui multiplie le gain de la main (×1,5).',when:'play',need:'cards',
     use(){const c=addEditionToHand('poly');return c?('Polychrome : '+c.r+c.s):false;}},
   {id:'lune',name:'La Lune',ic:'🌙',cost:8,desc:'À jouer sur ta main : transforme une de tes cartes en HOLOGRAPHIQUE (+1 au multiplicateur de la main).',when:'play',need:'cards',
     use(){const c=addEditionToHand('holo');return c?('Holo : '+c.r+c.s):false;}},
-  {id:'etoileD',name:"L'Étoile filante",ic:'✨',cost:7,desc:'À jouer sur ta main : transforme une de tes cartes en FOIL, qui rapporte des jetons bonus quand la main est gagnée.',when:'play',need:'cards',
+  {id:'etoileD',name:"L'Étoile filante",ic:'✨',cost:7,desc:'À jouer sur ta main : transforme une de tes cartes en FOIL, qui rapporte de l’argent bonus quand la main est gagnée.',when:'play',need:'cards',
     use(){const c=addEditionToHand('foil');return c?('Foil : '+c.r+c.s):false;}},
   {id:'pendu',name:'Le Pendu',ic:'🪢',cost:9,desc:'À jouer pendant la main : annule ta dernière carte tirée (sauve-toi quand tu as tiré la carte de trop).',when:'play',need:'extra',
     use(){const c=G.pHand.pop();renderHands();renderMult();updateBustReadout();renderActions();return'Retiré : '+c.r+c.s;}},
@@ -1584,7 +1584,7 @@ const SERVICE_POOL=[
 ];
 const SERVICE_BY_ID=Object.fromEntries(SERVICE_POOL.map(s=>[s.id,s]));
 const ED_NAME={foil:'FOIL',holo:'HOLO',poly:'POLY'};
-const ED_INFO={foil:'+ jetons bonus',holo:'+1 au multiplicateur',poly:'× multiplicateur'};
+const ED_INFO={foil:'+ argent bonus',holo:'+1 au multiplicateur',poly:'× multiplicateur'};
 function announceEd(c){if(c&&c.ed)popText('CARTE '+ED_NAME[c.ed],ED_INFO[c.ed]);}
 /* ICON retiré : effets affichés via jetons SHOPTOK */
 
@@ -2804,7 +2804,7 @@ function endRun(cashout){
     (cashout
       ?`Tu pars avec la cagnotte avant que ça tourne mal.`
       :`Tu repars quand même avec la moitié de ta cagnotte.`)+manque+
-    `<br><br>Tables tenues : <b>${depth}</b> · Jetons : <b>${abbr(G.bank)} $</b>`+
+    `<br><br>Tables tenues : <b>${depth}</b> · Argent : <b>${abbr(G.bank)} $</b>`+
     `<br>Réputation : <b>${STAR}${abbr(baseGain)}</b>`+(coffre?` <span style="color:var(--muted)">+ coffre ${STAR}${abbr(coffre)}</span>`:'')+` &nbsp;→&nbsp; total <b>${STAR}${abbr(metaCur().rep)}</b>`+
     recLine+`<span style="color:var(--muted)">Record : ${rec.depth||0} tables · ${abbr(rec.chips||0)} $</span>`;
   }
