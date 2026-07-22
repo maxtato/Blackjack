@@ -576,10 +576,10 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 /* TABLE = simple conteneur (plus de bois) */
 #table{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;max-width:580px;position:relative;padding:6px 3px 6px;border:none;border-radius:0;background:none;overflow:visible;box-shadow:none}
 #table::before,#table::after{display:none!important}
-/* petit bouton VOIR (lunettes) : posé sur le coin du tapis, hors de la rangée d'actions */
-#peekBtn{position:absolute;top:50%;right:12px;transform:translateY(-50%);z-index:6;display:none;font-family:'Jersey 15',monospace;font-weight:700;font-size:17px;letter-spacing:.05em;color:#fff;background:var(--grape);border:none;clip-path:var(--pc);padding:13px 16px;line-height:1;cursor:pointer;box-shadow:0 4px 0 var(--purpleDk);animation:btnTwitch 1.1s steps(1,end) infinite}
+/* petit bouton VOIR (lunettes) : posé en haut à droite du tapis, hors de la rangée de bonus */
+#peekBtn{position:absolute;top:10px;right:10px;transform:none;z-index:6;display:none;font-family:'Jersey 15',monospace;font-weight:700;font-size:15px;letter-spacing:.05em;color:#fff;background:var(--grape);border:none;clip-path:var(--pc);padding:9px 13px;line-height:1;cursor:pointer;box-shadow:0 4px 0 var(--purpleDk);animation:btnTwitch 1.1s steps(1,end) infinite}
 #peekBtn.show{display:block}
-#peekBtn:active{transform:translateY(calc(-50% + 2px));filter:brightness(.92)}
+#peekBtn:active{transform:translateY(2px);filter:brightness(.92)}
 /* FELT = tapis teal, bords relevés, légèrement incliné */
 #felt{position:relative;z-index:0;flex:0 1 auto;aspect-ratio:1/1;width:100%;height:auto;max-width:100%;max-height:100%;margin:0 auto;display:flex;transition:background .5s ease;clip-path:var(--fc);box-shadow:6px 9px 0 rgba(0,0,0,.4),inset 0 3px 0 rgba(255,255,255,.06),inset 0 -4px 0 rgba(0,0,0,.3);padding:8px 8px;transform:none;
   /* pointillé + profondeur radiale (centre plus clair, bords plus sombres) par-dessus la couleur de zone */
@@ -821,6 +821,11 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 .shopItem .shopTok{position:relative;flex:0 0 auto;width:64px;height:64px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;border-radius:0;box-shadow:none;animation:none;overflow:visible}
 .shopItem .shopTok .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:18px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000;white-space:nowrap}
 .shopItem .shopTok .ft small{font-size:.72em;font-weight:700;margin-left:.2em}
+/* boutique : reliques/tarots/services en ÉTIQUETTES (comme sur le tapis), plus de jetons */
+.shopItem .shopTok.tag{width:64px;height:46px;background:#1b1c21;clip-path:var(--pc);box-shadow:2px 3px 0 rgba(0,0,0,.42);overflow:hidden}
+.shopItem .shopTok.tag.joker{box-shadow:2px 3px 0 rgba(0,0,0,.42),inset 0 0 0 2px #f0be14}
+.shopItem .shopTok.tag.tarot{box-shadow:2px 3px 0 rgba(0,0,0,.42),inset 0 0 0 2px #a05cf0}
+.shopItem .shopTok.tag.svc{box-shadow:2px 3px 0 rgba(0,0,0,.42),inset 0 0 0 2px #2fae9f}
 /* badges d'amélioration (Planque) : petit texte détaché du nombre */
 .shopTok small{margin-left:.2em}
 /* ...sauf les unités symboles (/, %, $) : collées au nombre */
@@ -2018,8 +2023,9 @@ function fitChipText(){
     const chip=ft.parentElement;if(!chip)return;
     const W=chip.getBoundingClientRect().width;
     if(!W)return;
-    const target=W*0.60;                 // largeur utile du centre noir
-    let fs=W*0.30, floor=W*0.135, g=0;   // départ = 30% du jeton (max), plancher ≈ libellé très long
+    const isTag=chip.classList.contains('tag');   // étiquette boutique = presque toute la largeur ; jeton = centre noir (~60%)
+    const target=W*(isTag?0.86:0.60);
+    let fs=W*(isTag?0.28:0.30), floor=W*0.135, g=0;   // départ = 30% du jeton (max), plancher ≈ libellé très long
     ft.style.fontSize=fs+'px';
     while(ft.getBoundingClientRect().width>target&&fs>floor&&g<80){fs-=0.5;ft.style.fontSize=fs+'px';g++;}
   });
@@ -2634,7 +2640,7 @@ function renderShop(){
       :'<span style="font-size:9px;color:var(--yellow)">◆ RELIQUE</span>';
     const tk=SHOPTOK[r.id]||{t:'?',c:'#ffce3a'};
     const chipCls=isSvc?'svc':isTarot?'tarot':'joker';
-    d.innerHTML=`<div class="shopTok ${chipCls}">${chipInner()}<span class="ft" style="color:${tk.c}">${tk.t}</span></div><div class="sInfo"><div class="nm">${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
+    d.innerHTML=`<div class="shopTok tag ${chipCls}"><span class="ft" style="color:${tk.c}">${tk.t}</span></div><div class="sInfo"><div class="nm">${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
     const cost=isSvc?serviceCost(r):itemCost(r);
     const b=document.createElement('button');b.className='btn '+(isSvc?'b-teal':isTarot?'b-purple':'b-gold');
     b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=abbr(cost)+' $';
