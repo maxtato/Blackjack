@@ -1048,7 +1048,7 @@ small.sym{margin-left:0!important}
       <div><span class="rt">BUT</span>Bats le croupier à chaque main sans dépasser <span class="k">21</span>. Une figure vaut 10, l'As vaut 1 ou 11.</div>
       <div><span class="rt">LA TABLE</span>Joue <span class="k">toutes les mains imposées</span>, mise dans la <span class="k">limite</span> (min–max fixe), et atteins l'<span class="k">objectif de gain</span> avant la dernière main. Sous l'objectif = table perdue.</div>
       <div><span class="rt">TES COUPS</span><span class="k">TIRER</span> une carte, <span class="k">RESTER</span> sur ta main, ou <span class="k">FORCER LA CHANCE</span> (2 cartes, on garde la meilleure · 1×/table).</div>
-      <div><span class="rt"><i class="pxstar"></i> ÉTOILES</span>Chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Elles ouvrent les <span class="d">boss</span> et les zones profondes.</div>
+      <div><span class="rt"><i class="pxstar"></i> ÉTOILES</span>Chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Plus tu en décroches, plus ta <span class="k">réputation</span> grimpe.</div>
       <div><span class="rt">BARAKA</span>Ta barre de <span class="k">veine</span> monte à chaque victoire (<span class="k">coup culotté = +2</span>) et débloque des <span class="k">multiplicateurs</span> de plus en plus forts. Perdre une main la <span class="d">remet à zéro</span>.</div>
       <div><span class="rt">COMBOS</span>Le vrai jeu : <span class="k">construis</span> tes mains, ne te contente pas de battre le croupier.<br><span class="k">21 PARFAIT ×3</span> · <span class="k">CHARLIE</span> (5 cartes) ×2 · <span class="k">COULEUR</span> (3+ même enseigne) ×2 · <span class="k">SUITE</span> (3+ rangs qui se suivent) ×2 · BLACKJACK ×1.5 · PAIRE DE 7 ×1.5 · ARC-EN-CIEL (4 enseignes) ×1.5.<br>Les pastilles sur le tapis montrent ce qui est acquis et à portée.</div>
       <div><span class="rt">PETITS BONUS</span>Des coups de pouce au multiplicateur selon la situation : <span class="k">COUR</span> (2+ figures) ×1.5 · <span class="k">FILOU</span> (gagner avec ≤15) ×1.5 · <span class="k">AU POIL</span> (battre le croupier d'un point) ×1.5 · <span class="k">CLUTCH</span> (dernière main) ×1.5 · <span class="k">REMONTADA</span> (parti ≤11, fini ≥17) ×1.3.</div>
@@ -1292,7 +1292,7 @@ function uLvl(id){return (metaCur().unlocks[id])|0;}
 const UNLOCKS_NUIT=[
   {id:'bank',     name:'Pécule',    tok:'+$',                     tc:'#ffce3a', max:5, cost:n=>15+n*15, desc:n=>'Jetons de départ +'+(15*(n+1))},
   {id:'pourboire',name:'Pourboire', tok:'+$<small class="sym">/main</small>', tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' jeton(s) au début de chaque main'},
-  {id:'net',      name:'Filet',     tok:'+1 <small>essai</small>', tc:'#3f8bd6', max:3, cost:n=>40+n*30, desc:n=>'Secondes chances de départ : '+(1+n+1)},
+  {id:'net',      name:'Filet',     tok:'+1 <small>essai</small>', tc:'#3f8bd6', max:3, cost:n=>40+n*30, desc:n=>'Secondes chances de départ : '+(3+n+1)},
   {id:'tarot',    name:'Poche',     tok:'+1 <small>slot</small>',  tc:'#a64dff', max:1, cost:n=>70,      desc:n=>'+1 emplacement Tarot permanent'},
   {id:'contact',  name:'Contact',   tok:'+1<small>◆</small>',     tc:'#ffce3a', max:1, cost:n=>90,      desc:n=>'Commence chaque parcours avec une relique offerte'},
   {id:'relic2',   name:'Coffre',    tok:'+3<small>◆</small>',     tc:'#9be84a', max:1, cost:n=>120,     desc:n=>'Débloque 3 reliques RARES en boutique (Talisman, Aimant, Le Phare)'},
@@ -1313,7 +1313,7 @@ function findUnlock(id){return unlocksFor(MODE).find(x=>x.id===id);}
 function unlockCost(u){const n=uLvl(u.id);return n>=u.max?null:u.cost(n);}
 /* valeurs de départ d'une descente, dérivées des déblocages */
 function startBank(){return 50+uLvl('bank')*15;}
-function startTokens(){return 1+uLvl('net');}
+function startTokens(){return 3+uLvl('net');}   // secondes chances de départ : plus de marge pour le Parcours
 function startRelics(){if(uLvl('contact')){const pool=RELIC_POOL.filter(r=>!r.lock||uLvl(r.lock));const r=pool[rndInt(pool.length)];return [Object.assign({},r)];}return [];}
 /* ---------- données ---------- */
 const SUITS=['♠','♥','♦','♣'];
@@ -1326,17 +1326,17 @@ const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
    ============================================================ */
 const RUN=[
   /* ZONE 1 — Initiation */
-  {n:'Arrière-salle', zone:1, mains:6, min:5,  max:20,  cap:50,   goal:150, master:210,      rule:null,     entry:0,   need:0,           ruleText:'Initiation'},
-  {n:'Table nerveuse',zone:1, mains:7, min:5,  max:25,  cap:130,  goal:220, master:320,      rule:'nervous',entry:0,   need:0,           ruleText:'La baraka monte 2× plus vite'},
-  {n:'Le Videur',     zone:1, mains:7, min:10, max:30,  cap:200,  goal:340, master:460,      rule:'gros',   entry:0,   need:2, boss:true, ruleText:'BOSS · le croupier tire jusqu’à 18'},
+  {n:'Arrière-salle', zone:1, mains:10, min:5,  max:20,  cap:50,   goal:150, master:210,      rule:null,     entry:0,   need:0,           ruleText:'Initiation'},
+  {n:'Table nerveuse',zone:1, mains:10, min:5,  max:25,  cap:130,  goal:220, master:320,      rule:'nervous',entry:0,   need:0,           ruleText:'La baraka monte 2× plus vite'},
+  {n:'Le Videur',     zone:1, mains:10, min:10, max:30,  cap:200,  goal:340, master:460,      rule:'gros',   entry:0,   need:2, boss:true, ruleText:'BOSS · le croupier tire jusqu’à 18'},
   /* ZONE 2 — La Pression */
-  {n:'Cave humide',   zone:2, mains:7, min:10, max:48,  cap:280,  goal:500, master:700,      rule:'mute',   entry:70,  need:3,           ruleText:'Croupier muet · droit d’entrée 70'},
-  {n:'Salon rouge',   zone:2, mains:8, min:15, max:52,  cap:430,  goal:760, master:1010,     rule:null,     entry:0,   need:0,           ruleText:'Salon feutré'},
-  {n:'Le Banquier',   zone:2, mains:8, min:20, max:62,  cap:640,  goal:1080, master:1420,     rule:'depart', entry:0,   need:6, boss:true, ruleText:'BOSS · table déjà chaude (+30 %)'},
+  {n:'Cave humide',   zone:2, mains:10, min:10, max:48,  cap:280,  goal:500, master:700,      rule:'mute',   entry:70,  need:3,           ruleText:'Croupier muet · droit d’entrée 70'},
+  {n:'Salon rouge',   zone:2, mains:10, min:15, max:52,  cap:430,  goal:760, master:1010,     rule:null,     entry:0,   need:0,           ruleText:'Salon feutré'},
+  {n:'Le Banquier',   zone:2, mains:10, min:20, max:62,  cap:640,  goal:1080, master:1420,     rule:'depart', entry:0,   need:6, boss:true, ruleText:'BOSS · table déjà chaude (+30 %)'},
   /* ZONE 3 — Casino profond */
-  {n:'Fosse aux as',  zone:3, mains:8, min:25, max:80,  cap:900,  goal:1580, master:2080,     rule:null,     entry:240, need:8,          ruleText:'Casino profond · droit d’entrée 240'},
-  {n:'Table maudite', zone:3, mains:9, min:30, max:100, cap:1300, goal:2350, master:3000,     rule:'gros',   entry:0,   need:0,           ruleText:'Croupier impitoyable (18)'},
-  {n:'La Faucheuse',  zone:3, mains:9, min:40, max:120, cap:1800, goal:3200, master:4100,     rule:'sec',    entry:0,   need:11,boss:true, ruleText:'BOSS FINAL · égalité = défaite'},
+  {n:'Fosse aux as',  zone:3, mains:10, min:25, max:80,  cap:900,  goal:1580, master:2080,     rule:null,     entry:240, need:8,          ruleText:'Casino profond · droit d’entrée 240'},
+  {n:'Table maudite', zone:3, mains:10, min:30, max:100, cap:1300, goal:2350, master:3000,     rule:'gros',   entry:0,   need:0,           ruleText:'Croupier impitoyable (18)'},
+  {n:'La Faucheuse',  zone:3, mains:10, min:40, max:120, cap:1800, goal:3200, master:4100,     rule:'sec',    entry:0,   need:11,boss:true, ruleText:'BOSS FINAL · égalité = défaite'},
 ];
 const RUN_LEN=RUN.length;
 const ZONE_NAMES={1:'Initiation',2:'La Pression',3:'Casino profond'};
@@ -2532,28 +2532,21 @@ function openShop(){
   const cb=$('cashBtn');
   if(isBoss||last){cb.style.display='';cb.innerHTML=(last?'TERMINER<small>':'ENCAISSER<small>')+STAR+abbr(repOnEnd(true))+' réput.</small>';}
   else{cb.style.display='none';}
-  // table suivante : verrou par étoiles + droit d'entrée éventuel
+  // table suivante : atteindre l'objectif suffit (pas de verrou d'étoiles) · droit d'entrée éventuel
   const nextBtn=$('shopNextBtn'),nextObj=$('shopNextObj');
   if(last){
     nextBtn.style.display='none';$('shopGate').textContent='Tu as bouclé la run. Encaisse ta réputation.';
     if(nextObj)nextObj.style.display='none';
   }else{
     const nx=tableFor(G.tableIdx+1);
-    nextBtn.style.display='';
-    const locked=(G.runStars||0)<(nx.need||0);
+    nextBtn.style.display='';nextBtn.disabled=false;      // pas de verrou d'étoiles : atteindre l'objectif suffit
     const feeTxt=nx.entry?` · droit d'entrée ${abbr(nx.entry)} $`:'';
     $('shopNext').textContent=`${nx.n} · obj. ${abbr(nx.goal)} $ · conseillé ${abbr(nx.cap)} $${feeTxt}`;
     // objectif de la prochaine table, bien visible : aide à décider d'acheter ou de garder du cash
     if(nextObj){nextObj.style.display='';
       nextObj.innerHTML=`PROCHAINE · <b>${nx.n}</b> — objectif <b style="color:var(--gold)">${abbr(nx.goal)} $</b> · capital conseillé <b>${abbr(nx.cap)} $</b>`+(nx.entry?` · entrée <b style="color:var(--red)">${abbr(nx.entry)} $</b>`:'');
     }
-    if(locked){
-      nextBtn.disabled=true;
-      $('shopGate').innerHTML=`${PXI('lock')} Table suivante : ${nx.need}${STAR} requis (tu as ${G.runStars||0}${STAR}). Vise mieux que survivre.`;
-    }else{
-      nextBtn.disabled=false;
-      $('shopGate').textContent=nx.entry?`Salle plus exclusive — droit d'entrée ${abbr(nx.entry)} $.`:'';
-    }
+    $('shopGate').textContent=nx.entry?`Salle plus exclusive — droit d'entrée ${abbr(nx.entry)} $.`:'';
   }
   rollShop();
   $('shop').classList.add('show');
@@ -2624,7 +2617,6 @@ function leaveShop(){
   if(!G.endless&&G.tableIdx+1>=RUN_LEN)return;     // mode normal : pas de table après la dernière
   const nx=tableFor(G.tableIdx+1);
   if(!nx)return;                                   // sécurité
-  if((G.runStars||0)<(nx.need||0)){popText('VERROUILLÉ',nx.need+STAR+' requis');return;}
   $('shop').classList.remove('show');
   const prevZone=G.table.zone;
   G.tableIdx++;
@@ -3178,11 +3170,6 @@ function startGame(fromTable){
   if(fromTable>0){                                  // REPRISE : départ direct à une table déjà atteinte (ou raccourci zone 2)
     G.tableIdx=fromTable;G.table=RUN[fromTable];
     G.bank=(RUN[fromTable].cap||0)+(startBank()-50);   // capital calé sur le conseillé de la table (+ Pécule) ; cagnotte ★ à zéro : on va plus vite mais on rapporte moins
-    // étoiles minimales pour avoir légitimement atteint cette table → les verrous ★ des tables
-    // suivantes restent franchissables (sinon la reprise démarre à 0★ et bloque « table suivante »)
-    let need=RUN[fromTable].need||0;G.tableStars=[];
-    for(let i=0;i<fromTable;i++){const s=Math.min(3,need);G.tableStars[i]=s;need-=s;}
-    G.runStars=G.tableStars.reduce((a,b)=>a+(b||0),0);
     enterTable(1);return;
   }
   G.contract=rollContract();
