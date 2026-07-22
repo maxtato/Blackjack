@@ -488,11 +488,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 /* on réserve toujours la hauteur d'une rangée de cartes (tarots/reliques) : le tapis ne se décale plus quand elles arrivent */
 #effects{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:7px;min-height:40px;padding:6px 6px}
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
-/* effets & tarots = étiquettes compactes (plus de jetons) : icône au-dessus, valeur en dessous */
-#effects .joker,#effects .tarot{position:relative;cursor:pointer;background:#1b1c21;clip-path:var(--pc);padding:6px 11px;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:50px;box-shadow:2px 3px 0 rgba(0,0,0,.42);animation:cardLife 4.4s ease-in-out infinite;transform-origin:center}
+/* effets & tarots = étiquettes (plus de jetons) : juste la valeur, toutes de taille identique */
+#effects .joker,#effects .tarot{position:relative;cursor:pointer;background:#1b1c21;clip-path:var(--pc);width:78px;height:34px;box-sizing:border-box;padding:0 6px;display:flex;align-items:center;justify-content:center;box-shadow:2px 3px 0 rgba(0,0,0,.42);animation:cardLife 4.4s ease-in-out infinite;transform-origin:center}
 #effects .tarot{animation-duration:4.8s}
 #effects .joker.hot{box-shadow:2px 3px 0 rgba(0,0,0,.42),0 0 0 2px var(--yellow)}
-#effects .fic{font-size:19px;line-height:1}
 /* JETON pixel : ombre dure (disque décalé) + disque accent (contour fin --disc) + 12 crans crème + intérieur noir — réutilisable (plateau + panneau) */
 .chps{position:absolute;inset:0;clip-path:var(--disc);background:rgba(0,0,0,.5);transform:translate(2px,3px);z-index:0}
 .chpo{position:absolute;inset:0;clip-path:var(--disc);background:#f4ecd8;z-index:1}                 /* liseret extérieur (crème) */
@@ -1979,7 +1978,7 @@ function renderRelics(){
     const d=document.createElement('div');d.className='joker';d.dataset.relic=r.id;
     if((r.id==='froid'||r.id==='clope')&&barakaLevel()>=3)d.classList.add('hot');
     const tk=SHOPTOK[r.id]||{t:r.name,c:'#ffce3a'};
-    d.innerHTML=`<span class="fic">${r.ic||''}</span><span class="ft" style="color:${tk.c}">${tk.t}</span>`;   // étiquette compacte : icône + valeur (plus de jeton)
+    d.innerHTML=`<span class="ft" style="color:${tk.c}">${tk.t}</span>`;   // étiquette : juste la valeur (taille uniforme)
     d.title=`${r.name} — ${r.desc}`;
     d.onclick=()=>openInspect('relic',idx);
     wrap.appendChild(d);
@@ -1993,7 +1992,7 @@ function renderConsumables(){
   G.consumables.forEach((t,i)=>{
     const d=document.createElement('div');d.className='tarot';
     const tk=SHOPTOK[t.id]||{t:t.name,c:'#a64dff'};
-    d.innerHTML=`<span class="fic">${t.ic||''}</span><span class="ft" style="color:${tk.c}">${tk.t}</span>`;   // étiquette compacte : icône + valeur (plus de jeton)
+    d.innerHTML=`<span class="ft" style="color:${tk.c}">${tk.t}</span>`;   // étiquette : juste la valeur (taille uniforme)
     d.title=`${t.name} — ${t.desc}`;
     d.onclick=()=>openInspect('tarot',i);
     wrap.appendChild(d);
