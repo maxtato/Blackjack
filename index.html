@@ -486,10 +486,10 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .stat.goal .v.warn{animation:warnPulse .62s ease-in-out infinite}
 /* EFFECTS fan (blocs + ombre carte) */
 /* on réserve toujours la hauteur d'une rangée de cartes (tarots/reliques) : le tapis ne se décale plus quand elles arrivent */
-#effects{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:7px;min-height:40px;padding:6px 6px}
+#effects{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:5px;min-height:40px;padding:6px 5px}
 #relicRow,#consumeRow,#relics,#consumes{display:contents!important}
 /* effets & tarots = étiquettes (plus de jetons) : juste la valeur, toutes de taille identique */
-#effects .joker,#effects .tarot{position:relative;cursor:pointer;background:#1b1c21;clip-path:var(--pc);width:78px;height:34px;box-sizing:border-box;padding:0 6px;display:flex;align-items:center;justify-content:center;box-shadow:2px 3px 0 rgba(0,0,0,.42);animation:cardLife 4.4s ease-in-out infinite;transform-origin:center}
+#effects .joker,#effects .tarot{position:relative;cursor:pointer;background:#1b1c21;clip-path:var(--pc);width:62px;min-width:62px;flex:0 0 62px;height:32px;box-sizing:border-box;padding:0 4px;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:2px 3px 0 rgba(0,0,0,.42);animation:cardLife 4.4s ease-in-out infinite;transform-origin:center}
 #effects .tarot{animation-duration:4.8s}
 #effects .joker.hot{box-shadow:2px 3px 0 rgba(0,0,0,.42),0 0 0 2px var(--yellow)}
 /* JETON pixel : ombre dure (disque décalé) + disque accent (contour fin --disc) + 12 crans crème + intérieur noir — réutilisable (plateau + panneau) */
@@ -517,7 +517,7 @@ h2,.score .v,.box .v,.zlbl .v,#multPop .m,.overlay h1,.pp,.pstate,.statline b,.c
 .joker .chpo,.joker .chpl{background:#fff0a8}
 .tarot .chpo,.tarot .chpl{background:#e6d2ff}
 /* texte borné au centre noir : max-width sous le diamètre du centre → n'empiète jamais sur le liseret intérieur */
-#effects .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:13px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000;white-space:nowrap}
+#effects .ft{position:relative;z-index:6;font-family:'Jersey 15',monospace;font-weight:700;font-size:12px;line-height:1;text-align:center;text-shadow:1px 1px 0 #000;white-space:nowrap}
 #effects .ft small{font-size:.72em;font-weight:700;margin-left:.2em}
 #effects .joker:nth-child(2n){animation-delay:-1.5s}#effects .joker:nth-child(3n){animation-delay:-2.9s}
 #effects .joker .ic{font-size:18px}#effects .joker .nm{font-size:7px}
@@ -1932,6 +1932,19 @@ function renderObjective(){
 function fanEffects(){
   // étiquettes : simple rangée (plus d'éventail de jetons)
   document.querySelectorAll('#effects .joker,#effects .tarot').forEach(el=>{el.style.translate='';el.style.rotate='';el.style.zIndex='';});
+  fitLabelText();
+}
+/* réduit la valeur d'une étiquette si elle dépasse la largeur fixe (garde des tags identiques, sans coupe) */
+function fitLabelText(){
+  document.querySelectorAll('#effects .ft').forEach(ft=>{
+    const box=ft.parentElement;if(!box)return;
+    const avail=box.clientWidth-8;if(avail<=0)return;
+    ft.style.fontSize='';let fs=parseFloat(getComputedStyle(ft).fontSize)||12,g=0;
+    while(ft.scrollWidth>avail&&fs>7&&g<40){fs-=0.5;ft.style.fontSize=fs+'px';g++;}
+  });
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{
+    document.querySelectorAll('#effects .ft').forEach(ft=>{const box=ft.parentElement;if(!box)return;const avail=box.clientWidth-8;if(avail<=0)return;let fs=parseFloat(getComputedStyle(ft).fontSize)||12,g=0;while(ft.scrollWidth>avail&&fs>7&&g<40){fs-=0.5;ft.style.fontSize=fs+'px';g++;}});
+  });
 }
 /* jeton : disque + 12 crans crème (répartis à 30°) + intérieur noir — même markup partout */
 /* 12 crans crème : rayon calculé cran par cran pour que le COIN le plus externe
