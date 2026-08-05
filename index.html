@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -789,6 +789,16 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 #restartBtn span{position:relative;z-index:1}
 #restartBtn:hover{opacity:.9}
 #restartBtn:active{transform:translate(1px,2px)}
+/* ===== PARAMÈTRES : bouton d'accès (menu principal) + panneau ===== */
+#setBtn0{position:absolute;top:12px;left:12px;width:30px;height:30px;z-index:5;background:var(--teal);color:var(--teal);border:none;clip-path:var(--rc);font-family:'Jersey 15',monospace;font-weight:700;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.45))}
+#setBtn0::before{content:"";position:absolute;inset:2px;background:var(--panelDk2,#1b1c21);clip-path:var(--rc);z-index:0}
+#setBtn0 span{position:relative;z-index:1}
+#setBtn0:active{transform:translate(1px,2px)}
+.setRow{display:flex;flex-direction:column;gap:9px;margin-bottom:18px;text-align:left}
+.setLbl{font-size:11px;letter-spacing:.12em;color:var(--muted)}
+.setOpts{display:flex;gap:9px;flex-wrap:wrap}
+.setOpts .btn{flex:1;min-width:120px;height:46px;display:flex;align-items:center;justify-content:center;font-size:14px;padding:0 9px;background:var(--panelDk2);color:var(--paper)}
+.setOpts .btn.on{background:var(--gold);color:#3a2a00}
 
 /* petit jeton de revenu (pourboire/mécène) en début de main, en haut à droite du tapis */
 #turnPop{position:absolute;inset:0;pointer-events:none;z-index:7;font-family:'Jersey 15',monospace;image-rendering:pixelated}
@@ -942,26 +952,26 @@ small.sym{margin-left:0!important}
 <div id="shaker">
 <div id="app">
   <header id="topbar">
-    <div class="tname"><div class="tncol"><span id="tableName">Arrière-salle</span><span class="tmeta" id="tableMeta"></span><span class="rule" id="ruleText"></span></div><div class="thead-right"><button id="pauseBtn" onclick="openPause()" title="Pause" aria-label="Pause">II</button><div id="lives" class="lives" title="Vies (secondes chances)"></div></div></div>
+    <div class="tname"><div class="tncol"><span id="tableName">Back Room</span><span class="tmeta" id="tableMeta"></span><span class="rule" id="ruleText"></span></div><div class="thead-right"><button id="pauseBtn" onclick="openPause()" data-i18n-title="ui.pause" aria-label="Pause">II</button><div id="lives" class="lives" data-i18n-title="ui.lives"></div></div></div>
     <div class="tstats">
       <div class="stat turnstat" id="turnStat">
         <span class="tnum" id="turnNum">4</span>
         <span class="tcol">
-          <span class="tt">TOURS<br>RESTANTS</span>
-          <span class="ts">main <span id="mainNum">1</span>/<span id="mainMax">4</span></span>
+          <span class="tt" data-i18n-html="ui.turnsLeft">TURNS<br>LEFT</span>
+          <span class="ts"><span id="handWord">hand</span> <span id="mainNum">1</span>/<span id="mainMax">4</span></span>
           <span class="tpips" id="turnPips"></span>
         </span>
       </div>
       <div id="scorebox">
-        <span class="seg chips"><b class="k">MISE</b><span class="v" id="chipsVal">10</span></span>
-        <span class="seg mult"><b class="k">MULT</b><span class="v" id="multVal">×1</span></span>
+        <span class="seg chips"><b class="k" data-i18n="ui.bet">BET</b><span class="v" id="chipsVal">10</span></span>
+        <span class="seg mult"><b class="k" data-i18n="ui.mult">MULT</b><span class="v" id="multVal">×1</span></span>
       </div>
-      <div class="stat gainstat" id="gainStat"><span class="lbl">GAIN</span><span class="v" id="gainVal">50 $</span></div>
+      <div class="stat gainstat" id="gainStat"><span class="lbl" data-i18n="ui.gain">CASH</span><span class="v" id="gainVal">$50</span></div>
     </div>
     <div id="objWrap">
       <div id="objBar"><div id="objFill"></div></div>
       <div id="objTick"></div>
-      <span id="objGoal">0 $</span>
+      <span id="objGoal">$0</span>
     </div>
   </header>
 
@@ -975,31 +985,31 @@ small.sym{margin-left:0!important}
   <div id="stage">
     <div id="table">
       <div id="felt">
-        <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">BARAKA</span><span id="pPct"></span></span></div>
+        <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">STREAK</span><span id="pPct"></span></span></div>
         <div id="feltDeco"></div>
         <div id="turnPop"></div>
         <div id="feltInner">
           <div id="feltMark">21</div>
           <div id="multPop"><div class="burst"></div><span class="m"></span><span class="t"></span></div>
-          <div id="recPop"><span class="rm">★ NOUVEAU RECORD ★</span><span class="rt"></span></div>
+          <div id="recPop"><span class="rm" data-i18n="rec.banner">★ NEW RECORD ★</span><span class="rt"></span></div>
           <div class="zone">
-            <div class="zlbl">Croupier<span class="v" id="dVal">—</span></div>
+            <div class="zlbl"><span data-i18n="ui.dealer">Dealer</span><span class="v" id="dVal">—</span></div>
             <div class="hand" id="dHand"></div>
           </div>
           <div id="center"><div id="tip"></div><div id="comboRow"></div></div>
           <div class="zone">
-            <div class="zlbl">Toi<span class="v" id="pVal">—</span></div>
+            <div class="zlbl"><span data-i18n="ui.you">You</span><span class="v" id="pVal">—</span></div>
             <div class="hand" id="pHand"></div>
           </div>
         </div>
       </div>
-      <button id="peekBtn" onclick="usePeek()" title="Lis la prochaine carte du sabot">VOIR</button>
+      <button id="peekBtn" onclick="usePeek()" data-i18n-title="ui.peekTitle" data-i18n="ui.peek">PEEK</button>
     </div>
   </div>
   </div>
 
   <footer id="bottombar">
-    <div id="betRow"><span class="lbl">MISE</span><div id="chips"></div><span class="lbl spacer" aria-hidden="true">MISE</span></div>
+    <div id="betRow"><span class="lbl" data-i18n="ui.bet">BET</span><div id="chips"></div><span class="lbl spacer" aria-hidden="true" data-i18n="ui.bet">BET</span></div>
     <div id="actions"></div>
   </footer>
 
@@ -1010,12 +1020,13 @@ small.sym{margin-left:0!important}
 <!-- MENU PRINCIPAL (choix du mode) -->
 <div class="overlay show" id="modeMenu">
   <div class="ovpanel">
-    <button id="rulesBtn0" onclick="openRules()" title="Règles du jeu" aria-label="Règles"><span>i</span></button>
+    <button id="rulesBtn0" onclick="openRules()" data-i18n-title="planque.rulesTitle" aria-label="Rules"><span>i</span></button>
+    <button id="setBtn0" onclick="openSettings()" data-i18n-title="set.btnTitle" aria-label="Settings"><span>⚙</span></button>
     <h1 class="win menuTitle" style="letter-spacing:.04em">COLD DECK</h1>
-    <p>Choisis ton mode de jeu. Chaque mode a <b>sa Planque</b> et sa <b>réputation</b>.</p>
+    <p data-i18n-html="menu.sub"></p>
     <div class="shopBtns" style="flex-direction:column;gap:12px;margin-top:8px">
-      <button class="btn b-gold menu" onclick="chooseMode('nuit')" style="width:100%">LA TOURNÉE<small id="menuTourneeSub">24 tables · une fin · reliques &amp; tarots</small></button>
-      <button class="btn b-purple menu" onclick="chooseMode('infini')" style="width:100%">SANS FIN<small>blackjack pur · monte les paliers</small></button>
+      <button class="btn b-gold menu" onclick="chooseMode('nuit')" style="width:100%"><span id="menuCircuit">THE CIRCUIT</span><small id="menuTourneeSub"></small></button>
+      <button class="btn b-purple menu" onclick="chooseMode('infini')" style="width:100%"><span data-i18n="menu.endless">ENDLESS</span><small data-i18n="menu.endlessSub"></small></button>
     </div>
     <div class="menuRecs" id="menuRecords"></div>
   </div>
@@ -1024,32 +1035,32 @@ small.sym{margin-left:0!important}
 <!-- LA PLANQUE (hub, propre au mode choisi) -->
 <div class="overlay" id="intro">
   <div class="ovpanel">
-    <button id="restartBtn" onclick="restartAll()" title="Recommencer ce mode (perd la réputation du mode)" aria-label="Recommencer"><span>↺</span></button>
-    <button id="rulesBtn" onclick="openRules()" title="Règles du jeu" aria-label="Règles"><span>i</span></button>
-    <div class="planqueMode nuit" id="planqueMode"><i class="pxi pxi-flag"></i> LA TOURNÉE</div>
-    <h1 class="win" id="planqueTitle">LA PLANQUE</h1>
-    <p id="planqueSub">Dépense ta <b>réputation</b> en avantages permanents, puis repars.</p>
+    <button id="restartBtn" onclick="restartAll()" data-i18n-title="planque.restartTitle" aria-label="Restart"><span>↺</span></button>
+    <button id="rulesBtn" onclick="openRules()" data-i18n-title="planque.rulesTitle" aria-label="Rules"><span>i</span></button>
+    <div class="planqueMode nuit" id="planqueMode"><i class="pxi pxi-flag"></i> THE CIRCUIT</div>
+    <h1 class="win" id="planqueTitle">THE HIDEOUT</h1>
+    <p id="planqueSub"></p>
     <div id="palierResume" style="display:none"></div>
     <div class="repBar">
-      <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl">réputation</span></div>
-      <div class="recBox" id="recBox">RECORD<br><span style="white-space:nowrap"><b>0 tables</b> · <b>0 $</b></span></div>
+      <div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl" data-i18n="planque.rep">reputation</span></div>
+      <div class="recBox" id="recBox"></div>
     </div>
-    <button class="btn b-purple menu" id="upgradesBtn" onclick="openUpgrades()" style="margin-bottom:18px">AMÉLIORATIONS<small id="upgradesSub">avantages permanents</small></button>
-    <div class="backPick"><div class="bpLabel">DOS DE CARTE</div>
+    <button class="btn b-purple menu" id="upgradesBtn" onclick="openUpgrades()" style="margin-bottom:18px"><span data-i18n="planque.upgrades">UPGRADES</span><small id="upgradesSub"></small></button>
+    <div class="backPick"><div class="bpLabel" data-i18n="planque.back">CARD BACK</div>
       <div class="bpCurrent">
-        <button class="bpArrow" id="bpPrev" onclick="stepBack(-1)" aria-label="Dos précédent"><span class="ar" style="--o:-.8px">◀</span></button>
+        <button class="bpArrow" id="bpPrev" onclick="stepBack(-1)" data-i18n-title="planque.prevBack" aria-label="Previous back"><span class="ar" style="--o:-.8px">◀</span></button>
         <div class="bpPrevWrap">
           <div class="card back bpCard" id="bpPreview"><i class="bpat"></i></div>
-          <div class="bpNum" id="bpSub">modèle 1 / 12</div>
+          <div class="bpNum" id="bpSub"></div>
         </div>
-        <button class="bpArrow" id="bpNext" onclick="stepBack(1)" aria-label="Dos suivant"><span class="ar" style="--o:.8px;--d:.14s">▶</span></button>
-        <button class="bpAll" onclick="openBacks()">tout voir ▸</button>
+        <button class="bpArrow" id="bpNext" onclick="stepBack(1)" data-i18n-title="planque.nextBack" aria-label="Next back"><span class="ar" style="--o:.8px;--d:.14s">▶</span></button>
+        <button class="bpAll" onclick="openBacks()" data-i18n="planque.seeAll">see all ▸</button>
       </div>
     </div>
     <div class="shopBtns" style="gap:10px;margin-top:2px">
-      <button class="btn b-teal menu" onclick="openMenu()" style="flex:0 0 auto">← MENU</button>
-      <button class="btn b-gold menu" id="planqueLaunch" onclick="launchMode()" style="flex:1">COMMENCER<small>la tournée · 24 tables</small></button>
-      <button class="btn b-red menu" id="planqueZ2" onclick="startGame(3)" style="flex:0 0 auto;display:none">ZONE 2<small>raccourci</small></button>
+      <button class="btn b-teal menu" onclick="openMenu()" style="flex:0 0 auto" data-i18n="planque.menu">← MENU</button>
+      <button class="btn b-gold menu" id="planqueLaunch" onclick="launchMode()" style="flex:1"></button>
+      <button class="btn b-red menu" id="planqueZ2" onclick="startGame(3)" style="flex:0 0 auto;display:none"><span data-i18n="planque.zone2">ZONE 2</span><small data-i18n="planque.zone2Sub"></small></button>
     </div>
   </div>
 </div>
@@ -1057,44 +1068,32 @@ small.sym{margin-left:0!important}
 <!-- RÈGLES DÉTAILLÉES -->
 <div class="overlay" id="rulesScreen">
   <div class="ovpanel">
-    <h1 class="win" style="font-size:22px">RÈGLES</h1>
-    <div class="rules">
-      <div><span class="rt">BUT</span>Bats le croupier à chaque main sans dépasser <span class="k">21</span>. Une figure vaut 10, l'As vaut 1 ou 11.</div>
-      <div><span class="rt">LA TABLE</span>Joue <span class="k">toutes les mains imposées</span>, mise dans la <span class="k">limite</span> (min–max fixe), et atteins l'<span class="k">objectif de gain</span> avant la dernière main. Sous l'objectif = table perdue.</div>
-      <div><span class="rt">TES COUPS</span><span class="k">TIRER</span> une carte, <span class="k">RESTER</span> sur ta main, ou <span class="k">FORCER LA CHANCE</span> (2 cartes, on garde la meilleure · 1×/table).</div>
-      <div><span class="rt"><i class="pxstar"></i> ÉTOILES</span>Chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Plus tu en décroches, plus ta <span class="k">réputation</span> grimpe.</div>
-      <div><span class="rt">BARAKA</span>Ta barre de <span class="k">veine</span> monte à chaque victoire (<span class="k">coup culotté = +2</span>) et débloque des <span class="k">multiplicateurs</span> de plus en plus forts. Perdre une main la <span class="d">remet à zéro</span>.</div>
-      <div><span class="rt">COMBOS</span>Le vrai jeu : <span class="k">construis</span> tes mains, ne te contente pas de battre le croupier.<br><span class="k">21 PARFAIT ×3</span> · <span class="k">CHARLIE</span> (5 cartes) ×2 · <span class="k">COULEUR</span> (3+ même enseigne) ×2 · <span class="k">SUITE</span> (3+ rangs qui se suivent) ×2 · BLACKJACK ×1.5 · PAIRE DE 7 ×1.5 · ARC-EN-CIEL (4 enseignes) ×1.5.<br>Les pastilles sur le tapis montrent ce qui est acquis et à portée.</div>
-      <div><span class="rt">PETITS BONUS</span>Des coups de pouce au multiplicateur selon la situation : <span class="k">COUR</span> (2+ figures) ×1.5 · <span class="k">FILOU</span> (gagner avec ≤15) ×1.5 · <span class="k">AU POIL</span> (battre le croupier d'un point) ×1.5 · <span class="k">CLUTCH</span> (dernière main) ×1.5 · <span class="k">REMONTADA</span> (parti ≤11, fini ≥17) ×1.3.</div>
-      <div><span class="rt"><i class="pxi pxi-scroll"></i> CONTRATS</span>Chaque table propose un <span class="k">défi optionnel</span> (« gagne une main de 5 cartes »…) qui rapporte des <span class="k">★ bonus</span>. Rempli ou non, la table continue normalement.</div>
-      <div><span class="rt">LA TOURNÉE</span><span class="k">24 tables · 8 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">continuer</span> pour plus gros. Atteins la <span class="k">zone 2</span> deux fois pour débloquer le <span class="k">raccourci</span>.</div>
-      <div><span class="rt">LA PLANQUE</span>Dépense ta <span class="k">réputation <i class="pxstar"></i></span> en avantages permanents (reliques, tarots, éditions) avant de repartir.</div>
-      <div><span class="rt">SANS FIN</span>Pas d'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · toutes les 5 mains, une <span class="d">main spéciale</span>. <span class="k">ENCAISSER</span> convertit ta cagnotte en réputation — la <span class="d">banqueroute</span> ne garde que les paliers.</div>
-    </div>
-    <button class="btn b-gold menu" onclick="closeRules()">FERMER</button>
+    <h1 class="win" style="font-size:22px" data-i18n="rules.title">RULES</h1>
+    <div class="rules" id="rulesBody"></div>
+    <button class="btn b-gold menu" onclick="closeRules()" data-i18n="rules.close">CLOSE</button>
   </div>
 </div>
 
 <!-- AMÉLIORATIONS (déblocages permanents, sortis de La Planque pour ne pas la saturer) -->
 <div class="overlay" id="upgradesScreen">
   <div class="ovpanel">
-    <h1 class="win" style="font-size:22px">AMÉLIORATIONS</h1>
-    <p id="upgradesLead" style="margin-top:-2px">Dépense ta <b>réputation</b> en avantages permanents.</p>
+    <h1 class="win" style="font-size:22px" data-i18n="upg.title">UPGRADES</h1>
+    <p id="upgradesLead" style="margin-top:-2px"></p>
     <div class="repBar" style="margin-bottom:14px">
-      <div class="repBig"><span class="repNum" id="repBal2">0</span><span class="repLbl">réputation</span></div>
+      <div class="repBig"><span class="repNum" id="repBal2">0</span><span class="repLbl" data-i18n="planque.rep">reputation</span></div>
     </div>
     <div class="shopItems" id="unlockItems"></div>
-    <button class="btn b-gold menu" onclick="closeUpgrades()">FERMER</button>
+    <button class="btn b-gold menu" onclick="closeUpgrades()" data-i18n="rules.close">CLOSE</button>
   </div>
 </div>
 
 <!-- DOS DE CARTE (galerie complète, sortie de La Planque pour ne pas la saturer) -->
 <div class="overlay" id="backPickScreen">
   <div class="ovpanel">
-    <h1 class="win" style="font-size:22px">DOS DE CARTE</h1>
-    <p style="margin-top:-2px">Choisis l'habillage du dos de tes cartes.</p>
+    <h1 class="win" style="font-size:22px" data-i18n="backs.title">CARD BACK</h1>
+    <p style="margin-top:-2px" data-i18n="planque.backLead"></p>
     <div class="bpRow" id="bpRow"></div>
-    <button class="btn b-gold menu" onclick="closeBacks()" style="margin-top:22px">FERMER</button>
+    <button class="btn b-gold menu" onclick="closeBacks()" style="margin-top:22px" data-i18n="rules.close">CLOSE</button>
   </div>
 </div>
 
@@ -1109,11 +1108,11 @@ small.sym{margin-left:0!important}
 <!-- CONFIRMATION RECOMMENCER -->
 <div class="overlay" id="confirmRestart">
   <div class="ovpanel" style="max-width:360px;text-align:center">
-    <h1 class="dead" style="font-size:21px">RECOMMENCER ?</h1>
-    <p>Êtes-vous sûr de vouloir <b>recommencer la progression de ce mode</b> ?<br>Tu perds la <b>réputation</b>, les <b>déblocages</b> et le <b>record</b> de ce mode uniquement.</p>
+    <h1 class="dead" style="font-size:21px" data-i18n="rst.title">RESTART?</h1>
+    <p data-i18n-html="rst.text"></p>
     <div class="shopBtns" style="margin-top:14px;gap:9px">
-      <button class="btn b-teal" onclick="closeRestart()" style="flex:1">ANNULER</button>
-      <button class="btn b-red" onclick="doRestart()" style="flex:1">RECOMMENCER</button>
+      <button class="btn b-teal" onclick="closeRestart()" style="flex:1" data-i18n="rst.cancel">CANCEL</button>
+      <button class="btn b-red" onclick="doRestart()" style="flex:1" data-i18n="rst.ok">RESTART</button>
     </div>
   </div>
 </div>
@@ -1121,13 +1120,14 @@ small.sym{margin-left:0!important}
 <!-- PAUSE -->
 <div class="overlay" id="pauseScreen">
   <div class="ovpanel" style="max-width:340px;text-align:center">
-    <h1 class="win" style="font-size:30px">PAUSE</h1>
-    <p style="margin-bottom:16px">La partie est en attente.</p>
+    <h1 class="win" style="font-size:30px" data-i18n="pause.title">PAUSE</h1>
+    <p style="margin-bottom:16px" data-i18n="pause.sub"></p>
     <div class="shopBtns" style="flex-direction:column;gap:10px">
-      <button class="btn b-teal menu" onclick="resumeGame()" style="width:100%">REPRENDRE</button>
-      <button class="btn b-gold menu" id="pauseCash" onclick="cashOutEndless(false)" style="width:100%;display:none">ENCAISSER<small>convertit ta cagnotte en réputation</small></button>
-      <button class="btn b-purple menu" onclick="pauseRules()" style="width:100%">RÈGLES</button>
-      <button class="btn b-blue menu" onclick="quitToMenu()" style="width:100%">RETOUR AU MENU<small>abandonne la partie · tu encaisses ta réputation</small></button>
+      <button class="btn b-teal menu" onclick="resumeGame()" style="width:100%" data-i18n="pause.resume">RESUME</button>
+      <button class="btn b-gold menu" id="pauseCash" onclick="cashOutEndless(false)" style="width:100%;display:none"></button>
+      <button class="btn b-purple menu" onclick="pauseRules()" style="width:100%" data-i18n="pause.rules">RULES</button>
+      <button class="btn b-teal menu" onclick="pauseSettings()" style="width:100%" data-i18n="set.open">⚙ SETTINGS</button>
+      <button class="btn b-blue menu" onclick="quitToMenu()" style="width:100%"><span data-i18n="pause.menu">BACK TO MENU</span><small data-i18n="pause.menuSub"></small></button>
     </div>
   </div>
 </div>
@@ -1135,8 +1135,8 @@ small.sym{margin-left:0!important}
 <!-- PALIER (mode infini) -->
 <div class="overlay" id="palierScreen">
   <div class="ovpanel" style="max-width:360px;text-align:center">
-    <h1 class="win" style="font-size:26px">PALIER <span id="palierNum">1</span></h1>
-    <p style="margin-bottom:16px">Choisis une <b>possibilité</b> pour la suite.</p>
+    <h1 class="win" style="font-size:26px"><span data-i18n="pal.title">TIER</span> <span id="palierNum">1</span></h1>
+    <p style="margin-bottom:16px" data-i18n-html="pal.sub"></p>
     <div class="shopBtns" id="palierBoons" style="flex-direction:column;gap:10px"></div>
   </div>
 </div>
@@ -1144,17 +1144,17 @@ small.sym{margin-left:0!important}
 <!-- SHOP -->
 <div class="overlay" id="shop">
   <div class="ovpanel">
-    <h1 class="win" id="shopTitle" style="font-size:23px">TABLE FRANCHIE</h1>
+    <h1 class="win" id="shopTitle" style="font-size:23px">TABLE CLEARED</h1>
     <div id="shopStars" style="font-size:24px;letter-spacing:.18em;color:var(--gold);text-align:center;margin:-2px 0 6px"></div>
-    <p>Table <b id="shopDepth">1</b> tenue · <b id="shopBank">0</b> $ en poche · cagnotte <b><i class="pxstar"></i><span id="shopPot">0</span></b> <span style="color:var(--muted)">(+<span id="shopReward">0</span> <i class="pxstar"></i>)</span></p>
+    <p id="shopSub"></p>
     <p id="shopGate" style="font-size:12px;color:var(--muted);margin-top:-4px"></p>
     <div id="shopNextObj" style="font-size:13px;color:var(--cream);background:var(--panelDk2);clip-path:var(--pc);padding:8px 12px;margin:2px 0 9px;text-align:center"></div>
     <div class="shopItems" id="shopItems"></div>
     <div class="shopBtns" style="margin-bottom:9px">
-      <button class="btn b-teal" id="rerollBtn" onclick="rerollShop()" style="flex:0 0 auto;font-size:13px;padding:11px 14px">RELANCER</button>
-      <button class="btn b-gold" id="cashBtn" onclick="cashOut()" style="flex:1;font-size:14px">ENCAISSER</button>
+      <button class="btn b-teal" id="rerollBtn" onclick="rerollShop()" style="flex:0 0 auto;font-size:13px;padding:11px 14px">REROLL</button>
+      <button class="btn b-gold" id="cashBtn" onclick="cashOut()" style="flex:1;font-size:14px">CASH OUT</button>
     </div>
-    <button class="btn b-blue menu" id="shopNextBtn" onclick="leaveShop()" style="width:100%">TABLE SUIVANTE →<small><span id="shopNext">0</span></small></button>
+    <button class="btn b-blue menu" id="shopNextBtn" onclick="leaveShop()" style="width:100%"></button>
   </div>
 </div>
 
@@ -1163,8 +1163,8 @@ small.sym{margin-left:0!important}
   <div class="ovpanel">
     <h1 id="loseTitle" class="dead"></h1>
     <p id="loseText"></p>
-    <button class="btn b-gold menu" id="retryBtn" onclick="retryTable()" style="width:100%;margin-bottom:9px">SECONDE CHANCE</button>
-    <button class="btn b-blue" id="giveupBtn" onclick="giveUp()" style="width:100%">ABANDONNER</button>
+    <button class="btn b-gold menu" id="retryBtn" onclick="retryTable()" style="width:100%;margin-bottom:9px">SECOND CHANCE</button>
+    <button class="btn b-blue" id="giveupBtn" onclick="giveUp()" style="width:100%">GIVE UP</button>
   </div>
 </div>
 
@@ -1174,13 +1174,499 @@ small.sym{margin-left:0!important}
     <h1 id="endTitle"></h1>
     <p id="endText"></p>
     <div class="runstats" id="endStats"></div>
-    <button class="btn b-gold menu" onclick="toPlanque()">RETOUR À LA PLANQUE</button>
+    <button class="btn b-gold menu" onclick="toPlanque()" data-i18n="end.back">BACK TO THE HIDEOUT</button>
+  </div>
+</div>
+
+<!-- PARAMÈTRES / SETTINGS -->
+<div class="overlay" id="settingsScreen">
+  <div class="ovpanel" style="max-width:360px;text-align:center">
+    <h1 class="win" style="font-size:26px" data-i18n="set.title">SETTINGS</h1>
+    <div class="setRow">
+      <span class="setLbl" data-i18n="set.lang">LANGUAGE</span>
+      <div class="setOpts" id="langOpts"></div>
+    </div>
+    <button class="btn b-gold menu" onclick="closeSettings()" style="width:100%" data-i18n="set.close">CLOSE</button>
   </div>
 </div>
 
 <script>
 /* ============================================================
-   TABLE 21 — moteur (identique) + présentation Balatro
+   LANGUES — tous les textes affichés vivent ici (en / fr).
+   Ils sont résolus AU RENDU : changer de langue dans les
+   paramètres met toute l'interface à jour, même en pleine main.
+   Les valeurs sont soit des chaînes, soit des fonctions
+   d'interpolation, soit des tableaux (mots tirés au hasard).
+   Les nombres/monnaies arrivent DÉJÀ formatés (voir cash()).
+   ============================================================ */
+const LANGS=[{id:'en',label:'ENGLISH'},{id:'fr',label:'FRANÇAIS'}];
+const STR={
+en:{
+/* --- chrome de jeu --- */
+'ui.turnsLeft':'TURNS<br>LEFT','ui.hand':(a,b)=>'hand '+a+'/'+b,
+'ui.bet':'BET','ui.mult':'MULT','ui.gain':'CASH','ui.potLbl':'POT',
+'ui.dealer':'Dealer','ui.you':'You','ui.peek':'PEEK','ui.peekTitle':'Read the next card in the shoe',
+'ui.pause':'Pause','ui.lives':'Lives (second chances)','ui.streak':'STREAK',
+'ui.lvl':(l,m)=>'· LV '+l+' ×'+m,'ui.relics':'relics',
+'ui.next':c=>'NEXT: '+c,'ui.bustRisk':p=>'BUST RISK: '+p+'%',
+/* --- menu principal --- */
+'menu.sub':'Pick your game mode. Each one has <b>its own Hideout</b> and <b>reputation</b>.',
+'menu.circuit':'THE CIRCUIT','menu.circuitSub':n=>n+' tables · one ending · relics & tarots',
+'menu.endless':'ENDLESS','menu.endlessSub':'pure blackjack · climb the tiers',
+'menu.recTables':d=>'best '+d+' table'+(d===1?'':'s'),'menu.recTier':p=>'best tier '+p,
+/* --- La Planque --- */
+'planque.title':'THE HIDEOUT',
+'planque.subCircuit':'Spend your <b>reputation</b> on permanent perks, then head out for a new <b>circuit</b>.',
+'planque.subInf':'Upgrade your <b>pot</b> with your <b>reputation</b>, then dive back in.',
+'planque.modeCircuit':'THE CIRCUIT','planque.modeInf':'∞ ENDLESS',
+'planque.rep':'reputation','planque.best':'BEST',
+'planque.tables':d=>d+' table'+(d===1?'':'s'),'planque.tierN':p=>'tier '+p,
+'planque.upgrades':'UPGRADES','planque.upgradesSub':'permanent perks',
+'planque.allMax':'all maxed','planque.avail':n=>n+' available',
+'planque.leadCircuit':'Spend your <b>reputation</b> on permanent perks.',
+'planque.leadInf':'Strengthen your <b>pot</b> with your <b>reputation</b>.',
+'planque.back':'CARD BACK','planque.backSub':(i,n)=>'design '+i+' / '+n,
+'planque.backLead':'Pick the artwork on the back of your cards.',
+'planque.seeAll':'see all ▸','planque.menu':'← MENU','planque.start':'START',
+'planque.startInf':'endless · pure blackjack','planque.startResume':n=>'resume · table '+n,
+'planque.startCircuit':n=>'the circuit · '+n+' tables',
+'planque.zone2':'ZONE 2','planque.zone2Sub':'shortcut',
+'planque.resumeTable':'RESUME AT','planque.resumeTier':'RESUME AT',
+'planque.tierLabel':n=>'Tier '+n,'planque.tableLabel':n=>'Table '+n,
+'planque.max':'MAX','planque.prevBack':'Previous back','planque.nextBack':'Next back',
+'planque.restartTitle':'Restart this mode (loses the mode’s reputation)','planque.rulesTitle':'Game rules',
+/* --- paramètres --- */
+'set.title':'SETTINGS','set.open':'⚙ SETTINGS','set.lang':'LANGUAGE','set.close':'CLOSE','set.btnTitle':'Settings',
+/* --- règles --- */
+'rules.title':'RULES','rules.close':'CLOSE',
+'rules.goal':'<span class="rt">GOAL</span>Beat the dealer on every hand without going over <span class="k">21</span>. Face cards are worth 10, an Ace is 1 or 11.',
+'rules.table':'<span class="rt">THE TABLE</span>Play <span class="k">every required hand</span>, bet within the <span class="k">limits</span> (fixed min–max), and reach the <span class="k">cash goal</span> before the last hand. Below the goal = table lost.',
+'rules.moves':'<span class="rt">YOUR MOVES</span><span class="k">HIT</span> for a card, <span class="k">STAND</span> on your hand, or <span class="k">FORCE YOUR LUCK</span> (2 cards, keep the best · 1×/table).',
+'rules.stars':'<span class="rt"><i class="pxstar"></i> STARS</span>Every table awards them based on your result: <span class="k">goal</span> · <span class="k">comfort</span> · <span class="k">mastery</span>. The more you take, the higher your <span class="k">reputation</span> climbs.',
+'rules.streak':'<span class="rt">STREAK</span>Your <span class="k">luck</span> bar rises with every win (<span class="k">gutsy play = +2</span>) and unlocks stronger and stronger <span class="k">multipliers</span>. Losing a hand <span class="d">wipes it out</span>.',
+'rules.combos':'<span class="rt">COMBOS</span>The real game: <span class="k">build</span> your hands, don’t just beat the dealer.<br><span class="k">PERFECT 21 ×3</span> · <span class="k">CHARLIE</span> (5 cards) ×2 · <span class="k">FLUSH</span> (3+ same suit) ×2 · <span class="k">STRAIGHT</span> (3+ ranks in a row) ×2 · BLACKJACK ×1.5 · PAIR OF 7s ×1.5 · RAINBOW (4 suits) ×1.5.<br>The pills on the felt show what you already have and what’s within reach.',
+'rules.bonus':'<span class="rt">SMALL BONUSES</span>Situational nudges to the multiplier: <span class="k">COURT</span> (2+ face cards) ×1.5 · <span class="k">LOWBALL</span> (win with ≤15) ×1.5 · <span class="k">BY ONE</span> (beat the dealer by a single point) ×1.5 · <span class="k">CLUTCH</span> (last hand) ×1.5 · <span class="k">COMEBACK</span> (started ≤11, finished ≥17) ×1.3.',
+'rules.contracts':'<span class="rt"><i class="pxi pxi-scroll"></i> CONTRACTS</span>Every table offers an <span class="k">optional challenge</span> (“win a 5-card hand”…) worth <span class="k">bonus ★</span>. Done or not, the table carries on as usual.',
+'rules.circuit':'<span class="rt">THE CIRCUIT</span><span class="k">24 tables · 8 zones · a boss every 3 levels</span>. After a boss: <span class="k">cash in</span> your reputation at the Hideout, or <span class="d">push on</span> for more. Reach <span class="k">zone 2</span> twice to unlock the <span class="k">shortcut</span>.',
+'rules.hideout':'<span class="rt">THE HIDEOUT</span>Spend your <span class="k">reputation <i class="pxstar"></i></span> on permanent perks (relics, tarots, editions) before heading out again.',
+'rules.endless':'<span class="rt">ENDLESS</span>No goal: grow your pot for as long as you can bet. Every <span class="k">tier</span> = a perk of your choice and higher bets · every 5 hands, a <span class="d">special hand</span>. <span class="k">CASH OUT</span> turns your pot into reputation — <span class="d">going bust</span> only keeps the tiers.',
+/* --- améliorations / galerie --- */
+'upg.title':'UPGRADES','backs.title':'CARD BACK',
+/* --- recommencer --- */
+'rst.title':'RESTART?','rst.text':'Are you sure you want to <b>restart this mode’s progress</b>?<br>You lose the <b>reputation</b>, the <b>unlocks</b> and the <b>record</b> of this mode only.',
+'rst.cancel':'CANCEL','rst.ok':'RESTART',
+/* --- pause --- */
+'pause.title':'PAUSE','pause.sub':'The game is on hold.','pause.resume':'RESUME',
+'pause.cash':'CASH OUT','pause.cashSub':'turns your pot into reputation',
+'pause.rules':'RULES','pause.menu':'BACK TO MENU','pause.menuSub':'quit the run · you cash in your reputation',
+/* --- palier (infini) --- */
+'pal.title':'TIER','pal.sub':'Pick a <b>perk</b> for what comes next.',
+'pal.cash':r=>'CASH OUT '+r,'pal.cashSub':'stop here · tier bonus +20 %',
+/* --- boutique --- */
+'shop.title':'TABLE CLEARED','shop.titleBoss':'BOSS DOWN','shop.titleLast':'CASINO CLEANED OUT',
+'shop.sub':(d,b,pot,rew)=>'Table <b>'+d+'</b> held · <b>'+b+'</b> in pocket · pot <b>'+pot+'</b> <span style="color:var(--muted)">(+'+rew+')</span>',
+'shop.total':'total','shop.reroll':c=>'REROLL ('+c+')',
+'shop.cash':'CASH OUT','shop.finish':'FINISH','shop.repSuffix':'rep.',
+'shop.next':'NEXT TABLE →','shop.nextInfo':(n,goal,cap,fee)=>n+' · goal '+goal+' · rec. '+cap+fee,
+'shop.fee':f=>' · entry fee '+f,
+'shop.nextObj':(n,goal,cap)=>'NEXT · <b>'+n+'</b> — goal <b style="color:var(--gold)">'+goal+'</b> · recommended bankroll <b>'+cap+'</b>',
+'shop.feeObj':f=>' · entry <b style="color:var(--red)">'+f+'</b>',
+'shop.gateFee':f=>'More exclusive room — entry fee '+f+'.',
+'shop.gateDone':'You cleared the run. Cash in your reputation.',
+'shop.empty':'Nothing to buy here.','shop.tagService':'✚ SERVICE','shop.tagTarot':'TAROT','shop.tagRelic':'◆ RELIC',
+'shop.full':'FULL','shop.owned':'OWNED',
+/* --- inspection d'un objet --- */
+'insp.tarot':'TAROT TOKEN · single use','insp.relic':'RELIC · permanent effect',
+'insp.use':'USE','insp.sell':v=>'SELL +'+v,'insp.close':'CLOSE','msg.sold':'SOLD',
+/* --- actions --- */
+'act.bet':'BET','act.betSub':b=>'bet '+b,'act.betChoose':'pick your bet','act.handSuffix':(h,m)=>' · hand '+h+'/'+m,
+'act.hit':'HIT','act.hitSub':'+1 card','act.risk':'RISK IT','act.riskSub':'+bonus if you survive',
+'act.stand':'STAND','act.standSub':'keep your hand',
+'act.split':'SPLIT','act.splitSub':'pair · two hands',
+'act.double':'DOUBLE','act.doubleSub':'bet ×2 · one card only',
+'act.force':'FORCE YOUR LUCK','act.forceSub':'keep the best · 1×/table',
+'act.forceUsed':'already used this table','act.forceOff':'2 cards 17-20 · keep the best',
+/* --- messages de jeu --- */
+'msg.notNow':'NOT NOW','msg.notNowSub':'usable during a hand',
+'msg.noCards':'NO CARDS','msg.cant':'CAN’T','msg.keep3':'keep ≥3 cards',
+'msg.slotsFull':'SLOTS FULL','msg.relicsFull':'RELICS FULL','msg.max':n=>n+' max',
+'msg.split':'SPLIT','msg.splitSub':c=>c+' · two hands',
+'msg.hand':n=>'HAND '+n,'msg.handSub':'your turn',
+'msg.doubled':'DOUBLED','msg.doubledSub':'bet ×2 · one card only',
+'msg.forced':'FORCED','msg.kept':c=>'kept '+c,
+'msg.insurance':'INSURANCE','msg.insuranceSub':'loss refunded',
+'msg.talisman':'TALISMAN','msg.talismanSub':'first loss refunded',
+'msg.gutsy':'GUTSY!','msg.gutsySub':n=>'+'+n+' streak',
+'msg.entryFee':'ENTRY FEE','msg.boss':'BOSS','msg.miniboss':'MINI-BOSS',
+'msg.zone':(n,name)=>'ZONE '+n+(name?' — '+name:''),
+'msg.contract':'CONTRACT DONE','msg.income':'INCOME',
+'inc.patron':n=>'Patron +'+n,'inc.shark':n=>'Loan Shark +'+n,'inc.tip':n=>'Tip +'+n,'inc.tier':n=>'Tier +'+n,
+'msg.endlessStart':'ENDLESS','msg.endlessStartSub':'climb as high as you can',
+/* --- multiplicateur / combos --- */
+'m.blackjack':'BLACKJACK','m.perfect':'PERFECT 21','m.charlie':'CHARLIE','m.pair7':'PAIR OF 7s',
+'m.flush':'FLUSH','m.straight':'STRAIGHT','m.rainbow':'RAINBOW','m.pushing':'PUSHING IT',
+'m.streak':l=>'STREAK LV '+l,'m.burner':'BURNER','m.foil':'FOIL','m.holo':'HOLO','m.poly':'POLY',
+'m.foilV':n=>'+'+n+' cash','m.ace':'LOADED ACE','m.cool':'COOL HEAD',
+'m.court':'COURT','m.lowball':'LOWBALL','m.comeback':'COMEBACK','m.clutch':'CLUTCH','m.byone':'BY ONE',
+'m.zonecap':'ZONE CAP','m.golden':'GOLDEN',
+'ed.card':n=>n+' CARD','ed.foil':'+ bonus cash','ed.holo':'+1 to the multiplier','ed.poly':'× multiplier',
+'cb.to21':n=>'PERFECT 21 ×3 · '+n+' away','cb.charlie':'CHARLIE ×2 · +1 card',
+'cb.flush':s=>'FLUSH ×2 · +1 '+s,'cb.rainbow':'RAINBOW ×1.5 · +1 card',
+'cb.pair7':'PAIR OF 7s · draw a 7','cb.straight':'STRAIGHT ×2 · possible',
+'cb.streak':(l,n)=>'STREAK LV '+l+' in '+n,
+/* --- bandeau du haut --- */
+'top.mastery':m=>'mastery ≥'+m,'top.betRange':(a,b)=>'bet '+a+'–'+b,
+'top.stars':n=>n+' star'+(n>1?'s':''),'top.pot':p=>'pot '+p,
+'top.contractDone':'✓ contract done','top.record':v=>'best '+v,
+'top.worth':r=>'worth '+r+' if you stop',
+'top.metaCircuit':(z,zn,i,n)=>'zone '+z+' · '+zn+' · '+i+'/'+n,
+'top.metaInf':(p,a,b)=>'∞ ENDLESS · tier '+p+' · bet '+a+'–'+b,
+/* --- mots de résolution --- */
+'w.jackpot':['JACKPOT!','MEGA!','BOOM!','ON FIRE!'],
+'w.win':['WIN!','YEAH!','BANG!','SMOOTH!','POW!'],
+'w.bj':['BLACKJACK!'],'w.push':['PUSH','TIE'],
+'w.lose':['MISSED!','DANG!','LOST!','OUCH!'],'w.bust':['BUSTED!','BURNED!','TOO HIGH!'],
+'w.betBack':'bet returned',
+'sp.win':'WON','sp.push':'PUSH','sp.lose':'LOST','sp.hand':i=>'Hand '+i+': ',
+/* --- fin de table / de run --- */
+'lost.goal':'GOAL MISSED','lost.goalTxt':m=>'You finish below the table’s cash goal — you were <b style="color:var(--red)">'+m+'</b> short.',
+'lost.broke':'BROKE','lost.brokeTxt':'Not enough left to bet the table minimum.',
+'lose.info':(n,pot)=>'Table <b>'+n+'</b> · Pot: <b>'+pot+'</b>',
+'lose.retry':'SECOND CHANCE','lose.tokens':n=>n+' token'+(n>1?'s':'')+' left',
+'lose.giveup':'GIVE UP','lose.giveupSub':r=>'cash in '+r,
+'endless.bust':'BANKRUPT','endless.bustTxt':'Nothing left to bet. Your pot ends here.',
+'end.cash':'YOU CASH OUT','end.circuitOver':'END OF THE CIRCUIT','end.potGone':'POT WIPED OUT',
+'end.cashTxt':'You walk off with the pot before things turn ugly.',
+'end.halfTxt':'You still leave with half of your pot.',
+'end.infCashTxt':b=>'You turn your pot into reputation'+(b?' — <b style="color:var(--gold)">tier bonus +20 %</b>':'')+'.',
+'end.infStopTxt':'Your dive ends here.',
+'end.missing':(m,prox)=>'<br>You were <b style="color:var(--red)">'+m+'</b> short of the goal'+(prox?' <span style="color:var(--muted)">— proximity bonus '+prox+'</span>':'')+'.',
+'end.infStats':(peak,tier)=>'Best pot: <b style="color:var(--gold)">'+peak+'</b> · Tier reached: <b>'+tier+'</b>',
+'end.stats':(d,b)=>'Tables held: <b>'+d+'</b> · Cash: <b>'+b+'</b>',
+'end.rep':(g,total)=>'Reputation: <b>'+g+'</b>','end.repTotal':t=>' &nbsp;→&nbsp; total <b>'+t+'</b>',
+'end.vault':c=>' <span style="color:var(--muted)">+ vault '+c+'</span>',
+'end.newRecord':'NEW RECORD!',
+'end.recordInf':(tier,peak)=>'Best: tier '+tier+' · '+peak,
+'end.recordCircuit':(d,c)=>'Best: '+d+' table'+(d===1?'':'s')+' · '+c,
+'end.won':'HANDS WON','end.bestGain':'BEST WIN','end.bestMult':'BEST MULT','end.back':'BACK TO THE HIDEOUT',
+'rec.banner':'★ NEW RECORD ★','obj.reached':'GOAL!','obj.validated':'table cleared',
+/* --- tables de la tournée --- */
+'tbl.0':'Back Room','tbl.1':'Jittery Table','tbl.2':'The Bouncer','tbl.3':'Damp Cellar',
+'tbl.4':'Red Parlour','tbl.5':'The Banker','tbl.6':'Ace Pit','tbl.7':'Cursed Table','tbl.8':'The Reaper',
+'tbl.9':'Jade Lounge','tbl.10':'Hushed Table','tbl.11':'The Concierge',
+'tbl.12':'Antechamber','tbl.13':'Vault of Secrets','tbl.14':'The Accountant',
+'tbl.15':'Backroom Den','tbl.16':'Rat Cellar','tbl.17':'The Gravedigger',
+'tbl.18':'Gilded Box','tbl.19':'One-Way Mirror','tbl.20':'The Croupier',
+'tbl.21':'Royal Suite','tbl.22':'Masters’ Room','tbl.23':'THE GODFATHER',
+'zone.1':'Initiation','zone.2':'The Squeeze','zone.3':'Deep Casino','zone.4':'Red Circle',
+'zone.5':'The Vault','zone.6':'The Underbelly','zone.7':'Private Sphere','zone.8':'The Summit',
+'rule.nervous':'Streak builds 2× faster','rule.mute':'Silent dealer',
+'rule.gros':'The dealer hits up to 18','rule.depart':'Table already hot (+30 %)','rule.sec':'A push counts as a loss',
+'rtx.0':'Initiation','rtx.4':'Hushed parlour','rtx.7':'Merciless dealer (18)',
+'rtx.boss':r=>'BOSS · '+r,'rtx.bossFinal':'FINAL BOSS · a push counts as a loss','rtx.bossPlain':'showdown',
+'rtx.entry':f=>'entry fee '+f,'rtx.deep':'Deep room','rtx.endless':'Endless pot',
+'endless.tier':n=>'Tier '+n,
+/* --- reliques --- */
+'relic.lunettes.n':'Glasses','relic.lunettes.d':'Permanent relic. Once per hand, reveals the next card in the shoe before you decide to hit.',
+'relic.jeton.n':'Cracked Chip','relic.jeton.d':'Permanent relic. If you lose a hand with a total of 20, you get half your bet back.',
+'relic.clope.n':'Cigarette','relic.clope.d':'Permanent relic. Your streak builds 30 % faster, all the time.',
+'relic.as.n':'Loaded Ace','relic.as.d':'Permanent relic. When you win a hand containing an Ace: +1 to the multiplier.',
+'relic.froid.n':'Cool Head','relic.froid.d':'Permanent relic. If you win a hand at streak ≥ 75 %: +1 to the multiplier.',
+'relic.compteur.n':'Counter','relic.compteur.d':'Permanent relic. Constantly shows your odds of going over 21 on the next hit.',
+'relic.mecene.n':'Patron','relic.mecene.d':'Permanent relic. +4 free at the start of every hand.',
+'relic.usurier.n':'Loan Shark','relic.usurier.d':'Permanent relic. At the start of every hand: +1 per 5 in the bank (up to +6).',
+'relic.collector.n':'Collector','relic.collector.d':'Permanent relic. Special editions (FOIL/HOLO/POLY) show up 3× more often on your cards.',
+'relic.maitresse.n':'Trump Card','relic.maitresse.d':'Permanent relic. Your first card each hand is FOIL: bonus cash when you win.',
+'relic.bruleur.n':'Burner','relic.bruleur.d':'Permanent relic. If you win a hand at streak ≥ 50 %: hand payout ×1.5.',
+'relic.portebonheur.n':'Lucky Charm','relic.portebonheur.d':'Permanent relic. +1 Tarot token slot (you can hold one more token).',
+'relic.diplomate.n':'Diplomat','relic.diplomate.d':'Permanent relic. On a push with the dealer, you get half your bet back.',
+'relic.talisman.n':'Talisman','relic.talisman.d':'Rare relic. Once per table, your first lost hand is fully refunded.',
+'relic.aimant.n':'Magnet','relic.aimant.d':'Rare relic. +1 for every card you draw.',
+'relic.phare.n':'The Lighthouse','relic.phare.d':'Rare relic. CHARLIE (5 cards without busting) pays ×3 instead of ×2.',
+/* --- tarots --- */
+'tarot.etoile.n':'The Star','tarot.etoile.d':'Play any time: +2 STREAK right away (builds your luck).','tarot.etoile.u':'+2 streak',
+'tarot.jugement.n':'Judgement','tarot.jugement.d':'Play any time: jump straight up one STREAK level.','tarot.jugement.u':'STREAK +1 level',
+'tarot.soleil.n':'The Sun','tarot.soleil.d':'Adds 18 to your bank right away, any time.','tarot.soleil.u':'+18',
+'tarot.diable.n':'The Devil','tarot.diable.d':'Play on your hand: turns one of your cards POLYCHROME, multiplying the hand payout (×1.5).','tarot.diable.u':c=>'Polychrome: '+c,
+'tarot.lune.n':'The Moon','tarot.lune.d':'Play on your hand: turns one of your cards HOLOGRAPHIC (+1 to the hand multiplier).','tarot.lune.u':c=>'Holo: '+c,
+'tarot.etoileD.n':'The Shooting Star','tarot.etoileD.d':'Play on your hand: turns one of your cards FOIL, paying bonus cash when the hand is won.','tarot.etoileD.u':c=>'Foil: '+c,
+'tarot.pendu.n':'The Hanged Man','tarot.pendu.d':'Play during the hand: cancels the last card you drew (saves you when you drew one too many).','tarot.pendu.u':c=>'Removed: '+c,
+'tarot.magicien.n':'The Magician','tarot.magicien.d':'Play during the hand: rigs your next draw so it is the best possible card for your hand.','tarot.magicien.u':'Next card rigged',
+'tarot.roue.n':'The Wheel','tarot.roue.d':'Play on your hand: a 1-in-2 chance to add a random edition (FOIL, HOLO or POLY) to a card; otherwise nothing.','tarot.roue.u':e=>e+' edition!','tarot.roue.f':'Missed…',
+/* --- services --- */
+'svc.soin.n':'Cash Advance','svc.soin.d':'Tops your bank up to the table’s recommended bankroll.','svc.soin.u':'Bank topped up',
+'svc.assurance.n':'Insurance','svc.assurance.d':'Your next loss on this table is refunded (1×).','svc.assurance.u':'Insured',
+'svc.videur.n':'Tip the Bouncer','svc.videur.d':'+1 second-chance token.','svc.videur.u':'+1 second chance',
+/* --- déblocages : tournée --- */
+'unlock.bank.n':'Nest Egg','unlock.bank.d':n=>'Starting cash +'+(15*(n+1)),
+'unlock.pourboire.n':'Tip','unlock.pourboire.d':n=>'+'+(n+1)+' at the start of every hand',
+'unlock.net.n':'Safety Net','unlock.net.d':n=>'Starting second chances: '+(3+n+1),
+'unlock.tarot.n':'Pocket','unlock.tarot.d':n=>'+1 permanent Tarot slot',
+'unlock.contact.n':'Contact','unlock.contact.d':n=>'Start every circuit with a free relic',
+'unlock.relic2.n':'Vault','unlock.relic2.d':n=>'Unlocks 3 RARE relics in the shop (Talisman, Magnet, The Lighthouse)',
+/* --- déblocages : sans fin --- */
+'unlock.bankI.n':'Seed Money','unlock.bankI.d':n=>'Starting pot +'+(15*(n+1)),
+'unlock.pourboireI.n':'Annuity','unlock.pourboireI.d':n=>'+'+(n+1)+' every hand, non-stop',
+'unlock.plafond.n':'Ceiling','unlock.plafond.d':n=>'Starting bet ceiling +'+(10*(n+1))+' %',
+'unlock.elan.n':'Momentum','unlock.elan.d':n=>'Start straight at tier '+(1+(n+1)),
+'unlock.cashplus.n':'Launderer','unlock.cashplus.d':n=>'Cashing out the pot pays +'+(25*(n+1))+' %',
+'unlock.boon2.n':'Pacts','unlock.boon2.d':n=>'Unlocks 2 RARE tier perks (Boosted Streak, Special Hands ×2)',
+/* --- jetons d'effet (uniquement ceux qui portent un mot) --- */
+'tok.bank':'+$','tok.pourboire':'+$<small class="sym">/hand</small>','tok.net':'+1 <small>try</small>',
+'tok.tarot':'+1 <small>slot</small>','tok.contact':'+1<small>◆</small>','tok.relic2':'+3<small>◆</small>',
+'tok.plafond':'+% <small>bet</small>','tok.elan':'+1 <small>tier</small>','tok.cashplus':'+25<small class="sym">%★</small>',
+'tok.boon2':'+2 <small>perks</small>',
+'tok.lunettes':'PEEK','tok.jeton':'½ <small>BET</small>','tok.compteur':'BUST<small class="sym">%</small>',
+'tok.collector':'ED<small>×3</small>','tok.aimant':'+1<small class="sym">$/card</small>',
+'tok.talisman':'1 <small>LIFE</small>','tok.etoile':'+2 <small class="sym">streak</small>',
+'tok.jugement':'+1<small class="sym">lv</small>','tok.pendu':'−1 <small>card</small>',
+'tok.magicien':'IDEAL','tok.roue':'ED<small>?</small>','tok.assurance':'INSU<small>R</small>',
+'tok.videur':'+1 <small>try</small>',
+/* --- bonus de palier (infini) --- */
+'boon.mult.t':'+1 MULT CAP','boon.mult.d':'The multiplier can climb higher.',
+'boon.income.t':'+5 / HAND','boon.income.d':'Passive income every hand.',
+'boon.betmax.t':'MAX BET +25 %','boon.betmax.d':'Your bet ceiling rises: aim bigger.',
+'boon.filet.t':'STREAK NET','boon.filet.d':'On a loss, the STREAK does not drop to zero: it only loses one level.',
+'boon.cash.t':'+20 % POT','boon.cash.d':'An immediate injection into your pot.',
+'boon.baraplus.t':'BOOSTED STREAK','boon.baraplus.d':'Gutsy plays give +1 extra STREAK.',
+'boon.evt3.t':'SPECIAL HANDS ×2','boon.evt3.d':'A special hand every 3 hands (instead of 5).',
+/* --- mains spéciales (infini) --- */
+'evt.doree.t':'GOLDEN HAND','evt.doree.d':'payouts doubled on this hand',
+'evt.forcee.t':'FORCED BET','evt.forcee.d':'max bet required',
+'evt.pompette.t':'TIPSY DEALER','evt.pompette.d':'the dealer stands on 16',
+'evt.etoile.t':'STARRED CARD','evt.etoile.d':'your first card is HOLO (+1 mult)',
+/* --- contrats --- */
+'ctr.c5':'win a 5-card hand','ctr.c21':'win with a perfect 21','ctr.cpress':'win at streak ≥ 75 %',
+'ctr.cmult':'win a hand at ×3 or more','ctr.cdbl':'win a DOUBLED hand',
+'ctr.csuite':'win with a STRAIGHT','ctr.ccoul':'win with a FLUSH',
+},
+fr:{
+'ui.turnsLeft':'TOURS<br>RESTANTS','ui.hand':(a,b)=>'main '+a+'/'+b,
+'ui.bet':'MISE','ui.mult':'MULT','ui.gain':'GAIN','ui.potLbl':'CAGNOTTE',
+'ui.dealer':'Croupier','ui.you':'Toi','ui.peek':'VOIR','ui.peekTitle':'Lis la prochaine carte du sabot',
+'ui.pause':'Pause','ui.lives':'Vies (secondes chances)','ui.streak':'BARAKA',
+'ui.lvl':(l,m)=>'· NIV '+l+' ×'+m,'ui.relics':'reliques',
+'ui.next':c=>'PROCHAINE : '+c,'ui.bustRisk':p=>'RISQUE DE BUST : '+p+'%',
+'menu.sub':'Choisis ton mode de jeu. Chaque mode a <b>sa Planque</b> et sa <b>réputation</b>.',
+'menu.circuit':'LA TOURNÉE','menu.circuitSub':n=>n+' tables · une fin · reliques & tarots',
+'menu.endless':'SANS FIN','menu.endlessSub':'blackjack pur · monte les paliers',
+'menu.recTables':d=>'record '+d+' table'+(d>1?'s':''),'menu.recTier':p=>'record palier '+p,
+'planque.title':'LA PLANQUE',
+'planque.subCircuit':'Dépense ta <b>réputation</b> en avantages permanents, puis repars pour une nouvelle <b>tournée</b>.',
+'planque.subInf':'Améliore ta <b>cagnotte</b> avec ta <b>réputation</b>, puis repars.',
+'planque.modeCircuit':'LA TOURNÉE','planque.modeInf':'∞ SANS FIN',
+'planque.rep':'réputation','planque.best':'RECORD',
+'planque.tables':d=>d+' table'+(d>1?'s':''),'planque.tierN':p=>'palier '+p,
+'planque.upgrades':'AMÉLIORATIONS','planque.upgradesSub':'avantages permanents',
+'planque.allMax':'tout au max','planque.avail':n=>n+' dispo'+(n>1?'s':''),
+'planque.leadCircuit':'Dépense ta <b>réputation</b> en avantages permanents.',
+'planque.leadInf':'Renforce ta <b>cagnotte</b> avec ta <b>réputation</b>.',
+'planque.back':'DOS DE CARTE','planque.backSub':(i,n)=>'modèle '+i+' / '+n,
+'planque.backLead':'Choisis l’habillage du dos de tes cartes.',
+'planque.seeAll':'tout voir ▸','planque.menu':'← MENU','planque.start':'COMMENCER',
+'planque.startInf':'sans fin · blackjack pur','planque.startResume':n=>'reprise · table '+n,
+'planque.startCircuit':n=>'la tournée · '+n+' tables',
+'planque.zone2':'ZONE 2','planque.zone2Sub':'raccourci',
+'planque.resumeTable':'REPRENDRE À','planque.resumeTier':'REPRENDRE AU',
+'planque.tierLabel':n=>'Palier '+n,'planque.tableLabel':n=>'Table '+n,
+'planque.max':'MAX','planque.prevBack':'Dos précédent','planque.nextBack':'Dos suivant',
+'planque.restartTitle':'Recommencer ce mode (perd la réputation du mode)','planque.rulesTitle':'Règles du jeu',
+'set.title':'PARAMÈTRES','set.open':'⚙ PARAMÈTRES','set.lang':'LANGUE','set.close':'FERMER','set.btnTitle':'Paramètres',
+'rules.title':'RÈGLES','rules.close':'FERMER',
+'rules.goal':'<span class="rt">BUT</span>Bats le croupier à chaque main sans dépasser <span class="k">21</span>. Une figure vaut 10, l\'As vaut 1 ou 11.',
+'rules.table':'<span class="rt">LA TABLE</span>Joue <span class="k">toutes les mains imposées</span>, mise dans la <span class="k">limite</span> (min–max fixe), et atteins l\'<span class="k">objectif de gain</span> avant la dernière main. Sous l\'objectif = table perdue.',
+'rules.moves':'<span class="rt">TES COUPS</span><span class="k">TIRER</span> une carte, <span class="k">RESTER</span> sur ta main, ou <span class="k">FORCER LA CHANCE</span> (2 cartes, on garde la meilleure · 1×/table).',
+'rules.stars':'<span class="rt"><i class="pxstar"></i> ÉTOILES</span>Chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Plus tu en décroches, plus ta <span class="k">réputation</span> grimpe.',
+'rules.streak':'<span class="rt">BARAKA</span>Ta barre de <span class="k">veine</span> monte à chaque victoire (<span class="k">coup culotté = +2</span>) et débloque des <span class="k">multiplicateurs</span> de plus en plus forts. Perdre une main la <span class="d">remet à zéro</span>.',
+'rules.combos':'<span class="rt">COMBOS</span>Le vrai jeu : <span class="k">construis</span> tes mains, ne te contente pas de battre le croupier.<br><span class="k">21 PARFAIT ×3</span> · <span class="k">CHARLIE</span> (5 cartes) ×2 · <span class="k">COULEUR</span> (3+ même enseigne) ×2 · <span class="k">SUITE</span> (3+ rangs qui se suivent) ×2 · BLACKJACK ×1.5 · PAIRE DE 7 ×1.5 · ARC-EN-CIEL (4 enseignes) ×1.5.<br>Les pastilles sur le tapis montrent ce qui est acquis et à portée.',
+'rules.bonus':'<span class="rt">PETITS BONUS</span>Des coups de pouce au multiplicateur selon la situation : <span class="k">COUR</span> (2+ figures) ×1.5 · <span class="k">FILOU</span> (gagner avec ≤15) ×1.5 · <span class="k">AU POIL</span> (battre le croupier d\'un point) ×1.5 · <span class="k">CLUTCH</span> (dernière main) ×1.5 · <span class="k">REMONTADA</span> (parti ≤11, fini ≥17) ×1.3.',
+'rules.contracts':'<span class="rt"><i class="pxi pxi-scroll"></i> CONTRATS</span>Chaque table propose un <span class="k">défi optionnel</span> (« gagne une main de 5 cartes »…) qui rapporte des <span class="k">★ bonus</span>. Rempli ou non, la table continue normalement.',
+'rules.circuit':'<span class="rt">LA TOURNÉE</span><span class="k">24 tables · 8 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">continuer</span> pour plus gros. Atteins la <span class="k">zone 2</span> deux fois pour débloquer le <span class="k">raccourci</span>.',
+'rules.hideout':'<span class="rt">LA PLANQUE</span>Dépense ta <span class="k">réputation <i class="pxstar"></i></span> en avantages permanents (reliques, tarots, éditions) avant de repartir.',
+'rules.endless':'<span class="rt">SANS FIN</span>Pas d\'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · toutes les 5 mains, une <span class="d">main spéciale</span>. <span class="k">ENCAISSER</span> convertit ta cagnotte en réputation — la <span class="d">banqueroute</span> ne garde que les paliers.',
+'upg.title':'AMÉLIORATIONS','backs.title':'DOS DE CARTE',
+'rst.title':'RECOMMENCER ?','rst.text':'Êtes-vous sûr de vouloir <b>recommencer la progression de ce mode</b> ?<br>Tu perds la <b>réputation</b>, les <b>déblocages</b> et le <b>record</b> de ce mode uniquement.',
+'rst.cancel':'ANNULER','rst.ok':'RECOMMENCER',
+'pause.title':'PAUSE','pause.sub':'La partie est en attente.','pause.resume':'REPRENDRE',
+'pause.cash':'ENCAISSER','pause.cashSub':'convertit ta cagnotte en réputation',
+'pause.rules':'RÈGLES','pause.menu':'RETOUR AU MENU','pause.menuSub':'abandonne la partie · tu encaisses ta réputation',
+'pal.title':'PALIER','pal.sub':'Choisis une <b>possibilité</b> pour la suite.',
+'pal.cash':r=>'ENCAISSER '+r,'pal.cashSub':'s\'arrêter ici · bonus de palier +20 %',
+'shop.title':'TABLE FRANCHIE','shop.titleBoss':'BOSS VAINCU','shop.titleLast':'CASINO DÉVALISÉ',
+'shop.sub':(d,b,pot,rew)=>'Table <b>'+d+'</b> tenue · <b>'+b+'</b> en poche · cagnotte <b>'+pot+'</b> <span style="color:var(--muted)">(+'+rew+')</span>',
+'shop.total':'total','shop.reroll':c=>'RELANCER ('+c+')',
+'shop.cash':'ENCAISSER','shop.finish':'TERMINER','shop.repSuffix':'réput.',
+'shop.next':'TABLE SUIVANTE →','shop.nextInfo':(n,goal,cap,fee)=>n+' · obj. '+goal+' · conseillé '+cap+fee,
+'shop.fee':f=>' · droit d\'entrée '+f,
+'shop.nextObj':(n,goal,cap)=>'PROCHAINE · <b>'+n+'</b> — objectif <b style="color:var(--gold)">'+goal+'</b> · capital conseillé <b>'+cap+'</b>',
+'shop.feeObj':f=>' · entrée <b style="color:var(--red)">'+f+'</b>',
+'shop.gateFee':f=>'Salle plus exclusive — droit d\'entrée '+f+'.',
+'shop.gateDone':'Tu as bouclé la run. Encaisse ta réputation.',
+'shop.empty':'Rien à acheter ici.','shop.tagService':'✚ SERVICE','shop.tagTarot':'TAROT','shop.tagRelic':'◆ RELIQUE',
+'shop.full':'PLEIN','shop.owned':'ACQUIS',
+'insp.tarot':'JETON TAROT · à usage unique','insp.relic':'RELIQUE · effet permanent',
+'insp.use':'UTILISER','insp.sell':v=>'VENDRE +'+v,'insp.close':'FERMER','msg.sold':'REVENDU',
+'act.bet':'MISER','act.betSub':b=>'mise '+b,'act.betChoose':'choisis ta mise','act.handSuffix':(h,m)=>' · main '+h+'/'+m,
+'act.hit':'TIRER','act.hitSub':'+1 carte','act.risk':'RISQUER','act.riskSub':'+bonus si survie',
+'act.stand':'RESTER','act.standSub':'garde ta main',
+'act.split':'SÉPARER','act.splitSub':'paire · deux mains',
+'act.double':'DOUBLER','act.doubleSub':'mise ×2 · une seule carte',
+'act.force':'FORCER LA CHANCE','act.forceSub':'garde la meilleure · 1×/table',
+'act.forceUsed':'déjà utilisé cette table','act.forceOff':'2 cartes 17-20 · garde la meilleure',
+'msg.notNow':'PAS MAINTENANT','msg.notNowSub':'utilisable en jeu',
+'msg.noCards':'PAS DE CARTE','msg.cant':'IMPOSSIBLE','msg.keep3':'garde ≥3 cartes',
+'msg.slotsFull':'SLOTS PLEINS','msg.relicsFull':'RELIQUES PLEINES','msg.max':n=>n+' max',
+'msg.split':'SÉPARÉ','msg.splitSub':c=>c+' · deux mains',
+'msg.hand':n=>'MAIN '+n,'msg.handSub':'à toi de jouer',
+'msg.doubled':'DOUBLÉ','msg.doubledSub':'mise ×2 · une seule carte',
+'msg.forced':'FORCÉ','msg.kept':c=>'gardé '+c,
+'msg.insurance':'ASSURANCE','msg.insuranceSub':'perte remboursée',
+'msg.talisman':'TALISMAN','msg.talismanSub':'première perte remboursée',
+'msg.gutsy':'CULOTTÉ !','msg.gutsySub':n=>'+'+n+' baraka',
+'msg.entryFee':'DROIT D\'ENTRÉE','msg.boss':'BOSS','msg.miniboss':'MINI-BOSS',
+'msg.zone':(n,name)=>'ZONE '+n+(name?' — '+name:''),
+'msg.contract':'CONTRAT REMPLI','msg.income':'REVENU',
+'inc.patron':n=>'Mécène +'+n,'inc.shark':n=>'Usurier +'+n,'inc.tip':n=>'Pourboire +'+n,'inc.tier':n=>'Palier +'+n,
+'msg.endlessStart':'SANS FIN','msg.endlessStartSub':'monte aussi haut que possible',
+'m.blackjack':'BLACKJACK','m.perfect':'21 PARFAIT','m.charlie':'CHARLIE','m.pair7':'PAIRE DE 7',
+'m.flush':'COULEUR','m.straight':'SUITE','m.rainbow':'ARC-EN-CIEL','m.pushing':'INSISTANCE',
+'m.streak':l=>'BARAKA NIV '+l,'m.burner':'BRÛLEUR','m.foil':'FOIL','m.holo':'HOLO','m.poly':'POLY',
+'m.foilV':n=>'+'+n+' jet','m.ace':'AS TRUQUÉ','m.cool':'SANG-FROID',
+'m.court':'COUR','m.lowball':'FILOU','m.comeback':'REMONTADA','m.clutch':'CLUTCH','m.byone':'AU POIL',
+'m.zonecap':'PLAFOND ZONE','m.golden':'DORÉE',
+'ed.card':n=>'CARTE '+n,'ed.foil':'+ argent bonus','ed.holo':'+1 au multiplicateur','ed.poly':'× multiplicateur',
+'cb.to21':n=>'21 PARFAIT ×3 · à '+n,'cb.charlie':'CHARLIE ×2 · +1 carte',
+'cb.flush':s=>'COULEUR ×2 · +1 '+s,'cb.rainbow':'ARC-EN-CIEL ×1.5 · +1 carte',
+'cb.pair7':'PAIRE DE 7 · tire un 7','cb.straight':'SUITE ×2 · possible',
+'cb.streak':(l,n)=>'BARAKA NIV '+l+' dans '+n,
+'top.mastery':m=>'maîtrise ≥'+m,'top.betRange':(a,b)=>'mise '+a+'–'+b,
+'top.stars':n=>n+' étoile'+(n>1?'s':''),'top.pot':p=>'cagnotte '+p,
+'top.contractDone':'✓ contrat rempli','top.record':v=>'record '+v,
+'top.worth':r=>'vaut '+r+' en pause',
+'top.metaCircuit':(z,zn,i,n)=>'zone '+z+' · '+zn+' · '+i+'/'+n,
+'top.metaInf':(p,a,b)=>'∞ SANS FIN · palier '+p+' · mise '+a+'–'+b,
+'w.jackpot':['JACKPOT!','MÉGA!','BOOM!','EN FEU!'],
+'w.win':['GAGNÉ!','OUAIS!','BANG!','CLASSE!','POW!'],
+'w.bj':['BLACKJACK!'],'w.push':['ÉGALITÉ','MATCH NUL'],
+'w.lose':['RATÉ!','ZUT!','PERDU!','AÏE!'],'w.bust':['BUSTÉ!','CRAMÉ!','TROP HAUT!'],
+'w.betBack':'mise rendue',
+'sp.win':'GAGNÉ','sp.push':'ÉGALITÉ','sp.lose':'PERDU','sp.hand':i=>'Main '+i+' : ',
+'lost.goal':'OBJECTIF MANQUÉ','lost.goalTxt':m=>'Tu finis sous l’objectif de gain de la table — il te manquait <b style="color:var(--red)">'+m+'</b>.',
+'lost.broke':'À SEC','lost.brokeTxt':'Plus de quoi miser le minimum de la table.',
+'lose.info':(n,pot)=>'Table <b>'+n+'</b> · Cagnotte : <b>'+pot+'</b>',
+'lose.retry':'SECONDE CHANCE','lose.tokens':n=>n+' jeton'+(n>1?'s':'')+' restant'+(n>1?'s':''),
+'lose.giveup':'ABANDONNER','lose.giveupSub':r=>'encaisse '+r,
+'endless.bust':'BANQUEROUTE','endless.bustTxt':'Plus de quoi miser. Ta cagnotte s’arrête ici.',
+'end.cash':'TU ENCAISSES','end.circuitOver':'FIN DE LA TOURNÉE','end.potGone':'CAGNOTTE ÉPUISÉE',
+'end.cashTxt':'Tu pars avec la cagnotte avant que ça tourne mal.',
+'end.halfTxt':'Tu repars quand même avec la moitié de ta cagnotte.',
+'end.infCashTxt':b=>'Tu convertis ta cagnotte en réputation'+(b?' — <b style="color:var(--gold)">bonus de palier +20 %</b>':'')+'.',
+'end.infStopTxt':'Ta plongée s’arrête.',
+'end.missing':(m,prox)=>'<br>Il te manquait <b style="color:var(--red)">'+m+'</b> pour l\'objectif'+(prox?' <span style="color:var(--muted)">— prime de proximité '+prox+'</span>':'')+'.',
+'end.infStats':(peak,tier)=>'Cagnotte max : <b style="color:var(--gold)">'+peak+'</b> · Palier atteint : <b>'+tier+'</b>',
+'end.stats':(d,b)=>'Tables tenues : <b>'+d+'</b> · Argent : <b>'+b+'</b>',
+'end.rep':(g,total)=>'Réputation : <b>'+g+'</b>','end.repTotal':t=>' &nbsp;→&nbsp; total <b>'+t+'</b>',
+'end.vault':c=>' <span style="color:var(--muted)">+ coffre '+c+'</span>',
+'end.newRecord':'NOUVEAU RECORD !',
+'end.recordInf':(tier,peak)=>'Record : palier '+tier+' · '+peak,
+'end.recordCircuit':(d,c)=>'Record : '+d+' table'+(d>1?'s':'')+' · '+c,
+'end.won':'MAINS GAGNÉES','end.bestGain':'MEILLEUR GAIN','end.bestMult':'MEILLEUR MULT','end.back':'RETOUR À LA PLANQUE',
+'rec.banner':'★ NOUVEAU RECORD ★','obj.reached':'OBJECTIF !','obj.validated':'table validée',
+'tbl.0':'Arrière-salle','tbl.1':'Table nerveuse','tbl.2':'Le Videur','tbl.3':'Cave humide',
+'tbl.4':'Salon rouge','tbl.5':'Le Banquier','tbl.6':'Fosse aux as','tbl.7':'Table maudite','tbl.8':'La Faucheuse',
+'tbl.9':'Salon de jade','tbl.10':'Table feutrée','tbl.11':'Le Concierge',
+'tbl.12':'Antichambre','tbl.13':'Coffre à secrets','tbl.14':'Le Comptable',
+'tbl.15':'Tripot clandestin','tbl.16':'Cave aux rats','tbl.17':'Le Fossoyeur',
+'tbl.18':'Loge dorée','tbl.19':'Miroir sans tain','tbl.20':'La Croupière',
+'tbl.21':'Suite royale','tbl.22':'Salle des maîtres','tbl.23':'LE PARRAIN',
+'zone.1':'Initiation','zone.2':'La Pression','zone.3':'Casino profond','zone.4':'Cercle rouge',
+'zone.5':'Chambre forte','zone.6':'Les Bas-fonds','zone.7':'Sphère privée','zone.8':'Le Sommet',
+'rule.nervous':'La baraka monte 2× plus vite','rule.mute':'Croupier muet',
+'rule.gros':'Le croupier tire jusqu’à 18','rule.depart':'Table déjà chaude (+30 %)','rule.sec':'Égalité = défaite',
+'rtx.0':'Initiation','rtx.4':'Salon feutré','rtx.7':'Croupier impitoyable (18)',
+'rtx.boss':r=>'BOSS · '+r,'rtx.bossFinal':'BOSS FINAL · égalité = défaite','rtx.bossPlain':'affrontement',
+'rtx.entry':f=>'droit d’entrée '+f,'rtx.deep':'Salle profonde','rtx.endless':'Cagnotte sans fin',
+'endless.tier':n=>'Palier '+n,
+'relic.lunettes.n':'Lunettes','relic.lunettes.d':'Relique permanente. Une fois par main, révèle la prochaine carte du sabot avant de décider de tirer.',
+'relic.jeton.n':'Jeton fendu','relic.jeton.d':'Relique permanente. Si tu perds une main avec un total de 20, tu récupères la moitié de ta mise.',
+'relic.clope.n':'Cigarette','relic.clope.d':'Relique permanente. Ta baraka monte 30 % plus vite, tout le temps.',
+'relic.as.n':'As truqué','relic.as.d':'Relique permanente. Quand tu gagnes une main qui contient un As : +1 au multiplicateur.',
+'relic.froid.n':'Sang-froid','relic.froid.d':'Relique permanente. Si tu gagnes une main avec une baraka ≥ 75 % : +1 au multiplicateur.',
+'relic.compteur.n':'Compteur','relic.compteur.d':'Relique permanente. Affiche en continu ta probabilité de dépasser 21 au prochain tirage.',
+'relic.mecene.n':'Mécène','relic.mecene.d':'Relique permanente. +4 $ offerts au début de chaque main.',
+'relic.usurier.n':'Usurier','relic.usurier.d':'Relique permanente. Au début de chaque main : +1 $ par tranche de 5 $ en banque (jusqu’à +6).',
+'relic.collector.n':'Collectionneur','relic.collector.d':'Relique permanente. Les éditions spéciales (FOIL/HOLO/POLY) apparaissent 3× plus souvent sur tes cartes.',
+'relic.maitresse.n':'Carte maîtresse','relic.maitresse.d':'Relique permanente. Ta 1re carte de chaque main est FOIL : de l’argent bonus quand tu gagnes.',
+'relic.bruleur.n':'Brûleur','relic.bruleur.d':'Relique permanente. Si tu gagnes une main avec une baraka ≥ 50 % : gain de la main ×1,5.',
+'relic.portebonheur.n':'Porte-bonheur','relic.portebonheur.d':'Relique permanente. +1 emplacement de jeton Tarot (tu peux garder un jeton de plus).',
+'relic.diplomate.n':'Diplomate','relic.diplomate.d':'Relique permanente. En cas d’égalité avec le croupier, tu récupères la moitié de ta mise.',
+'relic.talisman.n':'Talisman','relic.talisman.d':'Relique rare. Une fois par table, ta première main perdue est intégralement remboursée.',
+'relic.aimant.n':'Aimant','relic.aimant.d':'Relique rare. +1 $ à chaque carte que tu tires.',
+'relic.phare.n':'Le Phare','relic.phare.d':'Relique rare. CHARLIE (5 cartes sans dépasser) paie ×3 au lieu de ×2.',
+'tarot.etoile.n':'L’Étoile','tarot.etoile.d':'À jouer à tout moment : +2 BARAKA tout de suite (fait monter ta veine).','tarot.etoile.u':'+2 baraka',
+'tarot.jugement.n':'Le Jugement','tarot.jugement.d':'À jouer à tout moment : monte directement d’un niveau de BARAKA.','tarot.jugement.u':'BARAKA +1 niveau',
+'tarot.soleil.n':'Le Soleil','tarot.soleil.d':'Ajoute aussitôt 18 $ à ta banque, à tout moment.','tarot.soleil.u':'+18 $',
+'tarot.diable.n':'Le Diable','tarot.diable.d':'À jouer sur ta main : transforme une de tes cartes en POLYCHROME, qui multiplie le gain de la main (×1,5).','tarot.diable.u':c=>'Polychrome : '+c,
+'tarot.lune.n':'La Lune','tarot.lune.d':'À jouer sur ta main : transforme une de tes cartes en HOLOGRAPHIQUE (+1 au multiplicateur de la main).','tarot.lune.u':c=>'Holo : '+c,
+'tarot.etoileD.n':'L’Étoile filante','tarot.etoileD.d':'À jouer sur ta main : transforme une de tes cartes en FOIL, qui rapporte de l’argent bonus quand la main est gagnée.','tarot.etoileD.u':c=>'Foil : '+c,
+'tarot.pendu.n':'Le Pendu','tarot.pendu.d':'À jouer pendant la main : annule ta dernière carte tirée (sauve-toi quand tu as tiré la carte de trop).','tarot.pendu.u':c=>'Retiré : '+c,
+'tarot.magicien.n':'Le Magicien','tarot.magicien.d':'À jouer pendant la main : truque ta prochaine carte tirée, qui sera la meilleure possible pour ta main.','tarot.magicien.u':'Prochaine carte truquée',
+'tarot.roue.n':'La Roue','tarot.roue.d':'À jouer sur ta main : 1 chance sur 2 d’ajouter une édition aléatoire (FOIL, HOLO ou POLY) à une carte ; sinon, rien.','tarot.roue.u':e=>'Édition '+e+' !','tarot.roue.f':'Raté…',
+'svc.soin.n':'Avance de fonds','svc.soin.d':'Renfloue ta banque jusqu’au capital conseillé de la table.','svc.soin.u':'Banque renflouée',
+'svc.assurance.n':'Assurance','svc.assurance.d':'Ta prochaine perte de la table est remboursée (1×).','svc.assurance.u':'Assuré',
+'svc.videur.n':'Pourboire au videur','svc.videur.d':'+1 jeton de seconde chance.','svc.videur.u':'+1 seconde chance',
+'unlock.bank.n':'Pécule','unlock.bank.d':n=>'Argent de départ +'+(15*(n+1))+' $',
+'unlock.pourboire.n':'Pourboire','unlock.pourboire.d':n=>'+'+(n+1)+' $ au début de chaque main',
+'unlock.net.n':'Filet','unlock.net.d':n=>'Secondes chances de départ : '+(3+n+1),
+'unlock.tarot.n':'Poche','unlock.tarot.d':n=>'+1 emplacement Tarot permanent',
+'unlock.contact.n':'Contact','unlock.contact.d':n=>'Commence chaque tournée avec une relique offerte',
+'unlock.relic2.n':'Coffre','unlock.relic2.d':n=>'Débloque 3 reliques RARES en boutique (Talisman, Aimant, Le Phare)',
+'unlock.bankI.n':'Mise de fond','unlock.bankI.d':n=>'Cagnotte de départ +'+(15*(n+1)),
+'unlock.pourboireI.n':'Rente','unlock.pourboireI.d':n=>'+'+(n+1)+' $ à chaque main, en continu',
+'unlock.plafond.n':'Plafond','unlock.plafond.d':n=>'Plafond de mise de départ +'+(10*(n+1))+' %',
+'unlock.elan.n':'Élan','unlock.elan.d':n=>'Démarre directement au palier '+(1+(n+1)),
+'unlock.cashplus.n':'Blanchisseur','unlock.cashplus.d':n=>'L’encaissement de la cagnotte rapporte +'+(25*(n+1))+' %',
+'unlock.boon2.n':'Pactes','unlock.boon2.d':n=>'Débloque 2 bonus de palier RARES (Baraka dopée, Mains spéciales ×2)',
+'tok.bank':'+$','tok.pourboire':'+$<small class="sym">/main</small>','tok.net':'+1 <small>essai</small>',
+'tok.tarot':'+1 <small>slot</small>','tok.contact':'+1<small>◆</small>','tok.relic2':'+3<small>◆</small>',
+'tok.plafond':'+% <small>mise</small>','tok.elan':'+1 <small>palier</small>','tok.cashplus':'+25<small class="sym">%★</small>',
+'tok.boon2':'+2 <small>bonus</small>',
+'tok.lunettes':'VOIR','tok.jeton':'½ <small>MISE</small>','tok.compteur':'BUST<small class="sym">%</small>',
+'tok.collector':'ÉD<small>×3</small>','tok.aimant':'+1<small class="sym">$/carte</small>',
+'tok.talisman':'1 <small>VIE</small>','tok.etoile':'+2 <small class="sym">baraka</small>',
+'tok.jugement':'+1<small class="sym">niv</small>','tok.pendu':'−1 <small>carte</small>',
+'tok.magicien':'IDÉAL','tok.roue':'ÉD<small>?</small>','tok.assurance':'ASSU<small>R</small>',
+'tok.videur':'+1 <small>essai</small>',
+'boon.mult.t':'+1 PLAFOND MULT','boon.mult.d':'Le multiplicateur peut monter plus haut.',
+'boon.income.t':'+5 $ / MAIN','boon.income.d':'Revenu passif à chaque main.',
+'boon.betmax.t':'MISE MAX +25 %','boon.betmax.d':'Ton plafond de mise grimpe : vise plus gros.',
+'boon.filet.t':'FILET BARAKA','boon.filet.d':'À la défaite, la BARAKA ne retombe pas à zéro : elle perd juste un niveau.',
+'boon.cash.t':'+20 % CAGNOTTE','boon.cash.d':'Injection immédiate dans ta cagnotte.',
+'boon.baraplus.t':'BARAKA DOPÉE','boon.baraplus.d':'Les coups culottés donnent +1 BARAKA de plus.',
+'boon.evt3.t':'MAINS SPÉCIALES ×2','boon.evt3.d':'Une main spéciale toutes les 3 mains (au lieu de 5).',
+'evt.doree.t':'MAIN DORÉE','evt.doree.d':'gains doublés sur cette main',
+'evt.forcee.t':'MISE FORCÉE','evt.forcee.d':'mise max obligatoire',
+'evt.pompette.t':'CROUPIER POMPETTE','evt.pompette.d':'le croupier s’arrête à 16',
+'evt.etoile.t':'CARTE ÉTOILÉE','evt.etoile.d':'ta 1re carte est HOLO (+1 mult)',
+'ctr.c5':'gagne une main de 5 cartes','ctr.c21':'gagne avec un 21 parfait','ctr.cpress':'gagne à baraka ≥ 75 %',
+'ctr.cmult':'gagne une main à ×3 ou plus','ctr.cdbl':'gagne une main DOUBLÉE',
+'ctr.csuite':'gagne avec une SUITE','ctr.ccoul':'gagne avec une COULEUR',
+}
+};
+let LANG=(()=>{try{const v=localStorage.getItem('t21lang');return STR[v]?v:'en';}catch(e){return 'en';}})();
+/* t('cle', args…) : chaîne, fonction d'interpolation, ou tableau (mot au hasard) */
+function t(key,...args){
+  const dict=STR[LANG]||STR.en;
+  const v=(key in dict)?dict[key]:STR.en[key];
+  if(v===undefined)return key;
+  return typeof v==='function'?v(...args):v;
+}
+function hasStr(key){return (STR[LANG]&&key in STR[LANG])||(key in STR.en);}
+</script>
+
+<script>
+/* ============================================================
+   COLD DECK — moteur + présentation Balatro
    ============================================================ */
 const $=id=>document.getElementById(id);
 const STAR='<i class="pxstar"></i>',STARE='<i class="pxstar e"></i>';   // étoile pixel pleine / vide
@@ -1202,6 +1688,9 @@ function abbr(n){
 /* même nombre, mais le séparateur de milliers passe par .thouSep (comme les contextes animés :
    gains, etc.) → écart identique partout, même dans les pages figées (Planque, menu). À utiliser en innerHTML. */
 function abbrS(n){return abbr(n).replace(/ /g,'<span class="thouSep"></span>');}
+/* montant d'argent, abrégé ET placé selon la langue : « 1.5K $ » en FR, « $1.5K » en EN */
+function cash(n){const a=abbr(n);return LANG==='fr'?(a+' $'):(a.charAt(0)==='-'?('-$'+a.slice(1)):('$'+a));}
+function cashS(n){const a=abbrS(n);return LANG==='fr'?(a+' $'):(a.charAt(0)==='-'?('-$'+a.slice(1)):('$'+a));}
 
 /* ---------- audio ---------- */
 const Audio_={ctx:null,started:false};
@@ -1252,7 +1741,7 @@ function renderBackPicker(){
   const prev=document.getElementById('bpPreview');
   if(prev)prev.className='card back '+cardBack+' bpCard';
   const sub=document.getElementById('bpSub');
-  if(sub)sub.textContent='modèle '+(CARD_BACKS.indexOf(cardBack)+1)+' / '+CARD_BACKS.length;
+  if(sub)sub.textContent=t('planque.backSub',CARD_BACKS.indexOf(cardBack)+1,CARD_BACKS.length);
   const row=document.getElementById('bpRow');if(!row)return;row.innerHTML='';
   CARD_BACKS.forEach((cb,i)=>{
     const slot=document.createElement('div');slot.className='bpslot';
@@ -1307,23 +1796,23 @@ function checkGainRecord(gain){
 function uLvl(id){return (metaCur().unlocks[id])|0;}
 /* déblocages permanents de LA NUIT (descente : reliques, tarots, vies) */
 const UNLOCKS_NUIT=[
-  {id:'bank',     name:'Pécule',    tok:'+$',                     tc:'#ffce3a', max:5, cost:n=>15+n*15, desc:n=>'Argent de départ +'+(15*(n+1))+' $'},
-  {id:'pourboire',name:'Pourboire', tok:'+$<small class="sym">/main</small>', tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' $ au début de chaque main'},
-  {id:'net',      name:'Filet',     tok:'+1 <small>essai</small>', tc:'#3f8bd6', max:3, cost:n=>40+n*30, desc:n=>'Secondes chances de départ : '+(3+n+1)},
-  {id:'tarot',    name:'Poche',     tok:'+1 <small>slot</small>',  tc:'#a64dff', max:1, cost:n=>70,      desc:n=>'+1 emplacement Tarot permanent'},
-  {id:'contact',  name:'Contact',   tok:'+1<small>◆</small>',     tc:'#ffce3a', max:1, cost:n=>90,      desc:n=>'Commence chaque tournée avec une relique offerte'},
-  {id:'relic2',   name:'Coffre',    tok:'+3<small>◆</small>',     tc:'#9be84a', max:1, cost:n=>120,     desc:n=>'Débloque 3 reliques RARES en boutique (Talisman, Aimant, Le Phare)'},
+  {id:'bank',      k:'bank',      tc:'#ffce3a', max:5, cost:n=>15+n*15},
+  {id:'pourboire', k:'pourboire', tc:'#ffce3a', max:3, cost:n=>25+n*20},
+  {id:'net',       k:'net',       tc:'#3f8bd6', max:3, cost:n=>40+n*30},
+  {id:'tarot',     k:'tarot',     tc:'#a64dff', max:1, cost:n=>70},
+  {id:'contact',   k:'contact',   tc:'#ffce3a', max:1, cost:n=>90},
+  {id:'relic2',    k:'relic2',    tc:'#9be84a', max:1, cost:n=>120},
 ];
 /* déblocages permanents de LA CAGNOTTE (infini : capital, rente, plafond, élan)
    — on réutilise les ids 'bank'/'pourboire' (stockés à part par mode) pour
    profiter de startBank()/applyHandIncome() sans code spécifique. */
 const UNLOCKS_INFINI=[
-  {id:'bank',     name:'Mise de fond',tok:'+$',                    tc:'#ffce3a', max:5, cost:n=>15+n*15, desc:n=>'Cagnotte de départ +'+(15*(n+1))},
-  {id:'pourboire',name:'Rente',       tok:'+$<small class="sym">/main</small>',tc:'#ffce3a', max:3, cost:n=>25+n*20, desc:n=>'+'+(n+1)+' $ à chaque main, en continu'},
-  {id:'plafond',  name:'Plafond',     tok:'+% <small>mise</small>', tc:'#a64dff', max:3, cost:n=>45+n*30, desc:n=>'Plafond de mise de départ +'+(10*(n+1))+' %'},
-  {id:'elan',     name:'Élan',        tok:'+1 <small>palier</small>',tc:'#3f8bd6',max:3, cost:n=>60+n*45, desc:n=>'Démarre directement au palier '+(1+(n+1))},
-  {id:'cashplus', name:'Blanchisseur',tok:'+25<small class="sym">%★</small>',  tc:'#19c3c3',max:2, cost:n=>70+n*70, desc:n=>'L\'encaissement de la cagnotte rapporte +'+(25*(n+1))+' %'},
-  {id:'boon2',    name:'Pactes',      tok:'+2 <small>bonus</small>',tc:'#a64dff',max:1, cost:n=>110,     desc:n=>'Débloque 2 bonus de palier RARES (Baraka dopée, Mains spéciales ×2)'},
+  {id:'bank',      k:'bankI',      tc:'#ffce3a', max:5, cost:n=>15+n*15},
+  {id:'pourboire', k:'pourboireI', tc:'#ffce3a', max:3, cost:n=>25+n*20},
+  {id:'plafond',   k:'plafond',    tc:'#a64dff', max:3, cost:n=>45+n*30},
+  {id:'elan',      k:'elan',       tc:'#3f8bd6', max:3, cost:n=>60+n*45},
+  {id:'cashplus',  k:'cashplus',   tc:'#19c3c3', max:2, cost:n=>70+n*70},
+  {id:'boon2',     k:'boon2',      tc:'#a64dff', max:1, cost:n=>110},
 ];
 function unlocksFor(mode){return (mode||MODE)==='infini'?UNLOCKS_INFINI:UNLOCKS_NUIT;}
 function findUnlock(id){return unlocksFor(MODE).find(x=>x.id===id);}
@@ -1342,50 +1831,59 @@ const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
    Chaque table est une épreuve fermée : on joue TOUTES les mains
    obligatoires, puis on valide en étoiles. Mise plafonnée FIXE.
    ============================================================ */
+/* nom et texte de règle : traduits au rendu (voir tableName / tableRuleText) */
 const RUN=[
   /* ZONE 1 — Initiation */
-  {n:'Arrière-salle', zone:1, mains:10, min:5,  max:20,  cap:50,   goal:150, master:210,      rule:null,     entry:0,   need:0,           ruleText:'Initiation'},
-  {n:'Table nerveuse',zone:1, mains:10, min:5,  max:25,  cap:130,  goal:220, master:320,      rule:'nervous',entry:0,   need:0,           ruleText:'La baraka monte 2× plus vite'},
-  {n:'Le Videur',     zone:1, mains:10, min:10, max:30,  cap:200,  goal:340, master:460,      rule:'gros',   entry:0,   need:2, boss:true, ruleText:'BOSS · le croupier tire jusqu’à 18'},
+  {zone:1, mains:10, min:5,  max:20,  cap:50,   goal:150, master:210,      rule:null,     entry:0,   need:0,           rt:{k:'rtx.0'}},
+  {zone:1, mains:10, min:5,  max:25,  cap:130,  goal:220, master:320,      rule:'nervous',entry:0,   need:0,           rt:{rule:'nervous'}},
+  {zone:1, mains:10, min:10, max:30,  cap:200,  goal:340, master:460,      rule:'gros',   entry:0,   need:2, boss:true, rt:{boss:true,rule:'gros'}},
   /* ZONE 2 — La Pression */
-  {n:'Cave humide',   zone:2, mains:10, min:10, max:48,  cap:280,  goal:500, master:700,      rule:'mute',   entry:70,  need:3,           ruleText:'Croupier muet · droit d’entrée 70'},
-  {n:'Salon rouge',   zone:2, mains:10, min:15, max:52,  cap:430,  goal:760, master:1010,     rule:null,     entry:0,   need:0,           ruleText:'Salon feutré'},
-  {n:'Le Banquier',   zone:2, mains:10, min:20, max:62,  cap:640,  goal:1080, master:1420,     rule:'depart', entry:0,   need:6, boss:true, ruleText:'BOSS · table déjà chaude (+30 %)'},
+  {zone:2, mains:10, min:10, max:48,  cap:280,  goal:500, master:700,      rule:'mute',   entry:70,  need:3,           rt:{rule:'mute',entry:70}},
+  {zone:2, mains:10, min:15, max:52,  cap:430,  goal:760, master:1010,     rule:null,     entry:0,   need:0,           rt:{k:'rtx.4'}},
+  {zone:2, mains:10, min:20, max:62,  cap:640,  goal:1080, master:1420,     rule:'depart', entry:0,   need:6, boss:true, rt:{boss:true,rule:'depart'}},
   /* ZONE 3 — Casino profond */
-  {n:'Fosse aux as',  zone:3, mains:10, min:25, max:80,  cap:900,  goal:1580, master:2080,     rule:null,     entry:240, need:8,          ruleText:'Casino profond · droit d’entrée 240'},
-  {n:'Table maudite', zone:3, mains:10, min:30, max:100, cap:1300, goal:2350, master:3000,     rule:'gros',   entry:0,   need:0,           ruleText:'Croupier impitoyable (18)'},
-  {n:'La Faucheuse',  zone:3, mains:10, min:40, max:120, cap:1800, goal:3200, master:4100,     rule:'sec',    entry:0,   need:0,           boss:true, ruleText:'BOSS · égalité = défaite'},
+  {zone:3, mains:10, min:25, max:80,  cap:900,  goal:1580, master:2080,     rule:null,     entry:240, need:8,          rt:{zone:3,entry:240}},
+  {zone:3, mains:10, min:30, max:100, cap:1300, goal:2350, master:3000,     rule:'gros',   entry:0,   need:0,           rt:{k:'rtx.7'}},
+  {zone:3, mains:10, min:40, max:120, cap:1800, goal:3200, master:4100,     rule:'sec',    entry:0,   need:0,           boss:true, rt:{boss:true,rule:'sec'}},
 ];
-const ZONE_NAMES={1:'Initiation',2:'La Pression',3:'Casino profond',4:'Cercle rouge',5:'Chambre forte',6:'Les Bas-fonds',7:'Sphère privée',8:'Le Sommet'};
+function zoneName(z){return t('zone.'+z);}
 const ZONE_MULTCAP={1:4,2:6,3:9,4:11,5:13,6:16,7:19,8:24};        // plafond de multiplicateur par zone
 const ZONE_FELT={1:'#138f86',2:'#7c3a9e',3:'#a52f55'};           // héritage
 /* TOURNÉE ÉTENDUE : après les 3 zones écrites à la main, on génère 5 zones plus profondes
    (3 tables + boss chacune) → tournée beaucoup plus longue, dans l'esprit des paliers de l'infini. */
 (function(){
-  const RTX={nervous:'La baraka monte 2× plus vite',mute:'Croupier muet',gros:'Le croupier tire jusqu’à 18',depart:'Table déjà chaude (+30 %)',sec:'Égalité = défaite'};
-  const DEEP=[
-    {z:4,t:['Salon de jade','Table feutrée','Le Concierge']},
-    {z:5,t:['Antichambre','Coffre à secrets','Le Comptable']},
-    {z:6,t:['Tripot clandestin','Cave aux rats','Le Fossoyeur']},
-    {z:7,t:['Loge dorée','Miroir sans tain','La Croupière']},
-    {z:8,t:['Suite royale','Salle des maîtres','LE PARRAIN']},
-  ];
   const bossR=['gros','depart','sec'],midR=[null,'nervous','mute'];
   let cap=1800;
-  DEEP.forEach(zn=>{
-    zn.t.forEach((nm,ti)=>{
-      const boss=(ti===2),last=(zn.z===8&&ti===2);
+  for(let zi=0;zi<5;zi++){
+    const z=4+zi;
+    for(let ti=0;ti<3;ti++){
+      const boss=(ti===2),last=(z===8&&ti===2);
       cap=Math.round(cap*1.42/10)*10;
       const goal=Math.round(cap*1.78/10)*10,master=Math.round(cap*2.35/10)*10;
       const min=Math.max(40,Math.round(cap*0.03/5)*5),max=Math.round(cap*0.07/5)*5;
-      const rule=last?'sec':(boss?bossR[zn.z%bossR.length]:midR[(ti+zn.z)%midR.length]);
-      const ruleText=last?'BOSS FINAL · égalité = défaite':(boss?'BOSS · '+(RTX[rule]||'affrontement'):(rule?RTX[rule]:'Salle profonde'));
-      const entry=(ti===0&&zn.z%2===1)?Math.round(goal*0.1/10)*10:0;
-      RUN.push({n:nm,zone:zn.z,mains:10,min,max,cap,goal,master,rule,entry,need:0,boss,ruleText});
-    });
-  });
+      const rule=last?'sec':(boss?bossR[z%bossR.length]:midR[(ti+z)%midR.length]);
+      const entry=(ti===0&&z%2===1)?Math.round(goal*0.1/10)*10:0;
+      RUN.push({zone:z,mains:10,min,max,cap,goal,master,rule,entry,need:0,boss,rt:{boss,last,rule,entry}});
+    }
+  }
 })();
+RUN.forEach((r,i)=>{r.i=i;});
 const RUN_LEN=RUN.length;
+/* nom de table : clé tbl.<index> pour la tournée, « Palier N » en sans fin */
+function tableName(tb){return (tb&&tb.pal!=null)?t('endless.tier',tb.pal+1):t('tbl.'+((tb&&tb.i)|0));}
+/* texte de règle : recomposé à partir du descripteur rt (traduit à chaque rendu) */
+function tableRuleText(tb){
+  const r=(tb&&tb.rt)||{};
+  if(r.endless)return r.rule?t('rule.'+r.rule):t('rtx.endless');
+  if(r.last)return t('rtx.bossFinal');
+  if(r.boss)return t('rtx.boss',r.rule?t('rule.'+r.rule):t('rtx.bossPlain'));
+  const parts=[];
+  if(r.k)parts.push(t(r.k));
+  else if(r.zone)parts.push(zoneName(r.zone));
+  if(r.rule)parts.push(t('rule.'+r.rule));
+  if(r.entry)parts.push(t('rtx.entry',cash(r.entry)));
+  return parts.length?parts.join(' · '):t('rtx.deep');
+}
 
 /* ====== tapis évolutif ====== */
 const FELT_COLORS=['#138f86','#1c6ea8','#7c3a9e','#c0356b'];   // mêmes couleurs que les paliers (vert, bleu, violet, rose) — elles cyclent par zone
@@ -1416,8 +1914,8 @@ function applyFelt(){
 function showBoss(){
   const p=document.getElementById('multPop');if(!p)return;
   p.className='boss long';
-  p.querySelector('.m').textContent=(G.endless?'MINI-BOSS':'BOSS');
-  p.querySelector('.t').textContent=G.table.n;
+  p.querySelector('.m').textContent=t(G.endless?'msg.miniboss':'msg.boss');
+  p.querySelector('.t').textContent=tableName(G.table);
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
 }
 
@@ -1428,7 +1926,6 @@ function showBoss(){
    miser. Les MISES montent d'un cran à chaque PALIER de cagnotte
    franchi, et on choisit alors un BONUS. Banqueroute = fin.
    ============================================================ */
-const ENDLESS_RULETXT={nervous:'La baraka monte 2× plus vite',mute:'Croupier muet',gros:'Le croupier tire jusqu’à 18',depart:'Table déjà chaude (+30 %)',sec:'Égalité = défaite'};
 /* seuil de cagnotte pour franchir le palier p (0-based) — premier palier vite
    atteint (~2× la banque de départ) puis ×1.6 : la récompense rythme la partie */
 function palierTarget(p){return niceRound(300*Math.pow(2.2,p));}
@@ -1451,47 +1948,46 @@ function endlessTier(tier){
   const max=Math.max(min*3,roundBet(base*bmax));
   const zone=Math.min(9,1+Math.floor(tier/2));
   const rule=tier>=6?'gros':(tier>=3&&tier%2===1?'nervous':null);   // croupier plus dur en montant
-  return {n:'Palier '+((G.palier||0)+1),zone,mains:Infinity,min,max,cap:0,goal:Infinity,master:Infinity,
-    rule,entry:0,need:0,endless:true,cagnotte:true,
-    ruleText: rule?ENDLESS_RULETXT[rule]:'Cagnotte sans fin'};
+  return {pal:(G.palier||0),zone,mains:Infinity,min,max,cap:0,goal:Infinity,master:Infinity,
+    rule,entry:0,need:0,endless:true,cagnotte:true,rt:{endless:true,rule}};
 }
 function tableFor(idx){return G.endless?endlessTier(idx):RUN[Math.min(idx,RUN_LEN-1)];}
 function curTable(){return tableFor(G.tableIdx);}
 function relicMax(){return 5+((G.boons&&G.boons.relic)||0);}
 /* bonus de palier (mode infini cagnotte) — pas de relique/tarot, pas de vie */
+/* titres/descriptions : clés boon.<id>.t / .d */
 const BOONS=[
-  {id:'mult',  t:'+1 PLAFOND MULT', d:'Le multiplicateur peut monter plus haut.'},
-  {id:'income',t:'+5 $ / MAIN',     d:'Revenu passif à chaque main.'},
-  {id:'betmax',t:'MISE MAX +25 %',  d:'Ton plafond de mise grimpe : vise plus gros.'},
-  {id:'filet', t:'FILET BARAKA',    d:'À la défaite, la BARAKA ne retombe pas à zéro : elle perd juste un niveau.'},
-  {id:'cash',  t:'+20 % CAGNOTTE',  d:'Injection immédiate dans ta cagnotte.'},
+  {id:'mult'},{id:'income'},{id:'betmax'},{id:'filet'},{id:'cash'},
   /* bonus RARES : proposés seulement après l'achat des « Pactes » à La Planque infini */
-  {id:'baraplus',t:'BARAKA DOPÉE',  d:'Les coups culottés donnent +1 BARAKA de plus.',lock:'boon2'},
-  {id:'evt3',     t:'MAINS SPÉCIALES ×2',d:'Une main spéciale toutes les 3 mains (au lieu de 5).',lock:'boon2'},
+  {id:'baraplus',lock:'boon2'},
+  {id:'evt3',lock:'boon2'},
 ];
 /* mini-événements du mode cagnotte : toutes les 5 mains, la main est SPÉCIALE —
    ça casse la routine et crée des pics de tension/récompense */
 const ENDLESS_EVENTS=[
-  {id:'doree',   ic:'doree',   t:'MAIN DORÉE',        d:'gains doublés sur cette main'},
-  {id:'forcee',  ic:'forcee',  t:'MISE FORCÉE',       d:'mise max obligatoire'},
-  {id:'pompette',ic:'glass',   t:'CROUPIER POMPETTE', d:'le croupier s’arrête à 16'},
-  {id:'etoile',  ic:'diamond', t:'CARTE ÉTOILÉE',     d:'ta 1re carte est HOLO (+1 mult)'},
+  {id:'doree',   ic:'doree'},
+  {id:'forcee',  ic:'forcee'},
+  {id:'pompette',ic:'glass'},
+  {id:'etoile',  ic:'diamond'},
 ];
+function evtTitle(e){return t('evt.'+e.id+'.t');}
+function evtDesc(e){return t('evt.'+e.id+'.d');}
 /* CONTRATS (mode nuit) : un défi optionnel par table — le remplir rapporte des ★
    bonus dans la cagnotte. Pousse à jouer AUTREMENT, pas juste à battre le croupier. */
 const CONTRACTS=[
-  {id:'c5',    txt:'gagne une main de 5 cartes',       chk:o=>o.n>=5},
-  {id:'c21',   txt:'gagne avec un 21 parfait',         chk:o=>o.pv===21&&o.n>2},
-  {id:'cpress',txt:'gagne à baraka ≥ 75 %',            chk:o=>o.press>=75},
-  {id:'cmult', txt:'gagne une main à ×3 ou plus',      chk:o=>o.mult>=3},
-  {id:'cdbl',  txt:'gagne une main DOUBLÉE',           chk:o=>o.dbl},
-  {id:'csuite',txt:'gagne avec une SUITE',             chk:o=>o.suite},
-  {id:'ccoul', txt:'gagne avec une COULEUR',           chk:o=>o.coul},
+  {id:'c5',    chk:o=>o.n>=5},
+  {id:'c21',   chk:o=>o.pv===21&&o.n>2},
+  {id:'cpress',chk:o=>o.press>=75},
+  {id:'cmult', chk:o=>o.mult>=3},
+  {id:'cdbl',  chk:o=>o.dbl},
+  {id:'csuite',chk:o=>o.suite},
+  {id:'ccoul', chk:o=>o.coul},
 ];
+function contractText(c){return c?t('ctr.'+c.id):'';}
 function rollContract(){
   if(G.endless)return null;
   const c=CONTRACTS[rndInt(CONTRACTS.length)];
-  return {id:c.id,txt:c.txt,reward:10+((G.table&&G.table.zone)|0)*5,done:false};
+  return {id:c.id,reward:10+((G.table&&G.table.zone)|0)*5,done:false};
 }
 /* appelé sur chaque main GAGNÉE (mult = multiplicateur payé) */
 function checkContract(mult){
@@ -1501,7 +1997,7 @@ function checkContract(mult){
   const def=CONTRACTS.find(x=>x.id===c.id);
   if(def&&def.chk(o)){
     c.done=true;G.pot+=c.reward;
-    setTimeout(()=>{sfx.combo&&sfx.combo();coinBurst(8);popText(PXI('scroll')+' CONTRAT REMPLI','+'+c.reward+' '+STAR);renderTop();},1500);
+    setTimeout(()=>{sfx.combo&&sfx.combo();coinBurst(8);popText(PXI('scroll')+' '+t('msg.contract'),'+'+c.reward+' '+STAR);renderTop();},1500);
   }
 }
 /* étoiles : il FAUT atteindre l'objectif pour valider la table.
@@ -1537,61 +2033,70 @@ function repOnEnd(cashout){
   const base=cashout?G.pot:Math.floor(G.pot*0.5);
   return base+Math.max(0,depth)*3+(G.runStars|0)*2+(cashout?0:proximityRep());
 }
+/* noms / descriptions : clés relic.<id>.n et relic.<id>.d */
 const RELIC_POOL=[
-  {id:'lunettes',name:'Lunettes',ic:'👓',desc:'Relique permanente. Une fois par main, révèle la prochaine carte du sabot avant de décider de tirer.',cost:14},
-  {id:'jeton',name:'Jeton fendu',ic:'🪙',desc:'Relique permanente. Si tu perds une main avec un total de 20, tu récupères la moitié de ta mise.',cost:10},
-  {id:'clope',name:'Cigarette',ic:'🚬',desc:'Relique permanente. Ta baraka monte 30 % plus vite, tout le temps.',cost:12},
-  {id:'as',name:'As truqué',ic:'🂡',desc:'Relique permanente. Quand tu gagnes une main qui contient un As : +1 au multiplicateur.',cost:16},
-  {id:'froid',name:'Sang-froid',ic:'🧊',desc:'Relique permanente. Si tu gagnes une main avec une baraka ≥ 75 % : +1 au multiplicateur.',cost:16},
-  {id:'compteur',name:'Compteur',ic:'🎯',desc:'Relique permanente. Affiche en continu ta probabilité de dépasser 21 au prochain tirage.',cost:12},
-  {id:'mecene',name:'Mécène',ic:'💵',desc:'Relique permanente. +4 $ offerts au début de chaque main.',cost:15},
-  {id:'usurier',name:'Usurier',ic:'🏦',desc:'Relique permanente. Au début de chaque main : +1 $ par tranche de 5 $ en banque (jusqu’à +6).',cost:18},
-  {id:'collector',name:'Collectionneur',ic:'🌈',desc:'Relique permanente. Les éditions spéciales (FOIL/HOLO/POLY) apparaissent 3× plus souvent sur tes cartes.',cost:16},
-  {id:'maitresse',name:'Carte maîtresse',ic:'🎴',desc:'Relique permanente. Ta 1re carte de chaque main est FOIL : de l’argent bonus quand tu gagnes.',cost:14},
-  {id:'bruleur',name:'Brûleur',ic:'🔥',desc:'Relique permanente. Si tu gagnes une main avec une baraka ≥ 50 % : gain de la main ×1,5.',cost:17},
-  {id:'portebonheur',name:'Porte-bonheur',ic:'🍀',desc:'Relique permanente. +1 emplacement de jeton Tarot (tu peux garder un jeton de plus).',cost:12},
-  {id:'diplomate',name:'Diplomate',ic:'🤝',desc:'Relique permanente. En cas d’égalité avec le croupier, tu récupères la moitié de ta mise.',cost:11},
+  {id:'lunettes',cost:14},
+  {id:'jeton',cost:10},
+  {id:'clope',cost:12},
+  {id:'as',cost:16},
+  {id:'froid',cost:16},
+  {id:'compteur',cost:12},
+  {id:'mecene',cost:15},
+  {id:'usurier',cost:18},
+  {id:'collector',cost:16},
+  {id:'maitresse',cost:14},
+  {id:'bruleur',cost:17},
+  {id:'portebonheur',cost:12},
+  {id:'diplomate',cost:11},
   /* reliques RARES : n'apparaissent en boutique qu'après l'achat du « Coffre » à La Planque */
-  {id:'talisman',name:'Talisman',ic:'🧿',desc:'Relique rare. Une fois par table, ta première main perdue est intégralement remboursée.',cost:15,lock:'relic2'},
-  {id:'aimant',name:'Aimant',ic:'🧲',desc:'Relique rare. +1 $ à chaque carte que tu tires.',cost:12,lock:'relic2'},
-  {id:'phare',name:'Le Phare',ic:'🗼',desc:'Relique rare. CHARLIE (5 cartes sans dépasser) paie ×3 au lieu de ×2.',cost:16,lock:'relic2'},
+  {id:'talisman',cost:15,lock:'relic2'},
+  {id:'aimant',cost:12,lock:'relic2'},
+  {id:'phare',cost:16,lock:'relic2'},
 ];
 
 /* éditions de cartes : foil = jetons bonus, holo = +mult, poly = ×mult */
 const TAROT_POOL=[
-  {id:'etoile',name:"L'Étoile",ic:'❄️',cost:7,desc:'À jouer à tout moment : +2 BARAKA tout de suite (fait monter ta veine).',when:'any',
-    use(){addBaraka(2);return'+2 baraka';}},
-  {id:'jugement',name:'Le Jugement',ic:'⚖️',cost:11,desc:'À jouer à tout moment : monte directement d’un niveau de BARAKA.',when:'any',
-    use(){const lvl=barakaLevel();const target=lvl<4?BARAKA_STEPS[lvl]:BARAKA_STEPS[3];addBaraka(Math.max(1,target-(G.baraka||0)));return'BARAKA +1 niveau';}},
-  {id:'soleil',name:'Le Soleil',ic:'☀️',cost:6,desc:'Ajoute aussitôt 18 $ à ta banque, à tout moment.',when:'any',
-    use(){G.bank+=18;renderTop();coinBurst(8);return'+18 $';}},
-  {id:'diable',name:'Le Diable',ic:'😈',cost:9,desc:'À jouer sur ta main : transforme une de tes cartes en POLYCHROME, qui multiplie le gain de la main (×1,5).',when:'play',need:'cards',
-    use(){const c=addEditionToHand('poly');return c?('Polychrome : '+c.r+c.s):false;}},
-  {id:'lune',name:'La Lune',ic:'🌙',cost:8,desc:'À jouer sur ta main : transforme une de tes cartes en HOLOGRAPHIQUE (+1 au multiplicateur de la main).',when:'play',need:'cards',
-    use(){const c=addEditionToHand('holo');return c?('Holo : '+c.r+c.s):false;}},
-  {id:'etoileD',name:"L'Étoile filante",ic:'✨',cost:7,desc:'À jouer sur ta main : transforme une de tes cartes en FOIL, qui rapporte de l’argent bonus quand la main est gagnée.',when:'play',need:'cards',
-    use(){const c=addEditionToHand('foil');return c?('Foil : '+c.r+c.s):false;}},
-  {id:'pendu',name:'Le Pendu',ic:'🪢',cost:9,desc:'À jouer pendant la main : annule ta dernière carte tirée (sauve-toi quand tu as tiré la carte de trop).',when:'play',need:'extra',
-    use(){const c=G.pHand.pop();renderHands();renderMult();updateBustReadout();renderActions();return'Retiré : '+c.r+c.s;}},
-  {id:'magicien',name:'Le Magicien',ic:'🎩',cost:10,desc:'À jouer pendant la main : truque ta prochaine carte tirée, qui sera la meilleure possible pour ta main.',when:'play',
-    use(){G.magicNext=true;return'Prochaine carte truquée';}},
-  {id:'roue',name:'La Roue',ic:'🎡',cost:6,desc:'À jouer sur ta main : 1 chance sur 2 d’ajouter une édition aléatoire (FOIL, HOLO ou POLY) à une carte ; sinon, rien.',when:'play',need:'cards',
-    use(){if(Math.random()<0.5){const ed=['foil','holo','poly'][rndInt(3)];const c=addEditionToHand(ed);return c?('Édition '+ed.toUpperCase()+' !'):false;}return'Raté…';}},
+  {id:'etoile',cost:7,when:'any',
+    use(){addBaraka(2);return t('tarot.etoile.u');}},
+  {id:'jugement',cost:11,when:'any',
+    use(){const lvl=barakaLevel();const target=lvl<4?BARAKA_STEPS[lvl]:BARAKA_STEPS[3];addBaraka(Math.max(1,target-(G.baraka||0)));return t('tarot.jugement.u');}},
+  {id:'soleil',cost:6,when:'any',
+    use(){G.bank+=18;renderTop();coinBurst(8);return t('tarot.soleil.u');}},
+  {id:'diable',cost:9,when:'play',need:'cards',
+    use(){const c=addEditionToHand('poly');return c?t('tarot.diable.u',c.r+c.s):false;}},
+  {id:'lune',cost:8,when:'play',need:'cards',
+    use(){const c=addEditionToHand('holo');return c?t('tarot.lune.u',c.r+c.s):false;}},
+  {id:'etoileD',cost:7,when:'play',need:'cards',
+    use(){const c=addEditionToHand('foil');return c?t('tarot.etoileD.u',c.r+c.s):false;}},
+  {id:'pendu',cost:9,when:'play',need:'extra',
+    use(){const c=G.pHand.pop();renderHands();renderMult();updateBustReadout();renderActions();return t('tarot.pendu.u',c.r+c.s);}},
+  {id:'magicien',cost:10,when:'play',
+    use(){G.magicNext=true;return t('tarot.magicien.u');}},
+  {id:'roue',cost:6,when:'play',need:'cards',
+    use(){if(Math.random()<0.5){const ed=['foil','holo','poly'][rndInt(3)];const c=addEditionToHand(ed);return c?t('tarot.roue.u',ed.toUpperCase()):false;}return t('tarot.roue.f');}},
 ];
+
 /* SERVICES de boutique : régulateurs économiques, appliqués immédiatement à l'achat
    (ni relique ni tarot). Aident à encaisser les coups durs sans casser l'économie. */
 const SERVICE_POOL=[
-  {id:'soin',     name:'Avance de fonds', svc:true, baseCost:0.9, desc:'Renfloue ta banque jusqu’au capital conseillé de la table.',
-    apply(){const c=curTable().cap;if(G.bank<c){G.bank=c;}coinBurst(8);return'Banque renflouée';}},
-  {id:'assurance',name:'Assurance',       svc:true, baseCost:0.7, desc:'Ta prochaine perte de la table est remboursée (1×).',
-    apply(){G.insurance=true;return'Assuré';}},
-  {id:'videur',   name:'Pourboire au videur', svc:true, baseCost:1.1, desc:'+1 jeton de seconde chance.',
-    apply(){G.tokens=(G.tokens||0)+1;return'+1 seconde chance';}},
+  {id:'soin',      svc:true, baseCost:0.9,
+    apply(){const c=curTable().cap;if(G.bank<c){G.bank=c;}coinBurst(8);return t('svc.soin.u');}},
+  {id:'assurance', svc:true, baseCost:0.7,
+    apply(){G.insurance=true;return t('svc.assurance.u');}},
+  {id:'videur',    svc:true, baseCost:1.1,
+    apply(){G.tokens=(G.tokens||0)+1;return t('svc.videur.u');}},
 ];
+
 const SERVICE_BY_ID=Object.fromEntries(SERVICE_POOL.map(s=>[s.id,s]));
+/* espace de noms i18n porté par chaque objet (relique / tarot / service) */
+RELIC_POOL.forEach(r=>{r.ns='relic';});
+TAROT_POOL.forEach(x=>{x.ns='tarot';});
+SERVICE_POOL.forEach(x=>{x.ns='svc';});
+function iName(o){return o?t(o.ns+'.'+o.id+'.n'):'';}
+function iDesc(o){return o?t(o.ns+'.'+o.id+'.d'):'';}
 const ED_NAME={foil:'FOIL',holo:'HOLO',poly:'POLY'};
-const ED_INFO={foil:'+ argent bonus',holo:'+1 au multiplicateur',poly:'× multiplicateur'};
-function announceEd(c){if(c&&c.ed)popText('CARTE '+ED_NAME[c.ed],ED_INFO[c.ed]);}
+function edInfo(ed){return t('ed.'+ed);}
+function announceEd(c){if(c&&c.ed)popText(t('ed.card',ED_NAME[c.ed]),edInfo(c.ed));}
 /* ICON retiré : effets affichés via jetons SHOPTOK */
 
 
@@ -1689,38 +2194,38 @@ function computeMult(mode){
   const pv=handValue(G.pHand).total;
   let mult=1,bonusChips=0;const lines=[];
   const isNatural=(mode==='natural'&&G.pHand.length===2&&pv===21);
-  if(isNatural){mult*=1.5;lines.push(['BLACKJACK','×1.5']);}
-  if(pv===21&&!isNatural){mult*=3;lines.push(['21 PARFAIT','×3']);}
-  if(G.pHand.length>=5&&pv<=21){const cm=hasRelic('phare')?3:2;mult*=cm;lines.push(['CHARLIE','×'+cm,hasRelic('phare')?'phare':undefined]);}
-  if(countRank('7')>=2){mult*=1.5;lines.push(['PAIRE DE 7','×1.5']);}
+  if(isNatural){mult*=1.5;lines.push([t('m.blackjack'),'×1.5']);}
+  if(pv===21&&!isNatural){mult*=3;lines.push([t('m.perfect'),'×3']);}
+  if(G.pHand.length>=5&&pv<=21){const cm=hasRelic('phare')?3:2;mult*=cm;lines.push([t('m.charlie'),'×'+cm,hasRelic('phare')?'phare':undefined]);}
+  if(countRank('7')>=2){mult*=1.5;lines.push([t('m.pair7'),'×1.5']);}
   /* bonus de COMPOSITION : récompensent les mains construites (≥3 cartes) */
   const suits=new Set(G.pHand.map(c=>c.s));
-  if(G.pHand.length>=3&&suits.size===1){mult*=2;lines.push([PXI('couleur')+' COULEUR','×2']);}          // toutes la même enseigne
-  if(isStraight(G.pHand)){mult*=2;lines.push([PXI('suite')+' SUITE','×2']);}                            // rangs qui se suivent
-  if(G.pHand.length>=4&&suits.size===4){mult*=1.5;lines.push([PXI('arc')+' ARC-EN-CIEL','×1.5']);}   // une carte de chaque enseigne
-  if(G.insisted){mult*=1.5;lines.push(['INSISTANCE','×1.5']);}
+  if(G.pHand.length>=3&&suits.size===1){mult*=2;lines.push([PXI('couleur')+' '+t('m.flush'),'×2']);}     // toutes la même enseigne
+  if(isStraight(G.pHand)){mult*=2;lines.push([PXI('suite')+' '+t('m.straight'),'×2']);}                    // rangs qui se suivent
+  if(G.pHand.length>=4&&suits.size===4){mult*=1.5;lines.push([PXI('arc')+' '+t('m.rainbow'),'×1.5']);}     // une carte de chaque enseigne
+  if(G.insisted){mult*=1.5;lines.push([t('m.pushing'),'×1.5']);}
   const _bl=barakaLevel();
-  if(_bl>0){mult*=BARAKA_MULT[_bl];lines.push(['BARAKA NIV '+_bl,'×'+BARAKA_MULT[_bl]]);}   // veine en cours
-  if(hasRelic('bruleur')&&_bl>=2){mult*=1.5;lines.push(['BRÛLEUR','×1.5','bruleur']);}
+  if(_bl>0){mult*=BARAKA_MULT[_bl];lines.push([t('m.streak',_bl),'×'+BARAKA_MULT[_bl]]);}   // veine en cours
+  if(hasRelic('bruleur')&&_bl>=2){mult*=1.5;lines.push([t('m.burner'),'×1.5','bruleur']);}
   /* éditions des cartes en main */
   let foil=0,holo=0,poly=0;
   for(const c of G.pHand){if(c.ed==='foil')foil++;else if(c.ed==='holo')holo++;else if(c.ed==='poly')poly++;}
-  if(foil){bonusChips+=foil*3;lines.push([PXI('diamond')+' FOIL','+'+(foil*3)+' jet']);}
-  if(holo){mult+=holo;lines.push([PXI('diamond')+' HOLO','+'+holo]);}
-  if(poly){const pm=Math.pow(1.5,poly);mult*=pm;lines.push([PXI('diamond')+' POLY','×'+(Math.round(pm*100)/100)]);}
-  if(hasRelic('as')&&G.pHand.some(c=>c.r==='A')){mult+=1;lines.push(['AS TRUQUÉ','+1','as']);}
-  if(hasRelic('froid')&&_bl>=3){mult+=1;lines.push(['SANG-FROID','+1','froid']);}
+  if(foil){bonusChips+=foil*3;lines.push([PXI('diamond')+' '+t('m.foil'),t('m.foilV',foil*3)]);}
+  if(holo){mult+=holo;lines.push([PXI('diamond')+' '+t('m.holo'),'+'+holo]);}
+  if(poly){const pm=Math.pow(1.5,poly);mult*=pm;lines.push([PXI('diamond')+' '+t('m.poly'),'×'+(Math.round(pm*100)/100)]);}
+  if(hasRelic('as')&&G.pHand.some(c=>c.r==='A')){mult+=1;lines.push([t('m.ace'),'+1','as']);}
+  if(hasRelic('froid')&&_bl>=3){mult+=1;lines.push([t('m.cool'),'+1','froid']);}
   /* ---- PETITS BONUS SITUATIONNELS : du pep's, en multiplicateur (proportionnel à la mise → facile à équilibrer) ---- */
   const figs=G.pHand.filter(c=>c.r==='J'||c.r==='Q'||c.r==='K').length;
-  if(figs>=2){mult*=1.5;lines.push(['COUR','×1.5']);}                                   // les figures paient (2+ têtes)
-  if(pv<=15){mult*=1.5;lines.push(['FILOU','×1.5']);}                                    // gagner avec un petit total (≤15)
-  if(G.pHand.length>=3&&handValue(G.pHand.slice(0,2)).total<=11&&pv>=17){mult*=1.3;lines.push(['REMONTADA','×1.3']);}  // parti de bas, remonté à 17+
-  if(!G.endless&&isFinite(G.table.mains)&&G.hand>=G.table.mains){mult*=1.5;lines.push(['CLUTCH','×1.5']);} // dernière main de la table
-  if(G.revealed){const dvv=handValue(G.dHand).total; if(pv<=21&&dvv<=21&&pv-dvv===1){mult*=1.5;lines.push(['AU POIL','×1.5']);}} // battre le croupier d'exactement 1
+  if(figs>=2){mult*=1.5;lines.push([t('m.court'),'×1.5']);}                             // les figures paient (2+ têtes)
+  if(pv<=15){mult*=1.5;lines.push([t('m.lowball'),'×1.5']);}                             // gagner avec un petit total (≤15)
+  if(G.pHand.length>=3&&handValue(G.pHand.slice(0,2)).total<=11&&pv>=17){mult*=1.3;lines.push([t('m.comeback'),'×1.3']);}  // parti de bas, remonté à 17+
+  if(!G.endless&&isFinite(G.table.mains)&&G.hand>=G.table.mains){mult*=1.5;lines.push([t('m.clutch'),'×1.5']);} // dernière main de la table
+  if(G.revealed){const dvv=handValue(G.dHand).total; if(pv<=21&&dvv<=21&&pv-dvv===1){mult*=1.5;lines.push([t('m.byone'),'×1.5']);}} // battre le croupier d'exactement 1
   /* anti-explosion : rendement décroissant au-delà de ×3, puis plafond de zone */
   const cap=(ZONE_MULTCAP[curTable().zone]||9)+((G.boons&&G.boons.mult)||0);
   if(mult>3)mult=3+(mult-3)*0.6;            // au-delà de ×3, chaque bonus compte à 60 %
-  if(mult>cap){mult=cap;lines.push(['PLAFOND ZONE','×'+cap]);}
+  if(mult>cap){mult=cap;lines.push([t('m.zonecap'),'×'+cap]);}
   mult=Math.round(mult*100)/100;
   return {mult,lines,bonusChips};
 }
@@ -1865,8 +2370,8 @@ function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les 
   const pct=barakaPct(),lvl=barakaLevel();
   document.documentElement.style.setProperty('--p',(pct/100).toFixed(3));
   const f=$('pFill');if(f)f.style.width=pct+'%';
-  const pp=$('pPct');if(pp){pp.textContent=lvl?('· NIV '+lvl+' ×'+BARAKA_MULT[lvl]):'';pp.style.display=lvl?'':'none';}
-  const ps=$('pState');if(ps){ps.textContent='BARAKA';ps.style.color='';}
+  const pp=$('pPct');if(pp){pp.textContent=lvl?t('ui.lvl',lvl,BARAKA_MULT[lvl]):'';pp.style.display=lvl?'':'none';}
+  const ps=$('pState');if(ps){ps.textContent=t('ui.streak');ps.style.color='';}
   const bar=$('pBar');if(bar)bar.classList.toggle('tick',lvl>=3);
   const tbl=document.getElementById('table');if(tbl)tbl.classList.toggle('boil',lvl>=3);
 }
@@ -1890,28 +2395,28 @@ function comboHints(){
   const suits=new Set(h.map(c=>c.s));
   const sevens=h.filter(c=>c.r==='7').length;
   /* --- déjà acquis (s'appliquent si tu gagnes la main) --- */
-  if(v===21&&n===2)on.push('BLACKJACK ×1.5');
-  if(v===21&&n>2)on.push('21 PARFAIT ×3');
-  if(n>=5&&v<=21)on.push('CHARLIE ×2');
-  if(sevens>=2)on.push('PAIRE DE 7 ×1.5');
-  if(n>=3&&suits.size===1)on.push('COULEUR ×2');
-  if(isStraight(h))on.push('SUITE ×2');
-  if(n>=4&&suits.size===4)on.push('ARC-EN-CIEL ×1.5');
-  if(G.insisted)on.push('INSISTANCE ×1.5');
-  {const bl=barakaLevel();if(bl>0)on.push('BARAKA NIV '+bl+' ×'+BARAKA_MULT[bl]);}
+  if(v===21&&n===2)on.push(t('m.blackjack')+' ×1.5');
+  if(v===21&&n>2)on.push(t('m.perfect')+' ×3');
+  if(n>=5&&v<=21)on.push(t('m.charlie')+' ×2');
+  if(sevens>=2)on.push(t('m.pair7')+' ×1.5');
+  if(n>=3&&suits.size===1)on.push(t('m.flush')+' ×2');
+  if(isStraight(h))on.push(t('m.straight')+' ×2');
+  if(n>=4&&suits.size===4)on.push(t('m.rainbow')+' ×1.5');
+  if(G.insisted)on.push(t('m.pushing')+' ×1.5');
+  {const bl=barakaLevel();if(bl>0)on.push(t('m.streak',bl)+' ×'+BARAKA_MULT[bl]);}
   /* petits bonus situationnels prévisibles en direct */
-  if(h.filter(c=>c.r==='J'||c.r==='Q'||c.r==='K').length>=2)on.push('COUR ×1.5');
-  if(n&&v<=15)on.push('FILOU ×1.5');
-  if(n>=3&&handValue(h.slice(0,2)).total<=11&&v>=17)on.push('REMONTADA ×1.3');
-  if(!G.endless&&isFinite(G.table.mains)&&G.hand>=G.table.mains)on.push('CLUTCH ×1.5');
+  if(h.filter(c=>c.r==='J'||c.r==='Q'||c.r==='K').length>=2)on.push(t('m.court')+' ×1.5');
+  if(n&&v<=15)on.push(t('m.lowball')+' ×1.5');
+  if(n>=3&&handValue(h.slice(0,2)).total<=11&&v>=17)on.push(t('m.comeback')+' ×1.3');
+  if(!G.endless&&isFinite(G.table.mains)&&G.hand>=G.table.mains)on.push(t('m.clutch')+' ×1.5');
   /* --- à portée (une carte / un cran) --- */
-  if(v<21&&v>=11&&21-v<=10)soon.push('21 PARFAIT ×3 · à '+(21-v));
-  if(n===4&&v<=20)soon.push('CHARLIE ×2 · +1 carte');
-  if(n===2&&suits.size===1)soon.push('COULEUR ×2 · +1 '+h[0].s);
-  if(n===3&&suits.size===3)soon.push('ARC-EN-CIEL ×1.5 · +1 carte');
-  if(sevens===1&&n<=3)soon.push('PAIRE DE 7 · tire un 7');
-  if(!isStraight(h)&&n>=2&&n<=4&&RANKS.some(r=>isStraight(h.concat([{r,s:'♠'}]))))soon.push('SUITE ×2 · possible');
-  {const bl=barakaLevel();if(bl<4){const need=BARAKA_STEPS[bl]-(G.baraka||0);if(need<=2&&need>0)soon.push('BARAKA NIV '+(bl+1)+' dans '+need);}}
+  if(v<21&&v>=11&&21-v<=10)soon.push(t('cb.to21',21-v));
+  if(n===4&&v<=20)soon.push(t('cb.charlie'));
+  if(n===2&&suits.size===1)soon.push(t('cb.flush',h[0].s));
+  if(n===3&&suits.size===3)soon.push(t('cb.rainbow'));
+  if(sevens===1&&n<=3)soon.push(t('cb.pair7'));
+  if(!isStraight(h)&&n>=2&&n<=4&&RANKS.some(r=>isStraight(h.concat([{r,s:'♠'}]))))soon.push(t('cb.straight'));
+  {const bl=barakaLevel();if(bl<4){const need=BARAKA_STEPS[bl]-(G.baraka||0);if(need<=2&&need>0)soon.push(t('cb.streak',bl+1,need));}}
   return {on,soon};
 }
 function renderCombos(){
@@ -1919,14 +2424,14 @@ function renderCombos(){
   if(G.phase!=='play'||!G.pHand.length||G._dealing){row.innerHTML='';row.style.display='none';return;}
   const {on,soon}=comboHints();
   const pills=on.map(t=>`<i class="cpill on">${t}</i>`).concat(soon.map(t=>`<i class="cpill">${t}</i>`)).slice(0,4);
-  if(G.endless&&G.event)pills.unshift(`<i class="cpill evt">${PXI(G.event.ic)} ${G.event.t}</i>`);
-  if(!G.endless&&G.contract&&!G.contract.done)pills.push(`<i class="cpill ctr">${PXI('scroll')} ${G.contract.txt}</i>`);
+  if(G.endless&&G.event)pills.unshift(`<i class="cpill evt">${PXI(G.event.ic)} ${evtTitle(G.event)}</i>`);
+  if(!G.endless&&G.contract&&!G.contract.done)pills.push(`<i class="cpill ctr">${PXI('scroll')} ${contractText(G.contract)}</i>`);
   row.innerHTML=pills.join('');
   row.style.display=pills.length?'flex':'none';
 }
 function renderTop(){
-  const t=G.table;
-  const nMains=isFinite(t.mains)?t.mains:0;          // en infini t.mains = Infinity (bandeau masqué)
+  const tb=G.table;
+  const nMains=isFinite(tb.mains)?tb.mains:0;        // en infini mains = Infinity (bandeau masqué)
   $('tableNum').textContent=G.endless?('∞'+(G.tableIdx+1)):((G.tableIdx+1)+'/'+RUN_LEN);
   $('handNum').textContent=G.hand;$('handMax').textContent=nMains;
   const left=nMains-G.hand+1;
@@ -1938,30 +2443,33 @@ function renderTop(){
   const tp=$('turnPips');if(tp){let h='';for(let i=0;i<nMains;i++)h+='<i class="'+(i<G.hand?'on':'')+'"></i>';tp.innerHTML=h;}
   applyFelt();   // tapis évolutif : design + couleur selon la table
   const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=heartSVG(15)+'<span class="lvn">×'+n+'</span>';lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
-  $('tableName').textContent=t.n;                                   // nom seul, en gros
-  const tm=$('tableMeta');if(tm)tm.textContent=G.endless?('∞ SANS FIN · palier '+((G.palier||0)+1)+' · mise '+t.min+'–'+t.max):('zone '+t.zone+' · '+ZONE_NAMES[t.zone]+' · '+(G.tableIdx+1)+'/'+RUN_LEN);
+  $('tableName').textContent=tableName(tb);                         // nom seul, en gros
+  const tm=$('tableMeta');if(tm)tm.textContent=G.endless
+    ?t('top.metaInf',(G.palier||0)+1,abbr(tb.min),abbr(tb.max))
+    :t('top.metaCircuit',tb.zone,zoneName(tb.zone),G.tableIdx+1,RUN_LEN);
   const bits=[];
-  if(t.ruleText)bits.push(t.ruleText);
+  const rtx=tableRuleText(tb);
+  if(rtx)bits.push(rtx);
   if(G.endless){
-    bits.push('mise '+abbr(t.min)+'–'+abbr(t.max));
-    bits.push('vaut ★'+abbr(endlessCashRep())+' en pause');       // la tension : sécuriser ou replonger
-    bits.push('record '+abbr(Math.max(G.peak||0,G.bank))+' $');
+    bits.push(t('top.betRange',abbr(tb.min),abbr(tb.max)));
+    bits.push(t('top.worth',STAR+abbr(endlessCashRep())));         // la tension : sécuriser ou replonger
+    bits.push(t('top.record',cash(Math.max(G.peak||0,G.bank))));
   }else{
-    bits.push('maîtrise ≥'+abbr(t.master)+' $');
-    bits.push('mise '+abbr(t.min)+'–'+abbr(t.max));
-    bits.push((G.runStars||0)+' étoile'+((G.runStars||0)>1?'s':''));
-    if(G.pot>0)bits.push('cagnotte '+abbr(G.pot));
-    if(G.contract)bits.push(G.contract.done?('✓ contrat rempli'):(PXI('scroll')+' '+G.contract.txt+' (+'+G.contract.reward+STAR+')'));
+    bits.push(t('top.mastery',cash(tb.master)));
+    bits.push(t('top.betRange',abbr(tb.min),abbr(tb.max)));
+    bits.push(t('top.stars',G.runStars||0));
+    if(G.pot>0)bits.push(t('top.pot',abbr(G.pot)));
+    if(G.contract)bits.push(G.contract.done?t('top.contractDone'):(PXI('scroll')+' '+contractText(G.contract)+' (+'+G.contract.reward+STAR+')'));
   }
   $('ruleText').innerHTML=bits.join('  ·  ');
-  $('ruleText').classList.toggle('boss',!!t.boss);
+  $('ruleText').classList.toggle('boss',!!tb.boss);
   $('shoeCount').textContent=G.shoe.length;
   renderObjective();
 }
 /* barre de progression GAIN → OBJECTIF (au-dessus du tapis) */
 function renderObjective(){
-  const gv=$('gainVal');if(gv)gv.textContent=abbr(G.bank)+' $';
-  const lbl=document.querySelector('#gainStat .lbl');if(lbl)lbl.textContent=G.endless?'CAGNOTTE':'GAIN';
+  const gv=$('gainVal');if(gv)gv.textContent=cash(G.bank);
+  const lbl=document.querySelector('#gainStat .lbl');if(lbl)lbl.textContent=G.endless?t('ui.potLbl'):t('ui.gain');
   // nouvelle table / palier : la barre repart de 0 SANS glisser depuis l'objectif précédent (on coupe la transition le temps de la remettre à zéro)
   const _of=$('objFill'),_snap=_of&&G._objBarIdx!==G.tableIdx;
   if(_snap){_of.style.transition='none';_of.style.width='0%';void _of.offsetWidth;_of.style.transition='';G._objBarIdx=G.tableIdx;}
@@ -1969,7 +2477,7 @@ function renderObjective(){
     const p=G.palier||0,target=palierTarget(p);
     const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,target)*100));
     const f=$('objFill');if(f)f.style.width=pct+'%';
-    const g=$('objGoal');if(g)g.textContent=abbr(target)+' $';
+    const g=$('objGoal');if(g)g.textContent=cash(target);
     const bar=$('objBar');if(bar)bar.classList.remove('full');
     if(gv)gv.classList.remove('warn');
     return;
@@ -1978,7 +2486,7 @@ function renderObjective(){
   // barre = jetons ABSOLUS (depuis 0) vers l'objectif, exactement comme les paliers en Sans Fin (bank/target)
   const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,goal)*100));
   const f=$('objFill');if(f)f.style.width=pct+'%';
-  const g=$('objGoal');if(g)g.textContent=abbr(goal)+' $';  // objectif au bout de la barre
+  const g=$('objGoal');if(g)g.textContent=cash(goal);       // objectif au bout de la barre
   if(gv)gv.classList.toggle('warn',!!(G.table&&G.bank<G.table.min*3));
   const bar=$('objBar');if(bar)bar.classList.toggle('full',G.bank>=goal);
 }
@@ -2044,23 +2552,23 @@ function renderRelics(){
   G.relics.forEach((r,idx)=>{
     const d=document.createElement('div');d.className='joker';d.dataset.relic=r.id;
     if((r.id==='froid'||r.id==='clope')&&barakaLevel()>=3)d.classList.add('hot');
-    const tk=SHOPTOK[r.id]||{t:r.name,c:'#ffce3a'};
+    const tk=tokFor(r.id);
     d.innerHTML=`<span class="ft" style="color:${tk.c}">${tk.t}</span>`;   // étiquette : juste la valeur (taille uniforme)
-    d.title=`${r.name} — ${r.desc}`;
+    d.title=`${iName(r)} — ${iDesc(r)}`;
     d.onclick=()=>openInspect('relic',idx);
     wrap.appendChild(d);
   });
-  $('slotc').innerHTML=`${G.relics.length}/5<br>reliques`;
+  $('slotc').innerHTML=`${G.relics.length}/5<br>${t('ui.relics')}`;
   fanEffects();
 }
 function consumableSlots(){return 2+(hasRelic('portebonheur')?1:0)+uLvl('tarot')+((G.boons&&G.boons.tarot)||0);}
 function renderConsumables(){
   const row=$('consumeRow'),wrap=$('consumes');wrap.innerHTML='';
-  G.consumables.forEach((t,i)=>{
+  G.consumables.forEach((card,i)=>{
     const d=document.createElement('div');d.className='tarot';
-    const tk=SHOPTOK[t.id]||{t:t.name,c:'#a64dff'};
+    const tk=tokFor(card.id);
     d.innerHTML=`<span class="ft" style="color:${tk.c}">${tk.t}</span>`;   // étiquette : juste la valeur (taille uniforme)
-    d.title=`${t.name} — ${t.desc}`;
+    d.title=`${iName(card)} — ${iDesc(card)}`;
     d.onclick=()=>openInspect('tarot',i);
     wrap.appendChild(d);
   });
@@ -2077,14 +2585,14 @@ function addEditionToHand(ed){
   return G.pHand[idx];
 }
 function useConsumable(i,el){
-  const t=G.consumables[i];if(!t)return;
-  if(t.when==='play'&&G.phase!=='play'){popText('PAS MAINTENANT','utilisable en jeu');return;}
-  if(t.need==='cards'&&!G.pHand.length){popText('PAS DE CARTE','');return;}
-  if(t.need==='extra'&&G.pHand.length<=2){popText('IMPOSSIBLE','garde ≥3 cartes');return;}
-  const res=t.use();
-  if(res===false){popText('IMPOSSIBLE','');return;}
+  const card=G.consumables[i];if(!card)return;
+  if(card.when==='play'&&G.phase!=='play'){popText(t('msg.notNow'),t('msg.notNowSub'));return;}
+  if(card.need==='cards'&&!G.pHand.length){popText(t('msg.noCards'),'');return;}
+  if(card.need==='extra'&&G.pHand.length<=2){popText(t('msg.cant'),t('msg.keep3'));return;}
+  const res=card.use();
+  if(res===false){popText(t('msg.cant'),'');return;}
   if(el)el.classList.add('flash');
-  G.consumables.splice(i,1);sfx.buy();popText(t.name,res);
+  G.consumables.splice(i,1);sfx.buy();popText(iName(card),res);
   renderConsumables();
 }
 /* prix de revente : la moitié de ce qu'on a payé (jamais plus cher que l'achat) */
@@ -2097,23 +2605,23 @@ function openInspect(kind,i){
   const item=kind==='tarot'?G.consumables[i]:G.relics[i];
   if(!item)return;
   inspectRef={kind,i};
-  const tk=SHOPTOK[item.id]||{t:item.name,c:'#a64dff'};
+  const tk=tokFor(item.id);
   const tag=kind==='tarot'
-    ?'<span style="color:var(--grape)">JETON TAROT · à usage unique</span>'
-    :'<span style="color:var(--yellow)">RELIQUE · effet permanent</span>';
+    ?'<span style="color:var(--grape)">'+t('insp.tarot')+'</span>'
+    :'<span style="color:var(--yellow)">'+t('insp.relic')+'</span>';
   $('inspectBody').innerHTML=`<div class="inspCard tag ${kind==='tarot'?'tarot':'joker'}"><span class="ft" style="color:${tk.c}">${tk.t}</span></div>`
-    +`<h1 class="win" style="font-size:24px;margin:0 0 4px">${item.name}</h1>`
+    +`<h1 class="win" style="font-size:24px;margin:0 0 4px">${iName(item)}</h1>`
     +`<p style="font-size:10px;letter-spacing:.08em;margin:0 0 12px">${tag}</p>`
-    +`<p style="color:#dfe9ff;font-size:13px;line-height:1.6;margin:0 0 4px">${item.desc}</p>`;
+    +`<p style="color:#dfe9ff;font-size:13px;line-height:1.6;margin:0 0 4px">${iDesc(item)}</p>`;
   scheduleFitChipText();
   const act=$('inspectActions');act.innerHTML='';
   const mk=(label,cls,fn,dis)=>{const b=document.createElement('button');b.className='btn '+cls;b.style.cssText='font-size:13px;padding:11px 15px';b.innerHTML=label;if(dis)b.disabled=true;else b.onclick=fn;act.appendChild(b);return b;};
   if(kind==='tarot'){
     const notYet=(item.when==='play'&&G.phase!=='play');
-    mk('UTILISER','b-purple',()=>{const idx=inspectRef.i;closeInspect();useConsumable(idx);},notYet);
+    mk(t('insp.use'),'b-purple',()=>{const idx=inspectRef.i;closeInspect();useConsumable(idx);},notYet);
   }
-  mk('VENDRE +'+abbr(sellValue(item))+' $','b-gold',sellItem);
-  mk('FERMER','b-blue',closeInspect);
+  mk(t('insp.sell',cash(sellValue(item))),'b-gold',sellItem);
+  mk(t('insp.close'),'b-blue',closeInspect);
   $('inspectScreen').classList.add('show');
 }
 function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show');inspectRef=null;}
@@ -2125,15 +2633,15 @@ function sellItem(){
   const val=sellValue(item);
   G.bank+=val;arr.splice(i,1);sfx.buy();
   closeInspect();
-  popText('REVENDU',item.name+' · +'+abbr(val)+' $');
+  popText(t('msg.sold'),iName(item)+' · +'+cash(val));
   renderRelics();renderConsumables();renderTop();renderChips();renderActions();
 }
 function applyHandIncome(){
   let inc=0;const parts=[];
-  if(hasRelic('mecene')){inc+=4;parts.push('Mécène +4');}
-  if(hasRelic('usurier')){const u=Math.min(6,Math.floor(G.bank/5));if(u>0){inc+=u;parts.push('Usurier +'+u);}}
-  const tip=uLvl('pourboire');if(tip>0){inc+=tip;parts.push('Pourboire +'+tip);}
-  if(G.boons&&G.boons.income>0){inc+=G.boons.income;parts.push('Palier +'+G.boons.income);}
+  if(hasRelic('mecene')){inc+=4;parts.push(t('inc.patron',4));}
+  if(hasRelic('usurier')){const u=Math.min(6,Math.floor(G.bank/5));if(u>0){inc+=u;parts.push(t('inc.shark',u));}}
+  const tip=uLvl('pourboire');if(tip>0){inc+=tip;parts.push(t('inc.tip',tip));}
+  if(G.boons&&G.boons.income>0){inc+=G.boons.income;parts.push(t('inc.tier',G.boons.income));}
   // on ne montre plus le revenu en pop séparé : il est intégré au panneau de début de main
   if(inc>0){G.bank+=inc;renderTop();renderChips();G._income={amt:inc,parts:parts.slice()};}
   else G._income=null;
@@ -2191,9 +2699,9 @@ function renderActions(){
   };
   if(G.phase==='bet'){
     main.classList.add('betmain');
-    const mainTxt=G.endless?'':` · main ${G.hand}/${G.table.mains}`;
-    const sub=G.betChosen?`mise ${abbr(G.bet)} $${mainTxt}`:`choisis ta mise${mainTxt}`;
-    add(main,'MISER','b-gold span',deal,sub,G.bank<curTable().min||!G.betChosen);
+    const mainTxt=G.endless?'':t('act.handSuffix',G.hand,G.table.mains);
+    const sub=(G.betChosen?t('act.betSub',cash(G.bet)):t('act.betChoose'))+mainTxt;
+    add(main,t('act.bet'),'b-gold span',deal,sub,G.bank<curTable().min||!G.betChosen);
     a.appendChild(main);return;
   }
   // phases jeu / croupier / résolution : on garde toujours les 3 boutons,
@@ -2202,33 +2710,33 @@ function renderActions(){
   const v=G.pHand.length?handValue(G.pHand).total:0;
   const flirt=v>=17&&v<=20;
   if(flirt){
-    add(main,'RISQUER','b-red',()=>{G.insisted=true;playerHit();},'+bonus si survie',!live);
-    add(main,'RESTER','b-blue',playerStand,'garde ta main',!live);
+    add(main,t('act.risk'),'b-red',()=>{G.insisted=true;playerHit();},t('act.riskSub'),!live);
+    add(main,t('act.stand'),'b-blue',playerStand,t('act.standSub'),!live);
   }else{
-    add(main,'TIRER','b-gold',()=>playerHit(),'+1 carte',!live);
-    add(main,'RESTER','b-blue',playerStand,'garde ta main',!live);
+    add(main,t('act.hit'),'b-gold',()=>playerHit(),t('act.hitSub'),!live);
+    add(main,t('act.stand'),'b-blue',playerStand,t('act.standSub'),!live);
   }
   // actions spéciales (2 max, côte à côte). SÉPARER = paire · DOUBLER = total bas · FORCER = 17-20
   const two=G.pHand.length===2, pair=two&&G.pHand[0].r===G.pHand[1].r;
   const canSplit=!G.splitActive&&two&&pair&&G.bank>=G.bet;
   const canDouble=!G.splitActive&&two&&!flirt&&G.bank>=G.bet;   // fenêtre de double : total bas (9/10/11…)
   const specials=[];
-  if(canSplit)specials.push(['SÉPARER','b-blue',playerSplit,'paire · deux mains',!live]);
-  if(canDouble)specials.push(['DOUBLER','b-gold',playerDouble,'mise ×2 · une seule carte',!live]);
-  if(flirt)specials.push(['FORCER LA CHANCE','b-purple',forcerChance,(G.forcedUsed?'déjà utilisé cette table':'garde la meilleure · 1×/table'),!live||G.forcedUsed]);
-  if(!specials.length)specials.push(['FORCER LA CHANCE','b-purple',forcerChance,'2 cartes 17-20 · garde la meilleure',true]);
+  if(canSplit)specials.push([t('act.split'),'b-blue',playerSplit,t('act.splitSub'),!live]);
+  if(canDouble)specials.push([t('act.double'),'b-gold',playerDouble,t('act.doubleSub'),!live]);
+  if(flirt)specials.push([t('act.force'),'b-purple',forcerChance,(G.forcedUsed?t('act.forceUsed'):t('act.forceSub')),!live||G.forcedUsed]);
+  if(!specials.length)specials.push([t('act.force'),'b-purple',forcerChance,t('act.forceOff'),true]);
   specials.slice(0,2).forEach(s=>add(wide,s[0],s[1],s[2],s[3],s[4]));
   a.appendChild(main);a.appendChild(wide);
 }
 function usePeek(){
   if(G.peekUsed||G.phase!=='play'||!hasRelic('lunettes'))return;G.peekUsed=true;
   const n=G.shoe[G.shoe.length-1];
-  $('tip').textContent=`PROCHAINE : ${n.r}${n.s}`;blip(880,.05,'sine',.06);syncPeek();
+  $('tip').textContent=t('ui.next',n.r+n.s);blip(880,.05,'sine',.06);syncPeek();
 }
 function updateBustReadout(){
   if(hasRelic('compteur')&&G.phase==='play'){
     const bc=bustChance(G.pHand);
-    $('tip').textContent=`RISQUE DE BUST : ${bc}%`;
+    $('tip').textContent=t('ui.bustRisk',bc);
     $('tip').style.color=bc>50?'#ff9b8f':'var(--gold)';
   }
 }
@@ -2318,7 +2826,7 @@ function playerSplit(){
   G.bank-=G.bet;                                   // 2e mise
   G.splitActive=true;G.splitAces=(a.r==='A');
   G.hands=[[a],[b]];G.hi=0;G.pHand=G.hands[0];G.stakeMult=1;
-  sfx.buy();shake(8);popText('SÉPARÉ',a.r+a.s+' · deux mains');
+  sfx.buy();shake(8);popText(t('msg.split'),t('msg.splitSub',a.r+a.s));
   renderTop();renderChips();
   dealSplitCard();
 }
@@ -2340,7 +2848,7 @@ function dealSplitCard(){
 }
 function nextSplitHand(){
   G.hi++;G.pHand=G.hands[G.hi];G.insisted=false;
-  popText('MAIN '+(G.hi+1),'à toi de jouer');
+  popText(t('msg.hand',G.hi+1),t('msg.handSub'));
   renderHands(false);
   dealSplitCard();
 }
@@ -2348,7 +2856,7 @@ function nextSplitHand(){
 function playerDouble(){
   if(G.phase!=='play'||G._dealing||G.pHand.length!==2||G.bank<G.bet)return;
   G.bank-=G.bet;G.stakeMult=2;
-  sfx.buy();shake(10);popText('DOUBLÉ','mise ×2 · une seule carte');   // pas de gerbe de pièces : l'animation de gain est réservée aux victoires
+  sfx.buy();shake(10);popText(t('msg.doubled'),t('msg.doubledSub'));   // pas de gerbe de pièces : l'animation de gain est réservée aux victoires
   renderTop();renderChips();renderMult();
   const c=G.magicNext?drawIdeal():draw();G.magicNext=false;
   c._pending=true;G.pHand.push(c);
@@ -2368,7 +2876,7 @@ function forcerChance(){
   const test=c=>{const t=handValue([...G.pHand,c]).total;return t>21?-100:t;};
   const keep=test(c1)>=test(c2)?c1:c2;
   G.insisted=true;sfx.danger();shake(22);
-  popText('FORCÉ',`gardé ${keep.r}${keep.s}`);
+  popText(t('msg.forced'),t('msg.kept',keep.r+keep.s));
   keep._pending=true;G.pHand.push(keep);
   G._dealing=true;renderActions();
   dealCardIn(keep,{},()=>{
@@ -2423,7 +2931,7 @@ function resolve(mode){
     const r=computeMult(mode);mult=r.mult;lines=r.lines;
     const base=stake+r.bonusChips;
     gain=Math.round(base*mult);
-    if(G.endless&&G.event&&G.event.id==='doree'){gain*=2;lines.push([PXI('doree')+' DORÉE','×2']);}
+    if(G.endless&&G.event&&G.event.id==='doree'){gain*=2;lines.push([PXI('doree')+' '+t('m.golden'),'×2']);}
     G.bank+=stake+gain;
     if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,gain);G.stats.bestMult=Math.max(G.stats.bestMult,mult);}
     if(lines.length){$('tip').innerHTML=lines.map(l=>l[0]+' '+l[1]).join('  ·  ');$('tip').style.color='var(--gold)';}
@@ -2441,8 +2949,8 @@ function resolve(mode){
     G.bank+=stake;gain=pg;sfx.push();showWord('push',pg,1);
   }else{
     let back=0;
-    if(G.insurance){G.insurance=false;back=stake;popText('ASSURANCE','perte remboursée');}      // service boutique
-    else if(hasRelic('talisman')&&!G._talismanUsed){G._talismanUsed=true;back=stake;popText('TALISMAN','première perte remboursée');}
+    if(G.insurance){G.insurance=false;back=stake;popText(t('msg.insurance'),t('msg.insuranceSub'));}      // service boutique
+    else if(hasRelic('talisman')&&!G._talismanUsed){G._talismanUsed=true;back=stake;popText(t('msg.talisman'),t('msg.talismanSub'));}
     else if(hasRelic('jeton')&&pv===20&&!pBust){back=Math.floor(stake/2);}
     G.bank+=back;gain=back-stake;
     sfx.lose();shake(8);showWord('lose',gain,1,false,pBust);
@@ -2450,7 +2958,7 @@ function resolve(mode){
 
   if(outcome==='win')checkContract(mult);                 // contrat de table (mode nuit)
   // BARAKA : gagner remplit la barre (coup culotté = +2), perdre la remet à zéro
-  if(outcome==='win'){const cul=isCulotte(pv,mode);const culN=2+((G.boons&&G.boons.baraplus)?1:0);addBaraka(cul?culN:1);if(cul)setTimeout(()=>popText('CULOTTÉ !','+'+culN+' baraka'),320);}
+  if(outcome==='win'){const cul=isCulotte(pv,mode);const culN=2+((G.boons&&G.boons.baraplus)?1:0);addBaraka(cul?culN:1);if(cul)setTimeout(()=>popText(t('msg.gutsy'),t('msg.gutsySub',culN)),320);}
   else if(outcome==='lose')resetBaraka();
   renderTop();renderRelics();renderPressure();renderMult();
   setTimeout(()=>nextHandOrEnd(),1750+tallyMs);
@@ -2484,10 +2992,10 @@ function resolveSplit(){
       G.bank+=back;g=back-stake;
     }
     net+=g;maxG=Math.max(maxG,g);
-    const tag=outcome==='win'?'GAGNÉ':outcome==='push'?'ÉGALITÉ':'PERDU';
-    summary.push(`Main ${i+1} : ${tag}${g>0?' +'+abbr(g):(g<0?' '+abbr(g):'')}`);
+    const tag=t(outcome==='win'?'sp.win':outcome==='push'?'sp.push':'sp.lose');
+    summary.push(t('sp.hand',i+1)+tag+(g>0?' +'+abbr(g):(g<0?' '+abbr(g):'')));
   });
-  if(G.insurance&&net<0){G.insurance=false;G.bank+=Math.abs(net);net=0;popText('ASSURANCE','perte remboursée');}
+  if(G.insurance&&net<0){G.insurance=false;G.bank+=Math.abs(net);net=0;popText(t('msg.insurance'),t('msg.insuranceSub'));}
   const kind=net>0?'win':net<0?'lose':'push';
   sfx[kind]();if(kind==='lose'){shake(8);}
   showWord(kind,Math.abs(net),1);
@@ -2511,7 +3019,7 @@ function nextHandOrEnd(){
     const cadence=(G.boons&&G.boons.evt3)?3:5;                                   // « Mains spéciales ×2 » resserre le rythme
     G.event=(G.hand%cadence===0)?ENDLESS_EVENTS[rndInt(ENDLESS_EVENTS.length)]:null;   // main spéciale régulière
     clampBet();applyHandIncome();renderAll();renderHands();announceTurn();
-    if(G.event)popText(PXI(G.event.ic)+' '+G.event.t,G.event.d);
+    if(G.event)popText(PXI(G.event.ic)+' '+evtTitle(G.event),evtDesc(G.event));
     return;
   }
   if(G.bank>=G.table.goal){return finishTable();}  // objectif atteint → table gagnée tout de suite
@@ -2525,20 +3033,21 @@ function nextHandOrEnd(){
 }
 /* fin de table : 0★ = perdue · 1★ survie · 2★ objectif · 3★ maîtrise */
 function finishTable(){
-  const t=G.table;
-  const stars=starsFor(t,G.bank);
-  if(stars===0){onTableLost('OBJECTIF MANQUÉ',`Tu finis sous l’objectif de gain de la table — il te manquait <b style="color:var(--red)">${abbr(t.goal-G.bank)} $</b>.`);return;}
+  const tb=G.table;
+  const stars=starsFor(tb,G.bank);
+  if(stars===0){onTableLost('lost.goal',{k:'lost.goalTxt',miss:tb.goal-G.bank});return;}
   G.tableStars[G.tableIdx]=stars;
   G.runStars=G.tableStars.reduce((a,b)=>a+(b||0),0);
-  const reward=tableRep(t,stars,G.tableMaxBaraka||0);
+  const reward=tableRep(tb,stars,G.tableMaxBaraka||0);
   G.pot+=reward;G.lastReward=reward;G.lastStars=stars;
   updateRecord(G.tableIdx+1);
   openShop();
 }
-/* table perdue : seconde chance (jeton) ou fin de descente */
-function onTableLost(title,text){
+/* table perdue : seconde chance (jeton) ou fin de descente.
+   titre/texte sont des CLÉS i18n (ou {k,...} avec des valeurs) : l'écran est traduit à l'affichage. */
+function onTableLost(titleKey,textKey){
   updateRecord(G.tableIdx+1);
-  G.loseTitle=title;G.loseText=text;
+  G.loseTitle=titleKey;G.loseText=textKey;
   if(G.tokens>0){openLose();return;}
   endRun(false);
 }
@@ -2547,35 +3056,41 @@ function onTableLost(title,text){
 /* jeton d'effet explicite (au lieu d'un logo) : couleur = type d'effet
    or=jetons · orange=mult · cyan=pression · vert=info · violet=édition/slot · rouge=retrait */
 const SHOPTOK={
-  lunettes:{t:'VOIR',c:'#9be84a'},
-  jeton:{t:'½ <small>MISE</small>',c:'#ffce3a'},
+  lunettes:{t:'PEEK',c:'#9be84a'},
+  jeton:{t:'½ <small>BET</small>',c:'#ffce3a'},
   clope:{t:'+30<small class="sym">%</small>',c:'#19c3c3'},
   as:{t:'+1<small>×</small>',c:'#ff9326'},
   froid:{t:'+1<small>×</small>',c:'#ff9326'},
   compteur:{t:'BUST<small class="sym">%</small>',c:'#9be84a'},
   mecene:{t:'+4<small class="sym">$</small>',c:'#ffce3a'},
   usurier:{t:'+1<small class="sym">/5$</small>',c:'#ffce3a'},
-  collector:{t:'ÉD<small>×3</small>',c:'#a64dff'},
+  collector:{t:'ED<small>×3</small>',c:'#a64dff'},
   maitresse:{t:'FOIL',c:'#7fd2ff'},
   bruleur:{t:'×1.5',c:'#ff9326'},
   portebonheur:{t:'+1<small>'+STAR+'</small>',c:'#a64dff'},
   diplomate:{t:'=<small>½</small>',c:'#ffce3a'},
-  talisman:{t:'1 <small>VIE</small>',c:'#19c3c3'},
-  aimant:{t:'+1<small class="sym">$/carte</small>',c:'#ffce3a'},
+  talisman:{t:'1 <small>LIFE</small>',c:'#19c3c3'},
+  aimant:{t:'+1<small class="sym">$/card</small>',c:'#ffce3a'},
   phare:{t:'C<small>×3</small>',c:'#ff9326'},
-  etoile:{t:'+2 <small class="sym">baraka</small>',c:'#f0902a'},
-  jugement:{t:'+1<small class="sym">niv</small>',c:'#f0902a'},
+  etoile:{t:'+2 <small class="sym">streak</small>',c:'#f0902a'},
+  jugement:{t:'+1<small class="sym">lv</small>',c:'#f0902a'},
   soleil:{t:'+18<small class="sym">$</small>',c:'#ffce3a'},
   diable:{t:'POLY',c:'#ff7ad9'},
   lune:{t:'HOLO',c:'#b388ff'},
   etoileD:{t:'FOIL',c:'#7fd2ff'},
-  pendu:{t:'−1 <small>carte</small>',c:'#e0524f'},
-  magicien:{t:'IDÉAL',c:'#9be84a'},
-  roue:{t:'ÉD<small>?</small>',c:'#a64dff'},
+  pendu:{t:'−1 <small>card</small>',c:'#e0524f'},
+  magicien:{t:'IDEAL',c:'#9be84a'},
+  roue:{t:'ED<small>?</small>',c:'#a64dff'},
   soin:{t:'+<small class="sym">$$$</small>',c:'#9be84a'},
-  assurance:{t:'ASSU<small>R</small>',c:'#3f8bd6'},
-  videur:{t:'+1 <small>essai</small>',c:'#19c3c3'},
+  assurance:{t:'INSU<small>R</small>',c:'#3f8bd6'},
+  videur:{t:'+1 <small>try</small>',c:'#19c3c3'},
 };
+/* étiquette d'un effet : passe par STR quand elle contient un mot (clé tok.<id>) */
+function tokFor(id){
+  const tk=SHOPTOK[id]||{t:'?',c:'#ffce3a'};
+  const k='tok.'+id;
+  return {t:hasStr(k)?t(k):tk.t,c:tk.c};
+}
 function serviceCost(s){return niceRound(s.baseCost*curTable().goal*0.16);}
 let shopOffer=[],rerollCost=5;
 /* prix de boutique indexés sur la profondeur (≈ ta banque) : les cartes
@@ -2588,40 +3103,43 @@ function roundBet(v){let s;if(v<50)s=5;else if(v<200)s=10;else if(v<500)s=25;els
 function shopScale(){return Math.max(1,curTable().goal/100*1.2);}
 function itemCost(r){return niceRound(r.cost*shopScale());}
 function openShop(){
-  $('shopBank').textContent=abbr(G.bank);rerollCost=niceRound(6*shopScale());
-  $('shopDepth').textContent=G.endless?('∞ '+(G.tableIdx+1)):((G.tableIdx+1)+'/'+RUN_LEN);
-  $('shopPot').textContent=abbr(G.pot);
-  $('shopReward').textContent=abbr(G.lastReward);
-  $('shopStars').innerHTML=STAR.repeat(G.lastStars||0)+STARE.repeat(3-(G.lastStars||0))+'  ·  total '+STAR+(G.runStars||0);
+  rerollCost=niceRound(6*shopScale());
+  renderShopHead();
+  rollShop();
+  $('shop').classList.add('show');
+}
+/* en-tête de boutique : reconstruit à chaque achat ET à chaque changement de langue */
+function renderShopHead(){
+  const depth=G.endless?('∞ '+(G.tableIdx+1)):((G.tableIdx+1)+'/'+RUN_LEN);
+  $('shopSub').innerHTML=t('shop.sub',depth,cash(G.bank),STAR+abbr(G.pot),abbr(G.lastReward)+' '+STAR);
+  $('shopStars').innerHTML=STAR.repeat(G.lastStars||0)+STARE.repeat(3-(G.lastStars||0))+'  ·  '+t('shop.total')+' '+STAR+(G.runStars||0);
   const isBoss=!!G.table.boss, last=(!G.endless&&G.tableIdx>=RUN_LEN-1);
-  $('shopTitle').textContent=last?'CASINO DÉVALISÉ':(isBoss?'BOSS VAINCU':'TABLE FRANCHIE');
+  $('shopTitle').textContent=last?t('shop.titleLast'):(isBoss?t('shop.titleBoss'):t('shop.title'));
   // cash-out seulement aux paliers importants : après un boss (ou fin de run)
   const cb=$('cashBtn');
-  if(isBoss||last){cb.style.display='';cb.innerHTML=(last?'TERMINER<small>':'ENCAISSER<small>')+STAR+abbr(repOnEnd(true))+' réput.</small>';}
+  if(isBoss||last){cb.style.display='';cb.innerHTML=t(last?'shop.finish':'shop.cash')+'<small>'+STAR+abbr(repOnEnd(true))+' '+t('shop.repSuffix')+'</small>';}
   else{cb.style.display='none';}
   // table suivante : atteindre l'objectif suffit (pas de verrou d'étoiles) · droit d'entrée éventuel
   const nextBtn=$('shopNextBtn'),nextObj=$('shopNextObj');
   if(last){
-    nextBtn.style.display='none';$('shopGate').textContent='Tu as bouclé la run. Encaisse ta réputation.';
+    nextBtn.style.display='none';$('shopGate').textContent=t('shop.gateDone');
     if(nextObj)nextObj.style.display='none';
   }else{
-    const nx=tableFor(G.tableIdx+1);
+    const nx=tableFor(G.tableIdx+1),nxName=tableName(nx);
     nextBtn.style.display='';nextBtn.disabled=false;      // pas de verrou d'étoiles : atteindre l'objectif suffit
-    const feeTxt=nx.entry?` · droit d'entrée ${abbr(nx.entry)} $`:'';
-    $('shopNext').textContent=`${nx.n} · obj. ${abbr(nx.goal)} $ · conseillé ${abbr(nx.cap)} $${feeTxt}`;
+    const feeTxt=nx.entry?t('shop.fee',cash(nx.entry)):'';
+    nextBtn.innerHTML=t('shop.next')+'<small>'+t('shop.nextInfo',nxName,cash(nx.goal),cash(nx.cap),feeTxt)+'</small>';
     // objectif de la prochaine table, bien visible : aide à décider d'acheter ou de garder du cash
     if(nextObj){nextObj.style.display='';
-      nextObj.innerHTML=`PROCHAINE · <b>${nx.n}</b> — objectif <b style="color:var(--gold)">${abbr(nx.goal)} $</b> · capital conseillé <b>${abbr(nx.cap)} $</b>`+(nx.entry?` · entrée <b style="color:var(--red)">${abbr(nx.entry)} $</b>`:'');
+      nextObj.innerHTML=t('shop.nextObj',nxName,cash(nx.goal),cash(nx.cap))+(nx.entry?t('shop.feeObj',cash(nx.entry)):'');
     }
-    $('shopGate').textContent=nx.entry?`Salle plus exclusive — droit d'entrée ${abbr(nx.entry)} $.`:'';
+    $('shopGate').textContent=nx.entry?t('shop.gateFee',cash(nx.entry)):'';
   }
-  rollShop();
-  $('shop').classList.add('show');
 }
 function rollShop(){
   const owned=new Set(G.relics.map(r=>r.id));
   const relics=RELIC_POOL.filter(r=>!owned.has(r.id)&&(!r.lock||uLvl(r.lock))).map(r=>({type:'relic',data:r}));
-  const tarots=TAROT_POOL.map(t=>({type:'tarot',data:t}));
+  const tarots=TAROT_POOL.map(x=>({type:'tarot',data:x}));
   const pool=relics.concat(tarots);
   for(let i=pool.length-1;i>0;i--){const j=rndInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
   shopOffer=pool.slice(0,3);
@@ -2632,51 +3150,52 @@ function rollShop(){
 }
 function renderShop(){
   const box=$('shopItems');box.innerHTML='';
-  if(!shopOffer.length){box.innerHTML='<p style="color:var(--muted)">Rien à acheter ici.</p>';}
+  if(!shopOffer.length){box.innerHTML='<p style="color:var(--muted)">'+t('shop.empty')+'</p>';}
   shopOffer.forEach((it,i)=>{
     const r=it.data,isTarot=it.type==='tarot',isSvc=it.type==='service';
     const d=document.createElement('div');d.className='shopItem'+(it.bought?' bought':'');
     const tag=isSvc
-      ?'<span style="font-size:9px;color:var(--teal)">✚ SERVICE</span>'
+      ?'<span style="font-size:9px;color:var(--teal)">'+t('shop.tagService')+'</span>'
       :isTarot
-      ?'<span style="font-size:9px;color:var(--grape)">'+STAR+' TAROT</span>'
-      :'<span style="font-size:9px;color:var(--yellow)">◆ RELIQUE</span>';
-    const tk=SHOPTOK[r.id]||{t:'?',c:'#ffce3a'};
+      ?'<span style="font-size:9px;color:var(--grape)">'+STAR+' '+t('shop.tagTarot')+'</span>'
+      :'<span style="font-size:9px;color:var(--yellow)">'+t('shop.tagRelic')+'</span>';
+    const tk=tokFor(r.id);
     const chipCls=isSvc?'svc':isTarot?'tarot':'joker';
-    d.innerHTML=`<div class="shopTok tag ${chipCls}"><span class="ft" style="color:${tk.c}">${tk.t}</span></div><div class="sInfo"><div class="nm">${r.name} ${tag}</div><div class="ds">${r.desc}</div></div>`;
+    d.innerHTML=`<div class="shopTok tag ${chipCls}"><span class="ft" style="color:${tk.c}">${tk.t}</span></div><div class="sInfo"><div class="nm">${iName(r)} ${tag}</div><div class="ds">${iDesc(r)}</div></div>`;
     const cost=isSvc?serviceCost(r):itemCost(r);
     const b=document.createElement('button');b.className='btn '+(isSvc?'b-teal':isTarot?'b-purple':'b-gold');
-    b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=abbr(cost)+' $';
+    b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=cash(cost);
     const slotFull=isSvc?false:isTarot?G.consumables.length>=consumableSlots():G.relics.length>=relicMax();
     if(it.bought||G.bank<cost||slotFull)b.disabled=true;
-    if(slotFull&&!it.bought)b.textContent='PLEIN';
+    if(it.bought)b.textContent=t('shop.owned');
+    else if(slotFull)b.textContent=t('shop.full');
     b.onclick=()=>buyShopItem(i,d,b);
     d.appendChild(b);box.appendChild(d);
   });
   scheduleFitChipText();
-  const rb=$('rerollBtn');if(rb){rb.textContent='RELANCER ('+abbr(rerollCost)+' $)';rb.disabled=G.bank<rerollCost;}
+  const rb=$('rerollBtn');if(rb){rb.textContent=t('shop.reroll',cash(rerollCost));rb.disabled=G.bank<rerollCost;}
 }
 function buyShopItem(i,el,btn){
   const it=shopOffer[i];if(!it||it.bought)return;const r=it.data;
   const cost=it.type==='service'?serviceCost(r):itemCost(r);
   if(G.bank<cost)return;
   if(it.type==='service'){
-    G.bank-=cost;const msg=r.apply();if(msg)popText(r.name.toUpperCase(),msg);
+    G.bank-=cost;const msg=r.apply();if(msg)popText(iName(r).toUpperCase(),msg);
   }else if(it.type==='tarot'){
-    if(G.consumables.length>=consumableSlots()){popText('SLOTS PLEINS','');return;}
+    if(G.consumables.length>=consumableSlots()){popText(t('msg.slotsFull'),'');return;}
     G.bank-=cost;G.consumables.push({...r,_paid:cost});
   }else{
-    if(G.relics.length>=relicMax()){popText('RELIQUES PLEINES',relicMax()+' max');return;}
+    if(G.relics.length>=relicMax()){popText(t('msg.relicsFull'),t('msg.max',relicMax()));return;}
     G.bank-=cost;G.relics.push({...r,_paid:cost});
   }
   it.bought=true;sfx.buy();
-  el.classList.add('bought');btn.disabled=true;btn.textContent='ACQUIS';
-  $('shopBank').textContent=abbr(G.bank);
+  el.classList.add('bought');btn.disabled=true;btn.textContent=t('shop.owned');
+  renderShopHead();
   renderRelics();renderConsumables();renderShop();
 }
 function rerollShop(){
   if(G.bank<rerollCost)return;
-  G.bank-=rerollCost;rerollCost=niceRound(rerollCost+3*shopScale());$('shopBank').textContent=abbr(G.bank);sfx.card();
+  G.bank-=rerollCost;rerollCost=niceRound(rerollCost+3*shopScale());renderShopHead();sfx.card();
   rollShop();
 }
 /* CONTINUER : table suivante. Verrou par étoiles + droit d'entrée éventuel. */
@@ -2693,7 +3212,7 @@ function leaveShop(){
 /* mise en place d'une nouvelle table (après boutique / choix de palier) */
 function enterTable(prevZone){
   // droit d'entrée de zone : absorbe une partie des jetons (anti boule de neige)
-  if(G.table.entry){G.bank=Math.max(0,G.bank-G.table.entry);popText("DROIT D'ENTRÉE",'−'+abbr(G.table.entry)+' $');}
+  if(G.table.entry){G.bank=Math.max(0,G.bank-G.table.entry);popText(t('msg.entryFee'),'−'+cash(G.table.entry));}
   G.hand=1;G.phase='bet';G.pressure=0;G.baraka=0;G.tableMaxBaraka=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;G._talismanUsed=false;
   G.contract=rollContract();                               // nouveau contrat à chaque table
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // nouvelle table : on remise à zéro (pas la mise de la table d'avant)
@@ -2701,18 +3220,18 @@ function enterTable(prevZone){
   clampBet();
   G.tableStartBank=G.bank;
   applyHandIncome();
-  if(G.bank<G.table.min){onTableLost('À SEC','Plus de quoi miser le minimum de la table.');return;}
+  if(G.bank<G.table.min){onTableLost('lost.broke','lost.brokeTxt');return;}
   renderAll();renderHands();renderPressure();
   announceTurn();
   if(G.table.boss){
     // entrée de BOSS : on la sent — flash rouge, gros pop, tapis rouge (via applyFelt), secousse forte, double grondement
     sfx.danger();shake(32);flashScreen('lose');showBoss();
     setTimeout(()=>{try{sfx.danger&&sfx.danger();}catch(e){}shake(18);},180);
-    popText(G.endless?'MINI-BOSS':'BOSS',G.table.ruleText);
+    popText(t(G.endless?'msg.miniboss':'msg.boss'),tableRuleText(G.table));
   }
   else if(G.table.zone>prevZone){
     sfx.danger();shake(24);flashScreen('win');coinBurst(12);
-    popText('ZONE '+G.table.zone+(ZONE_NAMES[G.table.zone]?' — '+ZONE_NAMES[G.table.zone]:''),G.table.ruleText);
+    popText(t('msg.zone',G.table.zone,zoneName(G.table.zone)),tableRuleText(G.table));
   }
 }
 /* ENCAISSER : on quitte la descente en banquant toute la cagnotte */
@@ -2722,11 +3241,18 @@ function cashOut(){
 }
 
 /* ---------- seconde chance / fin de descente ---------- */
+/* texte de défaite : clé simple, ou {k, …valeurs} quand il faut interpoler */
+function loseBody(){
+  const x=G.loseText;
+  if(!x)return '';
+  if(typeof x==='object')return t(x.k,cash(x.miss||0));
+  return t(x);
+}
 function openLose(){
-  $('loseTitle').textContent=G.loseTitle;
-  $('loseText').innerHTML=G.loseText+`<br><br>Table <b>${G.tableIdx+1}</b> · Cagnotte : <b>${STAR}${abbr(G.pot)}</b>`;
-  $('retryBtn').innerHTML='SECONDE CHANCE<small>'+G.tokens+' jeton'+(G.tokens>1?'s':'')+' restant'+(G.tokens>1?'s':'')+'</small>';
-  $('giveupBtn').innerHTML='ABANDONNER<small>encaisse '+STAR+abbr(repOnEnd(false))+'</small>';
+  $('loseTitle').textContent=t(G.loseTitle||'');
+  $('loseText').innerHTML=loseBody()+'<br><br>'+t('lose.info',G.tableIdx+1,STAR+abbr(G.pot));
+  $('retryBtn').innerHTML=t('lose.retry')+'<small>'+t('lose.tokens',G.tokens)+'</small>';
+  $('giveupBtn').innerHTML=t('lose.giveup')+'<small>'+t('lose.giveupSub',STAR+abbr(repOnEnd(false)))+'</small>';
   $('loseScreen').classList.add('show');
 }
 /* rejoue la table en cours (sabot neuf, reliques gardées), contre un jeton */
@@ -2786,39 +3312,42 @@ function endRun(cashout){
   if(!G.endless&&G.tableIdx>=3)META.nuit.zone2Runs=(META.nuit.zone2Runs|0)+1;
   updateRecord(G.tableIdx+1);
   saveMeta();
-  const depth=G.tableIdx+1;
-  const rec=metaCur().record;
-  const recLine=newRec?`<br><b style="color:var(--gold)">${PXI('trophy')} NOUVEAU RECORD !</b> `:'<br>';
-  if(G.endless){
-    const peak=Math.max(G.peak||0,G.bank);
-    $('endTitle').textContent=cashout?'TU ENCAISSES':'CAGNOTTE ÉPUISÉE';
-    $('endTitle').className=cashout?'win':'dead';
+  G.endInfo={cashout,endless:!!G.endless,baseGain,coffre,prox,newRec,
+    depth:G.tableIdx+1,bank:G.bank,peak:Math.max(G.peak||0,G.bank),palier:(G.palier||0)+1,
+    palierCash:!!G._palierCash,rep:metaCur().rep,
+    goal:(G.table&&isFinite(G.table.goal))?G.table.goal:0,
+    rec:Object.assign({},metaCur().record),
+    stats:Object.assign({won:0,played:0,bestGain:0,bestMult:1},G.stats||{})};
+  if(G.endless)G._palierCash=false;
+  renderEndScreen();
+}
+/* écran de fin : reconstruit depuis G.endInfo (donc retraduisible à chaud) */
+function renderEndScreen(){
+  const e=G.endInfo;if(!e)return;
+  const rec=e.rec,st=e.stats;
+  const recLine=e.newRec?`<br><b style="color:var(--gold)">${PXI('trophy')} ${t('end.newRecord')}</b> `:'<br>';
+  if(e.endless){
+    $('endTitle').textContent=t(e.cashout?'end.cash':'end.potGone');
+    $('endTitle').className=e.cashout?'win':'dead';
     $('endText').innerHTML=
-      (cashout
-        ?`Tu convertis ta cagnotte en réputation${G._palierCash?' — <b style="color:var(--gold)">bonus de palier +20 %</b>':''}.`
-        :`Ta plongée s’arrête.`)+
-      `<br><br>Cagnotte max : <b style="color:var(--gold)">${abbr(peak)} $</b> · Palier atteint : <b>${(G.palier||0)+1}</b>`+
-      `<br>Réputation : <b>${STAR}${abbr(baseGain)}</b>`+` &nbsp;→&nbsp; total <b>${STAR}${abbr(metaCur().rep)}</b>`+
-      recLine+`<span style="color:var(--muted)">Record : palier ${rec.palier||0} · ${abbr(rec.peak||0)} $</span>`;
-    G._palierCash=false;
+      (e.cashout?t('end.infCashTxt',e.palierCash):t('end.infStopTxt'))+
+      '<br><br>'+t('end.infStats',cash(e.peak),e.palier)+
+      '<br>'+t('end.rep',STAR+abbr(e.baseGain))+t('end.repTotal',STAR+abbr(e.rep))+
+      recLine+'<span style="color:var(--muted)">'+t('end.recordInf',rec.palier||0,cash(rec.peak||0))+'</span>';
   }else{
-  const goal=(G.table&&isFinite(G.table.goal))?G.table.goal:0;
-  const manque=(!cashout&&goal&&G.bank<goal)?`<br>Il te manquait <b style="color:var(--red)">${abbr(goal-G.bank)} $</b> pour l'objectif`+(prox?` <span style="color:var(--muted)">— prime de proximité ${STAR}${prox}</span>`:'')+`.`:'';
-  $('endTitle').textContent=cashout?'TU ENCAISSES':'FIN DE LA TOURNÉE';
-  $('endTitle').className=cashout?'win':'dead';
-  $('endText').innerHTML=
-    (cashout
-      ?`Tu pars avec la cagnotte avant que ça tourne mal.`
-      :`Tu repars quand même avec la moitié de ta cagnotte.`)+manque+
-    `<br><br>Tables tenues : <b>${depth}</b> · Argent : <b>${abbr(G.bank)} $</b>`+
-    `<br>Réputation : <b>${STAR}${abbr(baseGain)}</b>`+(coffre?` <span style="color:var(--muted)">+ coffre ${STAR}${abbr(coffre)}</span>`:'')+` &nbsp;→&nbsp; total <b>${STAR}${abbr(metaCur().rep)}</b>`+
-    recLine+`<span style="color:var(--muted)">Record : ${rec.depth||0} tables · ${abbr(rec.chips||0)} $</span>`;
+    const manque=(!e.cashout&&e.goal&&e.bank<e.goal)?t('end.missing',cash(e.goal-e.bank),e.prox?STAR+e.prox:0):'';
+    $('endTitle').textContent=t(e.cashout?'end.cash':'end.circuitOver');
+    $('endTitle').className=e.cashout?'win':'dead';
+    $('endText').innerHTML=
+      t(e.cashout?'end.cashTxt':'end.halfTxt')+manque+
+      '<br><br>'+t('end.stats',e.depth,cash(e.bank))+
+      '<br>'+t('end.rep',STAR+abbr(e.baseGain))+(e.coffre?t('end.vault',STAR+abbr(e.coffre)):'')+t('end.repTotal',STAR+abbr(e.rep))+
+      recLine+'<span style="color:var(--muted)">'+t('end.recordCircuit',rec.depth||0,cash(rec.chips||0))+'</span>';
   }
-  const s=G.stats||{won:0,played:0,bestGain:0,bestMult:1};
   $('endStats').innerHTML=
-    `<div class="rs"><span class="l">MAINS GAGNÉES</span><span class="v">${s.won}/${s.played}</span></div>`+
-    `<div class="rs"><span class="l">MEILLEUR GAIN</span><span class="v">${abbr(s.bestGain)} $</span></div>`+
-    `<div class="rs"><span class="l">MEILLEUR MULT</span><span class="v">${fmtMult(s.bestMult)}</span></div>`;
+    `<div class="rs"><span class="l">${t('end.won')}</span><span class="v">${st.won}/${st.played}</span></div>`+
+    `<div class="rs"><span class="l">${t('end.bestGain')}</span><span class="v">${cash(st.bestGain)}</span></div>`+
+    `<div class="rs"><span class="l">${t('end.bestMult')}</span><span class="v">${fmtMult(st.bestMult)}</span></div>`;
   $('endScreen').classList.add('show');
 }
 
@@ -2828,28 +3357,23 @@ function popMult(m,label){
   p.querySelector('.m').textContent=m;p.querySelector('.t').textContent=label;
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
 }
-const WORDS={
-  jackpot:['JACKPOT!','MÉGA!','BOOM!','EN FEU!'],
-  win:['GAGNÉ!','OUAIS!','BANG!','CLASSE!','POW!'],
-  bj:['BLACKJACK!'],
-  push:['ÉGALITÉ','MATCH NUL'],
-  lose:['RATÉ!','ZUT!','PERDU!','AÏE!'],
-  bust:['BUSTÉ!','CRAMÉ!','TROP HAUT!']
-};
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function pickWord(kind){return pick(t('w.'+kind));}
 function showWord(kind,gain,mult,natural,bust){
   let word,sub='';
   if(kind==='win'){
-    word=natural?pick(WORDS.bj):(mult>=3?pick(WORDS.jackpot):pick(WORDS.win));
-    sub=(mult>1?fmtMult(mult)+'   ':'')+'+'+abbr(gain)+' $';
-  }else if(kind==='push'){word=pick(WORDS.push);sub=gain>0?('+'+abbr(gain)+' $'):'mise rendue';}
-  else{word=bust?pick(WORDS.bust):pick(WORDS.lose);sub=gain?abbr(gain)+' $':'';}
+    word=natural?pickWord('bj'):(mult>=3?pickWord('jackpot'):pickWord('win'));
+    sub=(mult>1?fmtMult(mult)+'   ':'')+'+'+cash(gain);
+  }else if(kind==='push'){word=pickWord('push');sub=gain>0?('+'+cash(gain)):t('w.betBack');}
+  else{word=bust?pickWord('bust'):pickWord('lose');sub=gain?cash(gain):'';}
   const p=$('multPop');
   p.className=kind+(word.length>7?' long':'');
   p.querySelector('.m').textContent=word;p.querySelector('.t').textContent=sub;
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
 }
-function openRules(){$('rulesScreen').classList.add('show');}
+const RULE_KEYS=['rules.goal','rules.table','rules.moves','rules.stars','rules.streak','rules.combos','rules.bonus','rules.contracts','rules.circuit','rules.hideout','rules.endless'];
+function renderRules(){const b=$('rulesBody');if(b)b.innerHTML=RULE_KEYS.map(k=>'<div>'+t(k)+'</div>').join('');}
+function openRules(){renderRules();$('rulesScreen').classList.add('show');}
 function closeRules(){$('rulesScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
 function openUpgrades(){renderPlanque();$('upgradesScreen').classList.add('show');}   // améliorations : ouvertes depuis La Planque, pour ne pas saturer la page
 function closeUpgrades(){$('upgradesScreen').classList.remove('show');}
@@ -2864,10 +3388,47 @@ let pauseReturn=false;
 function openPause(){
   audioInit();
   const pc=$('pauseCash');
-  if(pc){pc.style.display=G.endless?'':'none';if(G.endless)pc.innerHTML='ENCAISSER '+STAR+abbr(endlessCashRep())+'<small>convertit ta cagnotte en réputation</small>';}
+  if(pc){pc.style.display=G.endless?'':'none';if(G.endless)pc.innerHTML=t('pause.cash')+' '+STAR+abbr(endlessCashRep())+'<small>'+t('pause.cashSub')+'</small>';}
   $('pauseScreen').classList.add('show');
 }
 function resumeGame(){$('pauseScreen').classList.remove('show');}
+/* ---------- PARAMÈTRES (langue) ---------- */
+function openSettings(){renderLangOpts();$('settingsScreen').classList.add('show');}
+function closeSettings(){$('settingsScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
+function pauseSettings(){$('pauseScreen').classList.remove('show');pauseReturn=true;openSettings();}   // à la fermeture on revient à la pause
+function renderLangOpts(){
+  const row=$('langOpts');if(!row)return;row.innerHTML='';
+  LANGS.forEach(l=>{
+    const b=document.createElement('button');
+    b.className='btn'+(LANG===l.id?' on':'');
+    b.textContent=l.label;
+    b.onclick=()=>setLang(l.id);
+    row.appendChild(b);
+  });
+}
+/* change de langue à chaud : tout le texte est (re)produit au rendu */
+function setLang(id){
+  if(!STR[id]||id===LANG)return;
+  LANG=id;
+  try{localStorage.setItem('t21lang',id);}catch(e){}
+  try{sfx.buy&&sfx.buy();}catch(e){}
+  applyI18n();
+}
+/* applique la langue courante : attributs data-i18n* + tous les écrans dynamiques */
+function applyI18n(){
+  document.documentElement.lang=LANG;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.getAttribute('data-i18n'));});
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>{el.innerHTML=t(el.getAttribute('data-i18n-html'));});
+  document.querySelectorAll('[data-i18n-title]').forEach(el=>{el.title=t(el.getAttribute('data-i18n-title'));});
+  const hw=$('handWord');if(hw)hw.textContent=(LANG==='fr'?'main':'hand');
+  const mc=$('menuCircuit');if(mc)mc.textContent=t('menu.circuit');
+  renderLangOpts();renderRules();
+  renderAll();renderMenu();renderPlanque();renderBackPicker();
+  if($('shop').classList.contains('show')){renderShopHead();renderShop();}
+  if($('loseScreen').classList.contains('show'))openLose();
+  if($('endScreen').classList.contains('show'))renderEndScreen();
+  if($('pauseScreen').classList.contains('show'))openPause();
+}
 function pauseRules(){$('pauseScreen').classList.remove('show');pauseReturn=true;openRules();}   // à la fermeture des règles on revient à la pause
 function quitToMenu(){$('pauseScreen').classList.remove('show');endRun(false);}                   // abandonne : encaisse la réputation puis écran de fin → La Planque
 // annonce du nombre de tours restants, en gros, au début de chaque main
@@ -2877,10 +3438,10 @@ function announceTurn(){
   const el=$('turnPop');if(!el)return;
   let h='';
   if(G._income){
-    const lbl=G._income.parts.length===1?G._income.parts[0].replace(/\s*\+.*/,'').toUpperCase():'REVENU';
+    const lbl=G._income.parts.length===1?G._income.parts[0].replace(/\s*\+.*/,'').toUpperCase():t('msg.income');
     h+=`<div class="tp-coin"><b>+<span class="n">${abbr(G._income.amt)}</span><span class="cur">$</span></b><span>${lbl}</span></div>`;
   }
-  if(G.endless&&G.event)h+=`<div class="tp-evt">${PXI(G.event.ic)} ${G.event.t} · <small>${G.event.d}</small></div>`;   // main spéciale
+  if(G.endless&&G.event)h+=`<div class="tp-evt">${PXI(G.event.ic)} ${evtTitle(G.event)} · <small>${evtDesc(G.event)}</small></div>`;   // main spéciale
   el.innerHTML=h;
   if(!h)return;
   el.classList.remove('go');void el.offsetWidth;el.classList.add('go');
@@ -2962,7 +3523,7 @@ function animateScoreTally(mode,lines,cb){
 /* animation quand on franchit l'objectif de gain de la table */
 function objectiveReached(){
   const p=$('multPop');
-  if(p){p.className='win';p.querySelector('.m').textContent='OBJECTIF !';p.querySelector('.t').innerHTML=STAR+' table validée';
+  if(p){p.className='win';p.querySelector('.m').textContent=t('obj.reached');p.querySelector('.t').innerHTML=STAR+' '+t('obj.validated');
     p.classList.remove('go');void p.offsetWidth;p.classList.add('go');}
   // animation sur la barre d'objectif (à la place des confettis)
   const ow=$('objWrap');if(ow){ow.classList.remove('goalpop');void ow.offsetWidth;ow.classList.add('goalpop');setTimeout(()=>ow.classList.remove('goalpop'),900);}
@@ -2990,7 +3551,7 @@ function perfectFanfare(){
 /* bannière NOUVEAU RECORD ! (la bannière s'affiche toujours ; les confettis sont mutualisés) */
 function showRecord(gain){
   const p=$('recPop');if(!p)return;
-  p.querySelector('.rt').textContent='+'+abbr(gain)+' $';
+  p.querySelector('.rt').textContent='+'+cash(gain);
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
   bigConfetti(18);
 }
@@ -3133,11 +3694,11 @@ function renderMenu(){
   // logo intégré : le « O » de COLD devient un disque or contenant un pic noir (construit une fois)
   const mt=document.querySelector('#modeMenu .menuTitle');
   if(mt&&!mt.querySelector('.logoO'))mt.innerHTML='C<span class="logoO" aria-hidden="true">'+suitSVG('♠',40)+'</span>LD<br>DECK';
-  const ts=$('menuTourneeSub');if(ts)ts.textContent=RUN_LEN+' tables · une fin · reliques & tarots';   // nombre de tables réel (RUN_LEN), jamais figé
+  const ts=$('menuTourneeSub');if(ts)ts.textContent=t('menu.circuitSub',RUN_LEN);   // nombre de tables réel (RUN_LEN), jamais figé
   const el=$('menuRecords');if(!el)return;
   el.innerHTML=
-    `<div class="mrec"><span class="mrl" style="color:var(--gold)">LA TOURNÉE</span><span class="mrv">${STAR}${abbrS(META.nuit.rep)} · record ${n.depth||0} tables</span></div>`+
-    `<div class="mrec"><span class="mrl" style="color:var(--grape)">SANS FIN</span><span class="mrv">${STAR}${abbrS(META.infini.rep)} · record palier ${i.palier||0}</span></div>`;
+    `<div class="mrec"><span class="mrl" style="color:var(--gold)">${t('menu.circuit')}</span><span class="mrv">${STAR}${abbrS(META.nuit.rep)} · ${t('menu.recTables',n.depth||0)}</span></div>`+
+    `<div class="mrec"><span class="mrl" style="color:var(--grape)">${t('menu.endless')}</span><span class="mrv">${STAR}${abbrS(META.infini.rep)} · ${t('menu.recTier',i.palier||0)}</span></div>`;
 }
 function openMenu(){
   startPalierIdx=null;   // au retour menu, la reprise se remet par défaut sur le plus loin atteint
@@ -3161,14 +3722,12 @@ function stepResume(d){ startPalierIdx=(startPalierIdx||0)+d; renderPlanque(); }
 function renderPlanque(){
   const m=metaCur(),inf=MODE==='infini';
   $('repBal').innerHTML=abbrS(m.rep);
-  const pt=$('planqueTitle');if(pt)pt.textContent='LA PLANQUE';
-  const ps=$('planqueSub');if(ps)ps.innerHTML=inf
-    ?`Améliore ta <b>cagnotte</b> avec ta <b>réputation</b>, puis repars.`
-    :`Dépense ta <b>réputation</b> en avantages permanents, puis repars pour une nouvelle <b>tournée</b>.`;
-  const tag=$('planqueMode');if(tag){tag.innerHTML=inf?'∞ SANS FIN':PXI('flag')+' LA TOURNÉE';tag.className='planqueMode '+(inf?'inf':'nuit');}
-  const rb=$('recBox');if(rb)rb.innerHTML=inf
-    ?`RECORD<br><span style="white-space:nowrap"><b>palier ${m.record.palier||0}</b> · <b>${abbrS(m.record.peak||0)} $</b></span>`
-    :`RECORD<br><span style="white-space:nowrap"><b>${m.record.depth||0} tables</b> · <b>${abbrS(m.record.chips||0)} $</b></span>`;
+  const pt=$('planqueTitle');if(pt)pt.textContent=t('planque.title');
+  const ps=$('planqueSub');if(ps)ps.innerHTML=t(inf?'planque.subInf':'planque.subCircuit');
+  const tag=$('planqueMode');if(tag){tag.innerHTML=inf?t('planque.modeInf'):PXI('flag')+' '+t('planque.modeCircuit');tag.className='planqueMode '+(inf?'inf':'nuit');}
+  const rb=$('recBox');if(rb)rb.innerHTML=t('planque.best')+'<br><span style="white-space:nowrap">'+(inf
+    ?`<b>${t('planque.tierN',m.record.palier||0)}</b> · <b>${cashS(m.record.peak||0)}</b>`
+    :`<b>${t('planque.tables',m.record.depth||0)}</b> · <b>${cashS(m.record.chips||0)}</b>`)+'</span>';
   // sélecteur de palier de reprise (mode cagnotte) : reprendre au palier atteint (sauvegardé)
   const pr=$('palierResume');
   if(pr){
@@ -3178,9 +3737,9 @@ function renderPlanque(){
       if(startPalierIdx==null)startPalierIdx=maxIdx; else startPalierIdx=Math.min(Math.max(startPalierIdx,elan),maxIdx);
       if(maxIdx>elan){
         pr.style.display='';
-        pr.innerHTML='<span class="prLbl">REPRENDRE AU</span>'+
+        pr.innerHTML='<span class="prLbl">'+t('planque.resumeTier')+'</span>'+
           '<button class="prBtn" '+(startPalierIdx<=elan?'disabled':'')+' onclick="stepResume(-1)"><span class="ar" style="--o:-.8px">◀</span></button>'+
-          '<span class="prVal">Palier '+(startPalierIdx+1)+'</span>'+
+          '<span class="prVal">'+t('planque.tierLabel',startPalierIdx+1)+'</span>'+
           '<button class="prBtn" '+(startPalierIdx>=maxIdx?'disabled':'')+' onclick="stepResume(1)"><span class="ar" style="--o:.8px;--d:.14s">▶</span></button>';
       } else pr.style.display='none';
     } else {
@@ -3189,20 +3748,20 @@ function renderPlanque(){
       if(startPalierIdx==null)startPalierIdx=maxIdx; else startPalierIdx=Math.min(Math.max(startPalierIdx,0),maxIdx);
       if(maxIdx>=1){
         pr.style.display='';
-        pr.innerHTML='<span class="prLbl">REPRENDRE À</span>'+
+        pr.innerHTML='<span class="prLbl">'+t('planque.resumeTable')+'</span>'+
           '<button class="prBtn" '+(startPalierIdx<=0?'disabled':'')+' onclick="stepResume(-1)"><span class="ar" style="--o:-.8px">◀</span></button>'+
-          '<span class="prVal">Table '+(startPalierIdx+1)+'</span>'+
+          '<span class="prVal">'+t('planque.tableLabel',startPalierIdx+1)+'</span>'+
           '<button class="prBtn" '+(startPalierIdx>=maxIdx?'disabled':'')+' onclick="stepResume(1)"><span class="ar" style="--o:.8px;--d:.14s">▶</span></button>';
       } else { pr.style.display='none';startPalierIdx=0; }
     }
   }
   const resumeAt=(!inf&&startPalierIdx>0)?startPalierIdx:0;   // table de reprise de la tournée (0 = départ normal)
-  const lb=$('planqueLaunch');if(lb){lb.className='btn menu b-gold';lb.innerHTML=inf?'COMMENCER<small>sans fin · blackjack pur</small>':(resumeAt>0?('COMMENCER<small>reprise · table '+(resumeAt+1)+'</small>'):'COMMENCER<small>la tournée · '+RUN_LEN+' tables</small>');}
+  const lb=$('planqueLaunch');if(lb){lb.className='btn menu b-gold';
+    const sub=inf?t('planque.startInf'):(resumeAt>0?t('planque.startResume',resumeAt+1):t('planque.startCircuit',RUN_LEN));
+    lb.innerHTML=t('planque.start')+'<small>'+sub+'</small>';}
   const z2=$('planqueZ2');if(z2)z2.style.display=(!inf&&(META.nuit.zone2Runs|0)>=2&&(m.record.depth||0)<2)?'':'none';   // remplacé par le sélecteur « REPRENDRE À » dès qu'une table 2+ est atteinte
   const rb2=$('repBal2');if(rb2)rb2.textContent=abbr(m.rep);
-  const lead=$('upgradesLead');if(lead)lead.innerHTML=inf
-    ?`Renforce ta <b>cagnotte</b> avec ta <b>réputation</b>.`
-    :`Dépense ta <b>réputation</b> en avantages permanents.`;
+  const lead=$('upgradesLead');if(lead)lead.innerHTML=t(inf?'planque.leadInf':'planque.leadCircuit');
   const box=$('unlockItems');box.innerHTML='';
   let affordable=0,allMax=true;
   unlocksFor(MODE).forEach(u=>{
@@ -3210,17 +3769,17 @@ function renderPlanque(){
     if(!maxed){allMax=false;if(m.rep>=cost)affordable++;}
     const d=document.createElement('div');d.className='shopItem'+(maxed?' bought':'');
     const dots=u.max>1?` <span class="ulvl">${'●'.repeat(lvl)}${'○'.repeat(u.max-lvl)}</span>`:(lvl?' <span class="ulvl">●</span>':'');
-    d.innerHTML=`<div class="shopTok" style="color:${u.tc}">${u.tok}</div>`+
-      `<div class="sInfo"><div class="nm">${u.name}${dots}</div><div class="ds">${u.desc(lvl)}</div></div>`;
+    d.innerHTML=`<div class="shopTok" style="color:${u.tc}">${t('tok.'+u.k)}</div>`+
+      `<div class="sInfo"><div class="nm">${t('unlock.'+u.k+'.n')}${dots}</div><div class="ds">${t('unlock.'+u.k+'.d',lvl)}</div></div>`;
     const b=document.createElement('button');b.className='btn b-gold';
     b.style.cssText='font-size:13px;padding:9px 11px';
-    if(maxed){b.textContent='MAX';b.disabled=true;}
+    if(maxed){b.textContent=t('planque.max');b.disabled=true;}
     else{b.innerHTML=STAR+cost;if(m.rep<cost)b.disabled=true;b.onclick=()=>buyUnlock(u.id);}
     d.appendChild(b);box.appendChild(d);
   });
   // sous-titre du bouton d'ouverture : indique ce qui est achetable maintenant
-  const sub=$('upgradesSub');if(sub)sub.textContent=allMax?'tout au max'
-    :affordable?(affordable+' dispo'+(affordable>1?'s':'')):'avantages permanents';
+  const sub=$('upgradesSub');if(sub)sub.textContent=allMax?t('planque.allMax')
+    :affordable?t('planque.avail',affordable):t('planque.upgradesSub');
 }
 function buyUnlock(id){
   const u=findUnlock(id);if(!u)return;
@@ -3271,7 +3830,7 @@ function startEndless(){
   buildShoe();
   applyHandIncome();renderAll();renderHands();
   announceTurn();
-  popText('SANS FIN','monte aussi haut que possible');
+  popText(t('msg.endlessStart'),t('msg.endlessStartSub'));
 }
 /* palier de cagnotte franchi : on choisit un bonus + les mises montent d'un cran */
 function reachPalier(){
@@ -3286,10 +3845,10 @@ function reachPalier(){
   const pick=pool.slice(0,3);
   $('palierNum').textContent=G.palier;
   $('palierBoons').innerHTML=pick.map(b=>
-    `<button class="btn b-purple menu" onclick="applyBoon('${b.id}')" style="width:100%">${b.t}<small>${b.d}</small></button>`
+    `<button class="btn b-purple menu" onclick="applyBoon('${b.id}')" style="width:100%">${t('boon.'+b.id+'.t')}<small>${t('boon.'+b.id+'.d')}</small></button>`
   ).join('')+
     // le dilemme : replonger avec un bonus, ou sécuriser AVEC prime de palier
-    `<button class="btn b-gold menu" onclick="cashOutEndless(true)" style="width:100%;margin-top:6px">ENCAISSER ${STAR}${abbr(Math.round(endlessCashRep()*1.2))}<small>s'arrêter ici · bonus de palier +20 %</small></button>`;
+    `<button class="btn b-gold menu" onclick="cashOutEndless(true)" style="width:100%;margin-top:6px">${t('pal.cash',STAR+abbr(Math.round(endlessCashRep()*1.2)))}<small>${t('pal.cashSub')}</small></button>`;
   $('palierScreen').classList.add('show');
 }
 /* encaissement volontaire de la cagnotte (depuis l'écran palier avec bonus, ou la pause sans) */
@@ -3317,7 +3876,7 @@ function applyBoon(id){
 /* banqueroute : plus de quoi miser le minimum → fin de la plongée */
 function endlessBust(){
   document.body.classList.remove('inf');
-  G.loseTitle='BANQUEROUTE';G.loseText='Plus de quoi miser. Ta cagnotte s’arrête ici.';
+  G.loseTitle='endless.bust';G.loseText='endless.bustTxt';
   endRun(false);
 }
 /* recommencer la progression DU MODE COURANT : on perd sa réputation, ses déblocages et son record */
@@ -3331,7 +3890,7 @@ function doRestart(){
   $('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');$('shop').classList.remove('show');
   $('intro').classList.add('show');                       // on reste dans La Planque du mode, état neuf
 }
-freshGame();buildShoe();renderAll();renderHands();renderBackPicker();renderPlanque();renderMenu();tick();
+freshGame();buildShoe();applyI18n();renderHands();tick();
 </script>
 </body>
 </html>
