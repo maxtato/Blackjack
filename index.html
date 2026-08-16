@@ -797,8 +797,40 @@ body.inf #topbar #scorebox{order:0;flex:1 1 100%;align-self:stretch;justify-cont
 .setRow{display:flex;flex-direction:column;gap:9px;margin-bottom:18px;text-align:left}
 .setLbl{font-size:11px;letter-spacing:.12em;color:var(--muted)}
 .setOpts{display:flex;gap:9px;flex-wrap:wrap}
-.setOpts .btn{flex:1;min-width:120px;height:46px;display:flex;align-items:center;justify-content:center;font-size:14px;padding:0 9px;background:var(--panelDk2);color:var(--paper)}
+.setOpts .btn{flex:1;min-width:120px;min-height:46px;display:flex;flex-wrap:wrap;align-items:center;align-content:center;justify-content:center;gap:0 .32em;font-size:14px;padding:8px 9px;background:var(--panelDk2);color:var(--paper)}
+.setOpts .btn.wide{flex:1 0 100%}
 .setOpts .btn.on{background:var(--gold);color:#3a2a00}
+.setNote{font-size:10px;color:var(--mutedDk);line-height:1.5;text-align:left;margin:-8px 0 16px}
+/* ===== ÉCRAN DE PUBLICITÉ (bouchon de démo) ===== */
+#adOverlay{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;background:rgba(6,10,8,.95);padding:14px}
+#adOverlay.show{display:flex}
+.adFrame{width:100%;max-width:360px;background:var(--panel);clip-path:var(--pc);overflow:hidden;box-shadow:0 9px 0 rgba(0,0,0,.4)}
+.adBar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--panelDk2)}
+#adTag{font-size:9px;letter-spacing:.14em;color:#0b120e;background:var(--gold);padding:3px 6px;flex:0 0 auto}
+#adKind{font-size:9px;letter-spacing:.1em;color:var(--muted);flex:1;text-align:left}
+#adTimer{font-size:12px;color:var(--paper);flex:0 0 auto;min-width:58px;text-align:right}
+#adX{flex:0 0 auto;width:24px;height:24px;display:none;align-items:center;justify-content:center;background:var(--panelDk);color:var(--paper);border:none;clip-path:var(--pc);font-family:'Jersey 15',monospace;font-size:14px;line-height:1;cursor:pointer;padding:0}
+#adX.on{display:flex}
+#adX:active{transform:translate(1px,2px)}
+.adBody{position:relative;height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;overflow:hidden;
+  background:linear-gradient(160deg,#2b2358,#171036 70%)}
+.adBody::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.09) 2px,transparent 2px);background-size:16px 16px}
+.adBody::after{content:"";position:absolute;top:-40%;left:-60%;width:60%;height:190%;transform:rotate(18deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent);animation:adShine 2.6s linear infinite}
+@keyframes adShine{to{left:130%}}
+.adCube{position:relative;z-index:1;width:56px;height:56px;background:var(--gold);clip-path:var(--pc);display:flex;align-items:center;justify-content:center;
+  font-family:'Jersey 15',monospace;font-weight:700;font-size:26px;color:#3a2a00;animation:adFloat 2.4s ease-in-out infinite}
+@keyframes adFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+#adYour{position:relative;z-index:1;font-family:'Jersey 15',monospace;font-weight:700;font-size:22px;color:#fff;letter-spacing:.06em;text-align:center;padding:0 14px}
+#adFormat{position:relative;z-index:1;font-size:10px;letter-spacing:.1em;color:#b9a7f0}
+#adInstall{position:relative;z-index:1;margin-top:6px;background:var(--teal);color:#04302d;border:none;clip-path:var(--pc);
+  font-family:'Jersey 15',monospace;font-weight:700;font-size:14px;padding:10px 20px;cursor:pointer}
+#adInstall:active{transform:translate(1px,2px)}
+#adDemo{position:absolute;left:0;right:0;bottom:0;z-index:2;font-size:9px;letter-spacing:.08em;color:#0b120e;background:rgba(240,144,42,.92);padding:4px 8px;text-align:center}
+.adFoot{padding:10px;background:var(--panelDk2);display:flex;flex-direction:column;gap:8px;align-items:stretch}
+#adRewardLine{font-size:12px;color:var(--gold);text-align:center;line-height:1.4}
+#adFootBtn{width:100%;font-size:15px;padding:12px 9px}
+#adFootBtn[disabled]{background:#44464d!important;color:#868c95!important}
 
 /* petit jeton de revenu (pourboire/mécène) en début de main, en haut à droite du tapis */
 #turnPop{position:absolute;inset:0;pointer-events:none;z-index:7;font-family:'Jersey 15',monospace;image-rendering:pixelated}
@@ -1152,6 +1184,7 @@ small.sym{margin-left:0!important}
     <div class="shopItems" id="shopItems"></div>
     <div class="shopBtns" style="margin-bottom:9px">
       <button class="btn b-teal" id="rerollBtn" onclick="rerollShop()" style="flex:0 0 auto;font-size:13px;padding:11px 14px">REROLL</button>
+      <button class="btn b-purple" id="adRerollBtn" onclick="adFreeReroll()" style="flex:0 0 auto;font-size:13px;padding:11px 12px;display:none"></button>
       <button class="btn b-gold" id="cashBtn" onclick="cashOut()" style="flex:1;font-size:14px">CASH OUT</button>
     </div>
     <button class="btn b-blue menu" id="shopNextBtn" onclick="leaveShop()" style="width:100%"></button>
@@ -1163,6 +1196,7 @@ small.sym{margin-left:0!important}
   <div class="ovpanel">
     <h1 id="loseTitle" class="dead"></h1>
     <p id="loseText"></p>
+    <button class="btn b-teal menu" id="loseAdBtn" onclick="adExtraLife()" style="width:100%;margin-bottom:9px;display:none"></button>
     <button class="btn b-gold menu" id="retryBtn" onclick="retryTable()" style="width:100%;margin-bottom:9px">SECOND CHANCE</button>
     <button class="btn b-blue" id="giveupBtn" onclick="giveUp()" style="width:100%">GIVE UP</button>
   </div>
@@ -1174,6 +1208,7 @@ small.sym{margin-left:0!important}
     <h1 id="endTitle"></h1>
     <p id="endText"></p>
     <div class="runstats" id="endStats"></div>
+    <button class="btn b-teal menu" id="endAdBtn" onclick="adDoubleRep()" style="width:100%;margin-bottom:9px;display:none"></button>
     <button class="btn b-gold menu" onclick="toPlanque()" data-i18n="end.back">BACK TO THE HIDEOUT</button>
   </div>
 </div>
@@ -1186,7 +1221,33 @@ small.sym{margin-left:0!important}
       <span class="setLbl" data-i18n="set.lang">LANGUAGE</span>
       <div class="setOpts" id="langOpts"></div>
     </div>
+    <div class="setRow">
+      <span class="setLbl" data-i18n="set.ads">ADS (DEMO)</span>
+      <div class="setOpts" id="adOpts"></div>
+    </div>
+    <p class="setNote" data-i18n="set.adsNote"></p>
     <button class="btn b-gold menu" onclick="closeSettings()" style="width:100%" data-i18n="set.close">CLOSE</button>
+  </div>
+</div>
+
+<!-- ÉCRAN DE PUBLICITÉ (bouchon de démo : aucune régie branchée) -->
+<div id="adOverlay">
+  <div class="adFrame">
+    <div class="adBar">
+      <span id="adTag">AD</span><span id="adKind"></span><span id="adTimer"></span>
+      <button id="adX" onclick="Ads.closeNow()">✕</button>
+    </div>
+    <div class="adBody">
+      <span class="adCube">21</span>
+      <span id="adYour"></span>
+      <span id="adFormat"></span>
+      <button id="adInstall" onclick="Ads.fakeClick(this)"></button>
+      <span id="adDemo"></span>
+    </div>
+    <div class="adFoot">
+      <div id="adRewardLine"></div>
+      <button class="btn b-gold" id="adFootBtn" onclick="Ads.closeNow()"></button>
+    </div>
   </div>
 </div>
 
@@ -1237,6 +1298,23 @@ en:{
 'planque.restartTitle':'Restart this mode (loses the mode’s reputation)','planque.rulesTitle':'Game rules',
 /* --- paramètres --- */
 'set.title':'SETTINGS','set.open':'⚙ SETTINGS','set.lang':'LANGUAGE','set.close':'CLOSE','set.btnTitle':'Settings',
+/* --- publicité (bouchon de démo) --- */
+'ad.tag':'AD','ad.interTag':'INTERSTITIAL','ad.rewardedTag':'REWARDED AD',
+'ad.yourAd':'YOUR AD HERE','ad.format':'placeholder · 320×480','ad.install':'INSTALL',
+'ad.demoTag':'DEMO — no ad network connected','ad.demoClick':'Demo ad — nothing to click',
+'ad.skipIn':n=>'Skip in '+n+' s','ad.continue':'CONTINUE',
+'ad.rewardIn':n=>'Reward in '+n+' s','ad.rewardGot':'REWARD UNLOCKED','ad.claim':'CLAIM',
+'ad.aborted':'Reward missed','ad.demoReward':'Demo reward',
+'ad.lifeBtn':'▶ WATCH AN AD','ad.lifeSub':'+1 second chance · keep going',
+'ad.lifeReward':'+1 second chance',
+'ad.repBtn':'▶ DOUBLE YOUR REPUTATION','ad.repSub':r=>'+'+r+' on top','ad.repReward':r=>'+'+r+' reputation',
+'ad.rerollBtn':'▶ FREE','ad.rerollReward':'One free shop reroll',
+'ad.boonBtn':'▶ REROLL THE PERKS','ad.boonSub':'3 new options','ad.boonReward':'3 new perks',
+/* --- paramètres : pub --- */
+'set.ads':'ADS (DEMO)','set.adTestI':'TEST INTERSTITIAL','set.adTestR':'TEST REWARDED',
+'set.adFree':'REMOVE ADS','set.adCaps':'IGNORE CAPS','set.on':'ON','set.off':'OFF',
+'set.adsNote':'Demo only: no ad network is connected. “Remove ads” simulates the IAP (keeps rewarded ads). “Ignore caps” fires every interstitial so you can preview them — off, the real rules apply: 1 ad max every 3 tables and never less than 2 min apart.',
+
 /* --- règles --- */
 'rules.title':'RULES','rules.close':'CLOSE',
 'rules.goal':'<span class="rt">GOAL</span>Beat the dealer on every hand without going over <span class="k">21</span>. Face cards are worth 10, an Ace is 1 or 11.',
@@ -1472,6 +1550,23 @@ fr:{
 'planque.max':'MAX','planque.prevBack':'Dos précédent','planque.nextBack':'Dos suivant',
 'planque.restartTitle':'Recommencer ce mode (perd la réputation du mode)','planque.rulesTitle':'Règles du jeu',
 'set.title':'PARAMÈTRES','set.open':'⚙ PARAMÈTRES','set.lang':'LANGUE','set.close':'FERMER','set.btnTitle':'Paramètres',
+/* --- publicité (bouchon de démo) --- */
+'ad.tag':'PUB','ad.interTag':'INTERSTITIEL','ad.rewardedTag':'PUB RÉCOMPENSÉE',
+'ad.yourAd':'VOTRE PUB ICI','ad.format':'emplacement · 320×480','ad.install':'INSTALLER',
+'ad.demoTag':'DÉMO — aucune régie branchée','ad.demoClick':'Pub de démo — rien à cliquer',
+'ad.skipIn':n=>'Passer dans '+n+' s','ad.continue':'CONTINUER',
+'ad.rewardIn':n=>'Récompense dans '+n+' s','ad.rewardGot':'RÉCOMPENSE OBTENUE','ad.claim':'RÉCUPÉRER',
+'ad.aborted':'Récompense non obtenue','ad.demoReward':'Récompense de démo',
+'ad.lifeBtn':'▶ REGARDER UNE PUB','ad.lifeSub':'+1 seconde chance · tu continues',
+'ad.lifeReward':'+1 seconde chance',
+'ad.repBtn':'▶ DOUBLER TA RÉPUTATION','ad.repSub':r=>'+'+r+' en plus','ad.repReward':r=>'+'+r+' de réputation',
+'ad.rerollBtn':'▶ GRATUIT','ad.rerollReward':'Une relance de boutique offerte',
+'ad.boonBtn':'▶ RELANCER LES BONUS','ad.boonSub':'3 nouvelles options','ad.boonReward':'3 nouveaux bonus',
+/* --- paramètres : pub --- */
+'set.ads':'PUBLICITÉS (DÉMO)','set.adTestI':'TESTER UN INTERSTITIEL','set.adTestR':'TESTER UNE RÉCOMPENSÉE',
+'set.adFree':'SANS PUB','set.adCaps':'IGNORER LES PLAFONDS','set.on':'ACTIVÉ','set.off':'COUPÉ',
+'set.adsNote':'Démo uniquement : aucune régie n’est branchée. « Sans pub » simule l’achat (les récompensées restent). « Ignorer les plafonds » déclenche chaque interstitiel pour que tu les voies — coupé, les vraies règles s’appliquent : 1 pub maximum toutes les 3 tables et jamais à moins de 2 min d’intervalle.',
+
 'rules.title':'RÈGLES','rules.close':'FERMER',
 'rules.goal':'<span class="rt">BUT</span>Bats le croupier à chaque main sans dépasser <span class="k">21</span>. Une figure vaut 10, l\'As vaut 1 ou 11.',
 'rules.table':'<span class="rt">LA TABLE</span>Joue <span class="k">toutes les mains imposées</span>, mise dans la <span class="k">limite</span> (min–max fixe), et atteins l\'<span class="k">objectif de gain</span> avant la dernière main. Sous l\'objectif = table perdue.',
@@ -3048,7 +3143,7 @@ function finishTable(){
 function onTableLost(titleKey,textKey){
   updateRecord(G.tableIdx+1);
   G.loseTitle=titleKey;G.loseText=textKey;
-  if(G.tokens>0){openLose();return;}
+  if(G.tokens>0||Ads.canRewarded()){openLose();return;}   // pub récompensée = seconde chance de secours
   endRun(false);
 }
 
@@ -3104,6 +3199,8 @@ function shopScale(){return Math.max(1,curTable().goal/100*1.2);}
 function itemCost(r){return niceRound(r.cost*shopScale());}
 function openShop(){
   rerollCost=niceRound(6*shopScale());
+  G._adReroll=false;                 // une relance offerte par pub, par boutique
+  Ads.countTable();                  // rythme des interstitiels : compté par table franchie
   renderShopHead();
   rollShop();
   $('shop').classList.add('show');
@@ -3174,6 +3271,8 @@ function renderShop(){
   });
   scheduleFitChipText();
   const rb=$('rerollBtn');if(rb){rb.textContent=t('shop.reroll',cash(rerollCost));rb.disabled=G.bank<rerollCost;}
+  const arb=$('adRerollBtn');
+  if(arb){const show=!G._adReroll&&Ads.canRewarded();arb.style.display=show?'':'none';if(show)arb.textContent=t('ad.rerollBtn');}
 }
 function buyShopItem(i,el,btn){
   const it=shopOffer[i];if(!it||it.bought)return;const r=it.data;
@@ -3205,9 +3304,12 @@ function leaveShop(){
   if(!nx)return;                                   // sécurité
   $('shop').classList.remove('show');
   const prevZone=G.table.zone;
-  G.tableIdx++;
-  G.table=tableFor(G.tableIdx);
-  enterTable(prevZone);
+  // interstitiel sur la TRANSITION (récompense déjà encaissée), jamais sur l'objectif atteint
+  Ads.interstitial().then(()=>{
+    G.tableIdx++;
+    G.table=tableFor(G.tableIdx);
+    enterTable(prevZone);
+  });
 }
 /* mise en place d'une nouvelle table (après boutique / choix de palier) */
 function enterTable(prevZone){
@@ -3251,7 +3353,16 @@ function loseBody(){
 function openLose(){
   $('loseTitle').textContent=t(G.loseTitle||'');
   $('loseText').innerHTML=loseBody()+'<br><br>'+t('lose.info',G.tableIdx+1,STAR+abbr(G.pot));
+  const hasLife=(G.tokens||0)>0;
+  $('retryBtn').style.display=hasLife?'':'none';
   $('retryBtn').innerHTML=t('lose.retry')+'<small>'+t('lose.tokens',G.tokens)+'</small>';
+  // plus de vie : la pub récompensée en redonne une (emplacement le plus rentable)
+  const ab=$('loseAdBtn');
+  if(ab){
+    const show=!hasLife&&Ads.canRewarded();
+    ab.style.display=show?'':'none';
+    if(show)ab.innerHTML=t('ad.lifeBtn')+'<small>'+t('ad.lifeSub')+'</small>';
+  }
   $('giveupBtn').innerHTML=t('lose.giveup')+'<small>'+t('lose.giveupSub',STAR+abbr(repOnEnd(false)))+'</small>';
   $('loseScreen').classList.add('show');
 }
@@ -3344,6 +3455,12 @@ function renderEndScreen(){
       '<br>'+t('end.rep',STAR+abbr(e.baseGain))+(e.coffre?t('end.vault',STAR+abbr(e.coffre)):'')+t('end.repTotal',STAR+abbr(e.rep))+
       recLine+'<span style="color:var(--muted)">'+t('end.recordCircuit',rec.depth||0,cash(rec.chips||0))+'</span>';
   }
+  const eb=$('endAdBtn');
+  if(eb){
+    const show=!e.doubled&&Ads.canRewarded()&&(e.baseGain+e.coffre)>0;
+    eb.style.display=show?'':'none';
+    if(show)eb.innerHTML=t('ad.repBtn')+'<small>'+t('ad.repSub',STAR+abbr(e.baseGain+e.coffre))+'</small>';
+  }
   $('endStats').innerHTML=
     `<div class="rs"><span class="l">${t('end.won')}</span><span class="v">${st.won}/${st.played}</span></div>`+
     `<div class="rs"><span class="l">${t('end.bestGain')}</span><span class="v">${cash(st.bestGain)}</span></div>`+
@@ -3393,9 +3510,18 @@ function openPause(){
 }
 function resumeGame(){$('pauseScreen').classList.remove('show');}
 /* ---------- PARAMÈTRES (langue) ---------- */
-function openSettings(){renderLangOpts();$('settingsScreen').classList.add('show');}
+function openSettings(){renderLangOpts();renderAdOpts();$('settingsScreen').classList.add('show');}
 function closeSettings(){$('settingsScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
 function pauseSettings(){$('pauseScreen').classList.remove('show');pauseReturn=true;openSettings();}   // à la fermeture on revient à la pause
+/* réglages pub de démo : aperçu des deux formats, achat « sans pub », plafonds */
+function renderAdOpts(){
+  const row=$('adOpts');if(!row)return;row.innerHTML='';
+  const mk=(label,cls,fn)=>{const b=document.createElement('button');b.className='btn'+(cls||'');b.innerHTML=label;b.onclick=fn;row.appendChild(b);};
+  mk(t('set.adTestI'),'',()=>{closeSettings();setTimeout(()=>Ads.show('inter').then(()=>Ads.closeNow&&0),260);});
+  mk(t('set.adTestR'),'',()=>{closeSettings();setTimeout(()=>Ads.rewarded(t('ad.demoReward')),260);});
+  mk((Ads.removed()?'☑ ':'☐ ')+t('set.adFree'),' wide'+(Ads.removed()?' on':''),()=>Ads.setRemoved(!Ads.removed()));
+  mk((Ads.freeCaps()?'☑ ':'☐ ')+t('set.adCaps'),' wide'+(Ads.freeCaps()?' on':''),()=>Ads.setFreeCaps(!Ads.freeCaps()));
+}
 function renderLangOpts(){
   const row=$('langOpts');if(!row)return;row.innerHTML='';
   LANGS.forEach(l=>{
@@ -3422,7 +3548,7 @@ function applyI18n(){
   document.querySelectorAll('[data-i18n-title]').forEach(el=>{el.title=t(el.getAttribute('data-i18n-title'));});
   const hw=$('handWord');if(hw)hw.textContent=(LANG==='fr'?'main':'hand');
   const mc=$('menuCircuit');if(mc)mc.textContent=t('menu.circuit');
-  renderLangOpts();renderRules();
+  renderLangOpts();renderAdOpts();renderRules();
   renderAll();renderMenu();renderPlanque();renderBackPicker();
   if($('shop').classList.contains('show')){renderShopHead();renderShop();}
   if($('loseScreen').classList.contains('show'))openLose();
@@ -3613,6 +3739,7 @@ function spawnEmber(){
 }
 
 function tick(){
+  if(G._adPaused){requestAnimationFrame(tick);return;}   // pub à l'écran : jeu en veille
   const _bpct=barakaPct(),_blv=barakaLevel();
   const ambient=_blv>=3?Math.pow(_bpct/100,2)*5:0;
   const amt=Math.max(shakeAmt,ambient);
@@ -3624,6 +3751,146 @@ function tick(){
   if(_blv>=4&&G.phase==='play'&&(!G._beat||performance.now()-G._beat>680)){G._beat=performance.now();sfx.thump();}
   staggerUI();
   shakeAmt*=0.82;requestAnimationFrame(tick);
+}
+
+/* ============================================================
+   PUBLICITÉ — BOUCHON DE DÉMO
+   Aucune régie n'est branchée : Ads.show() affiche une fausse pub
+   pour valider les flux, le rythme et le rendu. Pour passer en réel,
+   il suffit de remplacer le corps de Ads.show() par l'appel du SDK
+   (AdMob / AppLovin / SDK du portail HTML5) — tout le reste du jeu
+   ne connaît que Ads.interstitial() et Ads.rewarded().
+   ============================================================ */
+const Ads={
+  DEMO:true,
+  interDelay:120000,       // délai minimum entre deux pubs (ms)
+  tablesPerAd:3,           // tables franchies avant d'autoriser un interstitiel
+  interSecs:4, rewardSecs:5,
+  _last:0,_tables:99,_busy:false,_resolve:null,_timer:null,_left:0,_kind:'',_ok:false,
+  /* --- achat « sans pub » (simulé ici par un réglage) --- */
+  removed(){try{return localStorage.getItem('t21noads')==='1';}catch(e){return false;}},
+  setRemoved(v){try{localStorage.setItem('t21noads',v?'1':'0');}catch(e){}renderAdOpts();},
+  /* --- démo : ignorer les plafonds pour voir chaque emplacement --- */
+  freeCaps(){try{return localStorage.getItem('t21adcaps')!=='0';}catch(e){return true;}},
+  setFreeCaps(v){try{localStorage.setItem('t21adcaps',v?'1':'0');}catch(e){}renderAdOpts();},
+  countTable(){this._tables++;},
+  canInterstitial(){
+    if(this.removed()||this._busy)return false;
+    if(this.freeCaps())return true;                                  // mode démo
+    return (Date.now()-this._last>this.interDelay)&&this._tables>=this.tablesPerAd;
+  },
+  canRewarded(){return !this._busy;},                                // le rewarded reste dispo même « sans pub »
+  interstitial(){
+    if(!this.canInterstitial())return Promise.resolve(false);
+    return this.show('inter').then(()=>{this._last=Date.now();this._tables=0;return true;});
+  },
+  rewarded(label){
+    if(!this.canRewarded())return Promise.resolve(false);
+    return this.show('reward',label).then(ok=>{if(ok)this._last=Date.now();return ok;});
+  },
+  /* ---- rendu de la fausse pub (à remplacer par le SDK) ---- */
+  show(kind,label){
+    return new Promise(resolve=>{
+      const ov=$('adOverlay');
+      if(!ov){resolve(kind!=='reward');return;}
+      this._busy=true;this._kind=kind;this._resolve=resolve;this._ok=(kind!=='reward');
+      adPause(true);
+      const rew=(kind==='reward');
+      this._left=rew?this.rewardSecs:this.interSecs;
+      $('adTag').textContent=t('ad.tag');
+      $('adKind').textContent=rew?t('ad.rewardedTag'):t('ad.interTag');
+      $('adYour').textContent=t('ad.yourAd');
+      $('adFormat').textContent=t('ad.format');
+      $('adInstall').textContent=t('ad.install');
+      $('adDemo').textContent=t('ad.demoTag');
+      $('adRewardLine').innerHTML=rew?(label||''):'';
+      $('adX').classList.remove('on');
+      const btn=$('adFootBtn');btn.disabled=true;
+      ov.classList.add('show');
+      this._paint();
+      clearInterval(this._timer);
+      this._timer=setInterval(()=>{
+        this._left--;
+        if(this._left<=0){
+          clearInterval(this._timer);this._timer=null;
+          this._ok=true;this._paint(true);
+        }else this._paint();
+      },1000);
+    });
+  },
+  _paint(done){
+    const rew=(this._kind==='reward'),btn=$('adFootBtn');
+    if(done){
+      $('adTimer').textContent='';
+      $('adX').classList.add('on');
+      btn.disabled=false;
+      btn.textContent=rew?t('ad.claim'):t('ad.continue');
+      btn.className='btn '+(rew?'b-gold':'b-blue');
+      if(rew)$('adRewardLine').innerHTML='<b>'+t('ad.rewardGot')+'</b>';
+    }else{
+      $('adTimer').textContent=rew?t('ad.rewardIn',this._left):t('ad.skipIn',this._left);
+      btn.textContent=rew?t('ad.rewardIn',this._left):t('ad.skipIn',this._left);
+      btn.className='btn b-gold';
+      // interstitiel : croix de fermeture anticipée sur la fin du décompte
+      if(!rew&&this._left<=1)$('adX').classList.add('on');
+    }
+  },
+  fakeClick(el){el.classList.remove('jit');void el.offsetWidth;el.classList.add('jit');popAdToast(t('ad.demoClick'));},
+  closeNow(){
+    clearInterval(this._timer);this._timer=null;
+    $('adOverlay').classList.remove('show');
+    const ok=this._ok,rew=(this._kind==='reward'),r=this._resolve;
+    this._busy=false;this._resolve=null;
+    adPause(false);
+    if(rew&&!ok)popAdToast(t('ad.aborted'));
+    if(r)r(ok);
+  }
+};
+/* met le jeu en veille pendant la pub : boucle d'animation + audio */
+function adPause(on){
+  G._adPaused=!!on;
+  try{if(Audio_.ctx&&Audio_.ctx.state){on?Audio_.ctx.suspend():Audio_.ctx.resume();}}catch(e){}
+}
+function popAdToast(txt){try{popText(txt,'');}catch(e){}}
+
+/* ---------- emplacements ---------- */
+/* 1. plus de vie : une pub redonne une seconde chance */
+function adExtraLife(){
+  Ads.rewarded(t('ad.lifeReward')).then(ok=>{
+    if(!ok)return;
+    G.tokens=(G.tokens||0)+1;
+    openLose();                       // rafraîchit l'écran (le bouton pub disparaît)
+    retryTable();
+  });
+}
+/* 2. fin de run : doubler la réputation gagnée */
+function adDoubleRep(){
+  const e=G.endInfo;if(!e||e.doubled)return;
+  Ads.rewarded(t('ad.repReward',STAR+abbr(e.baseGain+e.coffre))).then(ok=>{
+    if(!ok)return;
+    const bonus=e.baseGain+e.coffre;
+    metaCur().rep+=bonus;saveMeta();
+    e.doubled=true;e.baseGain+=bonus;e.rep=metaCur().rep;
+    coinBurst(14);try{sfx.win&&sfx.win();}catch(err){}
+    renderEndScreen();
+  });
+}
+/* 3. boutique : une relance offerte par boutique */
+function adFreeReroll(){
+  if(G._adReroll)return;
+  Ads.rewarded(t('ad.rerollReward')).then(ok=>{
+    if(!ok)return;
+    G._adReroll=true;try{sfx.card();}catch(e){}
+    rollShop();
+  });
+}
+/* 4. Sans Fin : relancer les bonus de palier */
+function adRerollBoons(){
+  if(G._adBoons)return;
+  Ads.rewarded(t('ad.boonReward')).then(ok=>{
+    if(!ok)return;
+    G._adBoons=true;reachPalier(true);
+  });
 }
 
 /* ---------- rendu global / boot ---------- */
@@ -3788,11 +4055,14 @@ function buyUnlock(id){
   renderPlanque();
 }
 function toPlanque(){
-  document.body.classList.remove('inf');
-  startPalierIdx=null;                       // la reprise se recale par défaut sur le plus loin atteint
-  $('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');$('shop').classList.remove('show');
-  renderPlanque();renderBackPicker();
-  $('intro').classList.add('show');
+  // fin de segment de session : le meilleur emplacement d'interstitiel du jeu
+  Ads.interstitial().then(()=>{
+    document.body.classList.remove('inf');
+    startPalierIdx=null;                     // la reprise se recale par défaut sur le plus loin atteint
+    $('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');$('shop').classList.remove('show');
+    renderPlanque();renderBackPicker();
+    $('intro').classList.add('show');
+  });
 }
 
 function startGame(fromTable){
@@ -3833,13 +4103,16 @@ function startEndless(){
   popText(t('msg.endlessStart'),t('msg.endlessStartSub'));
 }
 /* palier de cagnotte franchi : on choisit un bonus + les mises montent d'un cran */
-function reachPalier(){
+function reachPalier(again){
+  if(!again){
   G.palier=(G.palier||0)+1;
   G.tableIdx=G.palier;                       // le tier de mise suit le palier
   G.table=endlessTier(G.tableIdx);
   // sauvegarde automatique du palier atteint → on pourra reprendre d'ici même si on meurt/quitte
   const rr=metaCur().record;rr.palier=Math.max(rr.palier||0,(G.palier||0)+1);saveMeta();
   sfx.win&&sfx.win();flashScreen('win');shake(14);coinBurst(12);
+  G._adBoons=false;                          // une relance de bonus offerte par palier
+  }
   const pool=BOONS.filter(b=>(!b.lock||uLvl(b.lock))&&!(b.id==='evt3'&&G.boons&&G.boons.evt3)&&!(b.id==='filet'&&G.boons&&G.boons.filet)&&!(b.id==='baraplus'&&G.boons&&G.boons.baraplus));
   for(let i=pool.length-1;i>0;i--){const j=rndInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
   const pick=pool.slice(0,3);
@@ -3848,7 +4121,8 @@ function reachPalier(){
     `<button class="btn b-purple menu" onclick="applyBoon('${b.id}')" style="width:100%">${t('boon.'+b.id+'.t')}<small>${t('boon.'+b.id+'.d')}</small></button>`
   ).join('')+
     // le dilemme : replonger avec un bonus, ou sécuriser AVEC prime de palier
-    `<button class="btn b-gold menu" onclick="cashOutEndless(true)" style="width:100%;margin-top:6px">${t('pal.cash',STAR+abbr(Math.round(endlessCashRep()*1.2)))}<small>${t('pal.cashSub')}</small></button>`;
+    `<button class="btn b-gold menu" onclick="cashOutEndless(true)" style="width:100%;margin-top:6px">${t('pal.cash',STAR+abbr(Math.round(endlessCashRep()*1.2)))}<small>${t('pal.cashSub')}</small></button>`+
+    ((!G._adBoons&&Ads.canRewarded())?`<button class="btn b-teal menu" onclick="adRerollBoons()" style="width:100%;margin-top:4px">${t('ad.boonBtn')}<small>${t('ad.boonSub')}</small></button>`:'');
   $('palierScreen').classList.add('show');
 }
 /* encaissement volontaire de la cagnotte (depuis l'écran palier avec bonus, ou la pause sans) */
