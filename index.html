@@ -1196,8 +1196,7 @@ small.sym{margin-left:0!important}
   <div class="ovpanel">
     <h1 id="loseTitle" class="dead"></h1>
     <p id="loseText"></p>
-    <button class="btn b-teal menu" id="loseAdBtn" onclick="adExtraLife()" style="width:100%;margin-bottom:9px;display:none"></button>
-    <button class="btn b-gold menu" id="retryBtn" onclick="retryTable()" style="width:100%;margin-bottom:9px">SECOND CHANCE</button>
+    <button class="btn b-gold menu" id="retryBtn" onclick="adRetryTable()" style="width:100%;margin-bottom:9px">SECOND CHANCE</button>
     <button class="btn b-blue" id="giveupBtn" onclick="giveUp()" style="width:100%">GIVE UP</button>
   </div>
 </div>
@@ -1305,8 +1304,8 @@ en:{
 'ad.skipIn':n=>'Skip in '+n+' s','ad.continue':'CONTINUE',
 'ad.rewardIn':n=>'Reward in '+n+' s','ad.rewardGot':'REWARD UNLOCKED','ad.claim':'CLAIM',
 'ad.aborted':'Reward missed','ad.demoReward':'Demo reward',
-'ad.lifeBtn':'▶ WATCH AN AD','ad.lifeSub':'+1 second chance · keep going',
-'ad.lifeReward':'+1 second chance',
+'ad.retryBtn':'▶ SECOND CHANCE','ad.retrySub':n=>'watch an ad · '+n+' left',
+'ad.retryReward':'Replay this table','ad.retryAborted':'Ad skipped — no second chance',
 'ad.repBtn':'▶ DOUBLE YOUR REPUTATION','ad.repSub':r=>'+'+r+' on top','ad.repReward':r=>'+'+r+' reputation',
 'ad.rerollBtn':'▶ FREE','ad.rerollReward':'One free shop reroll',
 'ad.boonBtn':'▶ REROLL THE PERKS','ad.boonSub':'3 new options','ad.boonReward':'3 new perks',
@@ -1557,8 +1556,8 @@ fr:{
 'ad.skipIn':n=>'Passer dans '+n+' s','ad.continue':'CONTINUER',
 'ad.rewardIn':n=>'Récompense dans '+n+' s','ad.rewardGot':'RÉCOMPENSE OBTENUE','ad.claim':'RÉCUPÉRER',
 'ad.aborted':'Récompense non obtenue','ad.demoReward':'Récompense de démo',
-'ad.lifeBtn':'▶ REGARDER UNE PUB','ad.lifeSub':'+1 seconde chance · tu continues',
-'ad.lifeReward':'+1 seconde chance',
+'ad.retryBtn':'▶ SECONDE CHANCE','ad.retrySub':n=>'regarde une pub · '+n+' restante'+(n>1?'s':''),
+'ad.retryReward':'Rejouer cette table','ad.retryAborted':'Pub interrompue — pas de reprise',
 'ad.repBtn':'▶ DOUBLER TA RÉPUTATION','ad.repSub':r=>'+'+r+' en plus','ad.repReward':r=>'+'+r+' de réputation',
 'ad.rerollBtn':'▶ GRATUIT','ad.rerollReward':'Une relance de boutique offerte',
 'ad.boonBtn':'▶ RELANCER LES BONUS','ad.boonSub':'3 nouvelles options','ad.boonReward':'3 nouveaux bonus',
@@ -3143,7 +3142,7 @@ function finishTable(){
 function onTableLost(titleKey,textKey){
   updateRecord(G.tableIdx+1);
   G.loseTitle=titleKey;G.loseText=textKey;
-  if(G.tokens>0||Ads.canRewarded()){openLose();return;}   // pub récompensée = seconde chance de secours
+  if(G.tokens>0){openLose();return;}   // plus de reprise disponible : la descente s'arrête
   endRun(false);
 }
 
@@ -3353,16 +3352,15 @@ function loseBody(){
 function openLose(){
   $('loseTitle').textContent=t(G.loseTitle||'');
   $('loseText').innerHTML=loseBody()+'<br><br>'+t('lose.info',G.tableIdx+1,STAR+abbr(G.pot));
-  const hasLife=(G.tokens||0)>0;
-  $('retryBtn').style.display=hasLife?'':'none';
-  $('retryBtn').innerHTML=t('lose.retry')+'<small>'+t('lose.tokens',G.tokens)+'</small>';
-  // plus de vie : la pub récompensée en redonne une (emplacement le plus rentable)
-  const ab=$('loseAdBtn');
-  if(ab){
-    const show=!hasLife&&Ads.canRewarded();
-    ab.style.display=show?'':'none';
-    if(show)ab.innerHTML=t('ad.lifeBtn')+'<small>'+t('ad.lifeSub')+'</small>';
-  }
+  // REPRISE = PUB OBLIGATOIRE : les vies ne sont plus qu'un plafond de reprises,
+  // jamais un passe-droit. Si aucune pub n'est disponible (SDK indisponible /
+  // pas de remplissage), on laisse reprendre gratuitement plutôt que de bloquer.
+  const hasLife=(G.tokens||0)>0, byAd=Ads.canRewarded();
+  const rb=$('retryBtn');
+  rb.style.display=hasLife?'':'none';
+  rb.className='btn menu '+(byAd?'b-teal':'b-gold');
+  rb.innerHTML=(byAd?t('ad.retryBtn'):t('lose.retry'))
+    +'<small>'+(byAd?t('ad.retrySub',G.tokens):t('lose.tokens',G.tokens))+'</small>';
   $('giveupBtn').innerHTML=t('lose.giveup')+'<small>'+t('lose.giveupSub',STAR+abbr(repOnEnd(false)))+'</small>';
   $('loseScreen').classList.add('show');
 }
@@ -3854,12 +3852,13 @@ function adPause(on){
 function popAdToast(txt){try{popText(txt,'');}catch(e){}}
 
 /* ---------- emplacements ---------- */
-/* 1. plus de vie : une pub redonne une seconde chance */
-function adExtraLife(){
-  Ads.rewarded(t('ad.lifeReward')).then(ok=>{
-    if(!ok)return;
-    G.tokens=(G.tokens||0)+1;
-    openLose();                       // rafraîchit l'écran (le bouton pub disparaît)
+/* 1. REPRISE APRÈS DÉFAITE : vidéo obligatoire, puis on consomme une vie.
+   Abandonner la pub en cours = pas de reprise (la vie n'est pas consommée). */
+function adRetryTable(){
+  if((G.tokens||0)<=0)return;
+  if(!Ads.canRewarded()){retryTable();return;}      // aucune pub dispo : on ne bloque pas le joueur
+  Ads.rewarded(t('ad.retryReward')).then(ok=>{
+    if(!ok){popAdToast(t('ad.retryAborted'));return;}
     retryTable();
   });
 }
