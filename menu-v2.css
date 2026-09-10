@@ -1,0 +1,493 @@
+/* Cold Deck menus: a quiet frame around expressive pixel cards. */
+:root{--menu-bg:#101519;--menu-surface:#1b252a;--menu-line:#374549;--menu-cream:#f4ecd8;--menu-muted:#aabbb6;--menu-gold:#e8b84a;--menu-mint:#80c7b3}
+.overlay{background:rgba(7,13,16,.96);backdrop-filter:none;padding:32px 20px;text-align:left;color:var(--menu-cream)}
+.overlay .ovpanel{background:var(--menu-surface);padding:32px;max-width:640px;box-shadow:0 8px 0 #080d10;border:2px solid var(--menu-line);clip-path:var(--pc);width:100%}
+.overlay.show{animation:none}
+.overlay .ovpanel{animation:none}
+.overlay h1{font-size:40px!important;color:var(--menu-cream)!important;font-weight:400;letter-spacing:.025em;line-height:1.1;animation:none;text-shadow:none;margin:0 0 16px}
+.overlay h1[tabindex="-1"]:focus{outline:none}
+.overlay p{font-size:19px;line-height:1.45;color:var(--menu-muted);margin-bottom:24px}
+.overlay .L{transform:none!important}
+.overlay h1 .L,.mode-card strong .L{animation:letterShake var(--letter-duration,1.1s) steps(1,end) infinite;animation-delay:var(--d,0s)}
+.overlay button{font-family:'Jersey 15',monospace;cursor:pointer;touch-action:manipulation}
+.overlay button:disabled{cursor:default}
+.overlay button:focus-visible,.overlay summary:focus-visible{outline:3px solid var(--menu-cream);outline-offset:4px;filter:brightness(1.13)}
+.overlay .btn{min-height:48px;font-size:20px!important;padding:12px 18px!important;line-height:1.15;font-weight:400;text-shadow:none;animation:none}
+.overlay .btn small{font-size:16px;line-height:1.25;margin-top:6px;text-shadow:none;font-weight:400;opacity:.9}
+.overlay .btn.b-gold{background:var(--menu-gold);color:#182021;box-shadow:inset 0 -4px 0 #ac812e}
+.overlay .btn.b-blue,.overlay .btn.b-purple,.overlay .btn.b-teal{background:#2c3a3e;color:var(--menu-cream);box-shadow:inset 0 -3px 0 #11191d}
+.overlay .btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-2px)}
+.overlay .btn:active:not(:disabled){transform:translateY(1px)}
+.quiet-btn{background:none;color:var(--menu-muted);border:0;font-size:17px;min-height:44px;padding:8px 12px;line-height:1;letter-spacing:.05em;cursor:pointer;white-space:nowrap}
+.quiet-btn:hover{color:var(--menu-cream);background:#253135}
+.wordmark{font-size:22px;letter-spacing:.12em;color:var(--menu-cream);white-space:nowrap}
+.wordmark span{color:var(--menu-mint)}
+.section-label,.eyebrow,.dialog-kicker{font-size:15px;letter-spacing:.14em;line-height:1.35;color:var(--menu-muted);font-weight:400}
+.section-label{display:flex;align-items:center;gap:10px}
+.pixel-dot{width:6px;height:6px;background:var(--menu-mint);box-shadow:4px 4px 0 #35524c;display:inline-block}
+#modeMenu,#intro{padding:32px;background-color:var(--menu-bg);background-image:radial-gradient(#263334 1px,transparent 1px);background-size:8px 8px}
+#modeMenu .ovpanel,#intro .ovpanel{max-width:1080px;width:100%;min-height:0;margin:auto;padding:28px 44px;background:var(--menu-bg);border:2px solid var(--menu-line);box-shadow:8px 8px 0 #080c0f;clip-path:var(--pc);display:block;overflow:visible}
+.menu-top{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:46px;border-bottom:1px solid var(--menu-line);padding-bottom:20px}
+.menu-top nav{display:flex;gap:8px}
+#rulesBtn0,#setBtn0,#rulesBtn,#restartBtn{position:static;top:auto;right:auto;left:auto;transform:none;width:auto;height:auto;min-height:44px;display:inline-flex;background:none;border:none;clip-path:none;filter:none;color:var(--menu-muted);padding:8px 12px;font-size:17px;line-height:1;letter-spacing:.05em;font-weight:400}
+#rulesBtn0::before,#setBtn0::before,#rulesBtn::before,#restartBtn::before{display:none}
+#rulesBtn0:hover,#setBtn0:hover,#rulesBtn:hover,#restartBtn:hover{background:#253135;color:var(--menu-cream)}
+.home-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:64px;align-items:center;padding:46px 0 40px}
+.brand-stage{text-align:center;position:relative;align-self:center;min-width:0}
+.brand-stage .eyebrow{color:var(--menu-mint);margin-bottom:20px}
+#modeMenu h1.menuTitle{font-size:112px!important;line-height:.82;color:var(--menu-cream)!important;letter-spacing:.02em;text-shadow:4px 4px 0 #0a0d0f;margin:0;animation:none;font-weight:400}
+.menuTitle .logoO{background:var(--menu-gold);animation:none!important;width:.68em;height:.68em;vertical-align:.02em;margin:0 .04em}
+.menuTitle .logoO svg{width:.42em;height:.42em}
+.menu-hand{height:205px;position:relative;width:240px;margin:26px auto 0;pointer-events:none}
+.menu-hand .card{position:absolute;width:112px;height:156px;top:16px;left:38px;animation:none!important;box-shadow:6px 8px 0 #0008}
+.menu-hand .card:first-child{transform:rotate(-12deg);left:29px;top:26px}
+.menu-hand .card:last-child{transform:rotate(12deg);left:104px;top:8px}
+.menu-hand .corner-r{font-size:26px!important}
+.menu-hand .pip .suit{width:43px;height:auto}
+.menu-hand .corner .suit{width:13px;height:auto}
+.menu-hand .card .corner.tl{top:9px;left:10px}.menu-hand .card .corner.br{bottom:9px;right:10px}
+.brand-rule{display:flex;align-items:center;justify-content:center;gap:25px;font-size:17px;letter-spacing:.2em;color:#78978c}
+.brand-rule::before,.brand-rule::after{content:'';height:1px;width:48px;background:var(--menu-line)}
+.mode-choice>.section-label{margin-bottom:18px}
+.mode-card{position:relative;display:flex;flex-direction:column;text-align:left;width:100%;padding:24px 26px 0;border:0;clip-path:var(--pc);font-weight:400;transition:transform .15s,filter .15s;min-height:213px}
+.mode-card:hover{transform:translateY(-3px);filter:brightness(1.05)}
+.mode-card:active{transform:translateY(1px)}
+.mode-free{background:var(--menu-gold);color:#17201f;box-shadow:inset 0 -5px 0 #a77d2c;margin-bottom:16px}
+.mode-circuit{background:#243437;color:var(--menu-cream);box-shadow:inset 0 -5px 0 #142123}
+.mode-topline{display:flex;justify-content:space-between;align-items:center;font-size:14px;letter-spacing:.12em;line-height:1}
+.mode-circuit .mode-topline{color:var(--menu-mint)}
+.mode-symbol{font-size:27px;letter-spacing:0;line-height:1}
+.mode-card strong{font-size:48px;font-weight:400;line-height:1.05;margin:8px 0 4px;letter-spacing:.02em}
+.mode-description{font-size:19px;line-height:1.3;display:block;margin-bottom:19px;letter-spacing:0}
+.mode-circuit .mode-description{color:#c0d0c9}
+.mode-bottom{margin-top:auto;border-top:1px solid #15211e33;padding:13px 0 16px;display:flex;justify-content:space-between;align-items:center;font-size:16px;letter-spacing:.08em;line-height:1}
+.mode-circuit .mode-bottom{border-top:1px solid #6f8d843f;color:var(--menu-mint)}
+.mode-bottom>span:last-child{font-size:26px;line-height:1}
+.home-footer{border-top:1px solid var(--menu-line);padding-top:20px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.menuRecs{margin:0;display:flex;flex-direction:row;gap:24px}
+.mrec{background:none;clip-path:none;padding:0;display:flex;flex-direction:column;gap:5px;font-size:16px;line-height:1.2}
+.mrl{font-size:13px;letter-spacing:.12em;color:var(--menu-mint)!important}
+.mrv{font-size:16px;color:var(--menu-cream)}
+.menu-footnote{font-size:14px;line-height:1.35;max-width:220px;color:#94a8a0;text-align:right}
+.hideout-heading{padding:34px 0 28px}
+#intro .planqueMode{position:static;transform:none;background:none;color:var(--menu-mint);opacity:1;clip-path:none;padding:0;margin:0 0 10px;font-size:15px;text-align:left;letter-spacing:.14em}
+#intro h1{font-size:54px!important;line-height:1;margin-bottom:10px}
+#intro p{font-size:19px;line-height:1.4;margin-bottom:0;max-width:680px}
+.hideout-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:26px}
+.ready-panel{padding:28px;background:#153b36;border:2px solid #355c52;display:flex;flex-direction:column;align-items:stretch;clip-path:var(--pc);min-width:0}
+.ready-panel>.section-label{color:#bad7c8;justify-content:center;text-align:center}
+.ready-suit{color:#80bba1;margin:auto;min-height:165px;display:flex;align-items:center;justify-content:center}
+.ready-suit svg{width:85px;height:94px;opacity:.65;filter:drop-shadow(5px 5px 0 #0e2823)}
+#planqueLaunch{width:100%;min-height:74px;font-size:29px!important;padding:14px 12px!important;margin-top:18px}
+#planqueLaunch small{font-size:17px}
+.prep-panel{background:#1a2529;border:2px solid #303f43;padding:26px;clip-path:var(--pc);min-width:0}
+.repBar{display:flex;gap:18px;background:transparent;margin:20px 0!important;padding:0;align-items:center}
+.repBig,.recBox{background:none;clip-path:none;padding:0;flex:1;text-align:left}
+.repNum{font-size:40px;color:var(--menu-gold);line-height:1}
+.repLbl{font-size:16px;color:var(--menu-muted);margin-top:4px;letter-spacing:0}
+.recBox{font-size:14px;color:var(--menu-muted);line-height:1.5;border-left:1px solid var(--menu-line);padding-left:18px}
+.recBox b{font-size:20px;font-weight:400;color:var(--menu-cream)}
+.prep-link{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;min-height:76px;padding:16px;text-align:left;background:#30423f;border:0;border-bottom:3px solid #101b19;clip-path:var(--pc);color:var(--menu-cream)}
+.prep-link strong{font-size:23px;font-weight:400;display:block}
+.prep-link small{font-size:17px;color:#c4d4c9;display:block;margin-top:4px}
+.prep-link>span:last-child{font-size:26px;color:var(--menu-mint)}
+.prep-link:hover{background:#3c534e}
+.backPick{margin:24px 0 0}
+.back-caption{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.back-caption .section-label{font-size:14px;letter-spacing:.1em}
+.back-caption .bpAll{font-size:14px;position:static;margin:0;padding:8px 0;min-height:36px}
+.bpCurrent{display:flex;justify-content:center;align-items:center;gap:25px}
+.bpArrow{width:44px;height:44px;min-height:44px;font-size:24px;background:#2a3b3d;color:var(--menu-cream);border:none;clip-path:var(--pc)}
+.bpPrevWrap{width:auto;display:flex;align-items:center;gap:14px}
+#intro .bpCard{width:62px;height:88px;animation:none!important}
+.bpNum{font-size:16px;margin-top:0;color:var(--menu-muted);min-width:66px}
+.hideout-footer{display:flex;justify-content:space-between;gap:20px;margin-top:26px;padding-top:15px;border-top:1px solid var(--menu-line)}
+#restartBtn{font-size:14px;letter-spacing:0;color:#b1a7a0}
+#palierResume{margin:20px 0 0;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px}
+#palierResume .prLbl{font-size:14px}#palierResume .prVal{font-size:22px}#palierResume .prBtn{min-width:44px;min-height:44px;font-size:22px}
+.dialog-kicker{color:var(--menu-mint);margin-bottom:18px}
+#settingsScreen .ovpanel{max-width:550px!important;text-align:left!important}
+.setRow{margin:26px 0;gap:12px}
+.setLbl{font-size:16px;letter-spacing:.12em;color:var(--menu-muted)}
+.setOpts{display:flex;flex-wrap:wrap;gap:10px}
+.setOpts .btn{flex:1;background:#28373b;color:var(--menu-muted);font-size:18px!important}
+.setOpts .btn.on{background:#36574c;color:#f4ecd8;box-shadow:inset 0 -3px 0 var(--menu-mint)}
+.dev-options{border-top:1px solid var(--menu-line);padding:18px 0 26px;margin-top:30px;color:var(--menu-muted)}
+.dev-options summary{font-size:15px;min-height:32px;cursor:pointer;letter-spacing:.06em}
+.dev-options .setNote{font-size:16px;line-height:1.4;margin-bottom:0}
+#settingsScreen>.ovpanel>.btn,#rulesScreen>.ovpanel>.btn,#upgradesScreen>.ovpanel>.btn,#backPickScreen>.ovpanel>.btn{width:100%;margin-top:16px}
+#rulesScreen .ovpanel,#upgradesScreen .ovpanel{max-width:800px}
+.rules{font-size:19px;line-height:1.45;gap:12px;margin-top:22px}
+.rules>div{background:#142023;border:none;border-left:3px solid var(--menu-mint);border-radius:0;padding:16px 20px}
+.rules .rt{display:block;font-size:17px;color:var(--menu-mint);letter-spacing:.09em;margin-bottom:6px}
+.rules .k{color:var(--menu-gold)}
+.rules details{background:#142023;border-left:3px solid var(--menu-mint)}
+.rules summary{padding:17px 20px;cursor:pointer;color:var(--menu-cream);font-size:23px;min-height:54px}
+.rules details>div{padding:0 20px 4px}
+.rule-entry{padding:16px 0;border-top:1px solid var(--menu-line)}
+#unlockItems{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+#unlockItems .shopItem{display:grid;grid-template-columns:48px 1fr;gap:10px 14px;align-content:start;background:#122125;border:1px solid #36484a;clip-path:var(--pc);padding:18px;box-shadow:none}
+#unlockItems .shopTok{width:48px;height:48px;font-size:18px;background:#2c403e}
+#unlockItems .shopTok small{display:block;font-size:11px;line-height:1.1;letter-spacing:0}
+#unlockItems .sInfo{min-width:0}
+#unlockItems .nm{font-size:23px;line-height:1.15;font-weight:400;color:var(--menu-cream)}
+#unlockItems .ds{font-size:18px;line-height:1.35;margin-top:8px;color:#b9c9c2}
+#unlockItems .ulvl{display:block;font-size:13px;letter-spacing:.13em;flex-basis:100%;color:var(--menu-mint)}
+#unlockItems .shopItem>.btn{grid-column:1/-1;margin-top:5px;width:100%;font-size:20px!important}
+#unlockItems .shopItem>.btn:disabled{background:#27373b;color:#a9b7b1;opacity:1;box-shadow:none;border-bottom:2px solid #101b1e}
+#unlockItems .shopItem.bought{opacity:.7}
+#backPickScreen .ovpanel{max-width:680px}
+#bpRow{grid-template-columns:repeat(6,1fr);gap:16px;width:100%;margin:24px 0;justify-items:center}
+#bpRow .bpCard{width:64px;height:91px;cursor:pointer;animation:none}
+#bpRow .bpCard.sel{filter:drop-shadow(0 0 3px var(--menu-gold));outline:3px solid var(--menu-gold);outline-offset:4px}
+#pauseScreen .ovpanel,#confirmRestart .ovpanel,#palierScreen .ovpanel{max-width:460px!important}
+#pauseScreen .btn[onclick="resumeGame()"]{background:var(--menu-gold);color:#17201f}
+#pauseScreen .btn[onclick="quitToMenu()"]{background:transparent;box-shadow:none;color:#c7b9ad}
+.overlay .shopItem .nm{font-size:20px}.overlay .shopItem .ds{font-size:17px}
+.overlay .runstats .rs .l{font-size:14px}.overlay .runstats .rs .v{font-size:26px}
+@media(max-width:850px){
+ #modeMenu,#intro{padding:22px}
+ #modeMenu .ovpanel,#intro .ovpanel{padding:24px 28px}
+ .home-grid{gap:32px}
+ #modeMenu h1.menuTitle{font-size:90px!important}
+ .mode-card{padding:20px 20px 0;min-height:195px}.mode-card strong{font-size:43px}.mode-description{font-size:18px}
+ .hideout-grid{gap:18px}.ready-panel,.prep-panel{padding:20px}
+ .back-caption{flex-wrap:wrap;gap:0}.bpCurrent{gap:16px}
+}
+@media(max-width:620px){
+ #modeMenu,#intro{padding:0;background-image:none}
+ #modeMenu .ovpanel,#intro .ovpanel{border:0;clip-path:none;box-shadow:none;padding:18px 22px calc(20px + env(safe-area-inset-bottom,0px));margin:0;min-height:100%}
+ .menu-top{padding-bottom:14px;gap:8px}.menu-top nav{gap:2px}.wordmark{font-size:19px}.quiet-btn,#rulesBtn0,#setBtn0,#rulesBtn{font-size:15px;padding:8px}
+ .home-grid{grid-template-columns:1fr;gap:25px;padding:28px 0 25px}
+ .brand-stage{display:grid;grid-template-columns:1fr 102px;text-align:left;align-items:center;column-gap:10px}
+ .brand-stage .eyebrow{grid-column:1/-1;margin-bottom:14px;font-size:13px}
+ #modeMenu h1.menuTitle{font-size:70px!important;line-height:.81}
+ .menu-hand{width:100px;height:113px;margin:0}
+ .menu-hand .card{width:59px;height:82px;top:18px}
+ .menu-hand .card:first-child{left:0;top:27px}.menu-hand .card:last-child{left:37px;top:9px}
+ .menu-hand .corner-r{font-size:16px!important}.menu-hand .pip .suit{width:23px}
+ .menu-hand .corner .suit{width:8px}.menu-hand .card .corner.tl{top:5px;left:5px}.menu-hand .card .corner.br{bottom:5px;right:5px}
+ .brand-rule{display:none}.mode-choice>.section-label{font-size:13px;margin-bottom:13px}
+ .mode-card{min-height:177px;padding:17px 21px 0}.mode-card strong{font-size:42px;margin-top:5px}.mode-topline{font-size:12px}.mode-description{font-size:18px;margin-bottom:13px}.mode-bottom{font-size:14px;padding:10px 0 13px}
+ .mode-free{margin-bottom:12px}.mode-symbol{font-size:24px}
+ .home-footer{padding-top:17px;display:block}.menuRecs{gap:24px}.mrec{flex:1}.mrv{font-size:15px}.mrl{font-size:12px}
+ .menu-footnote{display:block;max-width:none;text-align:left;font-size:13px;margin-top:15px}
+ .hideout-heading{padding:26px 0 22px}#intro h1{font-size:46px!important}#intro p{font-size:18px}#intro .planqueMode{font-size:13px}
+ .hideout-grid{grid-template-columns:1fr;gap:18px}.ready-panel{padding:20px}.ready-suit{display:none}.ready-panel>.section-label{font-size:13px;justify-content:flex-start}
+ #planqueLaunch{min-height:68px;font-size:27px!important;margin-top:15px}.prep-panel{padding:21px}.prep-panel>.section-label{font-size:13px}
+ .repBar{margin:17px 0!important}.repNum{font-size:35px}.recBox b{font-size:19px}
+ .back-caption{flex-wrap:nowrap}.bpCurrent{gap:28px}.backPick{margin-top:18px}.hideout-footer{margin-top:20px;padding-top:12px}.hideout-footer .quiet-btn{padding-left:0;padding-right:0}
+ #intro>.ovpanel>.menu-top>.wordmark{display:none}
+ .overlay{padding:16px 12px}.overlay .ovpanel{padding:25px 20px}.overlay h1{font-size:34px!important}
+ #unlockItems{grid-template-columns:1fr}#unlockItems .shopItem{grid-template-columns:42px 1fr 64px;align-items:center;padding:15px;gap:12px}#unlockItems .shopItem>.btn{grid-column:auto;margin:0;min-height:48px;padding:10px 6px!important}
+ #unlockItems .nm{font-size:21px}#unlockItems .ds{font-size:17px}.rules{font-size:18px}.rules>div{padding:15px}
+ #bpRow{grid-template-columns:repeat(4,1fr);gap:16px 10px}#bpRow .bpCard{width:55px;height:78px}
+}
+@media(prefers-reduced-motion:reduce){.overlay *{animation:none!important;transition:none!important}.menu-card:hover{transform:none}}
+
+/* Native-size rendering: pixel silhouettes, readable supporting text. */
+:root{--menu-copy:'Segoe UI',Arial,sans-serif}
+.overlay{-webkit-font-smoothing:auto;font-synthesis:none;font-weight:400}
+.overlay svg{image-rendering:auto}
+/* Draw procedural card backs at the display's native density. */
+.card.back,.card.back::before,.card.back::after,
+.card.back .bpat,.card.back .bpat::before,.card.back .bpat::after{image-rendering:auto}
+#modeMenu,#intro{background-image:none}
+.overlay p,.mode-description,.menu-footnote,.mrv,.repLbl,.recBox,.prep-link small,
+.overlay .btn small,.bpNum,.rules,.dev-options .setNote,#unlockItems .ds,
+.overlay .shopItem .ds{font-family:var(--menu-copy);font-size:16px;line-height:1.5;letter-spacing:0;font-weight:400}
+.mode-description{font-size:17px;line-height:1.45}
+#intro p{font-family:var(--menu-copy);font-size:17px;line-height:1.55}
+.menu-footnote{font-size:13px;line-height:1.6}
+.mrv{font-size:14px;line-height:1.4}
+.section-label,.eyebrow,.dialog-kicker,.mode-topline,.mrl,.setLbl,
+#intro .planqueMode,.back-caption .section-label,#unlockItems .ulvl,
+.dev-options summary{font-family:var(--menu-copy);font-size:12px;line-height:1.4;letter-spacing:.1em;font-weight:600}
+.quiet-btn,#rulesBtn0,#setBtn0,#rulesBtn,#restartBtn,.back-caption .bpAll{
+ font-family:var(--menu-copy);font-size:13px;line-height:1.3;letter-spacing:.03em;font-weight:600;
+}
+.mode-bottom{font-size:20px;letter-spacing:.04em}
+.menu-hand .card:first-child{transform:none;left:28px;top:28px}
+.menu-hand .card:last-child{transform:none;left:106px;top:4px}
+.menu-hand .pip .suit{width:39px}
+.menu-hand .corner .suit{width:13px}
+.ready-suit svg{width:78px;height:78px}
+@media(min-width:1600px){
+ #modeMenu .ovpanel,#intro .ovpanel{max-width:1280px;padding:36px 52px}
+ .home-grid{gap:88px;padding:52px 0 46px}
+ .mode-card{min-height:226px;padding:26px 30px 0}
+ .mode-card strong{font-size:52px;margin-top:10px}
+ .mode-description{font-size:18px}
+ #intro p{font-size:18px}
+ .menu-footnote{font-size:14px;max-width:260px}
+ .mrv{font-size:16px}
+ .quiet-btn,#rulesBtn0,#setBtn0,#rulesBtn{font-size:14px}
+}
+@media(max-width:850px){.mode-description{font-size:16px}}
+@media(max-width:620px){
+ .brand-stage .eyebrow,.mode-choice>.section-label,.ready-panel>.section-label,
+ .prep-panel>.section-label,#intro .planqueMode,.back-caption .section-label{font-size:11px}
+ .mode-topline,.mrl{font-size:11px}
+ .quiet-btn,#rulesBtn0,#setBtn0,#rulesBtn,#restartBtn{font-size:12px;padding:8px}
+ .menu-hand .card:first-child{left:0;top:26px}.menu-hand .card:last-child{left:39px;top:4px}
+ .menu-hand .pip .suit{width:26px}.menu-hand .corner .suit{width:9px}
+ .mode-card{min-height:182px}.mode-description{font-size:15px}.mode-bottom{font-size:18px}
+ .menu-footnote{font-size:12px}.mrv{font-size:13px}
+ #intro p{font-size:16px}#planqueLaunch small{font-size:14px}
+ .prep-link small{font-size:14px}#unlockItems .ds,.rules{font-size:15px}
+ .recBox{font-size:13px}.bpNum{font-size:14px}
+ .back-caption .bpAll{font-size:11px}
+}
+
+/* The game uses the same readable small type as the menus. */
+#topbar .tmeta,#topbar .tname .rule,#topbar .stat .lbl,#scorebox .lbl,
+#scorebox .seg .k,#bottombar .blabel,#bottombar .btn small,#tip,#comboRow .cpill,
+#pBar .pmeta{font-family:var(--menu-copy);font-weight:400;letter-spacing:0}
+#topbar .tmeta{font-size:12px;line-height:1.4;margin-top:6px}
+#topbar .tname .rule{font-size:12px;line-height:1.4}
+#topbar .stat .lbl,#scorebox .seg .k{font-size:10px;line-height:1.2}
+#bottombar .btn{font-size:20px;line-height:1.2;font-weight:400}
+#bottombar .btn small{font-size:12px;line-height:1.35}
+#tip{font-size:14px;line-height:1.4;padding:5px 10px}
+#comboRow .cpill{font-size:11px;line-height:1.25}
+#pBar .pmeta{font-size:10px!important;font-weight:600}
+#effects .joker,#effects .tarot{animation:none}
+#pBar{animation:none;will-change:auto}
+#peekBtn{animation:none}
+@media(prefers-reduced-motion:reduce){
+ #app .L{animation:none!important;top:0!important}
+}
+
+/* Baraka follows the same independent motion, letter by letter. */
+#pBar .pmeta .L{animation:letterShake var(--letter-duration,1.1s) steps(1,end) infinite;animation-delay:var(--d,0s)}
+@media(prefers-reduced-motion:reduce){
+ .overlay .L,#pBar .pmeta .L{animation:none!important;top:0!important}
+}
+
+/* Desktop breathing room, kept on whole pixels. */
+@media(min-width:1024px) and (min-height:650px){
+ #app{--desktop-margin:16px;top:var(--desktop-margin);bottom:var(--desktop-margin)}
+ #app::before,#app::after{content:"";position:absolute;left:0;right:0;height:var(--desktop-margin);background:var(--panel);pointer-events:none}
+ #app::before{bottom:100%}
+ #app::after{top:100%}
+ #topbar{box-shadow:inset 0 -3px 0 rgba(0,0,0,.32)}
+ #bottombar{box-shadow:inset 0 3px 0 rgba(255,255,255,.06)}
+ .overlay,#modeMenu,#intro{padding-top:36px;padding-bottom:36px}
+}
+/* Keep room for both hands on shorter desktop displays. */
+@media(min-width:1024px) and (min-height:650px) and (max-height:1099px){
+ #topbar .tname{width:calc(45% - 8px)}
+ #topbar .tstats{width:calc(55% - 8px)}
+ body.inf #topbar .tstats{flex-wrap:nowrap}
+ body.inf #topbar #gainStat,body.inf #topbar #scorebox{flex:1 1 0}
+ #center{position:relative;top:auto;transform:none;flex:0 0 auto}
+}
+
+/* Larger native dimensions where the viewport has room; no global scaling. */
+@media(min-width:1200px) and (min-height:800px){
+ #app{--desktop-margin:24px}
+ .overlay,#modeMenu,#intro{padding-top:40px;padding-bottom:40px}
+ #modeMenu .ovpanel,#intro .ovpanel{max-width:1280px;padding:32px 48px}
+ .home-grid{gap:64px;padding:40px 0}
+ #modeMenu h1.menuTitle{font-size:128px!important}
+ .mode-card{min-height:242px;padding:28px 32px 0}
+ .mode-card strong{font-size:56px}
+ .mode-description,#intro p{font-size:19px}
+ .mode-bottom{font-size:23px;padding:16px 0 19px}
+ .wordmark{font-size:26px}
+ .section-label,.eyebrow,.dialog-kicker,.mode-topline,.mrl,.setLbl,
+ #intro .planqueMode,.back-caption .section-label,#unlockItems .ulvl,
+ .dev-options summary{font-size:14px}
+ .quiet-btn,#rulesBtn0,#setBtn0,#rulesBtn,#restartBtn,.back-caption .bpAll{font-size:15px}
+ .menu-footnote{font-size:15px;max-width:300px}
+ .mrv{font-size:17px}
+ .menu-hand{width:280px;height:226px}
+ .menu-hand .card{width:126px;height:176px}
+ .menu-hand .card:first-child{left:30px;top:28px}
+ .menu-hand .card:last-child{left:118px;top:4px}
+ .menu-hand .corner-r{font-size:29px!important}
+ .menu-hand .pip .suit{width:45px}
+ .menu-hand .corner .suit{width:15px}
+ .overlay h1{font-size:46px!important}
+ #intro h1{font-size:62px!important}
+ .overlay p,.overlay .btn small,.repLbl,.recBox,.prep-link small,
+ .bpNum,.rules,.dev-options .setNote,#unlockItems .ds,.overlay .shopItem .ds{font-size:18px}
+ .overlay .btn{font-size:24px!important;min-height:56px}
+ #planqueLaunch{font-size:34px!important;min-height:88px}
+ #planqueLaunch small{font-size:18px}
+ .ready-panel,.prep-panel{padding:32px}
+ .ready-suit{min-height:185px}
+ .ready-suit svg{width:94px;height:94px}
+ .prep-link{min-height:88px;padding:20px}
+ .prep-link strong{font-size:28px}
+ .repNum{font-size:48px}
+ .recBox b{font-size:24px}
+ #rulesScreen .ovpanel,#upgradesScreen .ovpanel{max-width:960px}
+ #settingsScreen .ovpanel{max-width:640px!important}
+ #pauseScreen .ovpanel,#confirmRestart .ovpanel,#palierScreen .ovpanel{max-width:550px!important}
+ #unlockItems .nm{font-size:26px}
+ .setOpts .btn{font-size:21px!important}
+
+ #mid,#stage{max-width:740px}
+ #table{max-width:690px}
+ #bottombar #betRow,#bottombar #actions{max-width:720px}
+ #topbar{padding:12px 24px;gap:10px 16px}
+ #topbar #tableName{font-size:34px}
+ #topbar .tmeta,#topbar .tname .rule{font-size:14px}
+ #topbar .stat .lbl,#scorebox .seg .k{font-size:12px}
+ #scorebox .seg.chips .v,#scorebox .seg.mult .v{font-size:22px}
+ .stat{padding:8px 10px}
+ .stat.turnstat .tnum{font-size:34px}
+ .stat.turnstat .tt,.stat.turnstat .ts{font-size:12px}
+ .stat.gainstat .v{font-size:24px}
+ body.inf #topbar #gainStat .lbl{font-size:13px}
+ body.inf #topbar #gainStat .v{font-size:46px}
+ #pauseBtn{width:44px;height:36px;font-size:18px}
+ #bottombar .btn{font-size:24px}
+ #bottombar .btn small{font-size:14px}
+ #actions{height:136px}
+ #betRow .lbl{font-size:14px}
+ #betRow .chip{font-size:23px;min-width:56px;height:44px}
+ #tip{font-size:16px}
+ #comboRow .cpill{font-size:13px}
+ #stage .zlbl{font-size:16px;padding:6px 14px}
+ #stage .zlbl .v{font-size:22px}
+ #stage .hand{min-height:94px;gap:4px}
+ #stage .card,#stage .flipwrap{width:66px;height:92px}
+ #stage .card .corner-r{font-size:17px}
+ #stage .card .pip .suit{width:28px;height:auto}
+ #stage .card .corner .suit{width:11px;height:auto}
+ #effects .joker,#effects .tarot{width:74px;min-width:74px;flex-basis:74px;height:38px}
+ #effects .ft{font-size:14px}
+ #pBar{width:280px;height:24px}
+ #pBar .pmeta{font-size:12px!important}
+ #peekBtn{font-size:18px;padding:11px 15px}
+}
+@media(min-width:1920px) and (min-height:1000px){
+ #app{--desktop-margin:32px}
+ .overlay,#modeMenu,#intro{padding-top:48px;padding-bottom:48px}
+ #modeMenu .ovpanel,#intro .ovpanel{max-width:1600px;padding:44px 64px}
+ .home-grid{gap:96px;padding:52px 0}
+ #modeMenu h1.menuTitle{font-size:144px!important}
+ .mode-card{min-height:272px;padding:32px 38px 0}
+ .mode-card strong{font-size:64px}
+ .mode-description,#intro p{font-size:21px}
+ .mode-bottom{font-size:26px;padding:18px 0 22px}
+ .wordmark{font-size:28px}
+ .section-label,.eyebrow,.dialog-kicker,.mode-topline,.mrl,.setLbl,
+ #intro .planqueMode,.back-caption .section-label{font-size:16px}
+ .quiet-btn,#rulesBtn0,#setBtn0,#rulesBtn,#restartBtn,.back-caption .bpAll{font-size:17px}
+ .menu-footnote{font-size:16px;max-width:340px}
+ .mrv{font-size:19px}
+ .menu-hand{width:300px;height:250px;margin-top:32px}
+ .menu-hand .card{width:140px;height:196px}
+ .menu-hand .card:first-child{left:28px;top:32px}
+ .menu-hand .card:last-child{left:126px;top:4px}
+ .menu-hand .corner-r{font-size:32px!important}
+ .menu-hand .pip .suit{width:49px}
+ .menu-hand .corner .suit{width:16px}
+ #intro h1{font-size:68px!important}
+ .hideout-heading{padding:40px 0 32px}
+ .hideout-grid{gap:32px}
+ .ready-suit{min-height:220px}
+ .prep-link strong{font-size:30px}
+
+ #mid,#stage{max-width:800px}
+ #table{max-width:750px}
+ #bottombar #betRow,#bottombar #actions{max-width:780px}
+ #topbar #tableName{font-size:36px}
+ #topbar .tmeta,#topbar .tname .rule{font-size:15px}
+ #topbar .stat .lbl,#scorebox .seg .k{font-size:13px}
+ #scorebox .seg.chips .v,#scorebox .seg.mult .v{font-size:24px}
+ .stat.turnstat .tnum{font-size:36px}
+ .stat.gainstat .v{font-size:26px}
+ body.inf #topbar #gainStat .v{font-size:50px}
+ #bottombar .btn{font-size:26px}
+ #bottombar .btn small{font-size:15px}
+ #actions{height:148px}
+ #betRow .chip{font-size:25px;min-width:60px;height:48px}
+ #tip{font-size:18px}
+ #comboRow .cpill{font-size:14px}
+ #stage .zlbl{font-size:17px}
+ #stage .zlbl .v{font-size:24px}
+ #stage .hand{min-height:102px}
+ #stage .card,#stage .flipwrap{width:72px;height:100px}
+ #stage .card .corner-r{font-size:18px}
+ #stage .card .pip .suit{width:31px}
+ #stage .card .corner .suit{width:12px}
+ #effects .joker,#effects .tarot{width:80px;min-width:80px;flex-basis:80px;height:42px}
+ #effects .ft{font-size:15px}
+ #pBar{width:310px;height:26px}
+ #pBar .pmeta{font-size:13px!important}
+}
+
+/* Borderless pixel faces; shadows sit outside the clipped surface. */
+:root{--button-fill:#28373b;--button-shadow:0 4px 0 rgba(6,11,14,.38),0 8px 14px rgba(0,0,0,.24)}
+.b-gold{--button-fill:var(--gold)}
+.b-blue{--button-fill:var(--blue)}
+.b-red{--button-fill:var(--red)}
+.b-purple{--button-fill:var(--grape)}
+.b-teal{--button-fill:var(--teal)}
+.overlay .btn.b-gold{--button-fill:var(--menu-gold)}
+.overlay .btn.b-blue,.overlay .btn.b-purple,.overlay .btn.b-teal{--button-fill:#2c3a3e}
+.mode-free{--button-fill:var(--menu-gold)}
+.mode-circuit{--button-fill:#243437}
+.prep-link{--button-fill:#30423f}
+.bpArrow{--button-fill:#2a3b3d}
+.prBtn,#peekBtn{--button-fill:var(--grape)}
+#pauseBtn,#chips .chip{--button-fill:var(--panelDk2)}
+#chips .chip.on{--button-fill:var(--gold)}
+.setOpts .btn{--button-fill:#28373b}
+.setOpts .btn.on{--button-fill:#36574c}
+#pauseScreen .btn[onclick="resumeGame()"]{--button-fill:var(--menu-gold)}
+
+button,#chips .chip{border:0!important;outline:none!important}
+:is(.btn,.mode-card,.prep-link,.bpArrow,.prBtn,#pauseBtn,#peekBtn,#chips .chip){
+ position:relative;isolation:isolate;clip-path:none;overflow:visible;
+ background:transparent!important;border-radius:0;box-shadow:none!important;
+ filter:none!important;transition:transform .12s ease;
+}
+#peekBtn{position:absolute}
+:is(.btn,.mode-card,.prep-link,.bpArrow,.prBtn,#pauseBtn,#peekBtn,#chips .chip)::before{
+ content:"";display:block!important;position:absolute;inset:0;height:auto;
+ border:0;border-radius:0;clip-path:var(--pc);background:var(--button-fill);
+ z-index:-1;pointer-events:none;box-shadow:none;transition:filter .12s ease;
+}
+:is(.btn,.mode-card,.prep-link,.bpArrow,.prBtn,#pauseBtn,#peekBtn,#chips .chip)::after{
+ content:"";position:absolute;inset:0;border:0;border-radius:4px;
+ background:transparent;box-shadow:var(--button-shadow);z-index:-2;pointer-events:none;
+ transition:box-shadow .12s ease;
+}
+:is(.btn,.mode-card,.prep-link,.bpArrow,.prBtn,#pauseBtn,#peekBtn,#chips .chip):not(:disabled):not(.locked):hover{
+ transform:translateY(-2px);
+}
+:is(.btn,.mode-card,.prep-link,.bpArrow,.prBtn,#pauseBtn,#peekBtn,#chips .chip):not(:disabled):not(.locked):hover::before{
+ filter:brightness(1.07);
+}
+:is(.btn,.mode-card,.prep-link,.bpArrow,.prBtn,#pauseBtn,#peekBtn,#chips .chip):not(:disabled):not(.locked):hover::after{
+ box-shadow:0 6px 0 rgba(6,11,14,.32),0 11px 18px rgba(0,0,0,.28);
+}
+:is(.btn,.mode-card,.prep-link,.bpArrow,.prBtn,#pauseBtn,#peekBtn,#chips .chip):not(:disabled):not(.locked):active{
+ transform:translateY(3px);
+}
+:is(.btn,.mode-card,.prep-link,.bpArrow,.prBtn,#pauseBtn,#peekBtn,#chips .chip):not(:disabled):not(.locked):active::after{
+ box-shadow:0 1px 0 rgba(6,11,14,.4),0 3px 6px rgba(0,0,0,.2);
+}
+/* Keyboard focus is visible through the face, without an outline. */
+:is(.btn,.mode-card,.prep-link,.bpArrow,.prBtn,#pauseBtn,#peekBtn,#chips .chip):focus-visible::before{
+ filter:brightness(1.25);
+}
+.quiet-btn:focus-visible{background:#35464a!important;color:var(--menu-cream)!important;text-decoration:underline;text-underline-offset:4px}
+.mode-bottom{border-top:0!important}
+.btn:disabled,.prBtn:disabled{--button-fill:#44464d;transform:none!important}
+#unlockItems .shopItem>.btn:disabled{--button-fill:#27373b;background:transparent!important}
+:is(.btn,.mode-card,.prep-link,.bpArrow,.prBtn,#pauseBtn,#peekBtn,#chips .chip):disabled::after,
+#chips .chip.locked::after{box-shadow:none}
+/* Secondary text actions retain their quiet treatment. */
+#pauseScreen .btn[onclick="quitToMenu()"]::before,
+#pauseScreen .btn[onclick="quitToMenu()"]::after{display:none!important}
+@media(prefers-reduced-motion:reduce){
+ :is(.btn,.mode-card,.prep-link,.bpArrow,.prBtn,#pauseBtn,#peekBtn,#chips .chip),
+ :is(.btn,.mode-card,.prep-link,.bpArrow,.prBtn,#pauseBtn,#peekBtn,#chips .chip)::before,
+ :is(.btn,.mode-card,.prep-link,.bpArrow,.prBtn,#pauseBtn,#peekBtn,#chips .chip)::after{transition:none}
+}
