@@ -959,6 +959,7 @@ small.sym{margin-left:0!important}
 .howto>div{padding:6px 9px}
 </style>
 <link rel="stylesheet" href="menu-v2.css">
+<link rel="stylesheet" href="arcade.css">
 </head>
 <body>
 <div id="bg">
@@ -2337,6 +2338,7 @@ function cardEl(c,opts={}){
   // (pas de collision de hash), le hash ajoute un petit aléa -> mouvement indépendant
   d.style.setProperty('--cd','-'+((opts.idx||0)*0.5+sd2*3).toFixed(3)+'s');
   if(opts.back){d.classList.add('back',cardBack);d.innerHTML='<i class="bpat"></i>';if(opts.arrive)d.classList.add('arrive');else if(opts.placed)d.classList.add('placed');return d;}
+  d.dataset.suit=c.s;d.dataset.rank=c.r;
   if(c.s==='♥'||c.s==='♦')d.classList.add('red');
   if(barakaLevel()>=3&&G.phase==='play')d.classList.add('jit');
   if(opts.arrive)d.classList.add('arrive');
@@ -2435,6 +2437,7 @@ function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les 
   const ps=$('pState');if(ps){ps.textContent=t('ui.streak');ps.style.color='';}
   const bar=$('pBar');if(bar)bar.classList.toggle('tick',lvl>=3);
   const tbl=document.getElementById('table');if(tbl)tbl.classList.toggle('boil',lvl>=3);
+  window.ColdDeckFX?.onPressure();
 }
 function renderMult(){
   let m=1,bonus=0;
@@ -2736,10 +2739,10 @@ function renderChips(){
   const opts=betChoices();clampBet();
   const locked=(G.phase!=='bet');     // mise verrouillée dès qu'une main est lancée
   opts.forEach(v=>{
-    const b=document.createElement('div');
+    const b=document.createElement('button');b.type='button';
     const tooDear=v>G.bank;            // palier hors budget
     b.className='chip'+((G.betChosen&&G.bet===v)?' on':'')+((locked||tooDear)?' locked':'');
-    b.textContent=abbr(v);
+    b.textContent=abbr(v);b.disabled=locked||tooDear;b.setAttribute('aria-label',cash(v));b.setAttribute('aria-pressed',String(G.betChosen&&G.bet===v));
     if(!locked&&!tooDear)b.onclick=()=>{G.bet=v;G.betChosen=true;renderChips();renderActions();renderMult();};
     wrap.appendChild(b);
   });
@@ -2754,7 +2757,7 @@ function renderActions(){
   const main=document.createElement('div');main.className='actMain';
   const wide=document.createElement('div');wide.className='actWide';
   const add=(parent,label,cls,fn,sub,dis)=>{
-    const b=document.createElement('button');b.className='btn '+cls;
+    const b=document.createElement('button');b.className='btn '+cls;b.setAttribute('aria-label',label);
     b.innerHTML=`<span class="blbl">${label}</span>`+(sub?`<small>${sub}</small>`:'');
     if(dis)b.disabled=true;else b.onclick=fn;parent.appendChild(b);return b;
   };
@@ -2807,6 +2810,7 @@ function updateBustReadout(){
    ============================================================ */
 function deal(){
   audioInit();if(!G.betChosen)return;clampBet();if(G.bank<curTable().min)return;
+  window.ColdDeckFX?.clear();
   G.bank-=G.bet;G.stakeMult=1;G.splitActive=false;G.hands=null;G.hi=0;G.splitAces=false;
   // pression PERSISTANTE : reportée de la main précédente, refroidie si on joue posé
   let p0;
@@ -2837,7 +2841,7 @@ function dealCardIn(c,opts,done){
   setTimeout(()=>{
     if(opts&&opts.stayDown){c._fd=true;renderHands(reveal);done&&done();return;}
     c._fd=false;c._flip=true;renderHands(reveal);sfx.flip();    // on la retourne
-    setTimeout(()=>{c._flip=false;renderHands(reveal);done&&done();},CARD_FLIP);
+    setTimeout(()=>{c._flip=false;renderHands(reveal);window.ColdDeckFX?.onCard(c);done&&done();},CARD_FLIP);
   },CARD_HOLD);
 }
 // distribution initiale : mes 2 cartes + 2 du croupier, une par une. La 2e du croupier reste dos.
@@ -3438,6 +3442,7 @@ function popMult(m,label){
   const p=$('multPop');
   p.querySelector('.m').textContent=m;p.querySelector('.t').textContent=label;
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
+  window.ColdDeckFX?.onAnnouncement();
 }
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
 function pickWord(kind){return pick(t('w.'+kind));}
@@ -3452,6 +3457,7 @@ function showWord(kind,gain,mult,natural,bust){
   p.className=kind+(word.length>7?' long':'');
   p.querySelector('.m').textContent=word;p.querySelector('.t').textContent=sub;
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
+  window.ColdDeckFX?.onResult(kind,gain,mult,natural,bust);
 }
 const RULE_KEYS=['rules.goal','rules.table','rules.moves','rules.stars','rules.streak','rules.combos','rules.bonus','rules.contracts','rules.circuit','rules.hideout','rules.endless'];
 function renderRules(){const b=$('rulesBody');if(b)b.innerHTML=RULE_KEYS.map(k=>'<div>'+t(k)+'</div>').join('');}
@@ -3549,6 +3555,7 @@ function cardPts(c){if(c.r==='A')return 11;if(c.r==='K'||c.r==='Q'||c.r==='J')re
 function flyTag(x,y,html,cls){
   const t=document.createElement('div');t.className='sctag '+(cls||'');t.innerHTML=html;
   t.style.left=x+'px';t.style.top=y+'px';$('particles').appendChild(t);
+  if(window.ColdDeckFX?.reduced){setTimeout(()=>t.remove(),1700);return;}
   // pop rapide, puis reste affiché plus longtemps avant de monter et s'effacer
   const a=t.animate([
     {transform:'translate(-50%,-20%) scale(.5)',opacity:0},
@@ -3560,16 +3567,18 @@ function flyTag(x,y,html,cls){
   a.onfinish=()=>t.remove();
 }
 function bounceEl(el){
-  if(!el)return;
+  if(!el||window.ColdDeckFX?.reduced)return;
+  window.ColdDeckFX?.onScoreCard(el);
   el.animate([
     {transform:'translateY(0) scale(1)'},
-    {transform:'translateY(-15px) scale(1.13)',offset:.4},
+    {transform:'translateY(-20px) rotate(-5deg) scale(1.16)',offset:.35},
     {transform:'translateY(0) scale(1)'}
   ],{duration:380,easing:'cubic-bezier(.3,1.5,.5,1)'});
 }
 /* une relique « se déclenche » : le jeton tressaute et brille (comme un joker de Balatro) */
 function fireRelic(el){
-  if(!el)return;
+  if(!el||window.ColdDeckFX?.reduced)return;
+  window.ColdDeckFX?.onRelic(el);
   el.animate([
     {transform:'translateY(0) scale(1) rotate(0deg)',filter:'brightness(1)'},
     {transform:'translateY(-11px) scale(1.2) rotate(-5deg)',filter:'brightness(1.55) drop-shadow(0 0 7px #ffe08a)',offset:.32},
@@ -3613,6 +3622,7 @@ function animateScoreTally(mode,lines,cb){
 }
 /* animation quand on franchit l'objectif de gain de la table */
 function objectiveReached(){
+  window.ColdDeckFX?.onGoal();
   const p=$('multPop');
   if(p){p.className='win';p.querySelector('.m').textContent=t('obj.reached');p.querySelector('.t').innerHTML=STAR+' '+t('obj.validated');
     p.classList.remove('go');void p.offsetWidth;p.classList.add('go');}
@@ -3642,18 +3652,20 @@ function perfectFanfare(){
 /* bannière NOUVEAU RECORD ! (la bannière s'affiche toujours ; les confettis sont mutualisés) */
 function showRecord(gain){
   const p=$('recPop');if(!p)return;
+  window.ColdDeckFX?.onRecord();
   p.querySelector('.rt').textContent='+'+cash(gain);
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
   bigConfetti(18);
 }
 
 let shakeAmt=0;
-function shake(n){shakeAmt=Math.max(shakeAmt,n);}
+function shake(n){if(!window.ColdDeckFX?.reduced)shakeAmt=Math.max(shakeAmt,n);}
 
 /* ---- effets visuels ---- */
 /* confettis pixel : petits carrés colorés (couleurs emblématiques) qui giclent et retombent en tournoyant */
 const CONFETTI_COLS=['#ffce3a','#34b6a8','#c0356b','#9a5cd0','#e0524f','#f4ecd8','#1c6ea8'];
 function pixelConfetti(n){
+  if(window.ColdDeckFX?.reduced)return;
   const cont=$('particles');if(!cont)return;const cx=innerWidth/2,cy=innerHeight/2;   // pile au centre de l'écran
   for(let i=0;i<n;i++){
     const c=document.createElement('div');c.className='confetti';
@@ -3673,10 +3685,11 @@ function pixelConfetti(n){
     a.onfinish=()=>c.remove();
   }
 }
-function flashScreen(kind){const f=$('fx');f.classList.remove('win','lose');void f.offsetWidth;f.classList.add(kind);setTimeout(()=>f.classList.remove(kind),500);}
+function flashScreen(kind){if(window.ColdDeckFX?.reduced)return;const f=$('fx');f.classList.remove('win','lose');void f.offsetWidth;f.classList.add(kind);setTimeout(()=>f.classList.remove(kind),500);}
 function slamBox(){const s=$('scorebox');s.classList.remove('slam');void s.offsetWidth;s.classList.add('slam');}
 function badFlash(){const s=$('scorebox');if(!s)return;s.classList.remove('bad');void s.offsetWidth;s.classList.add('bad');setTimeout(()=>s.classList.remove('bad'),520);}
 function coinBurst(n){
+  if(window.ColdDeckFX?.reduced)return;
   const cont=$('particles'),cx=innerWidth/2,cy=innerHeight*0.5;
   for(let i=0;i<n;i++){
     const c=document.createElement('div');c.className='coin';
@@ -3692,6 +3705,7 @@ function coinBurst(n){
   }
 }
 function spawnEmber(){
+  if(window.ColdDeckFX?.reduced)return;
   const cont=$('particles'),e=document.createElement('div');e.className='ember';
   e.style.left=(innerWidth*(0.12+Math.random()*0.76))+'px';e.style.top=(innerHeight*0.86)+'px';
   const rise=180+Math.random()*220, drift=(Math.random()-.5)*70;
@@ -3707,7 +3721,7 @@ function tick(){
   if(G._adPaused){requestAnimationFrame(tick);return;}   // pub à l'écran : jeu en veille
   const _bpct=barakaPct(),_blv=barakaLevel();
   const ambient=_blv>=3?Math.pow(_bpct/100,2)*5:0;
-  const amt=Math.max(shakeAmt,ambient);
+  const amt=window.ColdDeckFX?.reduced?0:Math.max(shakeAmt,ambient);
   if(amt>0.2){
     const x=(Math.random()-.5)*amt,y=(Math.random()-.5)*amt;
     const pixelRatio=window.devicePixelRatio||1;
@@ -4128,5 +4142,6 @@ freshGame();buildShoe();applyI18n();renderHands();tick();
 </script>
 <script src="render-quality.js"></script>
 <script src="menu-v2.js"></script>
+<script src="arcade.js"></script>
 </body>
 </html>
