@@ -222,7 +222,7 @@ body.inf #objFill{background:linear-gradient(90deg,#865ce0,#d3a7ff)}
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important;scroll-behavior:auto!important}
  #shaker{transform:none!important}
- .menu-hand .card{animation:none!important}
+ .menu-hand .card,.menu-hand .card:first-child,.menu-hand .card:last-child{animation:none!important}
  .menu-hand .card:first-child{transform:rotate(-13deg)}.menu-hand .card:last-child{transform:rotate(11deg)}
  .flipwrap{transform:rotateY(180deg)}
  #multPop.go{animation:none!important;opacity:1;transform:translate(-50%,-50%)}

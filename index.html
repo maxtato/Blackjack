@@ -3442,6 +3442,7 @@ function popMult(m,label){
   const p=$('multPop');
   p.querySelector('.m').textContent=m;p.querySelector('.t').textContent=label;
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
+  window.ColdDeckFX?.onAnnouncement();
 }
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
 function pickWord(kind){return pick(t('w.'+kind));}
