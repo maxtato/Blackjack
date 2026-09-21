@@ -1,0 +1,229 @@
+/* Cold Deck: saturated ink, paper cards and action-driven arcade feedback. */
+:root{
+ --bg0:#090c16;--panel:#1c2038;--panelHi:#282644;--panelDk:#171a2e;--panelDk2:#101426;
+ --ink:#0b0b18;--paper:#fff5dd;--cream:#fff5dd;--muted:#b4b8ce;
+ --gold:#ffd15b;--yellow:#ffd15b;--goldDk:#b77b24;--blue:#579dff;--blueDk:#3153a1;
+ --red:#ff657e;--redDk:#ab3656;--teal:#54dfbb;--tealDk:#178c7f;
+ --grape:#b88aff;--purpleDk:#60439e;--magenta:#f27bca;--lime:#c8ef76;
+ --menu-bg:#101323;--menu-surface:#1d223a;--menu-line:#3b3c60;
+ --menu-cream:#fff5dd;--menu-muted:#bdc0d5;--menu-gold:#ffd15b;--menu-mint:#76e4c4;
+ --suit-purple:#6941b7;--suit-coral:#d23660;--suit-orange:#b95b19;--suit-mint:#147966;
+}
+#bg{background:radial-gradient(ellipse at 50% 45%,#1b2135 0,#090c16 70%)}
+#vignette{opacity:.25}#scan{opacity:.025}
+
+/* Menus keep their existing navigation and respond like physical game pieces. */
+#modeMenu,#intro{background:#0b0d18}
+#modeMenu .ovpanel,#intro .ovpanel{background:radial-gradient(ellipse at 9% 35%,#292241 0,transparent 50%),var(--menu-bg);border-color:#3f3a5a;position:relative}
+#modeMenu .ovpanel::after,#intro .ovpanel::after{content:'';position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#ffd15b 0 25%,#b88aff 25% 50%,#76e4c4 50% 75%,#ff657e 75%);pointer-events:none}
+.menu-top,.home-footer,.hideout-footer{border-color:#36334e}
+.wordmark{color:var(--gold)}.wordmark span{color:var(--grape)}
+#modeMenu h1.menuTitle{color:var(--gold)!important;text-shadow:0 5px 0 #8c4d52,0 10px 0 #201529!important}
+.brand-stage .eyebrow{color:var(--menu-mint)}
+.brand-stage::before{content:'';position:absolute;width:250px;height:250px;max-width:90%;left:50%;top:36%;transform:translate(-50%,-30%) rotate(16deg);background:repeating-conic-gradient(from 0deg,#b88aff0d 0deg 12deg,transparent 12deg 30deg);clip-path:var(--pc);pointer-events:none}
+.menu-hand .card:first-child{transform:rotate(-13deg);animation:arcadeMenuLeft 5s ease-in-out infinite!important}
+.menu-hand .card:last-child{transform:rotate(11deg);animation:arcadeMenuRight 5s ease-in-out -1.5s infinite!important}
+.mode-card{overflow:hidden;transition:transform .18s cubic-bezier(.2,1.4,.4,1),filter .18s}
+.mode-card:hover{transform:translateY(-5px) rotate(-.5deg)}
+.mode-card:active{transform:translateY(3px) scale(.98)}
+.mode-free{background:#ffd15b;box-shadow:inset 0 -6px 0 #c18b32}
+.mode-circuit{background:#7351c5;box-shadow:inset 0 -6px 0 #432b85}
+.mode-circuit .mode-topline,.mode-circuit .mode-bottom{color:#e6d6ff}
+.mode-circuit .mode-description{color:#f1e8ff}.mode-circuit .mode-bottom{border-color:#e8d5ff44}
+.mode-symbol{position:absolute;right:23px;top:58px;font-size:90px;transform:rotate(12deg);opacity:.17;pointer-events:none}
+.mode-card strong,.mode-description,.mode-topline,.mode-bottom{position:relative;z-index:1}
+.mode-description{max-width:90%}
+.brand-rule{color:var(--grape)}
+.ready-panel{background:radial-gradient(ellipse at 50% 30%,#286c61,#173c40 80%);border-color:#428c7b}
+.ready-suit svg{color:#7bf0c2;opacity:1;filter:drop-shadow(5px 6px 0 #0c282c)}
+.prep-panel{background:#201e38;border-color:#454064}
+.prep-link{background:#383157;border-bottom-color:#141126}
+.prep-link:hover{background:#49416c}.prep-link>span:last-child{color:#c2a0ff}
+.bpArrow{background:#43345f;color:#e8d6ff}
+.overlay .btn.b-blue{background:#346db5;color:#fff4df;box-shadow:inset 0 -4px 0 #234985}
+.overlay .btn.b-purple{background:#7450bf;color:#fff4df;box-shadow:inset 0 -4px 0 #4e3389}
+.overlay .btn.b-teal{background:#268874;color:#fff4df;box-shadow:inset 0 -4px 0 #175b50}
+.overlay .btn.b-gold{background:var(--gold);box-shadow:inset 0 -5px 0 #b6802e}
+.overlay.show:not(.menu-page)>.ovpanel{animation:arcadePanel .3s cubic-bezier(.2,1.2,.4,1)}
+.setOpts .btn.on{background:#694baa;box-shadow:inset 0 -3px 0 #ccaaff}
+.quiet-btn:hover,#rulesBtn0:hover,#setBtn0:hover,#rulesBtn:hover,#restartBtn:hover{background:#302746}
+
+/* Four inks preserve the suit shapes, with just a hint of tinted paper. */
+.card[data-suit="♠"]{--card-accent:var(--suit-purple);--card-tint:#e8deff}
+.card[data-suit="♥"]{--card-accent:var(--suit-coral);--card-tint:#ffe1dd}
+.card[data-suit="♦"]{--card-accent:var(--suit-orange);--card-tint:#ffeab9}
+.card[data-suit="♣"]{--card-accent:var(--suit-mint);--card-tint:#d1f2d8}
+.card:not(.back){color:var(--card-accent,var(--inkCard));background:#111329}
+.card:not(.back)::before{background:linear-gradient(150deg,#fffbed 0%,#fff8e8 60%,var(--card-tint,#fff2d8) 100%)}
+.card:not(.back) .pip{position:relative}
+.card:not(.back) .pip::before{content:'';position:absolute;width:37px;height:37px;background:var(--card-accent);opacity:.065;transform:rotate(45deg);pointer-events:none}
+.card:not(.back) .pip .suit{position:relative;z-index:1}
+.cardslot{filter:drop-shadow(2px 5px 0 #090c1a66);perspective:700px}
+.card.placed:not(.jit){animation:none}
+.flipwrap{animation:arcadeFlip .4s cubic-bezier(.25,.8,.3,1) both}
+.flipwrap .card{animation:none!important}
+@keyframes arcadeFlip{0%{transform:perspective(700px) rotateY(0) scale(.94)}45%{transform:perspective(700px) rotateY(85deg) translateY(-10px) scale(1.1)}78%{transform:perspective(700px) rotateY(185deg) translateY(-3px) scale(1.04)}100%{transform:perspective(700px) rotateY(180deg) scale(1)}}
+
+/* Colour is attached to game information: gold cash, blue stake, violet multiplier. */
+#topbar{background:#1b1c31;box-shadow:inset 0 -3px 0 #090b17;border-top:3px solid #b88aff}
+#topbar #tableName{color:var(--gold)}
+#topbar .tmeta{color:#ceb8f2}#topbar .tname .rule{color:#b6bbcc}
+.stat{background:#121526}
+#gainStat{background:#343027;box-shadow:inset 0 -3px 0 #b2863c}
+#scorebox .seg.chips{background:#264d83;box-shadow:inset 0 -3px 0 #1b355e}
+#scorebox .seg.mult{background:#6544a0;box-shadow:inset 0 -3px 0 #412b6e}
+#scorebox .seg.chips .v,#scorebox .seg.mult .v{color:#fff7e6}
+#scorebox .seg .k{color:#ece7ff}
+.lives{background:#382239;color:#ff87a2}#pauseBtn{background:#343047}
+#objBar{height:12px;background:#0e1220}
+#objFill{background:linear-gradient(90deg,#d79539,#ffe37b)}
+body.inf #objFill{background:linear-gradient(90deg,#865ce0,#d3a7ff)}
+#objGoal{color:#d8c6f2;font-size:13px}
+#felt{background:radial-gradient(rgba(0,0,0,.10) 1px,transparent 1.5px) center/12px 12px,radial-gradient(ellipse at 50% 38%,#70ffd62b,transparent 65%),var(--felt,#168e82);box-shadow:inset 0 4px 0 #b7ffe522,inset 0 -6px 0 #06162455;transition:background .45s,filter .2s}
+#feltDeco .fdOut{box-shadow:inset 0 0 0 2px #dfc77c99}
+#feltDeco .fdIn{box-shadow:inset 0 0 0 1px #d9f4cb33}
+#feltMark{display:block;font-size:130px;color:#c4ffe80d;top:49%;letter-spacing:-.06em}
+#pBar{background:#142832;box-shadow:0 3px 0 #0a151c55;top:5px;height:22px}
+#pFill{background:linear-gradient(90deg,#a88aff,#fa80bb,#ffcf62)}
+#pBar .pmeta{color:#ffefd8}
+#stage .zlbl{background:#0d2731;color:#d4efe5;padding:5px 12px;gap:4px;min-height:27px}
+#stage .zlbl::before{background:#14373d}
+#stage .zlbl .v{color:#ffe086;font-size:22px}
+#stage .zone:last-child .zlbl::before{background:#e5f0b8}
+#stage .zone:last-child .zlbl,#stage .zone:last-child .zlbl .v{color:#18382e}
+#stage .card,#stage .flipwrap{width:64px;height:89px}
+#stage .card .corner-r{font-size:16px}
+#stage .card .pip .suit{width:29px;height:auto}
+#stage .hand{min-height:93px}
+#stage .hand:has(>.cardslot:nth-child(5))>.cardslot+ .cardslot{margin-left:-17px!important}
+#stage .splithand .card,#stage .splithand .flipwrap{width:48px;height:67px}
+#stage .splithand .cardslot+ .cardslot{margin-left:-17px!important}
+#stage .splithand .card .pip .suit{width:21px}
+.splitwrap{gap:14px}.splithand .shval{background:#e3f2bd}
+#tip{color:#fff1cf}
+#comboRow .cpill.on{background:#efe8a9;color:#302346;border-color:#fff1bd}
+#comboRow .cpill{box-shadow:0 2px 0 #061c2555}
+#effects .joker{background:#4b345e;box-shadow:inset 0 -3px 0 #ba7ded}
+#effects .tarot{background:#244e5d;box-shadow:inset 0 -3px 0 #66d9cc}
+#effects .joker .ft{color:#ffe6a2}#effects .tarot .ft{color:#c5f7ec}
+#effects .joker.hot{background:#7250a0;box-shadow:inset 0 -3px 0 #f9d97a}
+#bottombar{background:#181b30;box-shadow:inset 0 2px 0 #423354;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+#bottombar .btn{box-shadow:inset 0 -5px 0 #0003;transition:filter .15s,transform .12s;min-height:44px}
+#bottombar .btn:not(:disabled):active{transform:translateY(3px) scale(.97)}
+#bottombar .b-blue{background:#73b3ef;color:#102b48}
+#bottombar .b-purple{background:#bd94f4;color:#291640}
+#bottombar .b-gold{background:#ffd15b;color:#352516}
+#bottombar .b-red{background:#ff7890;color:#431e32}
+#bottombar .btn:disabled{background:#30314a!important;color:#9da0b7!important;box-shadow:inset 0 -3px 0 #0002}
+#betRow .chip{background:#33304f;color:#e4d5ff;box-shadow:inset 0 -3px 0 #191c32;transition:transform .12s,background .12s}
+#betRow .chip.on{background:#c9a1ff;color:#231530;box-shadow:inset 0 -4px 0 #8760b7;transform:translateY(-3px)}
+#betRow .chip:not(.locked):hover{filter:brightness(1.15)}
+#betRow .chip:focus-visible,#bottombar .btn:focus-visible{outline:3px solid #fff1cf;outline-offset:3px;filter:brightness(1.12)}
+
+/* Local impacts stay clear of the controls. No full-screen strobe. */
+#arcadeFX{position:fixed;inset:0;z-index:48;overflow:hidden;pointer-events:none;contain:strict}
+.arcade-spark,.arcade-ring,.arcade-coin{position:absolute;pointer-events:none;will-change:transform,opacity}
+.arcade-spark{width:6px;height:6px;background:var(--spark,#ffd15b)}
+.arcade-spark.star{clip-path:polygon(35% 0,65% 0,65% 35%,100% 35%,100% 65%,65% 65%,65% 100%,35% 100%,35% 65%,0 65%,0 35%,35% 35%);width:13px;height:13px}
+.arcade-ring{width:44px;height:44px;border:3px solid var(--spark,#ffd15b);clip-path:var(--pc);transform-origin:center}
+.arcade-coin{width:13px;height:13px;background:#ffdc73;border:2px solid #fff2bd;outline:2px solid #be813c;clip-path:var(--pc);box-shadow:inset 0 -3px 0 #bf8535}
+#multPop{width:max-content;max-width:96%;top:49%;isolation:isolate}
+#multPop .burst{width:260px;height:140px;opacity:.92;transform:translate(-50%,-50%) rotate(-8deg);filter:none;background:#fff0bd}
+#multPop.win .burst{background:#ffcc5d}#multPop.push .burst{background:#95c7ff}#multPop.lose .burst{background:#ee789d}
+#multPop .m{display:block;font-size:54px;color:#fff8de;line-height:.95;letter-spacing:.02em;-webkit-text-stroke:1px #28203a;text-shadow:3px 4px 0 #382340!important}
+#multPop.long .m{font-size:38px}
+#multPop .t{display:inline-block;margin-top:10px;background:#211b39;color:#fff2d0;font-size:25px;line-height:1;padding:6px 15px;clip-path:var(--pc);transform:rotate(-3deg)}
+#multPop.go{animation:arcadeResult 1.4s cubic-bezier(.22,1,.35,1) forwards}
+.sctag.mult{color:#f7e3ff;background:#372653;font-size:20px;padding:6px 12px;box-shadow:inset 0 -3px 0 #b985ee}
+.sctag.mult b{color:#ffdb67;font-size:1.3em}
+#recPop .rm{color:#ffe28a;text-shadow:2px 3px 0 #342245!important}
+#recPop .rt{color:#dcbdff}
+#felt[data-arcade-result="win"]{animation:arcadeFeltWin .65s ease-out}
+#felt[data-arcade-result="lose"]{animation:arcadeFeltLose .4s ease-out}
+#felt[data-arcade-heat="3"],#felt[data-arcade-heat="4"]{box-shadow:inset 0 0 0 3px #f7c378aa,inset 0 0 55px #cb506633}
+@keyframes arcadeResult{0%{opacity:0;transform:translate(-50%,-50%) rotate(-9deg) scale(.45)}15%{opacity:1;transform:translate(-50%,-50%) rotate(3deg) scale(1.14)}28%{transform:translate(-50%,-50%) rotate(-2deg) scale(.98)}40%,76%{opacity:1;transform:translate(-50%,-50%) rotate(-2deg) scale(1)}100%{opacity:0;transform:translate(-50%,-75%) rotate(2deg) scale(.9)}}
+@keyframes arcadeFeltWin{0%,100%{filter:brightness(1)}28%{filter:brightness(1.17) saturate(1.18)}}
+@keyframes arcadeFeltLose{0%,100%{filter:none}35%{filter:saturate(.55) brightness(.86)}}
+@keyframes arcadePanel{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes arcadeMenuLeft{0%,100%{transform:translateY(0) rotate(-13deg)}50%{transform:translateY(-6px) rotate(-10deg)}}
+@keyframes arcadeMenuRight{0%,100%{transform:translateY(0) rotate(11deg)}50%{transform:translateY(-8px) rotate(14deg)}}
+
+/* A compact casino cabinet on wide displays; the phone retains its portrait table. */
+@media(min-width:1000px) and (min-height:650px){
+ #app{inset:28px 30px;max-width:1240px;margin:auto;display:grid;grid-template-columns:260px minmax(0,1fr);grid-template-rows:minmax(0,1fr) 174px;gap:14px}
+ #app::before,#app::after{display:none}
+ #topbar{grid-column:1;grid-row:1/3;flex-direction:column;flex-wrap:nowrap;justify-content:flex-start;align-items:stretch;padding:24px 20px;gap:24px;clip-path:var(--pc);border-top:4px solid #b88aff}
+ #topbar .tname{width:100%;flex-direction:column;gap:22px}
+ #topbar .thead-right{margin:0;width:100%;justify-content:space-between;order:-1}
+ #topbar #tableName{font-size:34px;line-height:1.05}
+ #topbar .tmeta{margin-top:12px;font-size:13px}
+ #topbar .tname .rule{margin-top:10px;font-size:12px;line-height:1.6}
+ #topbar .tstats,body.inf #topbar .tstats{width:100%;display:flex;flex-direction:column;align-items:stretch;gap:14px;flex:0}
+ #topbar .stat,#topbar #scorebox,body.inf #topbar #gainStat,body.inf #topbar #scorebox{width:100%;flex:0 0 auto;align-self:stretch;padding:12px}
+ #topbar #scorebox,body.inf #topbar #scorebox{padding:0;min-height:75px}
+ #scorebox .seg .v,#scorebox .seg.chips .v,#scorebox .seg.mult .v{font-size:32px}
+ #topbar #gainStat .v{font-size:36px}
+ #topbar #gainStat .lbl{font-size:12px;letter-spacing:.15em}
+ #topbar #objWrap{margin-top:auto;flex:0 0 auto}
+ #mid{grid-column:2;grid-row:1;padding:0;min-height:0;max-width:none;gap:0}
+ #stage,#table{max-width:none;min-height:0}
+ #table{padding:0}
+ #felt{aspect-ratio:auto;height:100%;min-height:0;padding:12px 18px}
+ #feltInner{padding:24px 0 14px;gap:0}
+ #feltInner .zone{min-height:0}
+ #center{position:relative;top:auto;transform:none;min-height:28px;flex:0 0 auto}
+ #stage .card,#stage .flipwrap{width:80px;height:112px}
+ #stage .hand{min-height:114px}
+ #stage .card .corner-r{font-size:20px}
+ #stage .card .pip .suit{width:35px}
+ #stage .card .corner .suit{width:11px;height:auto}
+ #stage .zlbl{font-size:15px;margin-bottom:12px}
+ #stage .splithand .card,#stage .splithand .flipwrap{width:62px;height:87px}
+ #stage .splithand .cardslot+ .cardslot{margin-left:-10px!important}
+ #bottombar{grid-column:2;grid-row:2;padding:12px 20px;gap:10px;clip-path:var(--pc)}
+ #bottombar #betRow,#bottombar #actions{max-width:none}
+ #actions{height:112px;gap:8px}
+ #betRow .chip{height:35px;min-width:48px;font-size:21px}
+ #bottombar .btn{font-size:22px}#bottombar .btn small{font-size:12px}
+ #effects{min-height:40px;padding:0 0 8px}
+ #multPop .m{font-size:68px}#multPop.long .m{font-size:47px}
+ #multPop .burst{width:340px;height:190px}
+}
+@media(max-width:620px){
+ #modeMenu .ovpanel,#intro .ovpanel{padding-top:22px}
+ .brand-stage::before{width:120px;height:120px;top:20%;left:80%}
+ .mode-symbol{font-size:80px;top:39px}
+ #modeMenu h1.menuTitle{text-shadow:0 3px 0 #8c4d52,0 6px 0 #201529!important}
+ #topbar{padding:9px 12px;gap:7px}
+ #topbar #tableName{font-size:26px}
+ #topbar .tname .rule{font-size:10px;line-height:1.25}
+ #topbar .tmeta{font-size:11px;margin-top:4px}
+ #objWrap{margin-top:0;padding:8px 0 15px}
+ #topbar .stat .lbl,#scorebox .seg .k{font-size:9px}
+ #bottombar{padding-top:10px}
+ #actions{height:108px;gap:7px}
+ #stage .zlbl{font-size:12px;margin-bottom:6px}
+ #stage .zlbl .v{font-size:19px}
+ #pBar{height:20px;max-width:68%}
+ #multPop .m{font-size:45px}#multPop.long .m{font-size:31px}
+ #multPop .t{font-size:22px}
+ #multPop .burst{width:230px;height:130px}
+ .sctag.mult{font-size:15px;max-width:92vw;white-space:normal;text-align:center}
+}
+@media(max-height:720px) and (max-width:620px){
+ #stage .card,#stage .flipwrap{width:55px;height:76px}
+ #stage .hand{min-height:78px}
+ #stage .card .pip .suit{width:24px}
+ #actions{height:96px}#bottombar .btn small{font-size:10px}
+ #effects{min-height:34px;padding:2px}
+ #feltInner{padding-top:17px;gap:0}
+ #stage .zlbl{margin-bottom:4px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important;scroll-behavior:auto!important}
+ #shaker{transform:none!important}
+ .menu-hand .card{animation:none!important}
+ .menu-hand .card:first-child{transform:rotate(-13deg)}.menu-hand .card:last-child{transform:rotate(11deg)}
+ .flipwrap{transform:rotateY(180deg)}
+ #multPop.go{animation:none!important;opacity:1;transform:translate(-50%,-50%)}
+}
