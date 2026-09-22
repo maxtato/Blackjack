@@ -70,7 +70,7 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 .card{color:var(--inkCard);--art-wash:#1739f508;--art-accent:#f4eb18;--art-line:#1c40ee;--court-ink:#17234b;--court-shade:#b6c5ff;--court-skin:#fffefa;border-radius:8px;box-shadow:0 2px 3px #020c7b26,0 7px 12px #06137f30,0 18px 25px -14px #020a7290}
 .card[data-suit="♠"],.card[data-suit="♣"]{color:var(--inkCard);--art-accent:#f4eb18;--art-line:#1c40ee}
 .card[data-suit="♥"],.card[data-suit="♦"]{color:var(--suitRed);--art-accent:#f4eb18;--art-line:#ff7e42}
-.corner-r{font:750 calc(var(--card-w)*.26)/1 "Avenir Next","Segoe UI",Arial,sans-serif;letter-spacing:-.065em}.card::after{box-shadow:inset 0 0 0 1px #fff9}
+.corner-r{font:750 calc(var(--card-w)*.22)/1 "Avenir Next","Segoe UI",Arial,sans-serif;letter-spacing:-.065em}.card::after{box-shadow:inset 0 0 0 1px #fff9}
 .card.back{--back-bg:#092fe4;--back-ink:#fffefa;background:var(--back-bg);color:var(--back-ink);border:3px solid #fffefa;box-shadow:0 8px 16px #06137f45}
 .card.back::after{inset:4px;border-radius:5px;border:1px solid var(--back-ink);opacity:.9;box-shadow:none}
 .bpat{inset:7px;opacity:.2;background:repeating-linear-gradient(45deg,transparent 0 4px,var(--back-ink) 4px 4.6px,transparent 4.6px 8px)}
@@ -150,9 +150,9 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 @media (prefers-reduced-motion:reduce){#tableLightning{display:none}.hero-art::before,.hero-art::after{animation:none}}
 :root[data-motion=gentle] #tableLightning{display:none}
 
-/* Larger indices and pips, with a compact two-digit ten. */
-.corner .suit{width:calc(var(--card-w)*.14);height:calc(var(--card-w)*.14)}
-.card[data-rank="10"] .corner-r{font-size:calc(var(--card-w)*.23);letter-spacing:-.085em}
+/* Compact indices leave a clear margin around the central artwork. */
+.corner .suit{width:calc(var(--card-w)*.115);height:calc(var(--card-w)*.115)}
+.card[data-rank="10"] .corner-r{font-size:calc(var(--card-w)*.20);letter-spacing:-.065em}
 
 /* Card-led scoring and crisp four-suit print, inspired by the reference clip. */
 .card{background:#fffdf4;border-radius:5px;box-shadow:0 2px 0 #071c7626,0 7px 12px #06137f30}
@@ -173,3 +173,23 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 @media(prefers-reduced-motion:reduce){.card.arrive,.card.flip{animation:none!important}.combo-impact{transition:none}}
 :root[data-motion=gentle] .card.arrive,:root[data-motion=gentle] .card.flip{animation:none!important}
 :root[data-motion=gentle] .combo-impact{transition:none}
+
+/* Clear corner margins and a distinct, high-contrast action palette. */
+.corner.tl{left:4.5%;top:4.5%}.corner.br{right:4.5%;bottom:4.5%}
+.card-art{transform:scale(.94);transform-origin:50% 50%}
+#actions .btn{color:#101c49;background:#fffefa}
+#actions .btn[data-game-action="stand"],#actions .btn[data-game-action="deal"]{background:#f4ff28;color:#101c49}
+#actions .btn[data-game-action="double"]{background:#ffb17d;color:#101c49}
+#actions .btn[data-game-action="split"]{background:#afffce;color:#101c49}
+#actions .btn[data-game-action="force"]{background:#601cb5;color:#ffffff}
+#actions .btn.b-red{background:#a91f41;color:#ffffff}
+#actions .btn:disabled{opacity:1;background:#2946b6;color:#cdd5f4;box-shadow:none;filter:none}
+#actions .btn small{opacity:1}
+.b-blue{background:#1636bd;color:#ffffff}.b-red{background:#a91f41;color:#ffffff}.b-purple{background:#601cb5;color:#ffffff}.b-teal{background:#166344;color:#ffffff}
+#tip:not(:empty){background:#081642;color:#ffffff;padding:6px 11px;border-radius:7px;box-shadow:0 3px 8px #07133625}
+.cpill{background:#ffffff;color:#101c49}.cpill.on{background:#f4ff28;color:#101c49}.cpill.evt{background:#eadcff;color:#421778}.cpill.ctr{background:#ffd2ad;color:#57220b}
+.combo-impact{color:#afffce;-webkit-text-stroke-color:#08122e;text-shadow:0 3px 0 #08122e}
+.sctag,.sctag.mult,.sctag b{color:#f4ff28;-webkit-text-stroke-color:#08122e;text-shadow:0 3px 0 #08122e}
+#multPop .m,#multPop .t{-webkit-text-stroke-color:#08122e;text-shadow:0 4px 0 #08122e}
+#multPop.win .m{color:#f4ff28}#multPop.lose .m{color:#ffb6a4}#multPop.push .m{color:#ffffff}#multPop .t{color:#ffffff}
+.tp-evt{background:#081642;color:#ffffff}.tp-evt small{color:#ffffff}
