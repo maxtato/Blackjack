@@ -1,7 +1,8 @@
 /* Presentation only: the blackjack engine and progression are unchanged. */
 Object.assign(STR.fr,{
+ 'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','modern.goal':'OBJECTIF','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA CHANCE A DU CARACTÈRE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
  'nav.rules':'RÈGLES','nav.settings':'RÉGLAGES','nav.back':'← MODES DE JEU','nav.reset':'Réinitialiser ce mode',
- 'menu.choose':'CHOISIS TA TABLE','menu.freeTag':'À TON RYTHME','menu.circuitTag':'LE DÉFI',
+ 'menu.choose':'CHOISIS TA TABLE','menu.freeTag':'À TON RYTHME','menu.circuitTag':"L'AVENTURE",
  'menu.endless':'LIBRE','menu.endlessSub':'Du blackjack, sans missions.',
  'menu.circuit':'CIRCUIT','menu.circuitSub':n=>n+' tables · boss, reliques & tarots',
  'menu.freeAction':'PRENDRE PLACE','menu.circuitAction':'ENTRER DANS LE CIRCUIT',
@@ -18,8 +19,9 @@ Object.assign(STR.fr,{
  'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>'
 });
 Object.assign(STR.en,{
+ 'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'TARGET','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'FORTUNE HAS CHARACTER.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
  'nav.rules':'HOW TO PLAY','nav.settings':'SETTINGS','nav.back':'← GAME MODES','nav.reset':'Reset this mode',
- 'menu.choose':'CHOOSE YOUR TABLE','menu.freeTag':'AT YOUR OWN PACE','menu.circuitTag':'THE CHALLENGE',
+ 'menu.choose':'CHOOSE YOUR TABLE','menu.freeTag':'AT YOUR OWN PACE','menu.circuitTag':'THE ADVENTURE',
  'menu.endless':'FREE PLAY','menu.endlessSub':'Blackjack. No missions.',
  'menu.circuit':'CIRCUIT','menu.circuitSub':n=>n+' tables · bosses, relics & tarots',
  'menu.freeAction':'TAKE A SEAT','menu.circuitAction':'ENTER THE CIRCUIT',
@@ -51,7 +53,7 @@ renderMenu=function(){
   return `<div class="mrec"><span class="mrl">${t(label)}</span><span class="mrv">${detail}</span></div>`;
  }).join('');
  if(!$('menuHand').children.length){
-  $('menuHand').append(cardEl({r:'A',s:'♠'}),cardEl({r:'K',s:'♥'}));
+  $('menuHand').append(cardEl({r:'A',s:'♠'}),cardEl({r:'Q',s:'♥'}),cardEl({r:'7',s:'♣'}));
  }
  $('readySuit').innerHTML=suitSVG('♠',85);
 };
