@@ -541,10 +541,10 @@ const ColdDeckArt = (() => {
   function royal(rank,s){
     const ink='var(--court-ink)',shade='var(--court-shade)',skin='var(--court-skin)',accent='var(--art-accent)';
     const head=rank==='K'
-      ? `<path d="M29 48 34 30h32l6 19-5 24-17 14-17-14Z" fill="${ink}"/><path d="M36 43h28v20L50 76 36 63Z" fill="${skin}"/><path d="M50 43h14v20L50 76Z" fill="${shade}"/><path d="m35 62 9 5 6-3 6 3 9-5-4 16-11 8-11-8Z" fill="${ink}"/><path d="m30 27 11 7 9-14 9 14 11-7-5 17H35Z" fill="${accent}"/><path d="M47 17h6m-3-4v8" stroke="${ink}" stroke-width="2"/>`
+      ? `<path d="M30 48 35 40h30l5 8-3 25-17 14-17-14Z" fill="${ink}"/><path d="M36 43h28v20L50 76 36 63Z" fill="${skin}"/><path d="M50 43h14v20L50 76Z" fill="${shade}"/><path d="m35 62 9 5 6-3 6 3 9-5-4 16-11 8-11-8Z" fill="${ink}"/><path d="M32 24 41 32 50 20 59 32 68 24 65 40H35Z" fill="${accent}"/><path d="M47 17h6m-3-4v8" stroke="${ink}" stroke-width="2"/>`
       : rank==='Q'
-        ? `<path d="M30 48q0-19 20-19t20 19l5 37-20-5-5-8-5 8-20 5Z" fill="${ink}"/><path d="M36 45h28v20L50 76 36 65Z" fill="${skin}"/><path d="M50 45h14v20L50 76Z" fill="${shade}"/><path d="M34 49 40 36h23l4 15-15-9-10 8Z" fill="${ink}"/><path d="m34 26 10 6 6-12 6 12 10-6-4 13H38Z" fill="${accent}"/><path d="m32 61 3 5-3 5-3-5Zm36 0 3 5-3 5-3-5Z" fill="${accent}"/>`
-        : `<path d="m31 44 6-12 24-5 10 17-4 27-8 6-22-8Z" fill="${ink}"/><path d="M36 44h28v22L50 77 36 64Z" fill="${skin}"/><path d="M50 44h14v22L50 77Z" fill="${shade}"/><path d="m29 40 10-16 25 4 10 16-19-5-15 8Z" fill="${ink}"/><path d="m34 33 27-5 7 7-29 4Z" fill="${accent}"/><path d="m62 27 3-9 6 2-7 10Z" fill="${shade}"/>`;
+        ? `<path d="M30 48q0-9 20-9t20 9l5 37-20-5-5-8-5 8-20 5Z" fill="${ink}"/><path d="M36 45h28v20L50 76 36 65Z" fill="${skin}"/><path d="M50 45h14v20L50 76Z" fill="${shade}"/><path d="M34 50 39 40h23l5 11-15-7-10 7Z" fill="${ink}"/><path d="M33 27 43 33 50 22 57 33 67 27 64 40H36Z" fill="${accent}"/><path d="m32 61 3 5-3 5-3-5Zm36 0 3 5-3 5-3-5Z" fill="${accent}"/>`
+        : `<path d="M31 45 35 40 66 41 69 49 66 71 58 77 37 69Z" fill="${ink}"/><path d="M36 44h28v22L50 77 36 64Z" fill="${skin}"/><path d="M50 44h14v22L50 77Z" fill="${shade}"/><path d="M62 31 66 19 72 21 66 34Z" fill="${shade}"/><path d="M29 41 38 27 59 25 69 34 72 44 51 40 39 47Z" fill="${ink}"/><path d="M33 37 62 30 67 36 39 43Z" fill="${accent}"/>`;
     const coat=rank==='Q'
       ? `<path d="m37 77 13 7 13-7 12 16v22H25V93Z" fill="${ink}"/><path d="m37 77 13 15 13-15-5 24H42Z" fill="${accent}"/>`
       : `<path d="m35 77 15 8 15-8 12 16v22H23V93Z" fill="${ink}"/><path d="m35 77 15 8-9 12-10-14Zm30 0-15 8 9 12 10-14Z" fill="${accent}"/><path d="M50 86v29" stroke="${shade}" stroke-width="1.5"/>`;
