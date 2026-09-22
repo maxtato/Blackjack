@@ -856,7 +856,7 @@ function renderRelics(){
     const d=document.createElement('div');d.className='joker';d.dataset.relic=r.id;
     if((r.id==='froid'||r.id==='clope')&&barakaLevel()>=3)d.classList.add('hot');
     const tk=tokFor(r.id);
-    d.innerHTML=`<span class="ft" style="color:${tk.c}">${tk.t}</span>`;   // étiquette : juste la valeur (taille uniforme)
+    d.innerHTML=effectMark(r.id,tk.c);
     d.title=`${iName(r)} — ${iDesc(r)}`;
     d.setAttribute('role','button');d.tabIndex=0;d.setAttribute('aria-label',d.title);d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();d.click();}};d.onclick=()=>openInspect('relic',idx);
     wrap.appendChild(d);
@@ -872,7 +872,7 @@ function renderConsumables(){
   G.consumables.forEach((card,i)=>{
     const d=document.createElement('div');d.className='tarot';
     const tk=tokFor(card.id);
-    d.innerHTML=`<span class="ft" style="color:${tk.c}">${tk.t}</span>`;   // étiquette : juste la valeur (taille uniforme)
+    d.innerHTML=effectMark(card.id,tk.c);
     d.title=`${iName(card)} — ${iDesc(card)}`;
     d.setAttribute('role','button');d.tabIndex=0;d.setAttribute('aria-label',d.title);d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();d.click();}};d.onclick=()=>openInspect('tarot',i);
     wrap.appendChild(d);
@@ -916,7 +916,7 @@ function openInspect(kind,i){
   const tag=kind==='tarot'
     ?'<span style="color:var(--grape)">'+t('insp.tarot')+'</span>'
     :'<span style="color:var(--yellow)">'+t('insp.relic')+'</span>';
-  $('inspectBody').innerHTML=`<div class="inspCard tag ${kind==='tarot'?'tarot':'joker'}"><span class="ft" style="color:${tk.c}">${tk.t}</span></div>`
+  $('inspectBody').innerHTML=`<div class="inspCard tag ${kind==='tarot'?'tarot':'joker'}">${effectMark(item.id,tk.c)}</div>`
     +`<h1 class="win" style="font-size:24px;margin:0 0 4px">${iName(item)}</h1>`
     +`<p style="font-size:10px;letter-spacing:.08em;margin:0 0 12px">${tag}</p>`
     +`<p style="color:var(--paper);font-size:13px;line-height:1.6;margin:0 0 4px">${iDesc(item)}</p>`;
@@ -1366,7 +1366,7 @@ function onTableLost(titleKey,textKey){
 }
 
 /* ---------- boutique ---------- */
-/* jeton d'effet explicite (au lieu d'un logo) : couleur = type d'effet
+/* Palette des symboles et anciennes étiquettes : couleur = type d'effet
    or=jetons · orange=mult · cyan=pression · vert=info · violet=édition/slot · rouge=retrait */
 const SHOPTOK={
   lunettes:{t:'PEEK',c:'#9be84a'},
@@ -1403,6 +1403,9 @@ function tokFor(id){
   const tk=SHOPTOK[id]||{t:'?',c:'#ffce3a'};
   const k='tok.'+id;
   return {t:hasStr(k)?t(k):tk.t,c:tk.c};
+}
+function effectMark(id,color){
+  return `<span class="effect-mark" style="color:${color}" aria-hidden="true">${ColdDeckArt.effect(id)}</span>`;
 }
 function serviceCost(s){return niceRound(s.baseCost*curTable().goal*0.16);}
 let shopOffer=[],rerollCost=5;
@@ -1476,7 +1479,7 @@ function renderShop(){
       :'<span style="font-size:9px;color:var(--yellow)">'+t('shop.tagRelic')+'</span>';
     const tk=tokFor(r.id);
     const chipCls=isSvc?'svc':isTarot?'tarot':'joker';
-    d.innerHTML=`<div class="shopTok tag ${chipCls}"><span class="ft" style="color:${tk.c}">${tk.t}</span></div><div class="sInfo"><div class="nm">${iName(r)} ${tag}</div><div class="ds">${iDesc(r)}</div></div>`;
+    d.innerHTML=`<div class="shopTok tag ${chipCls}">${effectMark(r.id,tk.c)}</div><div class="sInfo"><div class="nm">${iName(r)} ${tag}</div><div class="ds">${iDesc(r)}</div></div>`;
     const cost=isSvc?serviceCost(r):itemCost(r);
     const b=document.createElement('button');b.className='btn '+(isSvc?'b-teal':isTarot?'b-purple':'b-gold');
     b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=cash(cost);
@@ -2211,7 +2214,7 @@ function renderPlanque(){
     if(!maxed){allMax=false;if(m.rep>=cost)affordable++;}
     const d=document.createElement('div');d.className='shopItem'+(maxed?' bought':'');
     const dots=u.max>1?` <span class="ulvl">${'●'.repeat(lvl)}${'○'.repeat(u.max-lvl)}</span>`:(lvl?' <span class="ulvl">●</span>':'');
-    d.innerHTML=`<div class="shopTok" style="color:${u.tc}">${t('tok.'+u.k)}</div>`+
+    d.innerHTML=`<div class="shopTok">${effectMark(u.k,u.tc)}</div>`+
       `<div class="sInfo"><div class="nm">${t('unlock.'+u.k+'.n')}${dots}</div><div class="ds">${t('unlock.'+u.k+'.d',lvl)}</div></div>`;
     const b=document.createElement('button');b.className='btn b-gold';
     b.style.cssText='font-size:13px;padding:9px 11px';
@@ -2293,7 +2296,7 @@ function reachPalier(again){
   const pick=pool.slice(0,3);
   $('palierNum').textContent=G.palier;
   $('palierBoons').innerHTML=pick.map(b=>
-    `<button class="btn b-purple menu" data-action="apply-boon" data-boon="${b.id}" style="width:100%">${t('boon.'+b.id+'.t')}<small>${t('boon.'+b.id+'.d')}</small></button>`
+    `<button class="btn b-purple menu boon-choice" data-action="apply-boon" data-boon="${b.id}" style="width:100%">${effectMark(b.id,'#eadbff')}<span class="boon-copy">${t('boon.'+b.id+'.t')}<small>${t('boon.'+b.id+'.d')}</small></span></button>`
   ).join('')+
     // le dilemme : replonger avec un bonus, ou sécuriser AVEC prime de palier
     `<button class="btn b-gold menu" data-action="cash-out-endless-bonus" style="width:100%;margin-top:6px">${t('pal.cash',STAR+abbr(Math.round(endlessCashRep()*1.2)))}<small>${t('pal.cashSub')}</small></button>`+
