@@ -12,7 +12,9 @@ fs.writeFileSync(path.join(root,'cold-deck.js'),bundle);
 // an HTML preview isolates script execution from the global window object.
 if(process.argv[2]){
   let html=fs.readFileSync(path.join(root,'index.html'),'utf8');
-  html=html.replace('<link rel="stylesheet" href="modern.css">',()=>'<style>\n'+fs.readFileSync(path.join(root,'modern.css'),'utf8')+'\n</style>');
+  for(const css of ['modern.css','electric.css']){
+    html=html.replace('<link rel="stylesheet" href="'+css+'">',()=>'<style>\n'+fs.readFileSync(path.join(root,css),'utf8')+'\n</style>');
+  }
   html=html.replace('<script src="cold-deck.js"></script>',()=>'<script>\n'+bundle.replace(/<\/script/gi,'<\\/script')+'\n</script>');
   html=html.replace(/<link rel="manifest"[^>]+>\s*/,'');
   html=html.replace(/href="(icons\/[^"]+)"/g,(_,file)=>{

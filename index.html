@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Cold Deck — Club 21</title>
+<title>Cold Deck — Bleu électrique</title>
 <meta name="description" content="Une carte de plus, et tout peut basculer. Un blackjack roguelite de combos, de culot et de belles mains.">
-<meta name="theme-color" content="#e5e2d7">
+<meta name="theme-color" content="#1238f5">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -15,6 +15,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="stylesheet" href="modern.css">
+<link rel="stylesheet" href="electric.css">
 </head>
 <body>
 <div id="bg">
@@ -32,8 +33,8 @@
 <div id="shaker">
 <div id="app">
   <header id="topbar">
-    <div class="table-brand" aria-hidden="true">C<span>♠</span>D<span class="edition-mark">CLUB 21</span></div>
-    <div class="tname"><div class="tncol"><span id="tableName">Back Room</span><span class="tmeta" id="tableMeta"></span><span class="rule" id="ruleText"></span></div><div class="thead-right"><button id="pauseBtn" data-action="openPause" data-i18n-title="ui.pause" aria-label="Pause"><span></span><span></span></button><div id="lives" class="lives" data-i18n-title="ui.lives"></div></div></div>
+    <div class="brand-block"><div class="table-brand" role="img" aria-label="Cold Deck"><span>C<svg class="logo-o" viewBox="0 0 44 48" aria-hidden="true"><ellipse cx="22" cy="24" rx="21" ry="23" fill="currentColor"/><path d="M27 2 10 27h11l-5 19 19-28H23Z" fill="var(--bg0)"/></svg>LD</span><span>DECK</span></div><div class="table-number">TABLE <b id="tableNumber">01</b></div></div>
+    <div class="thead-right"><button id="pauseBtn" data-action="openPause" data-i18n-title="ui.pause" aria-label="Pause"><span></span><span></span></button><div id="lives" class="lives" data-i18n-title="ui.lives"></div></div>
     <div class="tstats">
       <div class="stat turnstat" id="turnStat">
         <span class="tnum" id="turnNum">4</span>
@@ -54,6 +55,7 @@
       <div id="objTick"></div>
       <span id="objGoal">$0</span>
     </div>
+    <details class="table-context"><summary id="tableName">Cold Deck</summary><div class="table-context-body"><span class="tmeta" id="tableMeta"></span><span class="rule" id="ruleText"></span></div></details>
   </header>
 
   <div id="mid">
@@ -68,9 +70,9 @@
       <div id="felt">
         <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">STREAK</span><span id="pPct"></span></span></div>
         <div id="feltDeco"></div>
+        <div id="tableLightning" aria-hidden="true"></div>
         <div id="turnPop"></div>
         <div id="feltInner">
-          <div id="feltMark" aria-hidden="true"><span>COLD DECK</span><b>21</b><span>MAKE YOUR LUCK</span></div>
           <div id="multPop"><div class="burst"></div><span class="m"></span><span class="t"></span></div>
           <div id="recPop"><span class="rm" data-i18n="rec.banner">★ NEW RECORD ★</span><span class="rt"></span></div>
           <div class="zone dealer-zone">
@@ -114,10 +116,6 @@
       <span class="hero-star star-one">✦</span><span class="hero-star star-two">✦</span>
       <span class="hero-chip chip-one">21</span><span class="hero-chip chip-two">×3</span>
       <div class="menu-hand" id="menuHand"></div>
-      <svg class="backroom-sketch glass-sketch" viewBox="0 0 120 150" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m26 54 8 72q26 12 52-1l9-72M26 54q32 10 69-1M29 64q33 8 63-1M35 116q23 9 49-1"/><path d="m32 84 5 36q23 8 46-1l5-37q-27 8-56 2Z" fill="#c19b5840" stroke="none"/><path d="m40 76 23-7 10 24-24 7Zm22 13 20-8 5 20-20 7"/><path d="M36 128q22 7 44 0M40 43q-11-13 2-23M57 40q12-10 2-25" opacity=".55"/><path d="m95 26 1 9 8 2-9 2-2 8-1-9-8-2 9-2Z" stroke="#9d783b"/></g></svg>
-      <svg class="backroom-sketch matchbook-sketch" viewBox="0 0 100 105" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m14 31 57-16 17 63-57 16Z" fill="#e8d6b1"/><path d="m14 31 58-15-1-8-59 16Zm13 45 57-15 4 17-57 16Z" fill="#74323f"/><path d="m33 47 20-6m-18 12 20-6m-17 12 12-3M31 82l46-12"/><path d="m56 32 7 6-2 8-6-3-4 5-5-5 2-8Z" fill="#74323f" stroke="none"/><path d="M81 22 91 14m-3 17 9-2" stroke="#a38651"/></g></svg>
-      <div class="hero-sticker"><span data-i18n="modern.private">CLUB PRIVÉ</span><strong>21.</strong><span data-i18n="modern.afterhours">APRÈS MINUIT</span></div>
-      <span class="art-caption" data-i18n="modern.artCaption">LA CHANCE A DU CARACTÈRE.</span>
     </div>
     <section class="mode-choice" aria-labelledby="chooseLabel">
       <div class="section-label" id="chooseLabel"><span class="live-dot"></span><span data-i18n="menu.choose">CHOISIS TA TABLE</span></div>

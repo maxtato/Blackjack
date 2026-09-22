@@ -510,7 +510,7 @@ function hasStr(key){return (STR[LANG]&&key in STR[LANG])||(key in STR.en);}
 
 
 /* card-art.js */
-/* Original vector artwork: engraved courts, two traditional inks, ivory stock. */
+/* Electric edition: geometric courts and precise, readable suit pips. */
 const ColdDeckArt = (() => {
   const paths = {
     '♠':'M50 7C40 24 11 39 11 61c0 19 23 27 34 10-1 12-6 18-15 22h40c-9-4-14-10-15-22 11 17 34 9 34-10C89 39 60 24 50 7Z',
@@ -530,32 +530,31 @@ const ColdDeckArt = (() => {
     9:[[33,32],[67,32],[33,58],[67,58],[50,71],[33,84],[67,84],[33,110],[67,110]],
     10:[[33,30],[67,30],[50,43],[33,57],[67,57],[33,85],[67,85],[50,99],[33,112],[67,112]]
   };
-  function portrait(rank,s){
-    const crown=rank==='J'
-      ? '<path d="M12 11C7 3 22-2 31 5l-3 7Z" fill="currentColor"/><path d="M24 6Q31-5 37 0q-1 7-10 10"/><path d="m29 2-4 8" stroke="var(--art-accent)"/>'
-      : '<path d="m12 10-2-8 7 4 5-6 5 6 7-4-2 8Z" fill="var(--art-wash)"/><path d="M12 12h20M15 9h14"/><path d="m17 7 1-1m5 2V5m5 2 1-1" stroke="var(--art-accent)" stroke-width="1.6"/>';
-    const hair=rank==='Q'
-      ? '<path d="M16 13q-8 7-5 17l-5 6 12-2 3-7M14 16q-4 11 0 15m2-10 1 7m-7 1-3 5"/><path d="M20 24v3" stroke="var(--art-accent)" stroke-width="2"/>'
-      : '<path d="M14 13q-4 8 1 14l5-2m-8-6 5-2m-5 6 5-2"/>';
-    const beard=rank==='K'
-      ? '<path d="m21 24 2 10 6-5 1-6m-7 3 1 5m2-6v4m-6-7 3 1 3-1"/>'
-      : '<path d="m25 24 3-.5m-8 3 5 1"/>';
-    const emblem=rank==='Q'
-      ? '<path d="M37 40V20m0 3c-9-5-4-10 0-7 5-4 9 3 0 7m0 10 5-4m-5 8-5-4"/>'
-      : rank==='K'
-        ? '<path d="M38 43V9m-4 5h8m-4-9 2 4-2 4-2-4Z"/>'
-        : '<path d="m36 43 2-24 4-4 2 7-6 20m1-18 3-3"/>';
-    const drawing=`<g fill="none" stroke="currentColor" stroke-width=".8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 29 5 36 3 44h40l-4-10-10-5-6 7Z" fill="var(--art-wash)"/><path d="m16 30 4 14m7-13-4 13M5 37l12 6m-9-9 10 6m-4-10 6 5M28 32l5 12m-5-7 8 2m-8 2 10 2"/><path d="M20 13h10v5l3 4-4 1v4l-5 3-5-3v-5q-5-2-3-5l3 1v-5" fill="var(--ivory,#fffaf0)"/>${hair}${beard}<path d="m26 17 3 .5m-4 2h2M19 20v2"/>${crown}<g stroke="var(--art-accent)">${emblem}<path d="m10 37 3 2-2 3-3-2Zm20 2 2 2-2 2-2-2Z"/></g></g>`;
-    return `<rect x="25" y="24" width="50" height="94" rx="1" fill="var(--art-wash)" stroke="currentColor" stroke-width=".55"/><g transform="translate(27 27)">${drawing}</g><g transform="translate(73 115) rotate(180)">${drawing}</g><path d="m27 72 46-2" stroke="var(--art-accent)" stroke-width="1.3"/>${pip(s,65,35,8)}${pip(s,35,107,8,180)}`;
-  }
   function face(rank,s){
     let art;
     if(rank==='A'){
       art=`${pip(s,50,66,43)}<g fill="none" stroke="var(--art-accent)" stroke-width=".65"><path d="M34 101h32m-26 3h20m-10-9v3M32 41q-4 5-5 11m41-11q4 5 5 11"/><path d="m47 32 3-3 3 3-3 3Z"/></g>`;
-    }else if(['J','Q','K'].includes(rank))art=portrait(rank,s);
+    }else if(['J','Q','K'].includes(rank))art=royal(rank,s);
     else art=(layouts[Number(rank)]||[]).map(([x,y])=>pip(s,x,y,Number(rank)>8?13:16,y>71?180:0)).join('');
     return `<svg class="card-art" viewBox="0 0 100 142" aria-hidden="true">${art}</svg>`;
   }
+  function royal(rank,s){
+    const crown=rank==='J'
+      ? '<path d="m37 39 13-14 13 14-13 6Z" fill="var(--art-accent)"/><path d="m47 26 4 9-6 5" fill="none" stroke="var(--inkCard)" stroke-width="2"/>'
+      : rank==='Q'
+        ? '<path d="m32 30 11 8 7-16 7 16 11-8-6 18H38Z" fill="var(--art-accent)"/><path d="M39 45h22" stroke="var(--inkCard)" stroke-width="2"/><path d="m50 17 3 5-3 5-3-5Z" fill="#ff8a32"/>'
+        : '<path d="m30 30 10 7 10-13 10 13 10-7-7 18H37Z" fill="var(--art-accent)"/><path d="M45 19h10m-5-5v10M37 44h26" fill="none" stroke="var(--inkCard)" stroke-width="2"/>';
+    return `<g data-court="${rank}">${crown}${pip(s,50,78,53)}<path d="M29 48v-9h7m28 0h7v9M29 104v8h7m28 0h7v-8" fill="none" stroke="var(--art-line)" stroke-width=".85"/></g>`;
+  }
+  const actionPaths={
+    hit:'M5 7 2 8l4 13 3-1M9 4 5 5l4 15 4-1M12 3l9 2-3 16-9-2Z',
+    stand:'M7 12V6a1 1 0 0 1 2 0v6-8a1 1 0 0 1 2 0v8-9a1 1 0 0 1 2 0v9-7a1 1 0 0 1 2 0v8l2-4q2-1 2 1l-3 9q-1 3-5 3-4 0-6-4l-3-5q-1-2 1-2l4 3Z',
+    double:'M5 6c0-4 15-4 15 0S5 10 5 6Zm0 0v4c0 4 15 4 15 0V6M5 10v4c0 4 15 4 15 0v-4M5 14v4c0 4 15 4 15 0v-4',
+    split:'M8 3 3 8l5 5M3 8h6v13m7-18 5 5-5 5m5-5h-6v13',
+    force:'m14 2-9 12h7l-2 8 9-12h-7l2-8Z',
+    deal:'M5 7 2 8l4 13 3-1M9 4 5 5l4 15 4-1M12 3l9 2-3 16-9-2Z'
+  };
+  const actionIcon=kind=>`<svg class="action-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${actionPaths[kind]||actionPaths.hit}"/></svg>`;
   const icons={
     flag:'M5 21V3m0 1c5-4 9 5 15 1v10c-6 4-10-5-15-1',
     trophy:'M8 3h8v8a4 4 0 0 1-8 0V3Zm0 2H3v3a5 5 0 0 0 5 5m8-8h5v3a5 5 0 0 1-5 5m-4 2v6m-5 0h10',
@@ -569,7 +568,7 @@ const ColdDeckArt = (() => {
     diamond:'m12 2 9 10-9 10L3 12 12 2Z'
   };
   const icon=n=>`<svg class="pxi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${icons[n]||icons.doree}"/></svg>`;
-  return {suit,face,icon};
+  return {suit,face,icon,actionIcon};
 })();
 
 
@@ -1322,6 +1321,7 @@ function renderTop(){
   applyFelt();   // tapis évolutif : design + couleur selon la table
   const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=heartSVG(15)+'<span class="lvn">×'+n+'</span>';lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
   $('tableName').textContent=tableName(tb);                         // nom seul, en gros
+  const tableNumber=$('tableNumber');if(tableNumber)tableNumber.textContent=String(G.endless?(G.palier||0)+1:G.tableIdx+1).padStart(2,'0');
   const tm=$('tableMeta');if(tm)tm.textContent=G.endless
     ?t('top.metaInf',(G.palier||0)+1,abbr(tb.min),abbr(tb.max))
     :t('top.metaCircuit',tb.zone,zoneName(tb.zone),G.tableIdx+1,RUN_LEN);
@@ -1355,7 +1355,7 @@ function renderObjective(){
     const p=G.palier||0,target=palierTarget(p);
     const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,target)*100));
     const f=$('objFill');if(f)f.style.width=pct+'%';
-    const g=$('objGoal');if(g)g.textContent=cash(target);
+    const g=$('objGoal');if(g)g.textContent=abbr(G.bank)+' / '+abbr(target);
     const bar=$('objBar');if(bar)bar.classList.remove('full');
     if(gv)gv.classList.remove('warn');
     return;
@@ -1364,7 +1364,7 @@ function renderObjective(){
   // barre = jetons ABSOLUS (depuis 0) vers l'objectif, exactement comme les paliers en Sans Fin (bank/target)
   const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,goal)*100));
   const f=$('objFill');if(f)f.style.width=pct+'%';
-  const g=$('objGoal');if(g)g.textContent=cash(goal);       // objectif au bout de la barre
+  const g=$('objGoal');if(g)g.textContent=abbr(G.bank)+' / '+abbr(goal);
   if(gv)gv.classList.toggle('warn',!!(G.table&&G.bank<G.table.min*3));
   const bar=$('objBar');if(bar)bar.classList.toggle('full',G.bank>=goal);
 }
@@ -1567,12 +1567,17 @@ function syncPeek(){
 }
 function renderActions(){
   syncPeek();
+  $('app').dataset.phase=G.phase;
+  $('betRow').hidden=G.phase!=='bet';
   const a=$('actions');a.innerHTML='';
   const main=document.createElement('div');main.className='actMain';
   const wide=document.createElement('div');wide.className='actWide';
   const add=(parent,label,cls,fn,sub,dis)=>{
     const b=document.createElement('button');b.className='btn '+cls;b.setAttribute('aria-label',label);
-    b.innerHTML=`<span class="blbl">${label}</span>`+(sub?`<small>${sub}</small>`:'');
+    const kind=fn===deal?'deal':fn===playerStand?'stand':fn===playerDouble?'double':fn===playerSplit?'split':fn===forcerChance?'force':'hit';
+    b.dataset.gameAction=kind;
+    b.innerHTML=ColdDeckArt.actionIcon(kind)+`<span class="action-copy"><span class="blbl">${label}</span>`+(sub?`<small>${sub}</small>`:'')+'</span>';
+    if(sub){const description=document.createElement('span');description.innerHTML=sub;b.title=description.textContent;b.setAttribute('aria-description',description.textContent);}
     if(dis)b.disabled=true;else b.onclick=fn;parent.appendChild(b);return b;
   };
   if(G.phase==='bet'){
@@ -1615,7 +1620,7 @@ function updateBustReadout(){
   if(hasRelic('compteur')&&G.phase==='play'){
     const bc=bustChance(G.pHand);
     $('tip').textContent=t('ui.bustRisk',bc);
-    $('tip').style.color=bc>50?'#8b3440':'var(--gold)';
+    $('tip').style.color=bc>50?'var(--orange)':'var(--gold)';
   }
 }
 
@@ -2911,7 +2916,8 @@ freshGame();buildShoe();applyI18n();renderHands();tick();
 /* menu-v2.js */
 /* Presentation only: the blackjack engine and progression are unchanged. */
 Object.assign(STR.fr,{
- 'modern.club':'CLUB PRIVÉ · BLACKJACK ROGUELITE','modern.private':'CLUB PRIVÉ','modern.afterhours':'APRÈS MINUIT',
+ 'ui.gain':'BANQUE','ui.turnsLeft':'MAINS','act.double':'DOUBLE',
+ 'modern.club':'BLACKJACK ROGUELITE','modern.private':'COLD DECK','modern.afterhours':'HAUTE TENSION',
  'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','modern.goal':'OBJECTIF','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
  'nav.rules':'RÈGLES','nav.settings':'RÉGLAGES','nav.back':'← MODES DE JEU','nav.reset':'Réinitialiser ce mode',
  'menu.choose':'CHOISIS TA TABLE','menu.freeTag':'À TON RYTHME','menu.circuitTag':"L'AVENTURE",
@@ -2931,7 +2937,8 @@ Object.assign(STR.fr,{
  'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>'
 });
 Object.assign(STR.en,{
- 'modern.club':'PRIVATE CLUB · BLACKJACK ROGUELITE','modern.private':'PRIVATE CLUB','modern.afterhours':'AFTER HOURS',
+ 'ui.gain':'BANK','ui.turnsLeft':'HANDS',
+ 'modern.club':'BLACKJACK ROGUELITE','modern.private':'COLD DECK','modern.afterhours':'HIGH VOLTAGE',
  'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'TARGET','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'THE HOUSE IS WATCHING.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
  'nav.rules':'HOW TO PLAY','nav.settings':'SETTINGS','nav.back':'← GAME MODES','nav.reset':'Reset this mode',
  'menu.choose':'CHOOSE YOUR TABLE','menu.freeTag':'AT YOUR OWN PACE','menu.circuitTag':'THE ADVENTURE',
@@ -3062,14 +3069,15 @@ syncMenuFocus();
   layer.id = 'arcadeFX';
   layer.setAttribute('aria-hidden', 'true');
   document.body.appendChild(layer);
+  const lightningLayer = $('tableLightning');
   const animations = new Set();
   const timers = new Set();
   let seed = (performance.now() * 1000) >>> 0;
   let lastLevel = barakaLevel();
   let popupTimer;
   let cameraAnimation, lastHaptic = -Infinity;
-  const palette = ['#edc989', '#b65268', '#8ba875', '#62bfff', '#fff4dd'];
-  const suitInk = {'♠':'#62bfff', '♥':'#be586e', '♦':'#d7ac59', '♣':'#78a87e'};
+  const palette = ['#f4ff28', '#fffefa', '#ff9238', '#f4ff28', '#fffefa'];
+  const suitInk = {'♠':'#fffefa', '♥':'#ff9238', '♦':'#ff9238', '♣':'#f4ff28'};
   let preference;
   try{preference=localStorage.getItem('colddeck-motion');}catch(e){}
   const reduced = () => preference==='gentle'||motion.matches;
@@ -3090,6 +3098,7 @@ syncMenuFocus();
     for (const animation of [...animations]) animation.cancel();
     animations.clear();
     layer.replaceChildren();
+    lightningLayer?.replaceChildren();
     cameraAnimation = null;
     shakeAmt = 0;
     $('shaker').style.transform = '';
@@ -3111,13 +3120,13 @@ syncMenuFocus();
     const r = el.getBoundingClientRect();
     return {x:r.left + r.width / 2, y:r.top + r.height / 2, width:r.width, height:r.height};
   }
-  function piece(cls, x, y, color) {
-    if (layer.childElementCount >= 84) return null;
+  function piece(cls, x, y, color, target=layer) {
+    if (layer.childElementCount + (lightningLayer?.childElementCount||0) >= 84) return null;
     const el = document.createElement('i');
     el.className = cls;
     el.style.left = x + 'px'; el.style.top = y + 'px';
     if (color) el.style.setProperty('--spark', color);
-    layer.appendChild(el);
+    target.appendChild(el);
     return el;
   }
   function haptic(strong=false) {
@@ -3144,29 +3153,44 @@ syncMenuFocus();
   }
   function lightning(el, reach=110, arms=5) {
     if (reduced() || document.hidden) return;
-    const p=rect(el);if(!p)return;
-    const bolt=piece('arcade-lightning',p.x,p.y);if(!bolt)return;
-    const radius=Math.min(reach,innerWidth*.48),size=radius*2+40,center=size/2;
-    bolt.style.width=bolt.style.height=size+'px';
-    let path='';
-    for(let arm=0;arm<arms;arm++){
-      const angle=arm/arms*Math.PI*2+random()*.5,length=radius*(.7+random()*.3);
-      const points=[[center,center]];
-      for(let step=1;step<=6;step++){
-        const d=length*step/6,jitter=(random()-.5)*24;
-        points.push([center+Math.cos(angle)*d-Math.sin(angle)*jitter,center+Math.sin(angle)*d+Math.cos(angle)*jitter]);
-      }
-      path+='M'+points.map(([x,y])=>x.toFixed(1)+' '+y.toFixed(1)).join('L');
-      const [bx,by]=points[3],branch=angle+(arm%2?-.85:.85);
-      path+=`M${bx.toFixed(1)} ${by.toFixed(1)}l${(Math.cos(branch)*22).toFixed(1)} ${(Math.sin(branch)*22).toFixed(1)} ${(Math.cos(branch+.6)*16).toFixed(1)} ${(Math.sin(branch+.6)*16).toFixed(1)}`;
+    let p=rect(el);if(!p)return;
+    // The hand element spans the table. Anchor the impact to the actual cards.
+    const cards=[...el.querySelectorAll('.card')].map(card=>card.getBoundingClientRect()).filter(r=>r.width>0);
+    if(cards.length){
+      const left=Math.min(...cards.map(r=>r.left)),right=Math.max(...cards.map(r=>r.right));
+      const top=Math.min(...cards.map(r=>r.top)),bottom=Math.max(...cards.map(r=>r.bottom));
+      p={x:(left+right)/2,y:(top+bottom)/2,width:right-left,height:bottom-top};
     }
-    bolt.innerHTML=`<svg viewBox="0 0 ${size} ${size}" fill="none" aria-hidden="true"><path class="bolt-glow" d="${path}"/><path class="bolt-core" d="${path}"/></svg>`;
+    const inside=lightningLayer&&$('felt').contains(el);
+    const origin=inside?lightningLayer.getBoundingClientRect():{left:0,top:0};
+    const bolt=piece('arcade-lightning',p.x-origin.left,p.y-origin.top,null,inside?lightningLayer:layer);if(!bolt)return;
+    const radius=Math.min(reach,innerWidth*.56),size=radius*2+70,center=size/2;
+    bolt.style.width=bolt.style.height=size+'px';
+    let art='';
+    const polygon=(points,angle)=>'M'+points.map(([x,y])=>{
+      const px=center+Math.cos(angle)*x-Math.sin(angle)*y;
+      const py=center+Math.sin(angle)*x+Math.cos(angle)*y;
+      return px.toFixed(1)+' '+py.toFixed(1);
+    }).join('L')+'Z';
+    for(let arm=0;arm<arms;arm++){
+      const side=arm%2?Math.PI:0,fan=Math.floor(arm/2)/Math.max(1,Math.ceil(arms/2)-1);
+      const angle=side+(fan-.5)*1.8+(random()-.5)*.18;
+      const length=radius*(.8+random()*.2),width=Math.min(23,length*.13);
+      const start=Math.min(p.width*.18,45);
+      const shape=[[start,0],[length*.51,-width],[length*.43,-width*.08],[length,-width*.55],[length*.59,width],[length*.65,width*.1],[length*.23,width*.7]];
+      art+=`<path class="bolt-glow" d="${polygon(shape,angle)}"/><path class="bolt-core" d="${polygon(shape.map(([x,y])=>[x*.94,y*.33]),angle)}"/>`;
+      if(arm%2===0){
+        const d=length*.7;
+        art+=`<path class="bolt-fragment" d="${polygon([[d,-width*2],[d+18,-width*2.6],[d+7,-width*1.4]],angle+.16)}"/>`;
+      }
+    }
+    bolt.innerHTML=`<svg viewBox="0 0 ${size} ${size}" aria-hidden="true">${art}</svg>`;
     animate(bolt,[
       {transform:'translate(-50%,-50%) scale(.38)',opacity:0},
       {transform:'translate(-50%,-50%) scale(.96)',opacity:1,offset:.1},
       {transform:'translate(-50%,-50%) scale(1.03)',opacity:.9,offset:.34},
       {transform:'translate(-50%,-50%) scale(1.09)',opacity:0}
-    ],{duration:360,easing:'ease-out'},true);
+    ],{duration:430,easing:'ease-out'},true);
   }
   function burst(el, {count=10, reach=58, color, ring=false} = {}) {
     if (reduced() || document.hidden) return;
@@ -3225,21 +3249,21 @@ syncMenuFocus();
     if (kind === 'win') {
       const big = natural || mult>=3;
       kick(big?8:5);
-      lightning($('pHand'),big?235:145,big?8:5);
+      lightning($('pHand'),big?310:230,big?8:6);
       impact($('pHand'));
       burst($('pHand'), {count:big?28:18,reach:big?205:135,ring:true});
       if(big)later(()=>{
         lightning($('center'),190,6);
-        burst($('center'),{count:12,reach:170,color:'#edc989',ring:true});
+        burst($('center'),{count:12,reach:170,color:'#f4ff28',ring:true});
       },125);
       collectCoins(natural?13:mult>=3?11:7);
       pulse($('scorebox'), true);
     } else if (kind === 'lose') {
       kick(4);
-      burst($('pVal'),{count:10,reach:68,color:'#a54960'});
+      burst($('pVal'),{count:10,reach:68,color:'#ff9238'});
       pulse($('pVal'));
     } else {
-      burst($('pVal'), {count:6,reach:36,color:'#a2d0ff'});
+      burst($('pVal'), {count:6,reach:36,color:'#fffefa'});
     }
   }
   function cardNode(card) {
@@ -3253,13 +3277,14 @@ syncMenuFocus();
     burst(el, {count:card.ed?11:5,reach:card.ed?58:33,color:suitInk[card.s]});
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
     haptic();
-    if(card.ed)lightning(el,80,3);
+    if(!G.dHand.includes(card)){lightning(el,card.ed?145:100,card.ed?5:3);kick(2);}
+    else if(card.ed)lightning(el,80,3);
   }
   function onScoreCard(el) {
     kick(3);
     lightning(el,115,5);
     impact(el);
-    burst(el, {count:12,reach:110,color:'#70c4ff',ring:true});
+    burst(el, {count:12,reach:110,color:'#f4ff28',ring:true});
   }
   function impact(el){
     if(reduced()||document.hidden)return;
@@ -3301,7 +3326,7 @@ syncMenuFocus();
   }
   function onRelic(el) {
     kick(3);lightning(el,90,4);
-    burst(el, {count:14,reach:90,color:'#edc989',ring:true});
+    burst(el, {count:14,reach:90,color:'#ff9238',ring:true});
     pulse($('multVal'),true);
   }
   function onPressure() {

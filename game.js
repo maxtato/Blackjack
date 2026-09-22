@@ -746,6 +746,7 @@ function renderTop(){
   applyFelt();   // tapis évolutif : design + couleur selon la table
   const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=heartSVG(15)+'<span class="lvn">×'+n+'</span>';lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
   $('tableName').textContent=tableName(tb);                         // nom seul, en gros
+  const tableNumber=$('tableNumber');if(tableNumber)tableNumber.textContent=String(G.endless?(G.palier||0)+1:G.tableIdx+1).padStart(2,'0');
   const tm=$('tableMeta');if(tm)tm.textContent=G.endless
     ?t('top.metaInf',(G.palier||0)+1,abbr(tb.min),abbr(tb.max))
     :t('top.metaCircuit',tb.zone,zoneName(tb.zone),G.tableIdx+1,RUN_LEN);
@@ -779,7 +780,7 @@ function renderObjective(){
     const p=G.palier||0,target=palierTarget(p);
     const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,target)*100));
     const f=$('objFill');if(f)f.style.width=pct+'%';
-    const g=$('objGoal');if(g)g.textContent=cash(target);
+    const g=$('objGoal');if(g)g.textContent=abbr(G.bank)+' / '+abbr(target);
     const bar=$('objBar');if(bar)bar.classList.remove('full');
     if(gv)gv.classList.remove('warn');
     return;
@@ -788,7 +789,7 @@ function renderObjective(){
   // barre = jetons ABSOLUS (depuis 0) vers l'objectif, exactement comme les paliers en Sans Fin (bank/target)
   const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,goal)*100));
   const f=$('objFill');if(f)f.style.width=pct+'%';
-  const g=$('objGoal');if(g)g.textContent=cash(goal);       // objectif au bout de la barre
+  const g=$('objGoal');if(g)g.textContent=abbr(G.bank)+' / '+abbr(goal);
   if(gv)gv.classList.toggle('warn',!!(G.table&&G.bank<G.table.min*3));
   const bar=$('objBar');if(bar)bar.classList.toggle('full',G.bank>=goal);
 }
@@ -991,12 +992,17 @@ function syncPeek(){
 }
 function renderActions(){
   syncPeek();
+  $('app').dataset.phase=G.phase;
+  $('betRow').hidden=G.phase!=='bet';
   const a=$('actions');a.innerHTML='';
   const main=document.createElement('div');main.className='actMain';
   const wide=document.createElement('div');wide.className='actWide';
   const add=(parent,label,cls,fn,sub,dis)=>{
     const b=document.createElement('button');b.className='btn '+cls;b.setAttribute('aria-label',label);
-    b.innerHTML=`<span class="blbl">${label}</span>`+(sub?`<small>${sub}</small>`:'');
+    const kind=fn===deal?'deal':fn===playerStand?'stand':fn===playerDouble?'double':fn===playerSplit?'split':fn===forcerChance?'force':'hit';
+    b.dataset.gameAction=kind;
+    b.innerHTML=ColdDeckArt.actionIcon(kind)+`<span class="action-copy"><span class="blbl">${label}</span>`+(sub?`<small>${sub}</small>`:'')+'</span>';
+    if(sub){const description=document.createElement('span');description.innerHTML=sub;b.title=description.textContent;b.setAttribute('aria-description',description.textContent);}
     if(dis)b.disabled=true;else b.onclick=fn;parent.appendChild(b);return b;
   };
   if(G.phase==='bet'){
@@ -1039,7 +1045,7 @@ function updateBustReadout(){
   if(hasRelic('compteur')&&G.phase==='play'){
     const bc=bustChance(G.pHand);
     $('tip').textContent=t('ui.bustRisk',bc);
-    $('tip').style.color=bc>50?'#8b3440':'var(--gold)';
+    $('tip').style.color=bc>50?'var(--orange)':'var(--gold)';
   }
 }
 

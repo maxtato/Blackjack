@@ -1,0 +1,151 @@
+/* Selected art direction: electric blue, white stock and yellow impacts. */
+:root{
+  color-scheme:dark;
+  --bg0:#1238f5;--bg1:#1646ff;--bg2:#0824c7;
+  --ink:#101c49;--ink2:#18347e;--paper:#fffef7;--cream:#fffef7;--ivory:#fffefa;
+  --muted:#c4d0ff;--mutedDk:#aabaee;--line:#ffffff24;
+  --panel:#2549ed;--panelHi:#385df6;--panelDk:#0a24b4;--panelDk2:#1835cd;
+  --accent:#f4ff28;--yellow:#f4ff28;--gold:#f4ff28;--goldDk:#d9e522;--lime:#dbff62;
+  --magenta:#ff53a0;--red:#ff6857;--redDk:#bc293b;--orange:#ff9238;
+  --teal:#baffd6;--tealDk:#174daa;--green:#afffc5;--greenDk:#145eb9;
+  --blue:#c7dcff;--blueDk:#0725c4;--grape:#d7b5ff;--purpleDk:#643bba;
+  --cardW:#fffefa;--inkCard:#11182f;--suitRed:#ff542f;
+  --base-card-w:clamp(78px,13dvh,112px);--card-w:var(--base-card-w);
+  --display:"Arial Black","Avenir Next",Arial,sans-serif;
+  --game-type:Impact,"Arial Narrow","Avenir Next Condensed",var(--display);
+}
+body{background:var(--bg0)}
+button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-color:var(--yellow)}
+#bg{background:radial-gradient(ellipse at 50% 40%,#1845ff 0%,#1238f5 60%,#0d2cdd 100%)}
+#pattern,#heat,#heat2,#bg::before,#bg::after{display:none}
+::-webkit-scrollbar-thumb{background:#8199ff}
+
+/* A compact scoreboard over the table, on phone and desktop. */
+#app{display:flex;flex-direction:column;max-width:980px;width:100%;height:100%;height:100dvh;padding:24px 32px max(20px,env(safe-area-inset-bottom));gap:10px}
+#topbar{position:relative;display:grid;grid-template-columns:145px minmax(0,1fr) 46px;grid-template-rows:auto auto auto;align-items:start;gap:10px 24px;flex:none;padding:0;border:0;border-radius:0;overflow:visible;box-shadow:none;background:none}
+.brand-block{grid-column:1;grid-row:1 / 3;align-self:center}
+.table-brand{display:flex;flex-direction:column;align-items:flex-start;gap:0;font:950 49px/.84 var(--display);letter-spacing:-3.5px;color:var(--paper)}
+.table-brand>span:first-child{display:flex;align-items:center;color:inherit;font-size:inherit}
+.logo-o{width:.78em;height:.86em;display:inline-block;margin:0 -.025em}
+.table-number{font-size:10px;font-weight:750;letter-spacing:.25em;margin:12px 0 0 4px;white-space:nowrap}.table-number b{margin-left:3px}
+.thead-right{grid-column:3;grid-row:1 / 3;display:flex;flex-direction:column;gap:8px;align-items:center}
+#pauseBtn{height:44px;width:44px;border-radius:50%;background:#ffffff13;box-shadow:none}#pauseBtn span{height:17px;width:5px;background:var(--paper);border-radius:1px}#pauseBtn:hover{background:#ffffff26}
+.lives{display:flex;align-items:center;gap:3px;flex-wrap:nowrap;max-width:none;color:#fff}.lives .suit{width:10px;height:10px}.lvn{font-size:10px}
+.tstats{grid-column:2;grid-row:1;display:grid;grid-template-columns:1.35fr 1fr 1fr .75fr;gap:12px;align-items:start;min-height:0}
+#scorebox{display:contents}.gainstat{grid-column:1;grid-row:1;order:0;border:0;padding:0;align-items:flex-start}.seg{padding:0 0 0 12px;gap:4px;border:0;border-left:1px solid #ffffff30;border-radius:0;background:none;justify-content:flex-start}.seg.chips{grid-column:2;grid-row:1}.seg.mult{grid-column:3;grid-row:1}
+#scorebox .mult,#scorebox.hot .mult{background:none;box-shadow:none}
+.gainstat .lbl,.seg .k,.tt{font:600 10px/1.2 var(--font);letter-spacing:.1em;color:#f1f4ff;text-transform:uppercase}
+#gainVal,.seg .v,.tnum{font-family:var(--game-type);font-size:clamp(29px,4vw,44px);font-weight:900;line-height:1.1;letter-spacing:-.03em;margin:4px 0 0;color:var(--paper);white-space:nowrap;font-variant-numeric:tabular-nums}
+#scorebox .chips .v{color:var(--paper)}#scorebox .mult .v{color:var(--yellow)}#gainVal.warn,.tnum.warn{color:#ffad7d}
+.turnstat{grid-column:4;grid-row:1;display:flex;flex-direction:column-reverse;align-items:flex-start;gap:0;padding:0 0 0 12px;border-left:1px solid #ffffff30;border-radius:0;background:none}.tcol{display:block;flex:none}.tt br,.ts,.tpips{display:none}
+#objWrap{grid-column:2;grid-row:2;display:grid;grid-template-columns:auto 1fr;max-width:410px;min-height:0;gap:5px 10px;margin:0;color:var(--yellow);align-items:baseline}
+.objective-label{font-size:10px;font-weight:850;letter-spacing:.1em;color:var(--yellow)}#objGoal{grid-column:2;grid-row:1;color:var(--yellow);font-size:13px;font-weight:850;text-align:left;order:0}
+#objBar{grid-column:1 / 3;grid-row:2;height:7px;flex:none;background:#ffffff13;box-shadow:inset 0 0 0 1px #ffffff25;border-radius:12px}#objFill{background:var(--yellow);border-radius:12px}#objBar.full{box-shadow:0 0 14px #f4ff2840}
+.table-context{grid-column:1 / -1;grid-row:3;position:relative;justify-self:center;max-width:100%;z-index:25}
+#tableName{display:block;font:650 10px/1.4 var(--font);color:#d1daff;letter-spacing:.07em;text-align:center;cursor:pointer;padding:3px 12px;list-style:none}
+#tableName::-webkit-details-marker{display:none}#tableName::after{content:"⌄";margin-left:7px}
+.table-context-body{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:min(540px,85vw);padding:15px 18px;background:#0927cc;border:1px solid #ffffff24;border-radius:14px;box-shadow:0 12px 30px #08154640;max-height:180px;overflow:auto}
+#tableMeta{display:block;font-size:10px;color:var(--yellow);margin:0;text-align:left}#ruleText{display:block;font-size:11px;line-height:1.6;margin-top:8px;color:#e6ecff;max-height:none;overflow:visible}#ruleText.boss{color:#ffcfaa!important}
+
+/* Cards and totals float directly on the blue field. */
+#mid{flex:1;min-height:0;gap:4px}#effects{justify-content:center;min-height:38px;gap:12px;padding:0}.inventory-label{display:none}#relicRow,#consumeRow{gap:8px}#consumeRow{margin-left:12px}#relics,#consumes{min-height:32px;gap:10px}#relics:empty{display:none}#slotc,#consumeSlots{font-size:8px;color:#b9c9ff}#consumeSlots:empty{display:none}
+.joker,.tarot,.svc{background:#0a27bf;box-shadow:none;border-radius:9px;width:39px;height:37px}.joker:hover,.tarot:hover{background:#244af5}.joker.hot{box-shadow:0 0 15px #f4ff2830}.ft{font-family:var(--game-type);font-size:16px;color:var(--orange)}
+#felt,#felt.bossfelt,#felt[data-arcade-heat="4"]{border:0;background:transparent;box-shadow:none!important;border-radius:0;overflow:hidden}
+#felt::before{display:none}#felt::after{box-shadow:none!important;background:transparent}
+#feltDeco{opacity:1;background:none;overflow:hidden}
+#feltDeco::before,#feltDeco::after{content:"";position:absolute;width:29%;height:74%;top:10%;left:3%;background:#6f90ff;opacity:.075;clip-path:polygon(0 0,65% 38%,46% 38%,100% 100%,24% 49%,45% 49%)}
+#feltDeco::after{left:auto;right:3%;transform:scaleX(-1)}
+#tableLightning{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
+#feltInner{z-index:2;padding:22px 14px 8px;gap:8px}.zone{gap:10px;flex:1;justify-content:center;padding:0}.zlbl{display:flex;flex-direction:column;gap:5px;color:#fff;font-size:10px;letter-spacing:.23em;font-weight:800}
+.zlbl .v,.player-zone .zlbl .v{font:900 34px/1 var(--game-type);color:#fff;padding:0;background:none;border:0;border-radius:0;letter-spacing:-.035em}
+.player-zone .zlbl{color:#fff}.player-zone .zlbl .v{font-size:46px;position:relative;min-width:40px}
+.player-zone .zlbl .v::before,.player-zone .zlbl .v::after{content:"";position:absolute;top:28%;width:16px;height:5px;background:var(--yellow);left:-24px;transform:rotate(22deg);clip-path:polygon(0 0,100% 25%,90% 100%,12% 75%)}
+.player-zone .zlbl .v::after{left:auto;right:-24px;transform:rotate(-22deg)}
+.hand{gap:10px;--card-w:min(var(--base-card-w),calc((100cqw - 75px)/var(--hand-count,2)))}
+.hand:empty::before,.hand:empty::after{border-color:#ffffff16;background:#ffffff03;border-radius:8px}
+.table-empty{color:#bdccff;font-size:10px}.table-divider{display:none}#center{min-height:22px;gap:5px;max-width:660px}#tip{color:#e3e9ff;font-size:11px}#comboRow{gap:5px}.cpill{background:#082ac555;color:#dce6ff;font-size:9px}.cpill.on{color:var(--ink);background:var(--yellow);box-shadow:0 2px 14px #f4ff2820}.cpill.evt{color:#e0d0ff}.cpill.ctr{color:#ffba88}
+#pBar{height:17px;width:min(215px,50%);border-radius:15px;background:#0826bf77}.pmeta{font-size:7px;line-height:17px;color:#ccd7ff}#pPct{color:#fff}#pFill{background:linear-gradient(90deg,#f4ff2820,#f4ff2880)}
+#peekBtn{background:var(--yellow);color:var(--ink);border-radius:30px;padding:10px 16px}
+.splitwrap{gap:18px;--card-w:min(78px,calc((100cqw - 80px)/var(--split-count,4)))}.splithand{border-radius:9px}.shval{background:#fff;color:var(--ink);font-family:var(--game-type)}
+.card{color:var(--inkCard);--art-wash:#1739f508;--art-accent:#f4eb18;--art-line:#1940ed;border-radius:8px;box-shadow:0 2px 3px #020c7b26,0 7px 12px #06137f30,0 18px 25px -14px #020a7290}
+.card[data-suit="♠"],.card[data-suit="♣"]{color:var(--inkCard);--art-accent:#f4eb18;--art-line:#1c40ee}
+.card[data-suit="♥"],.card[data-suit="♦"]{color:var(--suitRed);--art-accent:#f4eb18;--art-line:#ff7e42}
+.corner-r{font:850 calc(var(--card-w)*.225)/.98 var(--game-type);letter-spacing:-.04em}.card::after{box-shadow:inset 0 0 0 1px #fff9}
+.card.back{--back-bg:#092fe4;--back-ink:#fffefa;background:var(--back-bg);color:var(--back-ink);border:3px solid #fffefa;box-shadow:0 8px 16px #06137f45}
+.card.back::after{inset:4px;border-radius:5px;border:1px solid var(--back-ink);opacity:.9;box-shadow:none}
+.bpat{inset:7px;opacity:.2;background:repeating-linear-gradient(45deg,transparent 0 4px,var(--back-ink) 4px 4.6px,transparent 4.6px 8px)}
+.card.back.cb9::before{content:"";inset:25% 24%;background:var(--back-ink);clip-path:polygon(50% 0,58% 37%,77% 23%,63% 43%,100% 50%,63% 57%,77% 77%,58% 63%,50% 100%,42% 63%,23% 77%,37% 57%,0 50%,37% 43%,23% 23%,42% 37%);filter:drop-shadow(0 0 7px #fff6)}
+
+/* The three main controls stay in the thumb area. Special actions still work. */
+#bottombar{grid-column:auto;flex:none;min-height:0;display:flex;flex-direction:column;gap:12px;padding:4px 0 0;background:none;box-shadow:none;border:0;border-radius:0}
+#betRow{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:12px}#betRow>.lbl{color:#dce5ff;font-size:9px}
+#betRow[hidden]{display:none}
+.chip{width:38px;height:38px;background:#ffffff15;color:#fff;border:0;box-shadow:none}.chip::after{border-color:#ffffff29}.chip.on{background:var(--yellow);color:var(--ink);box-shadow:0 5px 12px #030c8526}.chip.on::after{border-color:#1f356720}
+#actions{display:flex;width:100%;flex:1;gap:12px;align-items:stretch}.actMain,.actWide,.actMain.betmain{display:contents}
+#actions .btn{flex:1;min-width:0;min-height:70px;flex-direction:row;gap:10px;border-radius:100px;font:850 clamp(17px,2.4vw,25px)/1 var(--game-type);padding:13px 20px;background:#fffefa;color:#1231cf;border:0;box-shadow:0 7px 12px #071ea314}
+#actions .btn[data-game-action="stand"],#actions .btn[data-game-action="deal"]{background:var(--yellow);color:var(--ink)}
+#actions .btn[data-game-action="force"]{background:#ffcf8a;color:var(--ink)}#actions .btn.b-red{background:#ff9d6b;color:var(--ink)}
+#actions .btn:disabled{opacity:.32;filter:none}#actions .btn:disabled:not([data-game-action="deal"]){box-shadow:none}
+#actions .btn:not(:disabled):hover{filter:brightness(1.05);transform:translateY(-2px)}#actions .btn:not(:disabled):active{transform:translateY(2px) scale(.96)}
+.action-glyph{width:30px;height:30px;flex:none}.action-copy{display:flex;flex-direction:column;align-items:center;gap:4px}.blbl{white-space:nowrap}#actions .btn small{font:500 9px/1.3 var(--font);color:inherit;opacity:.7;max-width:100%}#app:not([data-phase="bet"]) #actions .btn small{display:none}
+#actions:has(.actWide .btn:nth-child(2)) .btn{font-size:19px;padding:12px}.btn{background:#e9eeff;color:var(--ink);box-shadow:none}.b-gold{background:var(--yellow);color:var(--ink)}.b-blue{background:#e4eaff;color:#153acf}.b-red{background:#ffd1c2;color:#802839}.b-teal{background:#c7fadd;color:#174739}.b-purple{background:#e7d6ff;color:#573786}
+
+/* Full blue menus, and light reading surfaces for rules and settings. */
+.menu-page{background:var(--bg0)}.menu-page::before{background:radial-gradient(ellipse at 76% 36%,#3b58ff7a,transparent 55%)}
+.menu-page .ovpanel{background:transparent}.wordmark{color:#fff}.brand-dot{color:var(--yellow)}.menu-page .quiet-btn{color:#eef2ff}.menu-page .quiet-btn:hover{color:#fff;background:#ffffff14}
+.overlay .menuTitle{color:#fff}.menuTitle>.title-accent{color:#fff}.overlay .hero-copy{color:#d9e3ff}.hero-tags>span{background:#ffffff13;color:#fff}.hero-tags>span:last-child{background:var(--yellow);color:var(--ink)}
+.hero-orbit{background:radial-gradient(ellipse,#6484ff50,transparent 70%)}.orbit-two{display:none}.hero-sticker,.art-caption,.backroom-sketch{display:none}
+.hero-art::before,.hero-art::after{content:"";position:absolute;left:0;top:22%;width:39%;height:61%;background:var(--yellow);clip-path:polygon(0 0,76% 38%,56% 38%,100% 100%,12% 42%,33% 42%);transform:rotate(-17deg);z-index:-1;opacity:.95}
+.hero-art::after{left:auto;right:-2%;top:18%;transform:scaleX(-1) rotate(-17deg);background:#fff}
+.menu-hand .card{box-shadow:0 4px 6px #05197b30,0 28px 35px -15px #010f8b90}.hero-chip{background:var(--yellow);color:var(--ink);box-shadow:0 6px 15px #04187e30}.hero-chip.chip-two{background:#ff9238;color:var(--ink)}
+.mode-circuit{background:var(--yellow);color:var(--ink);box-shadow:none}.mode-free{background:#fff;color:#1231cf}.mode-free:hover{background:#fffefa}.mode-free .mode-icon{color:#1231cf}.mode-circuit .mode-arrow{background:#1223a310;color:var(--ink)}
+.planqueMode{background:#ffffff15;color:var(--yellow)}.planqueMode.nuit{color:var(--yellow)}.ready-panel,.prep-panel{background:#0728c655;border:1px solid #ffffff14}.ready-suit::before{background:#f4ff2810}.ready-suit{color:var(--yellow)}.prep-link{background:#ffffff0d}.prep-link:hover{background:#ffffff18}.bpArrow,.prBtn{background:#ffffff17;color:#fff}.bpArrow:hover{background:#ffffff26}
+.overlay:not(.menu-page){background:#040e787a;backdrop-filter:blur(10px)}
+.overlay:not(.menu-page) .ovpanel,#adOverlay{color-scheme:light;--paper:#152452;--muted:#5c6786;--accent:#173bf0;--blue:#234ed1;--teal:#206849;--line:#1b3a8518;--red:#c63c48}
+.overlay:not(.menu-page) .ovpanel{background:#f7f8ff;color:var(--paper);box-shadow:0 24px 80px #02096350}
+.shopItem,.runstats>div,.rstat{background:#e9edfb}.prep-panel .recBox{color:#d9e2ff}.shopTok,.inspCard{background:#092ccc}.setOpts .btn.on{background:#163bef;color:#fff}.adFrame{background:#f7f8ff;color:#152452}.adBar{background:#e9edfb}.quiet-btn:hover{background:#153cff0a}
+
+/* Bolts are flat graphic wedges, behind the cards, with a brief luminous edge. */
+.arcade-lightning{filter:drop-shadow(0 0 4px #efff6240)}
+.arcade-lightning .bolt-glow{fill:#f4ff28;stroke:none;opacity:1}.arcade-lightning .bolt-core{fill:#fffefa;stroke:none;opacity:1}.arcade-lightning .bolt-fragment{fill:#ff963c;stroke:none}
+.arcade-spark{border-radius:0;clip-path:polygon(0 0,100% 35%,55% 100%);width:8px;height:14px;box-shadow:none}.arcade-spark.star{clip-path:none}
+.arcade-ring{border-color:#f4ff28;box-shadow:0 0 12px #f4ff2830}.impact-ray{height:4px;background:linear-gradient(90deg,#f4ff28,transparent);box-shadow:none}.impact-wash{background:radial-gradient(ellipse,#ffffff45,transparent 65%);mix-blend-mode:screen}
+.arcade-coin,.coin{background:var(--yellow);border-color:#fff;box-shadow:0 0 8px #f4ff2850}
+.combo-impact,.sctag,#multPop .m,#multPop .t{-webkit-text-stroke-color:#0b2ace;text-shadow:0 4px 0 #0b2ace;color:#fff}.combo-impact{font-family:var(--game-type);letter-spacing:0}#multPop .m{font-family:var(--game-type);letter-spacing:0}#multPop .t,.sctag b{color:var(--yellow)}
+.tp-evt{background:#0826ce;color:#fff}.tp-evt small{color:#d8e1ff}#recPop{color:var(--ink)}
+
+@media (max-width:720px){
+  :root{--base-card-w:clamp(64px,10.5dvh,82px)}
+  #app{padding:15px 14px max(12px,env(safe-area-inset-bottom));gap:6px}
+  #topbar{grid-template-columns:82px minmax(0,1fr) 29px;gap:8px 9px;padding:0}
+  .table-brand{font-size:31px;letter-spacing:-2px}.table-number{font-size:7px;letter-spacing:.19em;margin:8px 0 0 2px}
+  .tstats{grid-template-columns:1.35fr 1fr 1fr .65fr;gap:6px;min-height:0}.seg,.turnstat{padding:0 0 0 6px}.gainstat{padding:0;align-items:flex-start}.gainstat .lbl,.seg .k,.tt{font-size:7px;letter-spacing:.04em}.seg .v,#gainVal,.tnum{font-size:25px;letter-spacing:-.04em;margin-top:5px}.seg .v{margin-top:1px}.tt br{display:none}
+  .thead-right{gap:9px;flex-direction:column}#pauseBtn{width:29px;height:30px}#pauseBtn span{height:12px;width:3px}.lives{gap:2px;max-width:none}.lives .suit{width:8px;height:8px}.lvn{font-size:8px}
+  #objWrap{display:grid;gap:4px 6px;margin:0;min-height:0}.objective-label{font-size:7px;letter-spacing:.035em}#objGoal{font-size:9px;order:0}#objBar{height:5px}
+  #tableName{font-size:8px;padding:3px 10px}#ruleText{font-size:10px;max-height:none}#tableMeta{font-size:9px;text-align:left;letter-spacing:0}
+  #effects{min-height:30px;gap:9px}#relics,#consumes{gap:7px;min-height:30px}.joker,.tarot{width:32px;height:31px}.ft{font-size:13px}#slotc,#consumeSlots{font-size:7px}#consumeRow{margin-left:5px}
+  #feltInner{padding:18px 4px 4px;gap:5px}.zone{gap:7px}.zlbl{font-size:8px;letter-spacing:.19em;gap:4px}.zlbl .v{font-size:28px}.player-zone .zlbl .v{font-size:38px}.hand{gap:8px;--card-w:min(var(--base-card-w),calc((100cqw - 45px)/var(--hand-count,2)))}
+  #center{min-height:20px;gap:4px;width:98%}#tip{font-size:9px}.cpill{font-size:7px;padding:3px 5px}.table-empty{font-size:9px}.splitwrap{gap:8px;--card-w:min(57px,calc((100cqw - 65px)/var(--split-count,4)))}
+  #bottombar{padding:3px 0 0;gap:10px;min-height:0}#betRow{gap:10px}.chip{width:33px;height:33px;font-size:10px}#chips{gap:7px}
+  #actions{gap:8px}#actions .btn{min-height:56px;gap:6px;padding:11px 9px;font-size:16px;border-radius:50px}#actions .btn small{font-size:8px}.action-glyph{width:23px;height:23px}.blbl{white-space:nowrap}
+  #actions:has(.actWide .btn:nth-child(2)) .btn{padding:10px 5px;font-size:12px}#actions:has(.actWide .btn:nth-child(2)) .action-glyph{width:16px;height:18px}
+  .hero-art::before{left:-8%;width:48%}.hero-art::after{right:-6%;width:44%}
+  #multPop .m{-webkit-text-stroke-color:#0b2ace;text-shadow:0 4px 0 #0b2ace}#multPop .t{-webkit-text-stroke-color:#0b2ace}
+}
+@media (max-width:365px){
+  #app{padding-left:10px;padding-right:10px}#topbar{grid-template-columns:70px minmax(0,1fr) 27px;gap:7px}.table-brand{font-size:27px}.table-number{font-size:6px}.tstats{gap:5px}.seg,.turnstat{padding-left:4px}.gainstat .lbl,.seg .k,.tt{font-size:6.5px}.seg .v,#gainVal,.tnum{font-size:22px}
+  #actions{gap:6px}#actions .btn{font-size:13px;padding:10px 6px;gap:4px}.action-glyph{width:20px;height:20px}#actions:has(.actWide .btn:nth-child(2)) .btn{font-size:10px}
+}
+@media (max-height:700px){
+  #app{padding-top:9px;padding-bottom:max(9px,env(safe-area-inset-bottom));gap:4px}#topbar{gap:6px 10px}#effects{min-height:27px}#relics,#consumes{min-height:25px}.joker,.tarot{height:26px}#feltInner{padding-top:17px;gap:3px}.zone{gap:4px}#center{min-height:18px}.zlbl{gap:3px}.zlbl .v{font-size:25px}.player-zone .zlbl .v{font-size:32px}#actions .btn{min-height:48px}#bottombar{gap:7px}.chip{width:29px;height:29px}
+}
+@media (max-height:600px) and (orientation:portrait){
+  :root{--base-card-w:56px}#topbar{gap:4px 8px}.table-context{display:none}.table-empty{display:none}#effects{min-height:24px}.joker,.tarot{width:25px;height:25px}#pBar{height:14px}.pmeta{line-height:14px;font-size:6px}.zlbl .v{font-size:22px}.player-zone .zlbl .v{font-size:28px}#actions .btn{min-height:44px}#center{min-height:15px}#tip{font-size:8px}.cpill{font-size:6px;padding:2px 4px}
+}
+@media (max-height:600px) and (orientation:landscape){
+  :root{--base-card-w:clamp(59px,17dvh,88px)}#app{max-width:1000px;padding:10px 20px;gap:4px}#topbar{grid-template-columns:105px minmax(0,1fr) 36px;gap:5px 20px}.table-brand{font-size:35px}.table-number{font-size:7px;margin-top:6px}.tstats{gap:10px}.seg .v,#gainVal,.tnum{font-size:29px}#objWrap{max-width:350px}.table-context{display:none}#pauseBtn{width:32px;height:32px}#effects{min-height:25px}.joker,.tarot{height:25px;width:30px}
+  #feltInner{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr) auto;padding:17px 0 0;gap:2px 16px}.dealer-zone{grid-column:1;grid-row:1}.player-zone{grid-column:2;grid-row:1}#center{grid-column:1 / 3;grid-row:2;width:100%;min-height:16px}.zlbl .v,.player-zone .zlbl .v{font-size:27px}.zone{gap:5px}.table-empty{display:none}.zlbl{font-size:8px}
+  #bottombar{flex-direction:row;gap:18px;padding:3px 0 0}#betRow{flex-direction:row}#actions .btn{min-height:45px;font-size:17px;padding:9px 14px}.action-glyph{width:22px;height:22px}#pBar{width:150px}
+}
+@media (prefers-reduced-motion:reduce){#tableLightning{display:none}.hero-art::before,.hero-art::after{animation:none}}
+:root[data-motion=gentle] #tableLightning{display:none}

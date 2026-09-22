@@ -6,14 +6,15 @@
   layer.id = 'arcadeFX';
   layer.setAttribute('aria-hidden', 'true');
   document.body.appendChild(layer);
+  const lightningLayer = $('tableLightning');
   const animations = new Set();
   const timers = new Set();
   let seed = (performance.now() * 1000) >>> 0;
   let lastLevel = barakaLevel();
   let popupTimer;
   let cameraAnimation, lastHaptic = -Infinity;
-  const palette = ['#edc989', '#b65268', '#8ba875', '#62bfff', '#fff4dd'];
-  const suitInk = {'♠':'#62bfff', '♥':'#be586e', '♦':'#d7ac59', '♣':'#78a87e'};
+  const palette = ['#f4ff28', '#fffefa', '#ff9238', '#f4ff28', '#fffefa'];
+  const suitInk = {'♠':'#fffefa', '♥':'#ff9238', '♦':'#ff9238', '♣':'#f4ff28'};
   let preference;
   try{preference=localStorage.getItem('colddeck-motion');}catch(e){}
   const reduced = () => preference==='gentle'||motion.matches;
@@ -34,6 +35,7 @@
     for (const animation of [...animations]) animation.cancel();
     animations.clear();
     layer.replaceChildren();
+    lightningLayer?.replaceChildren();
     cameraAnimation = null;
     shakeAmt = 0;
     $('shaker').style.transform = '';
@@ -55,13 +57,13 @@
     const r = el.getBoundingClientRect();
     return {x:r.left + r.width / 2, y:r.top + r.height / 2, width:r.width, height:r.height};
   }
-  function piece(cls, x, y, color) {
-    if (layer.childElementCount >= 84) return null;
+  function piece(cls, x, y, color, target=layer) {
+    if (layer.childElementCount + (lightningLayer?.childElementCount||0) >= 84) return null;
     const el = document.createElement('i');
     el.className = cls;
     el.style.left = x + 'px'; el.style.top = y + 'px';
     if (color) el.style.setProperty('--spark', color);
-    layer.appendChild(el);
+    target.appendChild(el);
     return el;
   }
   function haptic(strong=false) {
@@ -88,29 +90,44 @@
   }
   function lightning(el, reach=110, arms=5) {
     if (reduced() || document.hidden) return;
-    const p=rect(el);if(!p)return;
-    const bolt=piece('arcade-lightning',p.x,p.y);if(!bolt)return;
-    const radius=Math.min(reach,innerWidth*.48),size=radius*2+40,center=size/2;
-    bolt.style.width=bolt.style.height=size+'px';
-    let path='';
-    for(let arm=0;arm<arms;arm++){
-      const angle=arm/arms*Math.PI*2+random()*.5,length=radius*(.7+random()*.3);
-      const points=[[center,center]];
-      for(let step=1;step<=6;step++){
-        const d=length*step/6,jitter=(random()-.5)*24;
-        points.push([center+Math.cos(angle)*d-Math.sin(angle)*jitter,center+Math.sin(angle)*d+Math.cos(angle)*jitter]);
-      }
-      path+='M'+points.map(([x,y])=>x.toFixed(1)+' '+y.toFixed(1)).join('L');
-      const [bx,by]=points[3],branch=angle+(arm%2?-.85:.85);
-      path+=`M${bx.toFixed(1)} ${by.toFixed(1)}l${(Math.cos(branch)*22).toFixed(1)} ${(Math.sin(branch)*22).toFixed(1)} ${(Math.cos(branch+.6)*16).toFixed(1)} ${(Math.sin(branch+.6)*16).toFixed(1)}`;
+    let p=rect(el);if(!p)return;
+    // The hand element spans the table. Anchor the impact to the actual cards.
+    const cards=[...el.querySelectorAll('.card')].map(card=>card.getBoundingClientRect()).filter(r=>r.width>0);
+    if(cards.length){
+      const left=Math.min(...cards.map(r=>r.left)),right=Math.max(...cards.map(r=>r.right));
+      const top=Math.min(...cards.map(r=>r.top)),bottom=Math.max(...cards.map(r=>r.bottom));
+      p={x:(left+right)/2,y:(top+bottom)/2,width:right-left,height:bottom-top};
     }
-    bolt.innerHTML=`<svg viewBox="0 0 ${size} ${size}" fill="none" aria-hidden="true"><path class="bolt-glow" d="${path}"/><path class="bolt-core" d="${path}"/></svg>`;
+    const inside=lightningLayer&&$('felt').contains(el);
+    const origin=inside?lightningLayer.getBoundingClientRect():{left:0,top:0};
+    const bolt=piece('arcade-lightning',p.x-origin.left,p.y-origin.top,null,inside?lightningLayer:layer);if(!bolt)return;
+    const radius=Math.min(reach,innerWidth*.56),size=radius*2+70,center=size/2;
+    bolt.style.width=bolt.style.height=size+'px';
+    let art='';
+    const polygon=(points,angle)=>'M'+points.map(([x,y])=>{
+      const px=center+Math.cos(angle)*x-Math.sin(angle)*y;
+      const py=center+Math.sin(angle)*x+Math.cos(angle)*y;
+      return px.toFixed(1)+' '+py.toFixed(1);
+    }).join('L')+'Z';
+    for(let arm=0;arm<arms;arm++){
+      const side=arm%2?Math.PI:0,fan=Math.floor(arm/2)/Math.max(1,Math.ceil(arms/2)-1);
+      const angle=side+(fan-.5)*1.8+(random()-.5)*.18;
+      const length=radius*(.8+random()*.2),width=Math.min(23,length*.13);
+      const start=Math.min(p.width*.18,45);
+      const shape=[[start,0],[length*.51,-width],[length*.43,-width*.08],[length,-width*.55],[length*.59,width],[length*.65,width*.1],[length*.23,width*.7]];
+      art+=`<path class="bolt-glow" d="${polygon(shape,angle)}"/><path class="bolt-core" d="${polygon(shape.map(([x,y])=>[x*.94,y*.33]),angle)}"/>`;
+      if(arm%2===0){
+        const d=length*.7;
+        art+=`<path class="bolt-fragment" d="${polygon([[d,-width*2],[d+18,-width*2.6],[d+7,-width*1.4]],angle+.16)}"/>`;
+      }
+    }
+    bolt.innerHTML=`<svg viewBox="0 0 ${size} ${size}" aria-hidden="true">${art}</svg>`;
     animate(bolt,[
       {transform:'translate(-50%,-50%) scale(.38)',opacity:0},
       {transform:'translate(-50%,-50%) scale(.96)',opacity:1,offset:.1},
       {transform:'translate(-50%,-50%) scale(1.03)',opacity:.9,offset:.34},
       {transform:'translate(-50%,-50%) scale(1.09)',opacity:0}
-    ],{duration:360,easing:'ease-out'},true);
+    ],{duration:430,easing:'ease-out'},true);
   }
   function burst(el, {count=10, reach=58, color, ring=false} = {}) {
     if (reduced() || document.hidden) return;
@@ -169,21 +186,21 @@
     if (kind === 'win') {
       const big = natural || mult>=3;
       kick(big?8:5);
-      lightning($('pHand'),big?235:145,big?8:5);
+      lightning($('pHand'),big?310:230,big?8:6);
       impact($('pHand'));
       burst($('pHand'), {count:big?28:18,reach:big?205:135,ring:true});
       if(big)later(()=>{
         lightning($('center'),190,6);
-        burst($('center'),{count:12,reach:170,color:'#edc989',ring:true});
+        burst($('center'),{count:12,reach:170,color:'#f4ff28',ring:true});
       },125);
       collectCoins(natural?13:mult>=3?11:7);
       pulse($('scorebox'), true);
     } else if (kind === 'lose') {
       kick(4);
-      burst($('pVal'),{count:10,reach:68,color:'#a54960'});
+      burst($('pVal'),{count:10,reach:68,color:'#ff9238'});
       pulse($('pVal'));
     } else {
-      burst($('pVal'), {count:6,reach:36,color:'#a2d0ff'});
+      burst($('pVal'), {count:6,reach:36,color:'#fffefa'});
     }
   }
   function cardNode(card) {
@@ -197,13 +214,14 @@
     burst(el, {count:card.ed?11:5,reach:card.ed?58:33,color:suitInk[card.s]});
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
     haptic();
-    if(card.ed)lightning(el,80,3);
+    if(!G.dHand.includes(card)){lightning(el,card.ed?145:100,card.ed?5:3);kick(2);}
+    else if(card.ed)lightning(el,80,3);
   }
   function onScoreCard(el) {
     kick(3);
     lightning(el,115,5);
     impact(el);
-    burst(el, {count:12,reach:110,color:'#70c4ff',ring:true});
+    burst(el, {count:12,reach:110,color:'#f4ff28',ring:true});
   }
   function impact(el){
     if(reduced()||document.hidden)return;
@@ -245,7 +263,7 @@
   }
   function onRelic(el) {
     kick(3);lightning(el,90,4);
-    burst(el, {count:14,reach:90,color:'#edc989',ring:true});
+    burst(el, {count:14,reach:90,color:'#ff9238',ring:true});
     pulse($('multVal'),true);
   }
   function onPressure() {

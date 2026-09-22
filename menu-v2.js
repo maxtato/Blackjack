@@ -1,6 +1,7 @@
 /* Presentation only: the blackjack engine and progression are unchanged. */
 Object.assign(STR.fr,{
- 'modern.club':'CLUB PRIVÉ · BLACKJACK ROGUELITE','modern.private':'CLUB PRIVÉ','modern.afterhours':'APRÈS MINUIT',
+ 'ui.gain':'BANQUE','ui.turnsLeft':'MAINS','act.double':'DOUBLE',
+ 'modern.club':'BLACKJACK ROGUELITE','modern.private':'COLD DECK','modern.afterhours':'HAUTE TENSION',
  'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','modern.goal':'OBJECTIF','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
  'nav.rules':'RÈGLES','nav.settings':'RÉGLAGES','nav.back':'← MODES DE JEU','nav.reset':'Réinitialiser ce mode',
  'menu.choose':'CHOISIS TA TABLE','menu.freeTag':'À TON RYTHME','menu.circuitTag':"L'AVENTURE",
@@ -20,7 +21,8 @@ Object.assign(STR.fr,{
  'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>'
 });
 Object.assign(STR.en,{
- 'modern.club':'PRIVATE CLUB · BLACKJACK ROGUELITE','modern.private':'PRIVATE CLUB','modern.afterhours':'AFTER HOURS',
+ 'ui.gain':'BANK','ui.turnsLeft':'HANDS',
+ 'modern.club':'BLACKJACK ROGUELITE','modern.private':'COLD DECK','modern.afterhours':'HIGH VOLTAGE',
  'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'TARGET','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'THE HOUSE IS WATCHING.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
  'nav.rules':'HOW TO PLAY','nav.settings':'SETTINGS','nav.back':'← GAME MODES','nav.reset':'Reset this mode',
  'menu.choose':'CHOOSE YOUR TABLE','menu.freeTag':'AT YOUR OWN PACE','menu.circuitTag':'THE ADVENTURE',
