@@ -18,6 +18,17 @@
   let preference;
   try{preference=localStorage.getItem('colddeck-motion');}catch(e){}
   const reduced = () => preference==='gentle'||motion.matches;
+  // Original motion moves by one physical pixel at every display density.
+  let densityQuery;
+  function syncPixelDensity(){
+    const ratio=window.devicePixelRatio||1;
+    document.documentElement.style.setProperty('--device-pixel',`${1/ratio}px`);
+    densityQuery?.removeEventListener('change',syncPixelDensity);
+    densityQuery=matchMedia(`(resolution: ${ratio}dppx)`);
+    densityQuery.addEventListener('change',syncPixelDensity);
+  }
+  window.addEventListener('resize',syncPixelDensity);
+  syncPixelDensity();
   function syncMotion(){document.documentElement.dataset.motion=reduced()?'gentle':'punchy';}
   syncMotion();
   const random = () => {
@@ -211,12 +222,6 @@
   }
   function onCard(card) {
     const el = cardNode(card); if (!el) return;
-    animate(el,[
-      {translate:'0 0',rotate:'0deg',scale:'1'},
-      {translate:'0 -8px',rotate:'-2deg',scale:'1.045',offset:.28},
-      {translate:'0 2px',rotate:'1deg',scale:'.99',offset:.7},
-      {translate:'0 0',rotate:'0deg',scale:'1'}
-    ],{duration:280});
     burst(el, {count:card.ed?11:5,reach:card.ed?58:33,color:suitInk[card.s]});
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
     haptic();
@@ -355,7 +360,6 @@
       if(el.querySelector('.live-letter'))return;
       const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
       const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
-      let index=0;
       for(const node of nodes){
         if(!node.textContent.trim()||node.parentElement.closest('svg,small'))continue;
         const fragment=document.createDocumentFragment();
@@ -366,8 +370,10 @@
           const ink=document.createElement('span');ink.className='live-ink';ink.setAttribute('aria-hidden','true');
           for(const character of word){
             const letter=document.createElement('i');letter.className='live-letter';letter.textContent=character;
-            letter.style.setProperty('--letter-delay',(-index*.105-.3)+'s');
-            ink.append(letter);index++;
+            const duration=.95+random()*.3;
+            letter.style.setProperty('--letter-duration',duration.toFixed(3)+'s');
+            letter.style.setProperty('--letter-delay',(-random()*duration).toFixed(3)+'s');
+            ink.append(letter);
           }
           group.append(ink);fragment.append(group);
         }

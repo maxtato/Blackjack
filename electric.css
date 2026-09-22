@@ -267,7 +267,7 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 #actions .btn{border-radius:30px;min-height:78px;padding:14px 18px;gap:12px;font-size:clamp(19px,2.6vw,29px);line-height:1.05;box-shadow:inset 0 2px 0 #ffffff35,inset 0 -4px 0 #00000015,0 10px 22px #00000026;overflow-wrap:anywhere}
 #actions .action-copy{min-width:0;max-width:100%;gap:4px}
 #actions .blbl{max-width:100%;white-space:normal;text-align:center;text-wrap:balance}
-#actions .btn[data-game-action="force"] .blbl{max-width:8ch;text-align:left}
+#actions .btn[data-game-action="force"] .blbl{max-width:8ch;text-align:center}
 #actions .action-glyph{width:34px;height:34px;flex-shrink:0}
 #actions .btn:disabled{box-shadow:inset 0 1px 0 #ffffff09;filter:none}
 #actions:has(.actWide .btn:nth-child(2)) .btn{font-size:19px;padding:12px 10px;gap:7px}
@@ -329,27 +329,15 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
   #actions .btn{min-height:44px;font-size:17px;padding:8px 12px;border-radius:18px}#actions .action-glyph{width:22px;height:24px}
 }
 
-/* Faster, staggered motion: transforms compose with the hand's fan layout. */
-.hand .cardslot{animation-name:active-card-drift}
-.dealer-zone .cardslot{--float-height:-5px;--float-angle:1.1deg}
-.player-zone .cardslot{--float-height:-8px;--float-angle:1.9deg}
-.splithand .cardslot{--float-height:-5px;--float-angle:1deg}
-@keyframes active-card-drift{
-  0%,100%{translate:-1px 2px;rotate:calc(-1 * var(--float-angle,1.5deg))}
-  45%{translate:1.5px var(--float-height,-7px);rotate:var(--float-angle,1.5deg)}
-  75%{translate:0 -2px;rotate:0deg}
+/* Original cardLife / letterShake timing and one-physical-pixel steps. */
+.hand .cardslot{animation:original-twitch 3.6s steps(1,end) var(--card-delay,0s) infinite;translate:none;rotate:none;top:0}
+.live-letter{position:relative;top:0;translate:none;rotate:none;animation:original-twitch var(--letter-duration,1.1s) steps(1,end) var(--letter-delay,0s) infinite}
+@keyframes original-twitch{
+  0%,33%,66%,100%{top:0}
+  16%,50%,83%{top:calc(-1 * var(--device-pixel,1px))}
 }
-.live-letter{animation-duration:1.45s;animation-name:active-letter-drift}
-#actions .blbl{--letter-height:-2.4px;--letter-angle:2.4deg}
-#pVal,#dVal{--letter-height:-3px;--letter-angle:2deg}
-#gainVal,#multVal{--letter-height:-2px;--letter-angle:1.5deg}
-.zlbl>[data-i18n]{--letter-height:-1.4px;--letter-angle:1.5deg}
-@keyframes active-letter-drift{
-  0%,100%{translate:0 0;rotate:calc(-1 * var(--letter-angle,1deg))}
-  42%{translate:0 var(--letter-height,-2px);rotate:var(--letter-angle,1deg)}
-  70%{translate:0 .5px;rotate:0deg}
-}
+#bottombar #actions .btn{color:#fff}
 #actions .btn:disabled .live-letter{animation-play-state:paused}
 /* Keep both the OS motion preference and the in-game gentle setting authoritative. */
-@media(prefers-reduced-motion:reduce){.hand .cardslot,.live-letter{animation:none!important;translate:none!important;rotate:none!important}}
-:root[data-motion=gentle] .hand .cardslot,:root[data-motion=gentle] .live-letter{animation:none!important;translate:none!important;rotate:none!important}
+@media(prefers-reduced-motion:reduce){.hand .cardslot,.live-letter{animation:none!important;top:0;translate:none!important;rotate:none!important}}
+:root[data-motion=gentle] .hand .cardslot,:root[data-motion=gentle] .live-letter{animation:none!important;top:0;translate:none!important;rotate:none!important}

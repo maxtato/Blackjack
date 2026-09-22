@@ -1180,8 +1180,8 @@ function fannedCard(c,idx,total,opts){
   // (la carte de droite, arrivée après, peut encore se superposer un tout petit peu)
   if(idx>0)slot.style.marginLeft=snapPixel(hashStr(seed+'x')*5-3)+'px';   // espacement aligné sur les pixels physiques
   slot.style.transform=`translateY(${snapPixel(arc+jY)}px) rotate(${(baseRot+jRot).toFixed(2)}deg)`;
-  slot.style.setProperty('--float-delay',(-hashStr(seed+'float')*5).toFixed(2)+'s');
-  slot.style.setProperty('--float-duration',(1.55+hashStr(seed+'period')*.75).toFixed(2)+'s');
+  const motionSeed=c.r+c.s+'#'+idx+(opts.dealer?'d':'p');
+  slot.style.setProperty('--card-delay','-'+(idx*.5+hashStr(motionSeed+'~')*3).toFixed(3)+'s');
   slot.appendChild(opts.flip?flipCard(c,Object.assign({idx:idx},opts)):cardEl(c,Object.assign({idx:idx},opts)));
   return slot;
 }
@@ -1584,7 +1584,7 @@ function renderActions(){
     const b=document.createElement('button');b.className='btn '+cls;b.setAttribute('aria-label',label);
     const kind=fn===deal?'deal':fn===playerStand?'stand':fn===playerDouble?'double':fn===playerSplit?'split':fn===forcerChance?'force':'hit';
     b.dataset.gameAction=kind;
-    b.innerHTML=ColdDeckArt.actionIcon(kind)+`<span class="action-copy"><span class="blbl">${label}</span>`+(sub?`<small>${sub}</small>`:'')+'</span>';
+    b.innerHTML=`<span class="action-copy"><span class="blbl">${label}</span>`+(sub?`<small>${sub}</small>`:'')+'</span>';
     if(sub){const description=document.createElement('span');description.innerHTML=sub;b.title=description.textContent;b.setAttribute('aria-description',description.textContent);}
     if(dis)b.disabled=true;else b.onclick=fn;parent.appendChild(b);return b;
   };
@@ -3089,6 +3089,17 @@ syncMenuFocus();
   let preference;
   try{preference=localStorage.getItem('colddeck-motion');}catch(e){}
   const reduced = () => preference==='gentle'||motion.matches;
+  // Original motion moves by one physical pixel at every display density.
+  let densityQuery;
+  function syncPixelDensity(){
+    const ratio=window.devicePixelRatio||1;
+    document.documentElement.style.setProperty('--device-pixel',`${1/ratio}px`);
+    densityQuery?.removeEventListener('change',syncPixelDensity);
+    densityQuery=matchMedia(`(resolution: ${ratio}dppx)`);
+    densityQuery.addEventListener('change',syncPixelDensity);
+  }
+  window.addEventListener('resize',syncPixelDensity);
+  syncPixelDensity();
   function syncMotion(){document.documentElement.dataset.motion=reduced()?'gentle':'punchy';}
   syncMotion();
   const random = () => {
@@ -3282,12 +3293,6 @@ syncMenuFocus();
   }
   function onCard(card) {
     const el = cardNode(card); if (!el) return;
-    animate(el,[
-      {translate:'0 0',rotate:'0deg',scale:'1'},
-      {translate:'0 -8px',rotate:'-2deg',scale:'1.045',offset:.28},
-      {translate:'0 2px',rotate:'1deg',scale:'.99',offset:.7},
-      {translate:'0 0',rotate:'0deg',scale:'1'}
-    ],{duration:280});
     burst(el, {count:card.ed?11:5,reach:card.ed?58:33,color:suitInk[card.s]});
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
     haptic();
@@ -3426,7 +3431,6 @@ syncMenuFocus();
       if(el.querySelector('.live-letter'))return;
       const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
       const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
-      let index=0;
       for(const node of nodes){
         if(!node.textContent.trim()||node.parentElement.closest('svg,small'))continue;
         const fragment=document.createDocumentFragment();
@@ -3437,8 +3441,10 @@ syncMenuFocus();
           const ink=document.createElement('span');ink.className='live-ink';ink.setAttribute('aria-hidden','true');
           for(const character of word){
             const letter=document.createElement('i');letter.className='live-letter';letter.textContent=character;
-            letter.style.setProperty('--letter-delay',(-index*.105-.3)+'s');
-            ink.append(letter);index++;
+            const duration=.95+random()*.3;
+            letter.style.setProperty('--letter-duration',duration.toFixed(3)+'s');
+            letter.style.setProperty('--letter-delay',(-random()*duration).toFixed(3)+'s');
+            ink.append(letter);
           }
           group.append(ink);fragment.append(group);
         }

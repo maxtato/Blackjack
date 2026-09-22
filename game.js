@@ -601,8 +601,8 @@ function fannedCard(c,idx,total,opts){
   // (la carte de droite, arrivée après, peut encore se superposer un tout petit peu)
   if(idx>0)slot.style.marginLeft=snapPixel(hashStr(seed+'x')*5-3)+'px';   // espacement aligné sur les pixels physiques
   slot.style.transform=`translateY(${snapPixel(arc+jY)}px) rotate(${(baseRot+jRot).toFixed(2)}deg)`;
-  slot.style.setProperty('--float-delay',(-hashStr(seed+'float')*5).toFixed(2)+'s');
-  slot.style.setProperty('--float-duration',(1.55+hashStr(seed+'period')*.75).toFixed(2)+'s');
+  const motionSeed=c.r+c.s+'#'+idx+(opts.dealer?'d':'p');
+  slot.style.setProperty('--card-delay','-'+(idx*.5+hashStr(motionSeed+'~')*3).toFixed(3)+'s');
   slot.appendChild(opts.flip?flipCard(c,Object.assign({idx:idx},opts)):cardEl(c,Object.assign({idx:idx},opts)));
   return slot;
 }
@@ -1005,7 +1005,7 @@ function renderActions(){
     const b=document.createElement('button');b.className='btn '+cls;b.setAttribute('aria-label',label);
     const kind=fn===deal?'deal':fn===playerStand?'stand':fn===playerDouble?'double':fn===playerSplit?'split':fn===forcerChance?'force':'hit';
     b.dataset.gameAction=kind;
-    b.innerHTML=ColdDeckArt.actionIcon(kind)+`<span class="action-copy"><span class="blbl">${label}</span>`+(sub?`<small>${sub}</small>`:'')+'</span>';
+    b.innerHTML=`<span class="action-copy"><span class="blbl">${label}</span>`+(sub?`<small>${sub}</small>`:'')+'</span>';
     if(sub){const description=document.createElement('span');description.innerHTML=sub;b.title=description.textContent;b.setAttribute('aria-description',description.textContent);}
     if(dis)b.disabled=true;else b.onclick=fn;parent.appendChild(b);return b;
   };
