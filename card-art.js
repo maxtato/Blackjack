@@ -1,4 +1,4 @@
-/* Original vector artwork: four inks, twelve backs, no bitmap scaling. */
+/* Original vector artwork: engraved courts, two traditional inks, ivory stock. */
 const ColdDeckArt = (() => {
   const paths = {
     '♠':'M50 7C40 24 11 39 11 61c0 19 23 27 34 10-1 12-6 18-15 22h40c-9-4-14-10-15-22 11 17 34 9 34-10C89 39 60 24 50 7Z',
@@ -20,20 +20,28 @@ const ColdDeckArt = (() => {
   };
   function portrait(rank,s){
     const crown=rank==='J'
-      ? '<path d="M26 36c-4-20 24-29 45-13l-7 11Z" fill="currentColor"/><path d="m61 22 8-12 6 15" fill="var(--art-accent)"/>'
-      : '<path d="m26 34-4-19 18 8L50 8l10 15 18-8-4 19Z" fill="var(--art-accent)" stroke="currentColor" stroke-width="2"/><path d="M28 34h44v6H28Z" fill="currentColor"/>';
-    const face=rank==='Q'
-      ? '<path d="M30 39C17 61 25 84 37 91h28c16-19 17-40 4-52" fill="currentColor"/><path d="M34 37v25c0 21 32 21 32 0V37" fill="#f5d5b8"/><path d="M32 36q20 11 36 0" fill="none" stroke="currentColor" stroke-width="7"/><path d="m45 68 5 2 6-3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="29" cy="67" r="4" fill="var(--art-accent)"/><circle cx="72" cy="67" r="4" fill="var(--art-accent)"/>'
-      : '<path d="M31 35h38v26c0 24-38 24-38 0Z" fill="#f5d5b8"/><path d="M29 39q20 6 41-4v11q-8-4-12-10l-7 7-9-4-12 5Z" fill="currentColor"/><path d="M39 65q7-12 12-4 8-8 14 3-9 8-14 2-4 7-12-1Z" fill="currentColor"/>';
-    const drawing=`<path d="M17 125V103q4-19 27-23h12q24 4 27 23v22" fill="currentColor"/><path d="m38 81 12 17 13-17-5 43H43Z" fill="var(--art-accent)"/><path d="m24 96 17 22m35-22-18 22" stroke="var(--art-accent)" stroke-width="3"/>${face}${crown}<path d="M38 52h5m14 0h5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="m50 52-3 8h5" fill="none" stroke="currentColor" stroke-width="1.6"/>${pip(s,50,109,12)}`;
-    return `<rect x="22" y="23" width="56" height="96" rx="27" fill="var(--art-wash)"/><g transform="translate(10 18) scale(.8)">${drawing}</g><path d="M25 119h50" stroke="currentColor" stroke-width="1" opacity=".4"/>`;
+      ? '<path d="M12 11C7 3 22-2 31 5l-3 7Z" fill="currentColor"/><path d="M24 6Q31-5 37 0q-1 7-10 10"/><path d="m29 2-4 8" stroke="var(--art-accent)"/>'
+      : '<path d="m12 10-2-8 7 4 5-6 5 6 7-4-2 8Z" fill="var(--art-wash)"/><path d="M12 12h20M15 9h14"/><path d="m17 7 1-1m5 2V5m5 2 1-1" stroke="var(--art-accent)" stroke-width="1.6"/>';
+    const hair=rank==='Q'
+      ? '<path d="M16 13q-8 7-5 17l-5 6 12-2 3-7M14 16q-4 11 0 15m2-10 1 7m-7 1-3 5"/><path d="M20 24v3" stroke="var(--art-accent)" stroke-width="2"/>'
+      : '<path d="M14 13q-4 8 1 14l5-2m-8-6 5-2m-5 6 5-2"/>';
+    const beard=rank==='K'
+      ? '<path d="m21 24 2 10 6-5 1-6m-7 3 1 5m2-6v4m-6-7 3 1 3-1"/>'
+      : '<path d="m25 24 3-.5m-8 3 5 1"/>';
+    const emblem=rank==='Q'
+      ? '<path d="M37 40V20m0 3c-9-5-4-10 0-7 5-4 9 3 0 7m0 10 5-4m-5 8-5-4"/>'
+      : rank==='K'
+        ? '<path d="M38 43V9m-4 5h8m-4-9 2 4-2 4-2-4Z"/>'
+        : '<path d="m36 43 2-24 4-4 2 7-6 20m1-18 3-3"/>';
+    const drawing=`<g fill="none" stroke="currentColor" stroke-width=".8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 29 5 36 3 44h40l-4-10-10-5-6 7Z" fill="var(--art-wash)"/><path d="m16 30 4 14m7-13-4 13M5 37l12 6m-9-9 10 6m-4-10 6 5M28 32l5 12m-5-7 8 2m-8 2 10 2"/><path d="M20 13h10v5l3 4-4 1v4l-5 3-5-3v-5q-5-2-3-5l3 1v-5" fill="var(--ivory,#fffaf0)"/>${hair}${beard}<path d="m26 17 3 .5m-4 2h2M19 20v2"/>${crown}<g stroke="var(--art-accent)">${emblem}<path d="m10 37 3 2-2 3-3-2Zm20 2 2 2-2 2-2-2Z"/></g></g>`;
+    return `<rect x="25" y="24" width="50" height="94" rx="1" fill="var(--art-wash)" stroke="currentColor" stroke-width=".55"/><g transform="translate(27 27)">${drawing}</g><g transform="translate(73 115) rotate(180)">${drawing}</g><path d="m27 72 46-2" stroke="var(--art-accent)" stroke-width="1.3"/>${pip(s,65,35,8)}${pip(s,35,107,8,180)}`;
   }
   function face(rank,s){
     let art;
     if(rank==='A'){
-      art=`<ellipse cx="50" cy="70" rx="34" ry="47" fill="var(--art-wash)"/><g stroke="currentColor" stroke-width="1.3" opacity=".65"><path d="m50 24 0 7m0 79v7M16 70h7m54 0h7M26 39l5 5m38 53 5 5M26 102l5-5m38-53 5-5"/></g>${pip(s,50,68,51)}<path d="M31 102q19 8 38 0" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="50" cy="34" r="2.5" fill="var(--art-accent)"/>`;
+      art=`${pip(s,50,66,43)}<g fill="none" stroke="var(--art-accent)" stroke-width=".65"><path d="M34 101h32m-26 3h20m-10-9v3M32 41q-4 5-5 11m41-11q4 5 5 11"/><path d="m47 32 3-3 3 3-3 3Z"/></g>`;
     }else if(['J','Q','K'].includes(rank))art=portrait(rank,s);
-    else art=`<path d="M22 121V37q28-27 56-6v75q-28 27-56 15Z" fill="var(--art-wash)"/>`+(layouts[Number(rank)]||[]).map(([x,y])=>pip(s,x,y,Number(rank)>8?15:18,y>71?180:0)).join('');
+    else art=(layouts[Number(rank)]||[]).map(([x,y])=>pip(s,x,y,Number(rank)>8?13:16,y>71?180:0)).join('');
     return `<svg class="card-art" viewBox="0 0 100 142" aria-hidden="true">${art}</svg>`;
   }
   const icons={

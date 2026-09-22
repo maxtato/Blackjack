@@ -218,7 +218,7 @@ function tableRuleText(tb){
 }
 
 /* ====== tapis évolutif ====== */
-const FELT_COLORS=['#17412f','#223d48','#41384b','#4a3531'];
+const FELT_COLORS=['#bdc8ad','#becac4','#cec2be','#cec8ae'];
 function applyFelt(){
   const zone=Math.max(0,((G.table&&G.table.zone)||1)-1);
   document.documentElement.style.setProperty('--felt',FELT_COLORS[zone%FELT_COLORS.length]);
@@ -601,6 +601,8 @@ function fannedCard(c,idx,total,opts){
   // (la carte de droite, arrivée après, peut encore se superposer un tout petit peu)
   if(idx>0)slot.style.marginLeft=snapPixel(hashStr(seed+'x')*5-3)+'px';   // espacement aligné sur les pixels physiques
   slot.style.transform=`translateY(${snapPixel(arc+jY)}px) rotate(${(baseRot+jRot).toFixed(2)}deg)`;
+  slot.style.setProperty('--float-delay',(-hashStr(seed+'float')*5).toFixed(2)+'s');
+  slot.style.setProperty('--float-duration',(3.6+hashStr(seed+'period')*1.8).toFixed(2)+'s');
   slot.appendChild(opts.flip?flipCard(c,Object.assign({idx:idx},opts)):cardEl(c,Object.assign({idx:idx},opts)));
   return slot;
 }
@@ -912,7 +914,7 @@ function openInspect(kind,i){
   $('inspectBody').innerHTML=`<div class="inspCard tag ${kind==='tarot'?'tarot':'joker'}"><span class="ft" style="color:${tk.c}">${tk.t}</span></div>`
     +`<h1 class="win" style="font-size:24px;margin:0 0 4px">${iName(item)}</h1>`
     +`<p style="font-size:10px;letter-spacing:.08em;margin:0 0 12px">${tag}</p>`
-    +`<p style="color:#dfe9ff;font-size:13px;line-height:1.6;margin:0 0 4px">${iDesc(item)}</p>`;
+    +`<p style="color:var(--paper);font-size:13px;line-height:1.6;margin:0 0 4px">${iDesc(item)}</p>`;
   scheduleFitChipText();
   const act=$('inspectActions');act.innerHTML='';
   const mk=(label,cls,fn,dis)=>{const b=document.createElement('button');b.className='btn '+cls;b.style.cssText='font-size:13px;padding:11px 15px';b.innerHTML=label;if(dis)b.disabled=true;else b.onclick=fn;act.appendChild(b);return b;};
@@ -1037,7 +1039,7 @@ function updateBustReadout(){
   if(hasRelic('compteur')&&G.phase==='play'){
     const bc=bustChance(G.pHand);
     $('tip').textContent=t('ui.bustRisk',bc);
-    $('tip').style.color=bc>50?'#ff9b8f':'var(--gold)';
+    $('tip').style.color=bc>50?'#8b3440':'var(--gold)';
   }
 }
 
@@ -1807,7 +1809,7 @@ function bounceEl(el){
   window.ColdDeckFX?.onScoreCard(el);
   el.animate([
     {transform:'translateY(0) scale(1)'},
-    {transform:'translateY(-20px) rotate(-5deg) scale(1.16)',offset:.35},
+    {transform:'translateY(-24px) rotate(-7deg) scale(1.22)',offset:.35},
     {transform:'translateY(0) scale(1)'}
   ],{duration:380,easing:'cubic-bezier(.3,1.5,.5,1)'});
 }
@@ -1900,7 +1902,7 @@ function shake(n){if(!window.ColdDeckFX?.reduced)shakeAmt=Math.max(shakeAmt,n);}
 
 /* ---- effets visuels ---- */
 /* confettis pixel : petits carrés colorés (couleurs emblématiques) qui giclent et retombent en tournoyant */
-const CONFETTI_COLS=['#e4f46e','#65cdb6','#ff7863','#73bdf4','#f6efe0','#eaad51','#9fa7ee'];
+const CONFETTI_COLS=['#edc989','#8ba875','#bc5266','#62bfff','#fff4dd','#c9994b','#b896ba'];
 function pixelConfetti(n){
   if(window.ColdDeckFX?.reduced)return;
   const cont=$('particles');if(!cont)return;const cx=innerWidth/2,cy=innerHeight/2;   // pile au centre de l'écran

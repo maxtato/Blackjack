@@ -510,7 +510,7 @@ function hasStr(key){return (STR[LANG]&&key in STR[LANG])||(key in STR.en);}
 
 
 /* card-art.js */
-/* Original vector artwork: four inks, twelve backs, no bitmap scaling. */
+/* Original vector artwork: engraved courts, two traditional inks, ivory stock. */
 const ColdDeckArt = (() => {
   const paths = {
     '♠':'M50 7C40 24 11 39 11 61c0 19 23 27 34 10-1 12-6 18-15 22h40c-9-4-14-10-15-22 11 17 34 9 34-10C89 39 60 24 50 7Z',
@@ -532,20 +532,28 @@ const ColdDeckArt = (() => {
   };
   function portrait(rank,s){
     const crown=rank==='J'
-      ? '<path d="M26 36c-4-20 24-29 45-13l-7 11Z" fill="currentColor"/><path d="m61 22 8-12 6 15" fill="var(--art-accent)"/>'
-      : '<path d="m26 34-4-19 18 8L50 8l10 15 18-8-4 19Z" fill="var(--art-accent)" stroke="currentColor" stroke-width="2"/><path d="M28 34h44v6H28Z" fill="currentColor"/>';
-    const face=rank==='Q'
-      ? '<path d="M30 39C17 61 25 84 37 91h28c16-19 17-40 4-52" fill="currentColor"/><path d="M34 37v25c0 21 32 21 32 0V37" fill="#f5d5b8"/><path d="M32 36q20 11 36 0" fill="none" stroke="currentColor" stroke-width="7"/><path d="m45 68 5 2 6-3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="29" cy="67" r="4" fill="var(--art-accent)"/><circle cx="72" cy="67" r="4" fill="var(--art-accent)"/>'
-      : '<path d="M31 35h38v26c0 24-38 24-38 0Z" fill="#f5d5b8"/><path d="M29 39q20 6 41-4v11q-8-4-12-10l-7 7-9-4-12 5Z" fill="currentColor"/><path d="M39 65q7-12 12-4 8-8 14 3-9 8-14 2-4 7-12-1Z" fill="currentColor"/>';
-    const drawing=`<path d="M17 125V103q4-19 27-23h12q24 4 27 23v22" fill="currentColor"/><path d="m38 81 12 17 13-17-5 43H43Z" fill="var(--art-accent)"/><path d="m24 96 17 22m35-22-18 22" stroke="var(--art-accent)" stroke-width="3"/>${face}${crown}<path d="M38 52h5m14 0h5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="m50 52-3 8h5" fill="none" stroke="currentColor" stroke-width="1.6"/>${pip(s,50,109,12)}`;
-    return `<rect x="22" y="23" width="56" height="96" rx="27" fill="var(--art-wash)"/><g transform="translate(10 18) scale(.8)">${drawing}</g><path d="M25 119h50" stroke="currentColor" stroke-width="1" opacity=".4"/>`;
+      ? '<path d="M12 11C7 3 22-2 31 5l-3 7Z" fill="currentColor"/><path d="M24 6Q31-5 37 0q-1 7-10 10"/><path d="m29 2-4 8" stroke="var(--art-accent)"/>'
+      : '<path d="m12 10-2-8 7 4 5-6 5 6 7-4-2 8Z" fill="var(--art-wash)"/><path d="M12 12h20M15 9h14"/><path d="m17 7 1-1m5 2V5m5 2 1-1" stroke="var(--art-accent)" stroke-width="1.6"/>';
+    const hair=rank==='Q'
+      ? '<path d="M16 13q-8 7-5 17l-5 6 12-2 3-7M14 16q-4 11 0 15m2-10 1 7m-7 1-3 5"/><path d="M20 24v3" stroke="var(--art-accent)" stroke-width="2"/>'
+      : '<path d="M14 13q-4 8 1 14l5-2m-8-6 5-2m-5 6 5-2"/>';
+    const beard=rank==='K'
+      ? '<path d="m21 24 2 10 6-5 1-6m-7 3 1 5m2-6v4m-6-7 3 1 3-1"/>'
+      : '<path d="m25 24 3-.5m-8 3 5 1"/>';
+    const emblem=rank==='Q'
+      ? '<path d="M37 40V20m0 3c-9-5-4-10 0-7 5-4 9 3 0 7m0 10 5-4m-5 8-5-4"/>'
+      : rank==='K'
+        ? '<path d="M38 43V9m-4 5h8m-4-9 2 4-2 4-2-4Z"/>'
+        : '<path d="m36 43 2-24 4-4 2 7-6 20m1-18 3-3"/>';
+    const drawing=`<g fill="none" stroke="currentColor" stroke-width=".8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 29 5 36 3 44h40l-4-10-10-5-6 7Z" fill="var(--art-wash)"/><path d="m16 30 4 14m7-13-4 13M5 37l12 6m-9-9 10 6m-4-10 6 5M28 32l5 12m-5-7 8 2m-8 2 10 2"/><path d="M20 13h10v5l3 4-4 1v4l-5 3-5-3v-5q-5-2-3-5l3 1v-5" fill="var(--ivory,#fffaf0)"/>${hair}${beard}<path d="m26 17 3 .5m-4 2h2M19 20v2"/>${crown}<g stroke="var(--art-accent)">${emblem}<path d="m10 37 3 2-2 3-3-2Zm20 2 2 2-2 2-2-2Z"/></g></g>`;
+    return `<rect x="25" y="24" width="50" height="94" rx="1" fill="var(--art-wash)" stroke="currentColor" stroke-width=".55"/><g transform="translate(27 27)">${drawing}</g><g transform="translate(73 115) rotate(180)">${drawing}</g><path d="m27 72 46-2" stroke="var(--art-accent)" stroke-width="1.3"/>${pip(s,65,35,8)}${pip(s,35,107,8,180)}`;
   }
   function face(rank,s){
     let art;
     if(rank==='A'){
-      art=`<ellipse cx="50" cy="70" rx="34" ry="47" fill="var(--art-wash)"/><g stroke="currentColor" stroke-width="1.3" opacity=".65"><path d="m50 24 0 7m0 79v7M16 70h7m54 0h7M26 39l5 5m38 53 5 5M26 102l5-5m38-53 5-5"/></g>${pip(s,50,68,51)}<path d="M31 102q19 8 38 0" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="50" cy="34" r="2.5" fill="var(--art-accent)"/>`;
+      art=`${pip(s,50,66,43)}<g fill="none" stroke="var(--art-accent)" stroke-width=".65"><path d="M34 101h32m-26 3h20m-10-9v3M32 41q-4 5-5 11m41-11q4 5 5 11"/><path d="m47 32 3-3 3 3-3 3Z"/></g>`;
     }else if(['J','Q','K'].includes(rank))art=portrait(rank,s);
-    else art=`<path d="M22 121V37q28-27 56-6v75q-28 27-56 15Z" fill="var(--art-wash)"/>`+(layouts[Number(rank)]||[]).map(([x,y])=>pip(s,x,y,Number(rank)>8?15:18,y>71?180:0)).join('');
+    else art=(layouts[Number(rank)]||[]).map(([x,y])=>pip(s,x,y,Number(rank)>8?13:16,y>71?180:0)).join('');
     return `<svg class="card-art" viewBox="0 0 100 142" aria-hidden="true">${art}</svg>`;
   }
   const icons={
@@ -786,7 +794,7 @@ function tableRuleText(tb){
 }
 
 /* ====== tapis évolutif ====== */
-const FELT_COLORS=['#17412f','#223d48','#41384b','#4a3531'];
+const FELT_COLORS=['#bdc8ad','#becac4','#cec2be','#cec8ae'];
 function applyFelt(){
   const zone=Math.max(0,((G.table&&G.table.zone)||1)-1);
   document.documentElement.style.setProperty('--felt',FELT_COLORS[zone%FELT_COLORS.length]);
@@ -1169,6 +1177,8 @@ function fannedCard(c,idx,total,opts){
   // (la carte de droite, arrivée après, peut encore se superposer un tout petit peu)
   if(idx>0)slot.style.marginLeft=snapPixel(hashStr(seed+'x')*5-3)+'px';   // espacement aligné sur les pixels physiques
   slot.style.transform=`translateY(${snapPixel(arc+jY)}px) rotate(${(baseRot+jRot).toFixed(2)}deg)`;
+  slot.style.setProperty('--float-delay',(-hashStr(seed+'float')*5).toFixed(2)+'s');
+  slot.style.setProperty('--float-duration',(3.6+hashStr(seed+'period')*1.8).toFixed(2)+'s');
   slot.appendChild(opts.flip?flipCard(c,Object.assign({idx:idx},opts)):cardEl(c,Object.assign({idx:idx},opts)));
   return slot;
 }
@@ -1480,7 +1490,7 @@ function openInspect(kind,i){
   $('inspectBody').innerHTML=`<div class="inspCard tag ${kind==='tarot'?'tarot':'joker'}"><span class="ft" style="color:${tk.c}">${tk.t}</span></div>`
     +`<h1 class="win" style="font-size:24px;margin:0 0 4px">${iName(item)}</h1>`
     +`<p style="font-size:10px;letter-spacing:.08em;margin:0 0 12px">${tag}</p>`
-    +`<p style="color:#dfe9ff;font-size:13px;line-height:1.6;margin:0 0 4px">${iDesc(item)}</p>`;
+    +`<p style="color:var(--paper);font-size:13px;line-height:1.6;margin:0 0 4px">${iDesc(item)}</p>`;
   scheduleFitChipText();
   const act=$('inspectActions');act.innerHTML='';
   const mk=(label,cls,fn,dis)=>{const b=document.createElement('button');b.className='btn '+cls;b.style.cssText='font-size:13px;padding:11px 15px';b.innerHTML=label;if(dis)b.disabled=true;else b.onclick=fn;act.appendChild(b);return b;};
@@ -1605,7 +1615,7 @@ function updateBustReadout(){
   if(hasRelic('compteur')&&G.phase==='play'){
     const bc=bustChance(G.pHand);
     $('tip').textContent=t('ui.bustRisk',bc);
-    $('tip').style.color=bc>50?'#ff9b8f':'var(--gold)';
+    $('tip').style.color=bc>50?'#8b3440':'var(--gold)';
   }
 }
 
@@ -2375,7 +2385,7 @@ function bounceEl(el){
   window.ColdDeckFX?.onScoreCard(el);
   el.animate([
     {transform:'translateY(0) scale(1)'},
-    {transform:'translateY(-20px) rotate(-5deg) scale(1.16)',offset:.35},
+    {transform:'translateY(-24px) rotate(-7deg) scale(1.22)',offset:.35},
     {transform:'translateY(0) scale(1)'}
   ],{duration:380,easing:'cubic-bezier(.3,1.5,.5,1)'});
 }
@@ -2468,7 +2478,7 @@ function shake(n){if(!window.ColdDeckFX?.reduced)shakeAmt=Math.max(shakeAmt,n);}
 
 /* ---- effets visuels ---- */
 /* confettis pixel : petits carrés colorés (couleurs emblématiques) qui giclent et retombent en tournoyant */
-const CONFETTI_COLS=['#e4f46e','#65cdb6','#ff7863','#73bdf4','#f6efe0','#eaad51','#9fa7ee'];
+const CONFETTI_COLS=['#edc989','#8ba875','#bc5266','#62bfff','#fff4dd','#c9994b','#b896ba'];
 function pixelConfetti(n){
   if(window.ColdDeckFX?.reduced)return;
   const cont=$('particles');if(!cont)return;const cx=innerWidth/2,cy=innerHeight/2;   // pile au centre de l'écran
@@ -2901,7 +2911,8 @@ freshGame();buildShoe();applyI18n();renderHands();tick();
 /* menu-v2.js */
 /* Presentation only: the blackjack engine and progression are unchanged. */
 Object.assign(STR.fr,{
- 'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','modern.goal':'OBJECTIF','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA CHANCE A DU CARACTÈRE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
+ 'modern.club':'CLUB PRIVÉ · BLACKJACK ROGUELITE','modern.private':'CLUB PRIVÉ','modern.afterhours':'APRÈS MINUIT',
+ 'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','modern.goal':'OBJECTIF','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
  'nav.rules':'RÈGLES','nav.settings':'RÉGLAGES','nav.back':'← MODES DE JEU','nav.reset':'Réinitialiser ce mode',
  'menu.choose':'CHOISIS TA TABLE','menu.freeTag':'À TON RYTHME','menu.circuitTag':"L'AVENTURE",
  'menu.endless':'LIBRE','menu.endlessSub':'Du blackjack, sans missions.',
@@ -2920,7 +2931,8 @@ Object.assign(STR.fr,{
  'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>'
 });
 Object.assign(STR.en,{
- 'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'TARGET','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'FORTUNE HAS CHARACTER.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
+ 'modern.club':'PRIVATE CLUB · BLACKJACK ROGUELITE','modern.private':'PRIVATE CLUB','modern.afterhours':'AFTER HOURS',
+ 'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'TARGET','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'THE HOUSE IS WATCHING.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
  'nav.rules':'HOW TO PLAY','nav.settings':'SETTINGS','nav.back':'← GAME MODES','nav.reset':'Reset this mode',
  'menu.choose':'CHOOSE YOUR TABLE','menu.freeTag':'AT YOUR OWN PACE','menu.circuitTag':'THE ADVENTURE',
  'menu.endless':'FREE PLAY','menu.endlessSub':'Blackjack. No missions.',
@@ -3055,8 +3067,9 @@ syncMenuFocus();
   let seed = (performance.now() * 1000) >>> 0;
   let lastLevel = barakaLevel();
   let popupTimer;
-  const palette = ['#e3f479', '#ff826c', '#83d7ba', '#94c7f6', '#f6f1e5'];
-  const suitInk = {'♠':'#94c7f6', '♥':'#ff9882', '♦':'#f3d382', '♣':'#83d7ba'};
+  let cameraAnimation, lastHaptic = -Infinity;
+  const palette = ['#edc989', '#b65268', '#8ba875', '#62bfff', '#fff4dd'];
+  const suitInk = {'♠':'#62bfff', '♥':'#be586e', '♦':'#d7ac59', '♣':'#78a87e'};
   let preference;
   try{preference=localStorage.getItem('colddeck-motion');}catch(e){}
   const reduced = () => preference==='gentle'||motion.matches;
@@ -3077,11 +3090,15 @@ syncMenuFocus();
     for (const animation of [...animations]) animation.cancel();
     animations.clear();
     layer.replaceChildren();
+    cameraAnimation = null;
+    shakeAmt = 0;
+    $('shaker').style.transform = '';
+    try { navigator.vibrate?.(0); } catch(e) {}
     $('felt')?.removeAttribute('data-arcade-result');
     $('multPop')?.classList.remove('go');
   }
   function animate(el, frames, options, remove = false) {
-    if (!el || reduced()) { if (remove) el?.remove(); return; }
+    if (!el || reduced() || document.hidden) { if (remove) el?.remove(); return; }
     const animation = el.animate(frames, {easing:'cubic-bezier(.2,.8,.3,1)', ...options});
     animations.add(animation);
     const finish = () => { animations.delete(animation); if (remove) el.remove(); };
@@ -3103,14 +3120,62 @@ syncMenuFocus();
     layer.appendChild(el);
     return el;
   }
+  function haptic(strong=false) {
+    if (reduced() || document.hidden || document.querySelector('.overlay.show,#adOverlay.show')) return;
+    const now = performance.now();
+    if (now-lastHaptic < 95) return;
+    lastHaptic = now;
+    try { navigator.vibrate?.(strong ? [16,24,28] : 8); } catch(e) {}
+  }
+  // Individual translate/rotate compose with the engine's separate #shaker.
+  function kick(strength=3) {
+    if (reduced() || document.hidden || document.querySelector('.overlay.show,#adOverlay.show')) return;
+    cameraAnimation?.cancel();
+    const x = Math.min(strength,8), direction = random()>.5 ? 1 : -1;
+    cameraAnimation = animate($('app'), [
+      {translate:'0px 0px',rotate:'0deg'},
+      {translate:`${-x*direction}px ${x*.55}px`,rotate:`${-.025*x*direction}deg`,offset:.12},
+      {translate:`${x*.7*direction}px ${-x*.35}px`,rotate:`${.016*x*direction}deg`,offset:.3},
+      {translate:`${-x*.4*direction}px ${x*.15}px`,rotate:'0deg',offset:.52},
+      {translate:`${x*.16*direction}px 0px`,rotate:'0deg',offset:.72},
+      {translate:'0px 0px',rotate:'0deg'}
+    ], {duration:strength>=6?360:245,easing:'ease-out'});
+    haptic(strength>=6);
+  }
+  function lightning(el, reach=110, arms=5) {
+    if (reduced() || document.hidden) return;
+    const p=rect(el);if(!p)return;
+    const bolt=piece('arcade-lightning',p.x,p.y);if(!bolt)return;
+    const radius=Math.min(reach,innerWidth*.48),size=radius*2+40,center=size/2;
+    bolt.style.width=bolt.style.height=size+'px';
+    let path='';
+    for(let arm=0;arm<arms;arm++){
+      const angle=arm/arms*Math.PI*2+random()*.5,length=radius*(.7+random()*.3);
+      const points=[[center,center]];
+      for(let step=1;step<=6;step++){
+        const d=length*step/6,jitter=(random()-.5)*24;
+        points.push([center+Math.cos(angle)*d-Math.sin(angle)*jitter,center+Math.sin(angle)*d+Math.cos(angle)*jitter]);
+      }
+      path+='M'+points.map(([x,y])=>x.toFixed(1)+' '+y.toFixed(1)).join('L');
+      const [bx,by]=points[3],branch=angle+(arm%2?-.85:.85);
+      path+=`M${bx.toFixed(1)} ${by.toFixed(1)}l${(Math.cos(branch)*22).toFixed(1)} ${(Math.sin(branch)*22).toFixed(1)} ${(Math.cos(branch+.6)*16).toFixed(1)} ${(Math.sin(branch+.6)*16).toFixed(1)}`;
+    }
+    bolt.innerHTML=`<svg viewBox="0 0 ${size} ${size}" fill="none" aria-hidden="true"><path class="bolt-glow" d="${path}"/><path class="bolt-core" d="${path}"/></svg>`;
+    animate(bolt,[
+      {transform:'translate(-50%,-50%) scale(.38)',opacity:0},
+      {transform:'translate(-50%,-50%) scale(.96)',opacity:1,offset:.1},
+      {transform:'translate(-50%,-50%) scale(1.03)',opacity:.9,offset:.34},
+      {transform:'translate(-50%,-50%) scale(1.09)',opacity:0}
+    ],{duration:360,easing:'ease-out'},true);
+  }
   function burst(el, {count=10, reach=58, color, ring=false} = {}) {
     if (reduced() || document.hidden) return;
     const p = rect(el); if (!p) return;
     if (ring) {
       const halo = piece('arcade-ring', p.x, p.y, color);
       animate(halo, [
-        {transform:'translate(-50%,-50%) rotate(0deg) scale(.45)', opacity:.8},
-        {transform:'translate(-50%,-50%) rotate(35deg) scale(2.2)', opacity:0}
+        {transform:'translate(-50%,-50%) rotate(0deg) scale(.3)', opacity:.95},
+        {transform:'translate(-50%,-50%) rotate(35deg) scale(3)', opacity:0}
       ], {duration:470}, true);
     }
     for (let i=0; i<count; i++) {
@@ -3158,10 +3223,20 @@ syncMenuFocus();
     $('felt').dataset.arcadeResult = kind;
     later(() => $('felt')?.removeAttribute('data-arcade-result'), 800);
     if (kind === 'win') {
-      burst($('pHand'), {count:natural?26:mult>=3?22:14,reach:natural?150:105,ring:true});
+      const big = natural || mult>=3;
+      kick(big?8:5);
+      lightning($('pHand'),big?235:145,big?8:5);
+      impact($('pHand'));
+      burst($('pHand'), {count:big?28:18,reach:big?205:135,ring:true});
+      if(big)later(()=>{
+        lightning($('center'),190,6);
+        burst($('center'),{count:12,reach:170,color:'#edc989',ring:true});
+      },125);
       collectCoins(natural?13:mult>=3?11:7);
       pulse($('scorebox'), true);
     } else if (kind === 'lose') {
+      kick(4);
+      burst($('pVal'),{count:10,reach:68,color:'#a54960'});
       pulse($('pVal'));
     } else {
       burst($('pVal'), {count:6,reach:36,color:'#a2d0ff'});
@@ -3177,10 +3252,14 @@ syncMenuFocus();
     const el = cardNode(card); if (!el) return;
     burst(el, {count:card.ed?11:5,reach:card.ed?58:33,color:suitInk[card.s]});
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
+    haptic();
+    if(card.ed)lightning(el,80,3);
   }
   function onScoreCard(el) {
+    kick(3);
+    lightning(el,115,5);
     impact(el);
-    burst(el, {count:14,reach:95,color:'#8edbff',ring:true});
+    burst(el, {count:12,reach:110,color:'#70c4ff',ring:true});
   }
   function impact(el){
     if(reduced()||document.hidden)return;
@@ -3191,10 +3270,10 @@ syncMenuFocus();
       {transform:'translate(-50%,-50%) scale(1.28)',opacity:.85,offset:.18},
       {transform:'translate(-50%,-50%) scale(1.75)',opacity:0}
     ],{duration:480},true);
-    for(let i=0;i<7;i++){
-      const angle=(i/7)*Math.PI*2;
+    for(let i=0;i<9;i++){
+      const angle=(i/9)*Math.PI*2;
       const ray=piece('impact-ray',p.x,p.y);
-      const x=Math.cos(angle)*75,y=Math.sin(angle)*75;
+      const x=Math.cos(angle)*105,y=Math.sin(angle)*105;
       animate(ray,[
         {transform:`translate(-50%,-50%) rotate(${angle}rad) scaleX(.2)`,opacity:0},
         {transform:`translate(calc(-50% + ${x*.5}px),calc(-50% + ${y*.5}px)) rotate(${angle}rad) scaleX(1)`,opacity:1,offset:.2},
@@ -3217,10 +3296,12 @@ syncMenuFocus();
       {transform:'translate(-50%,-50%) rotate(-4deg) scale(1)',opacity:1,offset:.36},
       {transform:'translate(-50%,-70%) rotate(-2deg) scale(.96)',opacity:0}
     ],{duration:470},true);
+    kick(4.5);lightning($('center'),145,5);
     impact($('multVal'));pulse($('multVal'),true);
   }
   function onRelic(el) {
-    burst(el, {count:14,reach:70,color:'#e3f479',ring:true});
+    kick(3);lightning(el,90,4);
+    burst(el, {count:14,reach:90,color:'#edc989',ring:true});
     pulse($('multVal'),true);
   }
   function onPressure() {
@@ -3237,10 +3318,13 @@ syncMenuFocus();
       try{localStorage.setItem('colddeck-motion',preference);}catch(e){}
       clear();syncMotion();renderMotionOptions();
     },
-    onGoal() { onAnnouncement(); burst($('objBar'), {count:20,reach:100,ring:true}); },
+    onGoal() { onAnnouncement(); kick(7); lightning($('objBar'),160,6); burst($('objBar'), {count:20,reach:135,ring:true}); },
     onRecord() { burst($('recPop'), {count:12,reach:85}); }
   };
-  document.addEventListener('visibilitychange', () => { if (document.hidden) clear(); });
+  document.addEventListener('visibilitychange', () => {
+    document.documentElement.dataset.pageHidden=String(document.hidden);
+    if (document.hidden) clear();
+  });
   motion.addEventListener('change', () => {clear();syncMotion();renderMotionOptions();});
   window.addEventListener('pagehide', clear);
   // Existing navigation owns game state; this observer cleans up presentation only.
@@ -3263,6 +3347,47 @@ syncMenuFocus();
   openSettings=function(){originalSettings();renderMotionOptions();};
   const originalLanguage=setLang;
   setLang=function(id){originalLanguage(id);renderMotionOptions();};
+
+  // Animate the lettering, while preserving a whole-word accessible label.
+  // Observe only the small regions the renderer replaces, never each frame.
+  const liveRegions=[document.querySelector('.menuTitle'),$('tableName'),$('gainVal'),$('multVal'),$('actions'),$('planqueTitle'),...document.querySelectorAll('.mode-card strong')].filter(Boolean);
+  const letterTargets='.menuTitle,#tableName,#gainVal,#multVal,.actMain .blbl,#planqueTitle,.mode-card strong';
+  function enlivenLetters(){
+    document.querySelectorAll(letterTargets).forEach(el=>{
+      if(el.querySelector('.live-letter'))return;
+      const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
+      const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+      let index=0;
+      for(const node of nodes){
+        if(!node.textContent.trim()||node.parentElement.closest('svg,small'))continue;
+        const fragment=document.createDocumentFragment();
+        for(const word of node.textContent.split(/(\s+)/u)){
+          if(!word.trim()){fragment.append(document.createTextNode(word));continue;}
+          const group=document.createElement('span');group.className='live-word';
+          const readable=document.createElement('span');readable.className='sr-only';readable.textContent=word;group.append(readable);
+          const ink=document.createElement('span');ink.className='live-ink';ink.setAttribute('aria-hidden','true');
+          for(const character of word){
+            const letter=document.createElement('i');letter.className='live-letter';letter.textContent=character;
+            letter.style.setProperty('--letter-delay',(-index*.19-.4)+'s');
+            ink.append(letter);index++;
+          }
+          group.append(ink);fragment.append(group);
+        }
+        node.replaceWith(fragment);
+      }
+    });
+  }
+  const lettersObserver=new MutationObserver(()=>{
+    lettersObserver.disconnect();enlivenLetters();observeLetters();
+  });
+  function observeLetters(){liveRegions.forEach(el=>lettersObserver.observe(el,{childList:true,subtree:true,characterData:true}));}
+  enlivenLetters();observeLetters();
+  document.addEventListener('pointerdown',event=>{
+    const button=event.target instanceof Element?event.target.closest('button'):null;
+    if(!button||button.disabled||button.closest('[inert]'))return;
+    animate(button,[{scale:'1'},{scale:'.96',offset:.3},{scale:'1'}],{duration:170});
+    if(button.closest('#actions,#chips'))haptic();
+  });
   onPressure();
 })();
 
