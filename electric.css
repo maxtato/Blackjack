@@ -5,10 +5,10 @@
   --ink:#101c49;--ink2:#18347e;--paper:#fffef7;--cream:#fffef7;--ivory:#fffefa;
   --muted:#c8cbd0;--mutedDk:#a9aeb6;--line:#ffffff24;
   --panel:#303238;--panelHi:#3c3f45;--panelDk:#18191d;--panelDk2:#25272c;
-  --accent:#f4ff28;--yellow:#f4ff28;--gold:#f4ff28;--goldDk:#d9e522;--lime:#dbff62;
-  --magenta:#ff53a0;--red:#ff6857;--redDk:#bc293b;--orange:#ff9238;
-  --teal:#baffd6;--tealDk:#174daa;--green:#afffc5;--greenDk:#145eb9;
-  --blue:#c7dcff;--blueDk:#0725c4;--grape:#d7b5ff;--purpleDk:#643bba;
+  --accent:#ffce3a;--yellow:#ffce3a;--gold:#ffce3a;--goldDk:#c79100;--lime:#9be84a;
+  --magenta:#ff4ea8;--red:#ff5470;--redDk:#cf2348;--orange:#ff9326;
+  --teal:#1fd1c8;--tealDk:#0f9a93;--green:#afffc5;--greenDk:#145eb9;
+  --blue:#3b8cf0;--blueDk:#1d5fc0;--grape:#a64dff;--purpleDk:#5e2aa6;
   --cardW:#fffefa;--inkCard:#11182f;--suitRed:#ff542f;
   --base-card-w:clamp(78px,13dvh,112px);--card-w:var(--base-card-w);
   --display:"Arial Black","Avenir Next",Arial,sans-serif;
@@ -193,3 +193,24 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 #multPop .m,#multPop .t{-webkit-text-stroke-color:#08122e;text-shadow:0 4px 0 #08122e}
 #multPop.win .m{color:#f4ff28}#multPop.lose .m{color:#ffb6a4}#multPop.push .m{color:#ffffff}#multPop .t{color:#ffffff}
 .tp-evt{background:#081642;color:#ffffff}.tp-evt small{color:#ffffff}
+
+/* Original Cold Deck accents on the modern charcoal interface. */
+:root{--paper:#fff7e6;--cream:#fff7e6;--muted:#c3b2f0}
+.btn,.b-gold{background:#ffce3a;color:#302200}
+.b-blue{background:#3b8cf0;color:#0c0720}.b-red{background:#ff5470;color:#0c0720}
+.b-purple{background:#a64dff;color:#0c0720}.b-teal{background:#1fd1c8;color:#04302d}
+#actions .btn,#actions .btn[data-game-action="hit"],#actions .btn[data-game-action="deal"],#actions .btn[data-game-action="double"]{background:#ffce3a;color:#302200}
+#actions .btn[data-game-action="stand"],#actions .btn[data-game-action="split"]{background:#3b8cf0;color:#0c0720}
+#actions .btn[data-game-action="force"]{background:#a64dff;color:#0c0720}
+#actions .btn.b-red{background:#ff5470;color:#0c0720}
+#actions .btn:disabled{background:#343039;color:#aaa2b8;opacity:1}
+.mode-circuit{background:#ffce3a;color:#302200}.mode-free,.mode-free:hover{background:#1fd1c8;color:#04302d}.mode-free .mode-icon{color:#04302d}
+#gainVal{color:#ffce3a}#scorebox .chips .v{color:#5aa6ff}#scorebox .mult .v{color:#ff5470}
+#gainVal.warn,.tnum.warn{color:#ff7d92}.objective-label,#objGoal{color:#ffce3a}
+.zlbl,.player-zone .zlbl{color:#c3b2f0}.zlbl .v{color:#fff7e6}.player-zone .zlbl .v{color:#1fd1c8}
+#tip:not(:empty){background:#1a1140;color:#fff7e6}
+.cpill{background:#302842;color:#e2d5ff}.cpill.on{background:#ffce3a;color:#302200}
+.cpill.evt{background:#392250;color:#e5c5ff}.cpill.ctr{background:#402a1b;color:#ffc78e}
+.combo-impact{color:#1fd1c8}.sctag,.sctag.mult{color:#fff7e6}.sctag b{color:#ffce3a}
+#multPop.win .m{color:#ffce3a}#multPop.lose .m{color:#ff5470}#multPop.push .m{color:#5aa6ff}#multPop .t{color:#1fd1c8}
+.tp-evt{background:#1a1140;color:#ffce3a}.tp-evt small{color:#e2d5ff}
