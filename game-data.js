@@ -14,7 +14,7 @@ en:{
 'ui.bet':'BET','ui.mult':'MULT','ui.gain':'CASH','ui.potLbl':'POT',
 'ui.dealer':'Dealer','ui.you':'You','ui.peek':'PEEK','ui.peekTitle':'Read the next card in the shoe',
 'ui.pause':'Pause','ui.lives':'Lives (second chances)','ui.streak':'STREAK',
-'ui.lvl':(l,m)=>'· LV '+l+' ×'+m,'ui.relics':'relics',
+'ui.lvl':(l,m)=>'· LV '+l+' ×'+m,'ui.relics':'relics','ui.consumables':'consumables',
 'ui.next':c=>'NEXT: '+c,'ui.bustRisk':p=>'BUST RISK: '+p+'%',
 /* --- menu principal --- */
 'menu.sub':'Pick your game mode. Each one has <b>its own Hideout</b> and <b>reputation</b>.',
@@ -269,7 +269,7 @@ fr:{
 'ui.bet':'MISE','ui.mult':'MULT','ui.gain':'GAIN','ui.potLbl':'CAGNOTTE',
 'ui.dealer':'Croupier','ui.you':'Toi','ui.peek':'VOIR','ui.peekTitle':'Lis la prochaine carte du sabot',
 'ui.pause':'Pause','ui.lives':'Vies (secondes chances)','ui.streak':'BARAKA',
-'ui.lvl':(l,m)=>'· NIV '+l+' ×'+m,'ui.relics':'reliques',
+'ui.lvl':(l,m)=>'· NIV '+l+' ×'+m,'ui.relics':'reliques','ui.consumables':'consommables',
 'ui.next':c=>'PROCHAINE : '+c,'ui.bustRisk':p=>'RISQUE DE BUST : '+p+'%',
 'menu.sub':'Choisis ton mode de jeu. Chaque mode a <b>sa Planque</b> et sa <b>réputation</b>.',
 'menu.circuit':'LA TOURNÉE','menu.circuitSub':n=>n+' tables · une fin · reliques & tarots',

@@ -18,7 +18,7 @@ en:{
 'ui.bet':'BET','ui.mult':'MULT','ui.gain':'CASH','ui.potLbl':'POT',
 'ui.dealer':'Dealer','ui.you':'You','ui.peek':'PEEK','ui.peekTitle':'Read the next card in the shoe',
 'ui.pause':'Pause','ui.lives':'Lives (second chances)','ui.streak':'STREAK',
-'ui.lvl':(l,m)=>'· LV '+l+' ×'+m,'ui.relics':'relics',
+'ui.lvl':(l,m)=>'· LV '+l+' ×'+m,'ui.relics':'relics','ui.consumables':'consumables',
 'ui.next':c=>'NEXT: '+c,'ui.bustRisk':p=>'BUST RISK: '+p+'%',
 /* --- menu principal --- */
 'menu.sub':'Pick your game mode. Each one has <b>its own Hideout</b> and <b>reputation</b>.',
@@ -273,7 +273,7 @@ fr:{
 'ui.bet':'MISE','ui.mult':'MULT','ui.gain':'GAIN','ui.potLbl':'CAGNOTTE',
 'ui.dealer':'Croupier','ui.you':'Toi','ui.peek':'VOIR','ui.peekTitle':'Lis la prochaine carte du sabot',
 'ui.pause':'Pause','ui.lives':'Vies (secondes chances)','ui.streak':'BARAKA',
-'ui.lvl':(l,m)=>'· NIV '+l+' ×'+m,'ui.relics':'reliques',
+'ui.lvl':(l,m)=>'· NIV '+l+' ×'+m,'ui.relics':'reliques','ui.consumables':'consommables',
 'ui.next':c=>'PROCHAINE : '+c,'ui.bustRisk':p=>'RISQUE DE BUST : '+p+'%',
 'menu.sub':'Choisis ton mode de jeu. Chaque mode a <b>sa Planque</b> et sa <b>réputation</b>.',
 'menu.circuit':'LA TOURNÉE','menu.circuitSub':n=>n+' tables · une fin · reliques & tarots',
@@ -1181,7 +1181,7 @@ function fannedCard(c,idx,total,opts){
   if(idx>0)slot.style.marginLeft=snapPixel(hashStr(seed+'x')*5-3)+'px';   // espacement aligné sur les pixels physiques
   slot.style.transform=`translateY(${snapPixel(arc+jY)}px) rotate(${(baseRot+jRot).toFixed(2)}deg)`;
   slot.style.setProperty('--float-delay',(-hashStr(seed+'float')*5).toFixed(2)+'s');
-  slot.style.setProperty('--float-duration',(3.6+hashStr(seed+'period')*1.8).toFixed(2)+'s');
+  slot.style.setProperty('--float-duration',(1.55+hashStr(seed+'period')*.75).toFixed(2)+'s');
   slot.appendChild(opts.flip?flipCard(c,Object.assign({idx:idx},opts)):cardEl(c,Object.assign({idx:idx},opts)));
   return slot;
 }
@@ -1440,7 +1440,9 @@ function renderRelics(){
     d.setAttribute('role','button');d.tabIndex=0;d.setAttribute('aria-label',d.title);d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();d.click();}};d.onclick=()=>openInspect('relic',idx);
     wrap.appendChild(d);
   });
-  $('slotc').innerHTML=`${G.relics.length}/5<br>${t('ui.relics')}`;
+  $('slotc').textContent=`${G.relics.length}/5`;
+  $('slotc').parentElement.setAttribute('aria-label',`${t('ui.relics')} : ${G.relics.length}/5`);
+  $('effects').hidden=!G.relics.length&&!G.consumables.length;
   fanEffects();
 }
 function consumableSlots(){return 2+(hasRelic('portebonheur')?1:0)+uLvl('tarot')+((G.boons&&G.boons.tarot)||0);}
@@ -1455,6 +1457,8 @@ function renderConsumables(){
     wrap.appendChild(d);
   });
   $('consumeSlots').textContent=`${G.consumables.length}/${consumableSlots()}`;
+  $('consumeSlots').parentElement.setAttribute('aria-label',`${t('ui.consumables')} : ${G.consumables.length}/${consumableSlots()}`);
+  $('effects').hidden=!G.relics.length&&!G.consumables.length;
   row.style.display=(G.consumables.length||hasRelic('portebonheur'))?'flex':'none';
   fanEffects();
 }
@@ -3182,7 +3186,7 @@ syncMenuFocus();
       const length=radius*(.8+random()*.2),width=Math.min(23,length*.13);
       const start=Math.min(p.width*.18,45);
       const shape=[[start,0],[length*.51,-width],[length*.43,-width*.08],[length,-width*.55],[length*.59,width],[length*.65,width*.1],[length*.23,width*.7]];
-      art+=`<path class="bolt-glow" d="${polygon(shape,angle)}"/><path class="bolt-core" d="${polygon(shape.map(([x,y])=>[x*.94,y*.33]),angle)}"/>`;
+      art+=`<path class="bolt-glow${arm%3===2?' bolt-teal':''}" d="${polygon(shape,angle)}"/><path class="bolt-core" d="${polygon(shape.map(([x,y])=>[x*.94,y*.33]),angle)}"/>`;
       if(arm%2===0){
         const d=length*.7;
         art+=`<path class="bolt-fragment" d="${polygon([[d,-width*2],[d+18,-width*2.6],[d+7,-width*1.4]],angle+.16)}"/>`;
@@ -3278,6 +3282,12 @@ syncMenuFocus();
   }
   function onCard(card) {
     const el = cardNode(card); if (!el) return;
+    animate(el,[
+      {translate:'0 0',rotate:'0deg',scale:'1'},
+      {translate:'0 -8px',rotate:'-2deg',scale:'1.045',offset:.28},
+      {translate:'0 2px',rotate:'1deg',scale:'.99',offset:.7},
+      {translate:'0 0',rotate:'0deg',scale:'1'}
+    ],{duration:280});
     burst(el, {count:card.ed?11:5,reach:card.ed?58:33,color:suitInk[card.s]});
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
     haptic();
@@ -3409,8 +3419,8 @@ syncMenuFocus();
 
   // Animate the lettering, while preserving a whole-word accessible label.
   // Observe only the small regions the renderer replaces, never each frame.
-  const liveRegions=[document.querySelector('.menuTitle'),$('tableName'),$('gainVal'),$('multVal'),$('actions'),$('planqueTitle'),...document.querySelectorAll('.mode-card strong')].filter(Boolean);
-  const letterTargets='.menuTitle,#tableName,#gainVal,#multVal,.actMain .blbl,#planqueTitle,.mode-card strong';
+  const liveRegions=[document.querySelector('.menuTitle'),$('tableName'),$('gainVal'),$('multVal'),$('actions'),$('planqueTitle'),...document.querySelectorAll('.zlbl,.mode-card strong')].filter(Boolean);
+  const letterTargets='.menuTitle,#tableName,#gainVal,#multVal,#pVal,#dVal,.zlbl>[data-i18n],#actions .blbl,#planqueTitle,.mode-card strong';
   function enlivenLetters(){
     document.querySelectorAll(letterTargets).forEach(el=>{
       if(el.querySelector('.live-letter'))return;
@@ -3427,7 +3437,7 @@ syncMenuFocus();
           const ink=document.createElement('span');ink.className='live-ink';ink.setAttribute('aria-hidden','true');
           for(const character of word){
             const letter=document.createElement('i');letter.className='live-letter';letter.textContent=character;
-            letter.style.setProperty('--letter-delay',(-index*.19-.4)+'s');
+            letter.style.setProperty('--letter-delay',(-index*.105-.3)+'s');
             ink.append(letter);index++;
           }
           group.append(ink);fragment.append(group);

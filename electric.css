@@ -214,3 +214,142 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 .combo-impact{color:#1fd1c8}.sctag,.sctag.mult{color:#fff7e6}.sctag b{color:#ffce3a}
 #multPop.win .m{color:#ffce3a}#multPop.lose .m{color:#ff5470}#multPop.push .m{color:#5aa6ff}#multPop .t{color:#1fd1c8}
 .tp-evt{background:#1a1140;color:#ffce3a}.tp-evt small{color:#e2d5ff}
+
+/* Approved graphite mockup: compact HUD, quieter chrome, luminous active hand. */
+:root{--bg0:#191c20;--bg1:#272c31;--bg2:#111419;--base-card-w:clamp(82px,14dvh,154px)}
+#bg{background:radial-gradient(ellipse at 50% 44%,#30363b 0%,#20252a 43%,#111419 100%)}
+#app{max-width:1040px;padding:24px 28px max(24px,env(safe-area-inset-bottom));gap:18px}
+#topbar{grid-template-columns:132px minmax(0,1fr) 54px;grid-template-rows:auto auto;gap:12px 24px}
+.table-brand{font-size:43px;letter-spacing:-3px}.table-number{margin-top:12px;font-size:10px}
+.tstats{grid-template-columns:1.35fr 1fr 1fr .9fr;gap:0}
+.gainstat,.seg,.turnstat{min-width:0;padding:0 16px;border-left:1px solid #8b93a340}
+.gainstat .lbl,.seg .k,.tt{color:#d9d7e8;font-size:10px;font-weight:600;letter-spacing:.06em}
+.seg .v,#gainVal,.tnum{font-size:clamp(30px,4.6vw,48px);line-height:1.12;margin:6px 0 0}
+#pauseBtn{width:50px;height:50px;background:#2a2d34;box-shadow:0 5px 16px #0002}
+#objWrap{max-width:none;padding-left:16px;gap:6px 10px}#objBar{height:8px;background:#262c32;box-shadow:inset 0 0 0 1px #7c829b70}
+#objFill{background:linear-gradient(90deg,#ffe57b,#ffce3a);box-shadow:inset 0 1px 0 #fff5}
+#mid{gap:12px;overflow:visible}
+.table-tools{position:relative;z-index:25;display:grid;grid-template-columns:1.2fr 1fr 1fr;align-items:center;flex:none;align-self:center;width:min(74%,640px);min-height:44px;border:1px solid #626c7c60;border-radius:28px;background:#171c2370;padding:7px 0;box-shadow:inset 0 1px 0 #ffffff03}
+.table-tools .table-context{display:block;grid-column:auto;grid-row:auto;justify-self:stretch;min-width:0;position:static}
+#tableName{font-size:11px;line-height:1.4;padding:6px 12px;color:#d9d1ed;letter-spacing:.1em;text-transform:uppercase;overflow-wrap:anywhere}
+.table-context-body{top:calc(100% + 8px);width:min(540px,calc(100vw - 32px));background:#20262e;border-color:#626c7c70;box-shadow:0 12px 35px #0008}
+#ruleText{display:block}
+.inventory-count{display:flex;justify-content:center;align-items:center;gap:14px;min-width:0;border-left:1px solid #8b93a350}
+.inventory-count svg{width:23px;height:23px;flex:none}.relic-count{color:#a64dff}.consume-count{color:#56e0df}
+#slotc,#consumeSlots{font:700 12px/1.3 var(--font);color:#d9d1ed;letter-spacing:.1em;white-space:nowrap}
+#effects{min-height:0;flex-wrap:wrap;gap:8px;padding:2px 8px}
+#effects[hidden]{display:none}#relicRow,#consumeRow{margin:0;min-width:0}#relics,#consumes{flex-wrap:wrap;justify-content:center;min-height:0}
+.joker,.tarot{background:#30303f;box-shadow:inset 0 0 0 1px #cab3ff20;border-radius:9px}
+.joker:hover,.tarot:hover{background:#40394e}.joker.hot{box-shadow:0 0 12px #ffce3a30}
+#pBar{position:relative;top:auto;left:auto;transform:none;align-self:center;flex:none;width:min(70%,600px);height:28px;border:1px solid #626c7c60;border-radius:24px;background:#10151bc0}
+#pBar::before{content:"";position:absolute;inset:7px 21%;border-radius:12px;background:#ffffff05}
+#pFill{background:linear-gradient(90deg,#1fd1c818,#1fd1c860)}
+.pmeta{height:100%;line-height:1;font-size:10px;letter-spacing:.2em;color:#ded5f3}
+#feltInner{padding:10px 12px 14px;gap:12px}.zone{padding:0;gap:12px}
+.zlbl{font-size:12px;letter-spacing:.23em;gap:8px}
+.zlbl .v{font-size:42px}.player-zone .zlbl .v{font-size:54px}
+.player-zone .zlbl .v::before,.player-zone .zlbl .v::after{width:22px;height:34px;top:17%;left:-34px;transform:rotate(-13deg);clip-path:polygon(0 0,100% 42%,58% 46%,100% 100%,12% 52%,47% 48%)}
+.player-zone .zlbl .v::after{left:auto;right:-34px;transform:scaleX(-1) rotate(-13deg)}
+.hand{gap:16px}#feltDeco::before,#feltDeco::after{height:90%;top:0;opacity:.045}
+.card{border-radius:7px;box-shadow:0 2px 3px #0003,0 10px 18px #0004,0 24px 32px -18px #0009}
+/* The glow sits on the wrapper, so it also works during a card flip. */
+#app[data-phase="play"] #pHand>.cardslot,#app[data-phase="play"] .splithand.active>.cardslot{filter:drop-shadow(0 0 2px #60eee8b0) drop-shadow(0 0 9px #1fd1c835)}
+#pHand:has(>.cardslot)::before,#pHand:has(>.cardslot)::after{content:"";position:absolute;pointer-events:none;z-index:-1;top:30%;left:calc(50% - var(--card-w)*1.65);width:calc(var(--card-w)*.55);height:calc(var(--card-w)*.72);background:linear-gradient(135deg,#1fd1c800,#44e0d5 65%,#1fd1c850);clip-path:polygon(0 0,100% 48%,66% 58%,100% 100%,22% 58%,48% 47%);opacity:.7}
+#pHand:has(>.cardslot)::after{left:auto;right:calc(50% - var(--card-w)*1.65);transform:scaleX(-1)}
+#pHand:has(>.cardslot:nth-child(4))::before,#pHand:has(>.cardslot:nth-child(4))::after{display:none}
+#center{gap:6px;min-height:28px}#tip{font-size:11px}
+#tip:not(:empty){background:#201932d9;border:1px solid #a64dff35;box-shadow:none;border-radius:12px}
+.cpill{padding:5px 12px;border-radius:22px;border:1px solid #a64dff95;background:#302043a0;color:#e3d2ff;font-size:10px;font-weight:650;letter-spacing:.025em}
+.cpill.on{border-color:#ffce3a;background:#ffce3a;color:#302200;box-shadow:0 0 12px #ffce3a18}
+.cpill.evt{border-color:#a64dff95}.cpill.ctr{border-color:#ed722f80}
+#bottombar{padding:10px 0 0;gap:12px}
+#actions{gap:14px}
+#actions .btn{border-radius:30px;min-height:78px;padding:14px 18px;gap:12px;font-size:clamp(19px,2.6vw,29px);line-height:1.05;box-shadow:inset 0 2px 0 #ffffff35,inset 0 -4px 0 #00000015,0 10px 22px #00000026;overflow-wrap:anywhere}
+#actions .action-copy{min-width:0;max-width:100%;gap:4px}
+#actions .blbl{max-width:100%;white-space:normal;text-align:center;text-wrap:balance}
+#actions .btn[data-game-action="force"] .blbl{max-width:8ch;text-align:left}
+#actions .action-glyph{width:34px;height:34px;flex-shrink:0}
+#actions .btn:disabled{box-shadow:inset 0 1px 0 #ffffff09;filter:none}
+#actions:has(.actWide .btn:nth-child(2)) .btn{font-size:19px;padding:12px 10px;gap:7px}
+.arcade-lightning{filter:drop-shadow(0 0 5px #ffce3a35)}
+.arcade-lightning .bolt-glow{fill:#ffda56}.arcade-lightning .bolt-teal{fill:#36ddd3}.arcade-lightning .bolt-fragment{fill:#ffce3a}
+.score-link-halo{stroke:#1fd1c8}.arcade-ring{border-color:#ffce3a}
+
+@media(max-width:720px){
+  :root{--base-card-w:clamp(64px,12dvh,106px)}
+  #app{padding:16px 14px max(18px,env(safe-area-inset-bottom));gap:12px}
+  #topbar{grid-template-columns:70px minmax(0,1fr) 32px;gap:9px 8px}
+  .table-brand{font-size:26px;letter-spacing:-1.9px}.table-number{font-size:6.5px;letter-spacing:.19em;margin:9px 0 0}
+  .gainstat,.seg,.turnstat{padding:0 7px}.gainstat .lbl,.seg .k,.tt{font-size:6.5px;letter-spacing:.01em}
+  .seg .v,#gainVal,.tnum{font-size:clamp(21px,6vw,30px);margin:5px 0 0}
+  #pauseBtn{width:32px;height:32px}#objWrap{padding-left:7px;gap:5px 6px}.objective-label{font-size:7px}#objGoal{font-size:10px}#objBar{height:6px}
+  #mid{gap:9px}.table-tools{width:86%;min-height:36px;padding:4px 0}
+  #tableName{font-size:9px;padding:5px 8px;letter-spacing:.06em}
+  .inventory-count{gap:10px}.inventory-count svg{width:19px;height:19px}#slotc,#consumeSlots{font-size:10px}
+  #pBar{width:81%;height:24px}.pmeta{font-size:8px}
+  #feltInner{padding:6px 4px 10px;gap:9px}.zone{gap:10px}.zlbl{font-size:10px;gap:5px}
+  .zlbl .v{font-size:34px}.player-zone .zlbl .v{font-size:44px}.hand{gap:12px}
+  #center{min-height:24px}#tip{font-size:10px}.cpill{font-size:9px;padding:4px 9px}
+  #bottombar{padding-top:5px}#actions{gap:8px}
+  #actions .btn{min-height:62px;border-radius:24px;padding:11px 10px;gap:7px;font-size:17px}
+  #actions .action-glyph{width:24px;height:27px}
+  #actions .btn[data-game-action="force"]{font-size:15px}
+  #actions:has(.actWide .btn:nth-child(2)) .btn{font-size:13px;padding:9px 6px;gap:4px}
+  #actions:has(.actWide .btn:nth-child(2)) .action-glyph{width:17px;height:22px}
+}
+@media(max-width:365px){
+  #app{padding-left:10px;padding-right:10px}#topbar{grid-template-columns:58px minmax(0,1fr) 29px;column-gap:6px}
+  .table-brand{font-size:23px}.table-number{font-size:6px}.gainstat,.seg,.turnstat{padding:0 5px}
+  .gainstat .lbl,.seg .k,.tt{font-size:6px}.seg .v,#gainVal,.tnum{font-size:21px}
+  #actions .btn{font-size:15px;padding:10px 7px;gap:5px}#actions .btn[data-game-action="force"]{font-size:13px}
+  #actions .action-glyph{width:20px;height:24px}#actions:has(.actWide .btn:nth-child(2)) .btn{font-size:11px}
+}
+@media(max-height:700px){
+  #app{padding-top:9px;padding-bottom:max(10px,env(safe-area-inset-bottom));gap:7px}#mid{gap:6px}
+  .table-tools{min-height:30px;padding:2px 0}#pBar{height:20px}.pmeta{font-size:7px}
+  #feltInner{padding-top:3px;padding-bottom:5px;gap:5px}.zone{gap:5px}.zlbl{font-size:8px;gap:4px}
+  .zlbl .v{font-size:27px}.player-zone .zlbl .v{font-size:34px}#center{min-height:20px}
+  #actions .btn{min-height:50px;border-radius:20px}.cpill{font-size:8px;padding:3px 8px}
+}
+@media(max-height:600px) and (orientation:portrait){
+  :root{--base-card-w:56px}#app{gap:5px}#mid{gap:4px}#feltInner{gap:3px}
+  .table-tools{min-height:27px}#tableName{padding:3px 6px;font-size:8px}.inventory-count svg{width:16px;height:16px}
+  #pBar{height:18px}.zlbl .v{font-size:22px}.player-zone .zlbl .v{font-size:28px}
+  #actions .btn{min-height:44px}#bottombar{gap:6px}.cpill{font-size:7px}
+}
+@media(max-height:600px) and (orientation:landscape){
+  :root{--base-card-w:clamp(50px,15dvh,82px)}
+  #app{max-width:1000px;padding:8px 20px;gap:5px}#topbar{grid-template-columns:90px minmax(0,1fr) 34px;gap:5px 14px}
+  .table-brand{font-size:30px}.table-number{font-size:7px;margin-top:6px}.seg .v,#gainVal,.tnum{font-size:27px;margin-top:2px}
+  #pauseBtn{width:32px;height:32px}#mid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto minmax(0,1fr);gap:4px 16px}
+  .table-tools{grid-column:1;grid-row:1;width:100%;min-height:28px}#pBar{grid-column:2;grid-row:1;width:90%}
+  #effects{grid-column:1 / -1;grid-row:2}#stage{grid-column:1 / -1;grid-row:3;min-height:0}
+  #feltInner{padding:2px 0 0;gap:3px 16px}.zone{gap:4px}.zlbl{font-size:8px}.zlbl .v,.player-zone .zlbl .v{font-size:25px}
+  #center{min-height:16px}.cpill{font-size:7px;padding:2px 7px}#bottombar{padding:0;gap:14px}
+  #actions .btn{min-height:44px;font-size:17px;padding:8px 12px;border-radius:18px}#actions .action-glyph{width:22px;height:24px}
+}
+
+/* Faster, staggered motion: transforms compose with the hand's fan layout. */
+.hand .cardslot{animation-name:active-card-drift}
+.dealer-zone .cardslot{--float-height:-5px;--float-angle:1.1deg}
+.player-zone .cardslot{--float-height:-8px;--float-angle:1.9deg}
+.splithand .cardslot{--float-height:-5px;--float-angle:1deg}
+@keyframes active-card-drift{
+  0%,100%{translate:-1px 2px;rotate:calc(-1 * var(--float-angle,1.5deg))}
+  45%{translate:1.5px var(--float-height,-7px);rotate:var(--float-angle,1.5deg)}
+  75%{translate:0 -2px;rotate:0deg}
+}
+.live-letter{animation-duration:1.45s;animation-name:active-letter-drift}
+#actions .blbl{--letter-height:-2.4px;--letter-angle:2.4deg}
+#pVal,#dVal{--letter-height:-3px;--letter-angle:2deg}
+#gainVal,#multVal{--letter-height:-2px;--letter-angle:1.5deg}
+.zlbl>[data-i18n]{--letter-height:-1.4px;--letter-angle:1.5deg}
+@keyframes active-letter-drift{
+  0%,100%{translate:0 0;rotate:calc(-1 * var(--letter-angle,1deg))}
+  42%{translate:0 var(--letter-height,-2px);rotate:var(--letter-angle,1deg)}
+  70%{translate:0 .5px;rotate:0deg}
+}
+#actions .btn:disabled .live-letter{animation-play-state:paused}
+/* Keep both the OS motion preference and the in-game gentle setting authoritative. */
+@media(prefers-reduced-motion:reduce){.hand .cardslot,.live-letter{animation:none!important;translate:none!important;rotate:none!important}}
+:root[data-motion=gentle] .hand .cardslot,:root[data-motion=gentle] .live-letter{animation:none!important;translate:none!important;rotate:none!important}

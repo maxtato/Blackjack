@@ -602,7 +602,7 @@ function fannedCard(c,idx,total,opts){
   if(idx>0)slot.style.marginLeft=snapPixel(hashStr(seed+'x')*5-3)+'px';   // espacement aligné sur les pixels physiques
   slot.style.transform=`translateY(${snapPixel(arc+jY)}px) rotate(${(baseRot+jRot).toFixed(2)}deg)`;
   slot.style.setProperty('--float-delay',(-hashStr(seed+'float')*5).toFixed(2)+'s');
-  slot.style.setProperty('--float-duration',(3.6+hashStr(seed+'period')*1.8).toFixed(2)+'s');
+  slot.style.setProperty('--float-duration',(1.55+hashStr(seed+'period')*.75).toFixed(2)+'s');
   slot.appendChild(opts.flip?flipCard(c,Object.assign({idx:idx},opts)):cardEl(c,Object.assign({idx:idx},opts)));
   return slot;
 }
@@ -861,7 +861,9 @@ function renderRelics(){
     d.setAttribute('role','button');d.tabIndex=0;d.setAttribute('aria-label',d.title);d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();d.click();}};d.onclick=()=>openInspect('relic',idx);
     wrap.appendChild(d);
   });
-  $('slotc').innerHTML=`${G.relics.length}/5<br>${t('ui.relics')}`;
+  $('slotc').textContent=`${G.relics.length}/5`;
+  $('slotc').parentElement.setAttribute('aria-label',`${t('ui.relics')} : ${G.relics.length}/5`);
+  $('effects').hidden=!G.relics.length&&!G.consumables.length;
   fanEffects();
 }
 function consumableSlots(){return 2+(hasRelic('portebonheur')?1:0)+uLvl('tarot')+((G.boons&&G.boons.tarot)||0);}
@@ -876,6 +878,8 @@ function renderConsumables(){
     wrap.appendChild(d);
   });
   $('consumeSlots').textContent=`${G.consumables.length}/${consumableSlots()}`;
+  $('consumeSlots').parentElement.setAttribute('aria-label',`${t('ui.consumables')} : ${G.consumables.length}/${consumableSlots()}`);
+  $('effects').hidden=!G.relics.length&&!G.consumables.length;
   row.style.display=(G.consumables.length||hasRelic('portebonheur'))?'flex':'none';
   fanEffects();
 }

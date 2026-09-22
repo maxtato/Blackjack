@@ -115,7 +115,7 @@
       const length=radius*(.8+random()*.2),width=Math.min(23,length*.13);
       const start=Math.min(p.width*.18,45);
       const shape=[[start,0],[length*.51,-width],[length*.43,-width*.08],[length,-width*.55],[length*.59,width],[length*.65,width*.1],[length*.23,width*.7]];
-      art+=`<path class="bolt-glow" d="${polygon(shape,angle)}"/><path class="bolt-core" d="${polygon(shape.map(([x,y])=>[x*.94,y*.33]),angle)}"/>`;
+      art+=`<path class="bolt-glow${arm%3===2?' bolt-teal':''}" d="${polygon(shape,angle)}"/><path class="bolt-core" d="${polygon(shape.map(([x,y])=>[x*.94,y*.33]),angle)}"/>`;
       if(arm%2===0){
         const d=length*.7;
         art+=`<path class="bolt-fragment" d="${polygon([[d,-width*2],[d+18,-width*2.6],[d+7,-width*1.4]],angle+.16)}"/>`;
@@ -211,6 +211,12 @@
   }
   function onCard(card) {
     const el = cardNode(card); if (!el) return;
+    animate(el,[
+      {translate:'0 0',rotate:'0deg',scale:'1'},
+      {translate:'0 -8px',rotate:'-2deg',scale:'1.045',offset:.28},
+      {translate:'0 2px',rotate:'1deg',scale:'.99',offset:.7},
+      {translate:'0 0',rotate:'0deg',scale:'1'}
+    ],{duration:280});
     burst(el, {count:card.ed?11:5,reach:card.ed?58:33,color:suitInk[card.s]});
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
     haptic();
@@ -342,8 +348,8 @@
 
   // Animate the lettering, while preserving a whole-word accessible label.
   // Observe only the small regions the renderer replaces, never each frame.
-  const liveRegions=[document.querySelector('.menuTitle'),$('tableName'),$('gainVal'),$('multVal'),$('actions'),$('planqueTitle'),...document.querySelectorAll('.mode-card strong')].filter(Boolean);
-  const letterTargets='.menuTitle,#tableName,#gainVal,#multVal,.actMain .blbl,#planqueTitle,.mode-card strong';
+  const liveRegions=[document.querySelector('.menuTitle'),$('tableName'),$('gainVal'),$('multVal'),$('actions'),$('planqueTitle'),...document.querySelectorAll('.zlbl,.mode-card strong')].filter(Boolean);
+  const letterTargets='.menuTitle,#tableName,#gainVal,#multVal,#pVal,#dVal,.zlbl>[data-i18n],#actions .blbl,#planqueTitle,.mode-card strong';
   function enlivenLetters(){
     document.querySelectorAll(letterTargets).forEach(el=>{
       if(el.querySelector('.live-letter'))return;
@@ -360,7 +366,7 @@
           const ink=document.createElement('span');ink.className='live-ink';ink.setAttribute('aria-hidden','true');
           for(const character of word){
             const letter=document.createElement('i');letter.className='live-letter';letter.textContent=character;
-            letter.style.setProperty('--letter-delay',(-index*.19-.4)+'s');
+            letter.style.setProperty('--letter-delay',(-index*.105-.3)+'s');
             ink.append(letter);index++;
           }
           group.append(ink);fragment.append(group);
