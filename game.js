@@ -1812,7 +1812,7 @@ function flyTag(x,y,html,cls){
 }
 function bounceEl(el){
   if(!el||window.ColdDeckFX?.reduced)return;
-  window.ColdDeckFX?.onScoreCard(el);
+  if(window.ColdDeckFX?.onScoreCard){window.ColdDeckFX.onScoreCard(el);return;}
   el.animate([
     {transform:'translateY(0) scale(1)'},
     {transform:'translateY(-24px) rotate(-7deg) scale(1.22)',offset:.35},

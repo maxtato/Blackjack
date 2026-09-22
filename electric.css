@@ -153,3 +153,23 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 /* Larger indices and pips, with a compact two-digit ten. */
 .corner .suit{width:calc(var(--card-w)*.14);height:calc(var(--card-w)*.14)}
 .card[data-rank="10"] .corner-r{font-size:calc(var(--card-w)*.23);letter-spacing:-.085em}
+
+/* Card-led scoring and crisp four-suit print, inspired by the reference clip. */
+.card{background:#fffdf4;border-radius:5px;box-shadow:0 2px 0 #071c7626,0 7px 12px #06137f30}
+.card[data-suit="♠"]{color:#283285;--art-line:#283285;--court-ink:#283285}
+.card[data-suit="♣"]{color:#23714c;--art-line:#23714c;--court-ink:#205a43;--court-shade:#c6dcc4}
+.card[data-suit="♥"]{color:#e4324d;--art-line:#e4324d;--court-ink:#9e2640;--court-shade:#f6c9ca}
+.card[data-suit="♦"]{color:#ed722f;--art-line:#ed722f;--court-ink:#a54926;--court-shade:#f8d6ba}
+.card.arrive{animation:reference-deal 310ms cubic-bezier(.18,.75,.25,1) both}
+.card.flip{animation:reference-reveal 330ms cubic-bezier(.18,.75,.25,1) both}
+@keyframes reference-deal{0%{opacity:0;transform:translate(95px,-34px) rotate(16deg) scale(.82)}65%{opacity:1;transform:translate(-4px,2px) rotate(-3deg) scale(1.035)}100%{opacity:1;transform:none}}
+@keyframes reference-reveal{0%{opacity:.3;transform:rotateY(-88deg) rotate(-5deg) translateY(-8px)}65%{opacity:1;transform:rotateY(8deg) rotate(2deg) translateY(-3px)}100%{opacity:1;transform:none}}
+#actions .btn{box-shadow:inset 0 -3px 0 #1231cf14,0 5px 10px #071ea322}
+.score-link{position:absolute;pointer-events:none}.score-link svg{display:block;width:100%;height:100%;overflow:visible}
+.score-link path{fill:none;stroke-linejoin:bevel;stroke-linecap:round}.score-link-halo{stroke:#cbd5ff;stroke-width:7;opacity:.28}.score-link-core{stroke:#fffefa;stroke-width:1.6}
+.card-value-pop{position:absolute;pointer-events:none;font:900 27px/1 var(--game-type);font-style:normal;paint-order:stroke fill;-webkit-text-stroke:3px #fffefa;text-shadow:0 3px 0 #0d2089;white-space:nowrap}
+.combo-impact{font-size:clamp(23px,3.4vw,40px);-webkit-text-stroke:4px #112161;text-shadow:0 3px 0 #112161;transition:top 110ms ease-out}
+.sctag{font-family:var(--game-type);font-size:21px;-webkit-text-stroke:3px #112161;text-shadow:0 3px 0 #112161}
+@media(prefers-reduced-motion:reduce){.card.arrive,.card.flip{animation:none!important}.combo-impact{transition:none}}
+:root[data-motion=gentle] .card.arrive,:root[data-motion=gentle] .card.flip{animation:none!important}
+:root[data-motion=gentle] .combo-impact{transition:none}

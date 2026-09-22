@@ -214,14 +214,42 @@
     burst(el, {count:card.ed?11:5,reach:card.ed?58:33,color:suitInk[card.s]});
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
     haptic();
-    if(!G.dHand.includes(card)){lightning(el,card.ed?145:100,card.ed?5:3);kick(2);}
+    if(!G.dHand.includes(card)){if(card.ed)lightning(el,145,5);kick(1.2);}
     else if(card.ed)lightning(el,80,3);
   }
+  // Reference rhythm: a local card accent, then an energy transfer to the HUD.
+  function energyLink(from,to){
+    if(reduced()||document.hidden)return;
+    const a=rect(from),b=rect(to);if(!a||!b)return;
+    const left=Math.min(a.x,b.x)-18,top=Math.min(a.y,b.y)-18;
+    const width=Math.abs(b.x-a.x)+36,height=Math.abs(b.y-a.y)+36;
+    const beam=piece('score-link',left,top);if(!beam)return;
+    beam.style.width=width+'px';beam.style.height=height+'px';
+    const x=a.x-left,y=a.y-top,dx=b.x-a.x,dy=b.y-a.y;
+    const bend=(random()-.5)*22;
+    const d=`M${x} ${y} L${x+dx*.32+bend} ${y+dy*.32} L${x+dx*.49-bend} ${y+dy*.49} L${x+dx*.7+bend} ${y+dy*.7} L${b.x-left} ${b.y-top}`;
+    beam.innerHTML=`<svg viewBox="0 0 ${width} ${height}" aria-hidden="true"><path class="score-link-halo" d="${d}"/><path class="score-link-core" d="${d}"/></svg>`;
+    animate(beam,[{opacity:0},{opacity:.9,offset:.15},{opacity:.65,offset:.5},{opacity:0}],{duration:260},true);
+  }
   function onScoreCard(el) {
-    kick(3);
-    lightning(el,115,5);
-    impact(el);
-    burst(el, {count:12,reach:110,color:'#f4ff28',ring:true});
+    if(reduced()||document.hidden||!el)return;
+    // Tracked with all effects so pause and motion changes cancel the bounce.
+    animate(el,[
+      {translate:'0 0',rotate:'0deg',scale:'1',filter:'brightness(1)',boxShadow:'0 7px 12px #06137f30'},
+      {translate:'0 -15px',rotate:'-4deg',scale:'1.13',filter:'brightness(1.08)',boxShadow:'0 0 0 2px #f4ff28,0 0 24px #f4ff2880',offset:.22},
+      {translate:'0 -5px',rotate:'2deg',scale:'1.03',filter:'brightness(1.04)',boxShadow:'0 0 0 1px #f4ff2870,0 0 10px #f4ff2830',offset:.57},
+      {translate:'0 0',rotate:'0deg',scale:'1',filter:'brightness(1)',boxShadow:'0 7px 12px #06137f30'}
+    ],{duration:420});
+    const p=rect(el);
+    if(p&&el.dataset.rank){
+      const value=piece('card-value-pop',p.x,p.y-p.height*.38);
+      if(value){value.textContent=el.dataset.rank;value.style.color=getComputedStyle(el).color;
+        animate(value,[{transform:'translate(-50%,0) scale(.5)',opacity:0},{transform:'translate(-50%,-12px) scale(1.2)',opacity:1,offset:.2},{transform:'translate(-50%,-20px) scale(1)',opacity:1,offset:.6},{transform:'translate(-50%,-38px) scale(.9)',opacity:0}],{duration:620},true);
+      }
+    }
+    energyLink(el,$('multVal'));
+    burst(el,{count:7,reach:65,color:'#f4ff28'});
+    haptic();
   }
   function impact(el){
     if(reduced()||document.hidden)return;
@@ -244,8 +272,10 @@
     }
   }
   function onCombo(line){
-    layer.querySelector('.combo-impact')?.remove();
     const p=rect($('center'));if(!p)return;
+    const previous=[...layer.querySelectorAll('.combo-impact')];
+    while(previous.length>1)previous.shift().remove();
+    previous.reverse().forEach((label,i)=>{label.style.top=(p.y-(i+1)*27)+'px';});
     const el=piece('combo-impact',p.x,p.y);
     if(!el)return;
     // These labels come directly from the engine's real scoring calculation.
@@ -257,9 +287,9 @@
       {transform:'translate(-50%,-50%) rotate(-4deg) scale(.94)',opacity:1,offset:.16},
       {transform:'translate(-50%,-50%) rotate(-4deg) scale(1)',opacity:1,offset:.36},
       {transform:'translate(-50%,-70%) rotate(-2deg) scale(.96)',opacity:0}
-    ],{duration:470},true);
-    kick(4.5);lightning($('center'),145,5);
-    impact($('multVal'));pulse($('multVal'),true);
+    ],{duration:680},true);
+    kick(2.5);lightning($('center'),125,4);
+    energyLink($('pHand'),$('multVal'));pulse($('multVal'),true);
   }
   function onRelic(el) {
     kick(3);lightning(el,90,4);
