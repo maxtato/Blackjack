@@ -9,7 +9,7 @@
   --magenta:#ff53a0;--red:#ff6857;--redDk:#bc293b;--orange:#ff9238;
   --teal:#baffd6;--tealDk:#174daa;--green:#afffc5;--greenDk:#145eb9;
   --blue:#c7dcff;--blueDk:#0725c4;--grape:#d7b5ff;--purpleDk:#643bba;
-  --cardW:#fffefa;--inkCard:#11182f;--suitRed:#ff542f;
+  --cardW:#fffefa;--inkCard:#626976;--suitRed:#827878;
   --base-card-w:clamp(78px,13dvh,112px);--card-w:var(--base-card-w);
   --display:"Arial Black","Avenir Next",Arial,sans-serif;
   --game-type:Impact,"Arial Narrow","Avenir Next Condensed",var(--display);
@@ -67,10 +67,10 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 #pBar{height:17px;width:min(215px,50%);border-radius:15px;background:#0826bf77}.pmeta{font-size:7px;line-height:17px;color:#ccd7ff}#pPct{color:#fff}#pFill{background:linear-gradient(90deg,#f4ff2820,#f4ff2880)}
 #peekBtn{background:var(--yellow);color:var(--ink);border-radius:30px;padding:10px 16px}
 .splitwrap{gap:18px;--card-w:min(78px,calc((100cqw - 80px)/var(--split-count,4)))}.splithand{border-radius:9px}.shval{background:#fff;color:var(--ink);font-family:var(--game-type)}
-.card{color:var(--inkCard);--art-wash:#1739f508;--art-accent:#f4eb18;--art-line:#1940ed;border-radius:8px;box-shadow:0 2px 3px #020c7b26,0 7px 12px #06137f30,0 18px 25px -14px #020a7290}
-.card[data-suit="♠"],.card[data-suit="♣"]{color:var(--inkCard);--art-accent:#f4eb18;--art-line:#1c40ee}
-.card[data-suit="♥"],.card[data-suit="♦"]{color:var(--suitRed);--art-accent:#f4eb18;--art-line:#ff7e42}
-.corner-r{font:850 calc(var(--card-w)*.225)/.98 var(--game-type);letter-spacing:-.04em}.card::after{box-shadow:inset 0 0 0 1px #fff9}
+.card{color:var(--inkCard);--art-wash:#1739f508;--art-accent:#e8e65b;--art-line:#a9adb5;--court-ink:#515966;--court-shade:#b8bdc5;--court-skin:#eeefee;border-radius:8px;box-shadow:0 2px 3px #020c7b26,0 7px 12px #06137f30,0 18px 25px -14px #020a7290}
+.card[data-suit="♠"],.card[data-suit="♣"]{color:var(--inkCard);--art-accent:#e8e65b;--art-line:#a9adb5}
+.card[data-suit="♥"],.card[data-suit="♦"]{color:var(--suitRed);--art-accent:#ded9aa;--art-line:#b5abaa}
+.corner-r{font:650 calc(var(--card-w)*.235)/1 "Avenir Next","Segoe UI",Arial,sans-serif;letter-spacing:-.065em}.card::after{box-shadow:inset 0 0 0 1px #fff9}
 .card.back{--back-bg:#092fe4;--back-ink:#fffefa;background:var(--back-bg);color:var(--back-ink);border:3px solid #fffefa;box-shadow:0 8px 16px #06137f45}
 .card.back::after{inset:4px;border-radius:5px;border:1px solid var(--back-ink);opacity:.9;box-shadow:none}
 .bpat{inset:7px;opacity:.2;background:repeating-linear-gradient(45deg,transparent 0 4px,var(--back-ink) 4px 4.6px,transparent 4.6px 8px)}
