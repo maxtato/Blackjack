@@ -462,3 +462,34 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
   #gainVal{font-size:32px}.seg.chips{grid-column:2;grid-row:1}.seg.mult{grid-column:3;grid-row:1}.turnstat{grid-column:4;grid-row:1}
   #objWrap{grid-column:2;grid-row:2;padding-left:8px;gap:4px 8px}#objBar{height:10px}
 }
+
+/* Reserve room for the controls and fit both hands into the remaining viewport. */
+#shaker{overflow-y:auto;overflow-x:hidden}
+#app{height:100dvh;min-height:640px;padding-top:max(10px,env(safe-area-inset-top));padding-bottom:max(12px,env(safe-area-inset-bottom));gap:10px}
+#mid{min-height:0;gap:8px}
+#stage{--hand-overhead:230px}
+.hand{--card-w:min(var(--base-card-w),max(36px,calc((100cqh - var(--hand-overhead) - var(--message-room))/2.84)),calc((100cqw - 70px)/var(--hand-count,2)))}
+.splitwrap{--card-w:min(calc(var(--base-card-w)*.77),max(32px,calc((100cqh - var(--hand-overhead) - var(--message-room))/2.84)),calc((100cqw - 80px)/var(--split-count,4)))}
+#bottombar{padding-top:4px;gap:8px}
+@media(max-width:720px){
+  #topbar{grid-template-rows:auto auto;gap:7px 8px}
+  .brand-block,.thead-right{grid-row:1}
+  #objWrap{grid-row:2;gap:4px 8px}
+  #gainVal{font-size:30px}
+  .tstats{gap:4px 0}
+  #stage{--hand-overhead:166px}
+  #feltInner{padding:4px 0;gap:4px}
+  .zone{gap:4px}.zlbl{gap:3px}
+  #center{padding:2px 0;gap:4px;min-height:18px}
+  .hand{--card-w:min(var(--base-card-w),max(36px,calc((100cqh - var(--hand-overhead) - var(--message-room))/2.84)),calc((100cqw - 48px)/var(--hand-count,2)))}
+  .splitwrap{--card-w:min(54px,max(32px,calc((100cqh - var(--hand-overhead) - var(--message-room))/2.84)),calc((100cqw - 65px)/var(--split-count,4)))}
+  #actions .btn{min-height:50px;padding:9px 8px}
+}
+@media(max-height:600px) and (orientation:landscape){
+  #app{min-height:360px;gap:4px;padding:6px 16px max(6px,env(safe-area-inset-bottom))}
+  #mid{gap:4px 12px}#stage{--hand-overhead:90px}
+  #objWrap{grid-row:2}.brand-block,.thead-right{grid-row:1 / 3}
+  .hand{--card-w:min(var(--base-card-w),max(32px,calc((100cqh - var(--hand-overhead) - var(--message-room))/1.42)),calc((100cqw - 48px)/var(--hand-count,2)))}
+  .splitwrap{--card-w:min(48px,max(30px,calc((100cqh - var(--hand-overhead) - var(--message-room))/1.42)),calc((100cqw - 65px)/var(--split-count,4)))}
+  #bottombar{padding-top:0;gap:8px}#actions .btn{min-height:44px;padding:7px 8px}
+}
