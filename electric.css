@@ -501,3 +501,33 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 @media(max-height:600px) and (orientation:landscape){
   #actions{flex:1 1 0;height:52px}#actions .btn{min-height:0}
 }
+
+/* The board owns its geometry. Action content cannot resize its grid track. */
+#app{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) 128px}
+#topbar{grid-column:1;grid-row:1}
+#mid{grid-column:1;grid-row:2;min-width:0;min-height:0}
+#bottombar{grid-column:1;grid-row:3;height:100%;min-height:0;max-height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;justify-content:flex-start}
+#bottombar #betRow{flex-shrink:0}
+#stage,#stage:has(#tip:not(:empty)){--message-room:0px}
+#feltInner{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) 44px minmax(0,1fr);gap:4px;padding:4px 0}
+#feltInner .dealer-zone{grid-column:1;grid-row:1}
+#feltInner .player-zone{grid-column:1;grid-row:3}
+#feltInner .zone{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:64px minmax(0,1fr);align-items:start;align-content:start;justify-items:center;gap:4px;padding:0;min-height:0}
+#feltInner .zlbl{height:64px;justify-content:center;margin:0}
+#feltInner .hand{align-self:start}
+#center{grid-column:1;grid-row:2;align-self:stretch;height:44px;min-height:0;max-height:44px;padding:0;overflow-y:auto;overflow-x:hidden;justify-content:flex-start}
+#feltInner .table-empty{position:absolute;top:100%;left:0;width:100%;margin:0;text-align:center;pointer-events:none}
+@media(max-width:720px){
+  #app{grid-template-rows:auto minmax(0,1fr) 110px}
+  #feltInner .zone{grid-template-rows:54px minmax(0,1fr)}
+  #feltInner .zlbl{height:54px}
+}
+@media(max-height:600px) and (orientation:landscape){
+  #app{grid-template-rows:auto minmax(0,1fr) 52px}
+  #feltInner{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) 30px;gap:2px 16px}
+  #feltInner .dealer-zone{grid-column:1;grid-row:1}
+  #feltInner .player-zone{grid-column:2;grid-row:1}
+  #feltInner .zone{grid-template-rows:44px minmax(0,1fr)}
+  #feltInner .zlbl{height:44px}
+  #center{grid-column:1 / 3;grid-row:2;height:30px;max-height:30px}
+}
