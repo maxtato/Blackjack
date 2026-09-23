@@ -79,7 +79,7 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 /* The three main controls stay in the thumb area. Special actions still work. */
 #bottombar{grid-column:auto;flex:none;min-height:0;display:flex;flex-direction:column;gap:12px;padding:4px 0 0;background:none;box-shadow:none;border:0;border-radius:0}
 #betRow{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:12px}#betRow>.lbl{color:#dce5ff;font-size:9px}
-#betRow[hidden]{display:none}
+#betRow[hidden]{display:flex;visibility:hidden;pointer-events:none}
 .chip{width:38px;height:38px;background:#ffffff15;color:#fff;border:0;box-shadow:none}.chip::after{border-color:#ffffff29}.chip.on{background:var(--yellow);color:var(--ink);box-shadow:0 5px 12px #030c8526}.chip.on::after{border-color:#1f356720}
 #actions{display:flex;width:100%;flex:1;gap:12px;align-items:stretch}.actMain,.actWide,.actMain.betmain{display:contents}
 #actions .btn{flex:1;min-width:0;min-height:70px;flex-direction:row;gap:10px;border-radius:100px;font:850 clamp(17px,2.4vw,25px)/1 var(--game-type);padding:13px 20px;background:#fffefa;color:#1231cf;border:0;box-shadow:0 7px 12px #071ea314}
@@ -492,4 +492,12 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
   .hand{--card-w:min(var(--base-card-w),max(32px,calc((100cqh - var(--hand-overhead) - var(--message-room))/1.42)),calc((100cqw - 48px)/var(--hand-count,2)))}
   .splitwrap{--card-w:min(48px,max(30px,calc((100cqh - var(--hand-overhead) - var(--message-room))/1.42)),calc((100cqw - 65px)/var(--split-count,4)))}
   #bottombar{padding-top:0;gap:8px}#actions .btn{min-height:44px;padding:7px 8px}
+}
+
+/* Keep identical footer geometry when betting controls become unavailable. */
+#actions{flex:0 0 auto;height:78px}
+#actions .btn{height:100%;min-height:0;box-sizing:border-box}
+@media(max-width:720px){#actions{height:64px}#actions .btn{min-height:0}}
+@media(max-height:600px) and (orientation:landscape){
+  #actions{flex:1 1 0;height:52px}#actions .btn{min-height:0}
 }
