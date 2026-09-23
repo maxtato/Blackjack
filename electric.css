@@ -387,3 +387,35 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
   #stage{--hand-overhead:86px}.hand{--fit-card-w:max(40px,calc((100cqh - var(--hand-overhead) - var(--message-room))/1.42))}
   #center{padding:0}#bottombar{padding-top:0}#effects .joker,#effects .tarot{height:28px}.effect-symbol{width:21px;height:21px}
 }
+
+/* Match the printed slots before and after dealing; extra cards still fit the hand. */
+:root{--base-card-w:clamp(68px,10dvh,112px)}
+.hand{--card-w:min(var(--base-card-w),calc((100cqw - 70px)/var(--hand-count,2)))}
+.hand:empty::before,.hand:empty::after{flex:none;width:var(--card-w);height:calc(var(--card-w)*1.42);border-radius:7px}
+.splitwrap{--card-w:min(calc(var(--base-card-w)*.77),calc((100cqw - 80px)/var(--split-count,4)))}
+@media(max-width:720px){
+  :root{--base-card-w:clamp(52px,9dvh,80px)}
+  .hand{--card-w:min(var(--base-card-w),calc((100cqw - 48px)/var(--hand-count,2)))}
+  .splitwrap{--card-w:min(54px,calc((100cqw - 65px)/var(--split-count,4)))}
+}
+@media(max-height:600px) and (orientation:portrait){:root{--base-card-w:48px}}
+@media(max-height:600px) and (orientation:landscape){:root{--base-card-w:clamp(40px,13dvh,68px)}}
+
+/* A flat edge-on swap avoids transparent back emblems in composited 3D layers.
+   Both faces change at the same 200 ms midpoint of the engine's 400 ms flip. */
+.flipwrap{transform-style:flat;animation:clean-card-turn 400ms ease-in-out both}
+.flipwrap>.card{transform:none;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.flipwrap>.back{animation:clean-card-back 400ms steps(1,end) both}
+.flipwrap>.front{animation:clean-card-front 400ms steps(1,end) both}
+.flipwrap>.back::before{content:none!important;display:none}
+@keyframes clean-card-turn{0%,100%{transform:scaleX(1)}50%{transform:scaleX(0)}}
+@keyframes clean-card-back{0%{visibility:visible}50%,100%{visibility:hidden}}
+@keyframes clean-card-front{0%{visibility:hidden}50%,100%{visibility:visible}}
+@media(prefers-reduced-motion:reduce){
+  .flipwrap{animation:none!important;transform:none!important}
+  .flipwrap>.back{animation:none!important;visibility:hidden}
+  .flipwrap>.front{animation:none!important;visibility:visible;transform:none}
+}
+:root[data-motion=gentle] .flipwrap{animation:none!important;transform:none!important}
+:root[data-motion=gentle] .flipwrap>.back{animation:none!important;visibility:hidden}
+:root[data-motion=gentle] .flipwrap>.front{animation:none!important;visibility:visible;transform:none}
