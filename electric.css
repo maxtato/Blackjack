@@ -330,25 +330,25 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 }
 
 /* Moderate, irregular idle accents, independent from each card's fan and flip. */
-.hand .cardslot{--idle-duration:1.55s;--card-hop:2.5px;--card-tilt:.8deg;animation:card-idle-punch var(--idle-duration) steps(1,end) var(--card-delay,0s) infinite;translate:none;rotate:none;top:0}
-.hand .cardslot:nth-child(2n){--idle-duration:1.8s}
-.hand .cardslot:nth-child(3n){--idle-duration:1.65s}
-.dealer-zone .cardslot{--card-hop:1.75px;--card-tilt:.6deg}
-.splithand .cardslot{--card-hop:1.5px;--card-tilt:.5deg}
+.hand .cardslot{--idle-duration:2.3s;--card-hop:1.25px;--card-tilt:.4deg;animation:card-idle-punch var(--idle-duration) steps(1,end) var(--card-delay,0s) infinite;translate:none;rotate:none;top:0}
+.hand .cardslot:nth-child(2n){--idle-duration:2.65s}
+.hand .cardslot:nth-child(3n){--idle-duration:2.45s}
+.dealer-zone .cardslot{--card-hop:.9px;--card-tilt:.3deg}
+.splithand .cardslot{--card-hop:.75px;--card-tilt:.25deg}
 .hand .cardslot:has(.flipwrap){animation:none;translate:none;rotate:none}
 @keyframes card-idle-punch{
   0%,58%,100%{translate:0 0;rotate:0deg}
-  12%{translate:-.5px calc(var(--card-hop)*-.65);rotate:calc(var(--card-tilt)*-1)}
-  28%{translate:0 -.5px;rotate:calc(var(--card-tilt)*.4)}
-  42%{translate:.5px calc(var(--card-hop)*-1);rotate:var(--card-tilt)}
-  74%{translate:-.5px -1px;rotate:calc(var(--card-tilt)*-.55)}
-  88%{translate:.5px .5px;rotate:calc(var(--card-tilt)*.3)}
+  12%{translate:-.25px calc(var(--card-hop)*-.65);rotate:calc(var(--card-tilt)*-1)}
+  28%{translate:0 -.25px;rotate:calc(var(--card-tilt)*.4)}
+  42%{translate:.25px calc(var(--card-hop)*-1);rotate:var(--card-tilt)}
+  74%{translate:-.25px -.5px;rotate:calc(var(--card-tilt)*-.55)}
+  88%{translate:.25px .25px;rotate:calc(var(--card-tilt)*.3)}
 }
-.live-letter{--text-hop:clamp(.6px,.0425em,1.5px);position:relative;top:0;translate:none;rotate:none;animation:letter-idle-punch calc(var(--letter-duration,1.1s)*1.15) steps(1,end) var(--letter-delay,0s) infinite}
+.live-letter{--text-hop:clamp(.3px,.022em,.75px);position:relative;top:0;translate:none;rotate:none;animation:letter-idle-punch calc(var(--letter-duration,1.1s)*1.65) steps(1,end) var(--letter-delay,0s) infinite}
 @keyframes letter-idle-punch{
   0%,34%,70%,100%{translate:0 0;rotate:0deg}
-  14%{translate:0 calc(var(--text-hop)*-1);rotate:-1deg}
-  48%{translate:.2px calc(var(--text-hop)*-.7);rotate:1deg}
+  14%{translate:0 calc(var(--text-hop)*-1);rotate:-.5deg}
+  48%{translate:.1px calc(var(--text-hop)*-.7);rotate:.5deg}
   84%{translate:0 calc(var(--text-hop)*-1);rotate:-.5deg}
 }
 #bottombar #actions .btn{color:#fff}
@@ -434,3 +434,31 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 :root[data-motion=gentle] .flipwrap{animation:none!important;transform:none!important}
 :root[data-motion=gentle] .flipwrap>.back{animation:none!important;visibility:hidden}
 :root[data-motion=gentle] .flipwrap>.front{animation:none!important;visibility:visible;transform:none}
+
+/* Give the cash total and objective a clear, steady visual priority. */
+.tstats{grid-template-columns:1.65fr 1fr 1fr .9fr}
+#gainStat{border-left:0;background:#ffce3a0d;border-radius:10px;padding:5px 12px}
+#gainStat .lbl{color:#fff0b3;font-size:11px;font-weight:800;letter-spacing:.06em}
+#gainVal{font-size:clamp(34px,5vw,54px);color:#ffda55;text-shadow:0 2px 12px #ffce3a20;margin-top:3px}
+#gainVal.warn{color:#ff8c9d}
+#gainVal .live-letter{animation:none;translate:none;rotate:none}
+#objWrap{gap:8px 10px}
+.objective-label{font-size:11px;color:#fff0b3}
+#objGoal{font-size:16px;color:#ffda55;font-variant-numeric:tabular-nums}
+#objBar{height:12px;background:#4d535d;box-shadow:inset 0 0 0 1px #ffffff24,0 2px 8px #0003}
+#objFill{background:linear-gradient(90deg,#ffcb32,#ffe585);box-shadow:inset 0 2px 0 #ffffff55}
+@media(max-width:720px){
+  .tstats{grid-template-columns:1fr 1fr 1fr;gap:7px 0}
+  #gainStat{grid-column:1 / -1;grid-row:1;flex-direction:row;align-items:center;justify-content:space-between;gap:8px;padding:5px 8px}
+  #gainStat .lbl{font-size:9px;letter-spacing:.025em}
+  #gainVal{font-size:32px;margin:0}
+  .seg.chips{grid-column:1;grid-row:2}.seg.mult{grid-column:2;grid-row:2}.turnstat{grid-column:3;grid-row:2}
+  #objWrap{grid-column:1 / -1;grid-row:3;padding-left:0;gap:6px 8px}
+  .objective-label{font-size:10px}#objGoal{font-size:14px}#objBar{height:11px}
+}
+@media(max-height:600px) and (orientation:landscape){
+  .tstats{grid-template-columns:1.65fr 1fr 1fr .9fr;gap:0}
+  #gainStat{grid-column:1;grid-row:1;flex-direction:column;align-items:flex-start;padding:0 8px;gap:0}
+  #gainVal{font-size:32px}.seg.chips{grid-column:2;grid-row:1}.seg.mult{grid-column:3;grid-row:1}.turnstat{grid-column:4;grid-row:1}
+  #objWrap{grid-column:2;grid-row:2;padding-left:8px;gap:4px 8px}#objBar{height:10px}
+}
