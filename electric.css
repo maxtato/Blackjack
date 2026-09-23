@@ -516,7 +516,6 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 #feltInner .zlbl{height:64px;justify-content:center;margin:0}
 #feltInner .hand{align-self:start}
 #center{grid-column:1;grid-row:2;align-self:stretch;height:44px;min-height:0;max-height:44px;padding:0;overflow-y:auto;overflow-x:hidden;justify-content:flex-start}
-#feltInner .table-empty{position:absolute;top:100%;left:0;width:100%;margin:0;text-align:center;pointer-events:none}
 @media(max-width:720px){
   #app{grid-template-rows:auto minmax(0,1fr) 110px}
   #feltInner .zone{grid-template-rows:54px minmax(0,1fr)}
