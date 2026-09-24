@@ -13,8 +13,8 @@
   let lastLevel = barakaLevel();
   let popupTimer;
   let cameraAnimation, lastHaptic = -Infinity;
-  const palette = ['#f4ff28', '#fffefa', '#ff9238', '#f4ff28', '#fffefa'];
-  const suitInk = {'♠':'#fffefa', '♥':'#ff9238', '♦':'#ff9238', '♣':'#f4ff28'};
+  const palette = ['#ffce3a', '#fff7e6', '#1fd1c8', '#ff5470', '#a64dff'];
+  const suitInk = {'♠':'#fff7e6', '♥':'#ff5470', '♦':'#ff9326', '♣':'#1fd1c8'};
   let preference;
   try{preference=localStorage.getItem('colddeck-motion');}catch(e){}
   const reduced = () => preference==='gentle'||motion.matches;
@@ -112,27 +112,10 @@
     const inside=lightningLayer&&$('felt').contains(el);
     const origin=inside?lightningLayer.getBoundingClientRect():{left:0,top:0};
     const bolt=piece('arcade-lightning',p.x-origin.left,p.y-origin.top,null,inside?lightningLayer:layer);if(!bolt)return;
-    const radius=Math.min(reach,innerWidth*.56),size=radius*2+70,center=size/2;
+    const radius=Math.min(reach,innerWidth*.56),size=radius*2+70;
     bolt.style.width=bolt.style.height=size+'px';
-    let art='';
-    const polygon=(points,angle)=>'M'+points.map(([x,y])=>{
-      const px=center+Math.cos(angle)*x-Math.sin(angle)*y;
-      const py=center+Math.sin(angle)*x+Math.cos(angle)*y;
-      return px.toFixed(1)+' '+py.toFixed(1);
-    }).join('L')+'Z';
-    for(let arm=0;arm<arms;arm++){
-      const side=arm%2?Math.PI:0,fan=Math.floor(arm/2)/Math.max(1,Math.ceil(arms/2)-1);
-      const angle=side+(fan-.5)*1.8+(random()-.5)*.18;
-      const length=radius*(.8+random()*.2),width=Math.min(23,length*.13);
-      const start=Math.min(p.width*.18,45);
-      const shape=[[start,0],[length*.51,-width],[length*.43,-width*.08],[length,-width*.55],[length*.59,width],[length*.65,width*.1],[length*.23,width*.7]];
-      art+=`<path class="bolt-glow${arm%3===2?' bolt-teal':''}" d="${polygon(shape,angle)}"/><path class="bolt-core" d="${polygon(shape.map(([x,y])=>[x*.94,y*.33]),angle)}"/>`;
-      if(arm%2===0){
-        const d=length*.7;
-        art+=`<path class="bolt-fragment" d="${polygon([[d,-width*2],[d+18,-width*2.6],[d+7,-width*1.4]],angle+.16)}"/>`;
-      }
-    }
-    bolt.innerHTML=`<svg viewBox="0 0 ${size} ${size}" aria-hidden="true">${art}</svg>`;
+    bolt.innerHTML=ColdDeckArt.illustration('ui-burst','lightning-art');
+    bolt.firstElementChild.style.transform=`rotate(${(arms%2?1:-1)*(3+random()*7)}deg)`;
     animate(bolt,[
       {transform:'translate(-50%,-50%) scale(.38)',opacity:0},
       {transform:'translate(-50%,-50%) scale(.96)',opacity:1,offset:.1},

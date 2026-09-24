@@ -562,15 +562,19 @@ const ColdDeckArt = (() => {
   // HD raster illustrations shared by inventory, shops, effects and menus.
   const illustrationKeys=new Set(["lunettes", "jeton", "clope", "as", "froid", "compteur", "mecene", "usurier", "collector", "maitresse", "bruleur", "portebonheur", "diplomate", "talisman", "aimant", "phare", "etoile", "jugement", "soleil", "diable", "lune", "etoileD", "pendu", "magicien", "roue", "soin", "assurance", "videur", "bank", "pourboire", "net", "tarot", "contact", "relic2", "plafond", "elan", "cashplus", "boon2", "mult", "baraplus", "evt3"]);
   const effectAliases={bankI:'bank',pourboireI:'pourboire',income:'pourboire',betmax:'plafond',filet:'net',cash:'soin'};
-  const interfaceArt={flag:'phare',trophy:'etoile',scroll:'boon2',forcee:'baraplus',glass:'baraplus',arc:'lune',suite:'elan',couleur:'tarot',doree:'etoile',diamond:'relic2'};
+  const interfaceArt={flag:'phare',trophy:'ui-trophy',scroll:'boon2',forcee:'baraplus',glass:'baraplus',arc:'lune',suite:'elan',couleur:'tarot',doree:'etoile',diamond:'relic2'};
   const image=key=>`assets/illustrations/${key}.webp`;
+  const backKeys={cb9:'back-lightning',cb10:'back-luck',cb11:'back-heart',cb12:'back-moon',cb13:'back-dice',cb14:'back-crown',cb15:'back-eye',cb16:'back-cherry',cb18:'back-flame',cb19:'back-diamond',cb22:'back-snake',cb26:'back-sun'};
+  const backKey=id=>backKeys[id]||backKeys.cb9;
+  const illustration=(key,className='scene-art',lazy=false)=>`<img class="${className}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`;
+  const back=(id,lazy=false)=>`<img class="card-back-image" src="${image(backKey(id))}" width="1024" height="1536" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`;
   function effect(id){
     const requested=effectAliases[id]||id;
     const key=illustrationKeys.has(requested)?requested:'etoile';
     return `<img class="effect-symbol effect-illustration" data-effect-symbol="${key}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">`;
   }
   const icon=n=>`<img class="pxi raster-icon" src="${image(interfaceArt[n]||'etoile')}" width="1024" height="1024" alt="" aria-hidden="true" decoding="async" draggable="false">`;
-  return {suit,face,icon,actionIcon,effect,image};
+  return {suit,face,icon,actionIcon,effect,image,illustration,back,backKey};
 })();
 
 
@@ -579,8 +583,8 @@ const ColdDeckArt = (() => {
    COLD DECK — moteur + présentation Balatro
    ============================================================ */
 const $=id=>document.getElementById(id);
-const STAR=ColdDeckArt.icon('doree'),STARE='<span class="empty-star">'+ColdDeckArt.icon('doree')+'</span>';   // Vector reputation badges
-const PXI=n=>ColdDeckArt.icon(n);                          // Smooth interface icons
+const STAR=ColdDeckArt.icon('doree'),STARE='<span class="empty-star">'+ColdDeckArt.icon('doree')+'</span>';
+const PXI=n=>ColdDeckArt.icon(n);
 const rndInt=n=>Math.floor(Math.random()*n);
 /* abrège les grands nombres : 1 500 → 1.5K, 2 000 000 → 2M, etc. */
 function abbr(n){
@@ -644,22 +648,23 @@ const sfx={
 /* ---------- dos de carte (préférence persistante) ---------- */
 const CARD_BACKS=['cb9','cb10','cb11','cb12','cb13','cb14','cb15','cb16','cb18','cb19','cb22','cb26'];
 let cardBack=(()=>{try{const v=localStorage.getItem('t21back');return CARD_BACKS.includes(v)?v:'cb9';}catch(e){return 'cb9';}})();
-function setCardBack(cb){cardBack=cb;try{localStorage.setItem('t21back',cb);}catch(e){}renderBackPicker();renderHands();}
+function setCardBack(cb){if(!CARD_BACKS.includes(cb))return;cardBack=cb;try{localStorage.setItem('t21back',cb);}catch(e){}renderBackPicker();renderHands();}
 function renderBackPicker(){
   // aperçu du dos sélectionné dans La Planque (la galerie complète vit dans l'overlay)
   const prev=document.getElementById('bpPreview');
-  if(prev)prev.className='card back '+cardBack+' bpCard';
+  if(prev){prev.className='card back '+cardBack+' bpCard';prev.innerHTML=ColdDeckArt.back(cardBack);}
   const sub=document.getElementById('bpSub');
-  if(sub)sub.textContent=t('planque.backSub',CARD_BACKS.indexOf(cardBack)+1,CARD_BACKS.length);
+  if(sub)sub.textContent=t('back.'+cardBack)+' · '+t('planque.backSub',CARD_BACKS.indexOf(cardBack)+1,CARD_BACKS.length);
   const row=document.getElementById('bpRow');if(!row)return;row.innerHTML='';
   CARD_BACKS.forEach((cb,i)=>{
     const slot=document.createElement('div');slot.className='bpslot';
-    const d=document.createElement('div');d.className='card back '+cb+' bpCard'+(cardBack===cb?' sel':'');d.innerHTML='<i class="bpat"></i>';
+    const d=document.createElement('button');d.type='button';d.className='card back '+cb+' bpCard'+(cardBack===cb?' sel':'');d.innerHTML=ColdDeckArt.back(cb,true);
     const sd=hashStr(cb+'#'+i),sd2=hashStr(cb+'~'+i),dur=5.5+sd*2.5;   // phase+durée propres -> mouvement indépendant
     d.style.setProperty('--cdur',dur.toFixed(2)+'s');
     d.style.setProperty('--cd','-'+(sd2*dur).toFixed(2)+'s');
-    slot.onclick=()=>{setCardBack(cb);try{sfx.flip();}catch(e){}};
-    slot.appendChild(d);row.appendChild(slot);
+    d.onclick=()=>{setCardBack(cb);try{sfx.flip();}catch(e){}};
+    const label=document.createElement('span');label.className='back-name';label.textContent=t('back.'+cb);
+    slot.append(d,label);row.appendChild(slot);
   });
 }
 
@@ -1146,7 +1151,7 @@ function heartSVG(size){return ColdDeckArt.suit('♥',size);}
 function cardEl(c,opts={}){
   const d=document.createElement('div');d.className='card';
   if(opts.back){
-    d.classList.add('back',cardBack);d.innerHTML='<i class="bpat"></i>';
+    d.classList.add('back',cardBack);d.innerHTML=ColdDeckArt.back(cardBack);
     d.setAttribute('aria-label',LANG==='fr'?'Carte cachée':'Hidden card');
   }else{
     d.dataset.suit=c.s;d.dataset.rank=c.r;
@@ -1562,7 +1567,7 @@ function renderChips(){
     const b=document.createElement('button');b.type='button';
     const tooDear=v>G.bank;            // palier hors budget
     b.className='chip'+((G.betChosen&&G.bet===v)?' on':'')+((locked||tooDear)?' locked':'');
-    b.textContent=abbr(v);b.disabled=locked||tooDear;b.setAttribute('aria-label',cash(v));b.setAttribute('aria-pressed',String(G.betChosen&&G.bet===v));
+    b.innerHTML=ColdDeckArt.illustration('ui-chip','chip-art')+'<span class="chip-value">'+abbr(v)+'</span>';b.disabled=locked||tooDear;b.setAttribute('aria-label',cash(v));b.setAttribute('aria-pressed',String(G.betChosen&&G.bet===v));
     if(!locked&&!tooDear)b.onclick=()=>{G.bet=v;G.betChosen=true;renderChips();renderActions();renderMult();};
     wrap.appendChild(b);
   });
@@ -2943,7 +2948,9 @@ Object.assign(STR.fr,{
  'planque.startCircuit':n=>'circuit · '+n+' tables',
  'set.title':'RÉGLAGES','set.close':'TERMINÉ','set.dev':'OUTILS DE DÉMONSTRATION',
  'rules.close':'RETOUR','rules.basic':'Les bases du blackjack','rules.bonuses':'Baraka & combinaisons','rules.modes':'Les modes de jeu',
- 'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>'
+ 'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>',
+ 'back.cb9':'Éclair','back.cb10':'Chance','back.cb11':'Cœur','back.cb12':'Lune','back.cb13':'Dés','back.cb14':'Couronne','back.cb15':'Œil','back.cb16':'Cerises','back.cb18':'Flamme','back.cb19':'Diamant','back.cb22':'Serpent','back.cb26':'Soleil',
+ 'set.open':'RÉGLAGES'
 });
 Object.assign(STR.en,{
  'ui.gain':'BANK','ui.turnsLeft':'HANDS',
@@ -2963,10 +2970,34 @@ Object.assign(STR.en,{
  'planque.startInf':'no missions · unlimited hands','planque.startCircuit':n=>'circuit · '+n+' tables',
  'set.close':'DONE','set.dev':'DEMO TOOLS','rules.close':'BACK',
  'rules.basic':'Blackjack basics','rules.bonuses':'Streaks & combinations','rules.modes':'Game modes',
- 'tok.bankI':'+$','tok.pourboireI':'+$<small>/hand</small>'
+ 'tok.bankI':'+$','tok.pourboireI':'+$<small>/hand</small>',
+ 'back.cb9':'Lightning','back.cb10':'Luck','back.cb11':'Heart','back.cb12':'Moon','back.cb13':'Dice','back.cb14':'Crown','back.cb15':'Eye','back.cb16':'Cherries','back.cb18':'Flame','back.cb19':'Diamond','back.cb22':'Snake','back.cb26':'Sun',
+ 'set.open':'SETTINGS'
 });
 for(const key of Object.keys(STR.fr))if(typeof STR.fr[key]==='string')STR.fr[key]=STR.fr[key].replaceAll('SANS FIN','LIBRE').replaceAll('LA TOURNÉE','CIRCUIT');
 for(const key of Object.keys(STR.en))if(typeof STR.en[key]==='string')STR.en[key]=STR.en[key].replaceAll('ENDLESS','FREE PLAY');
+// One illustrated language throughout the dialogs and celebration effects.
+for(const [name,key] of [['chip','ui-chip'],['burst','ui-burst'],['star','etoile']]){
+ document.documentElement.style.setProperty('--art-'+name,`url("${ColdDeckArt.image(key)}")`);
+}
+for(const [id,key] of Object.entries({rulesScreen:'boon2',upgradesScreen:'relic2',backPickScreen:'as',confirmRestart:'roue',pauseScreen:'ui-pause',palierScreen:'elan',shop:'ui-trophy',loseScreen:'net',endScreen:'ui-trophy',settingsScreen:'ui-settings'})){
+ const heading=$(id)?.querySelector('h1');if(!heading)continue;
+ const header=document.createElement('div');header.className='illustrated-heading';
+ heading.before(header);header.innerHTML=ColdDeckArt.illustration(key,'dialog-art',true);header.append(heading);
+}
+document.querySelectorAll('.hero-chip').forEach(el=>{
+ const value=el.textContent;el.innerHTML=ColdDeckArt.illustration('ui-chip','chip-art')+'<b>'+value+'</b>';
+});
+document.querySelectorAll('.hero-star').forEach(el=>el.innerHTML=ColdDeckArt.illustration('etoile','scene-art'));
+document.querySelector('.hero-art')?.insertAdjacentHTML('afterbegin',ColdDeckArt.illustration('ui-burst','hero-burst'));
+document.querySelector('#upgradesBtn')?.insertAdjacentHTML('afterbegin',ColdDeckArt.illustration('relic2','prep-art',true));
+const demoArt=document.querySelector('.adCube');if(demoArt)demoArt.innerHTML=ColdDeckArt.illustration('as','scene-art',true);
+const originalEndRender=renderEndScreen;
+renderEndScreen=function(){
+ originalEndRender();
+ const art=$('endScreen').querySelector('.dialog-art');
+ if(art&&G.endInfo)art.src=ColdDeckArt.image(G.endInfo.cashout?'ui-trophy':'jeton');
+};
 STR.fr['top.metaInf']=(p,a,b)=>'∞ LIBRE · palier '+p+' · mise '+a+'–'+b;
 STR.en['top.metaInf']=(p,a,b)=>'∞ FREE PLAY · tier '+p+' · bet '+a+'–'+b;
 STR.fr['rules.table']='<span class="rt">LES TABLES DU CIRCUIT</span>Atteins l’objectif de jetons avant d’épuiser tes mains. La table se termine dès que l’objectif est atteint. Les mises ont un minimum et un maximum propres à la table.';
@@ -2981,8 +3012,10 @@ renderMenu=function(){
   const detail=played?t(mode==='infini'?'menu.recTier':'menu.recTables',played):t('menu.first');
   return `<div class="mrec"><span class="mrl">${t(label)}</span><span class="mrv">${detail}</span></div>`;
  }).join('');
- if(!$('menuHand').children.length){
-  $('menuHand').innerHTML=['back-lightning','back-luck'].map((name,index)=>`<img class="card menu-card-image" src="${ColdDeckArt.image(name)}" width="1024" height="1536" alt="" decoding="async" ${index===0?'fetchpriority="high"':''} draggable="false">`).join('');
+ const menuBacks=[ColdDeckArt.backKey(cardBack),cardBack==='cb10'?'back-lightning':'back-luck'];
+ if($('menuHand').dataset.backs!==menuBacks.join(',')){
+  $('menuHand').dataset.backs=menuBacks.join(',');
+  $('menuHand').innerHTML=menuBacks.map((name,index)=>`<img class="card menu-card-image" src="${ColdDeckArt.image(name)}" width="1024" height="1536" alt="" decoding="async" ${index===0?'fetchpriority="high"':''} draggable="false">`).join('');
  }
  $('readySuit').innerHTML=ColdDeckArt.effect('as');
 };
@@ -2998,7 +3031,7 @@ renderBackPicker=function(){
  originalBackRender();
  document.querySelectorAll('#bpRow .bpCard').forEach((card,i)=>{
   card.setAttribute('role','button');card.tabIndex=0;
-  card.setAttribute('aria-label',t('planque.backSub',i+1,CARD_BACKS.length));
+  card.setAttribute('aria-label',t('back.'+CARD_BACKS[i])+' · '+t('planque.backSub',i+1,CARD_BACKS.length));
   card.setAttribute('aria-pressed',String(card.classList.contains('sel')));
   card.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();card.click();}};
  });
@@ -3085,8 +3118,8 @@ syncMenuFocus();
   let lastLevel = barakaLevel();
   let popupTimer;
   let cameraAnimation, lastHaptic = -Infinity;
-  const palette = ['#f4ff28', '#fffefa', '#ff9238', '#f4ff28', '#fffefa'];
-  const suitInk = {'♠':'#fffefa', '♥':'#ff9238', '♦':'#ff9238', '♣':'#f4ff28'};
+  const palette = ['#ffce3a', '#fff7e6', '#1fd1c8', '#ff5470', '#a64dff'];
+  const suitInk = {'♠':'#fff7e6', '♥':'#ff5470', '♦':'#ff9326', '♣':'#1fd1c8'};
   let preference;
   try{preference=localStorage.getItem('colddeck-motion');}catch(e){}
   const reduced = () => preference==='gentle'||motion.matches;
@@ -3184,27 +3217,10 @@ syncMenuFocus();
     const inside=lightningLayer&&$('felt').contains(el);
     const origin=inside?lightningLayer.getBoundingClientRect():{left:0,top:0};
     const bolt=piece('arcade-lightning',p.x-origin.left,p.y-origin.top,null,inside?lightningLayer:layer);if(!bolt)return;
-    const radius=Math.min(reach,innerWidth*.56),size=radius*2+70,center=size/2;
+    const radius=Math.min(reach,innerWidth*.56),size=radius*2+70;
     bolt.style.width=bolt.style.height=size+'px';
-    let art='';
-    const polygon=(points,angle)=>'M'+points.map(([x,y])=>{
-      const px=center+Math.cos(angle)*x-Math.sin(angle)*y;
-      const py=center+Math.sin(angle)*x+Math.cos(angle)*y;
-      return px.toFixed(1)+' '+py.toFixed(1);
-    }).join('L')+'Z';
-    for(let arm=0;arm<arms;arm++){
-      const side=arm%2?Math.PI:0,fan=Math.floor(arm/2)/Math.max(1,Math.ceil(arms/2)-1);
-      const angle=side+(fan-.5)*1.8+(random()-.5)*.18;
-      const length=radius*(.8+random()*.2),width=Math.min(23,length*.13);
-      const start=Math.min(p.width*.18,45);
-      const shape=[[start,0],[length*.51,-width],[length*.43,-width*.08],[length,-width*.55],[length*.59,width],[length*.65,width*.1],[length*.23,width*.7]];
-      art+=`<path class="bolt-glow${arm%3===2?' bolt-teal':''}" d="${polygon(shape,angle)}"/><path class="bolt-core" d="${polygon(shape.map(([x,y])=>[x*.94,y*.33]),angle)}"/>`;
-      if(arm%2===0){
-        const d=length*.7;
-        art+=`<path class="bolt-fragment" d="${polygon([[d,-width*2],[d+18,-width*2.6],[d+7,-width*1.4]],angle+.16)}"/>`;
-      }
-    }
-    bolt.innerHTML=`<svg viewBox="0 0 ${size} ${size}" aria-hidden="true">${art}</svg>`;
+    bolt.innerHTML=ColdDeckArt.illustration('ui-burst','lightning-art');
+    bolt.firstElementChild.style.transform=`rotate(${(arms%2?1:-1)*(3+random()*7)}deg)`;
     animate(bolt,[
       {transform:'translate(-50%,-50%) scale(.38)',opacity:0},
       {transform:'translate(-50%,-50%) scale(.96)',opacity:1,offset:.1},

@@ -71,11 +71,6 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 .card[data-suit="♠"],.card[data-suit="♣"]{color:var(--inkCard);--art-accent:#f4eb18;--art-line:#1c40ee}
 .card[data-suit="♥"],.card[data-suit="♦"]{color:var(--suitRed);--art-accent:#f4eb18;--art-line:#ff7e42}
 .corner-r{font:750 calc(var(--card-w)*.22)/1 "Avenir Next","Segoe UI",Arial,sans-serif;letter-spacing:-.065em}.card::after{box-shadow:inset 0 0 0 1px #fff9}
-.card.back{--back-bg:#092fe4;--back-ink:#fffefa;background:var(--back-bg);color:var(--back-ink);border:3px solid #fffefa;box-shadow:0 8px 16px #00000045}
-.card.back::after{inset:4px;border-radius:5px;border:1px solid var(--back-ink);opacity:.9;box-shadow:none}
-.bpat{inset:7px;opacity:.2;background:repeating-linear-gradient(45deg,transparent 0 4px,var(--back-ink) 4px 4.6px,transparent 4.6px 8px)}
-.card.back.cb9::before{content:"";inset:25% 24%;background:var(--back-ink);clip-path:polygon(50% 0,58% 37%,77% 23%,63% 43%,100% 50%,63% 57%,77% 77%,58% 63%,50% 100%,42% 63%,23% 77%,37% 57%,0 50%,37% 43%,23% 23%,42% 37%);filter:drop-shadow(0 0 7px #fff6)}
-
 /* The three main controls stay in the thumb area. Special actions still work. */
 #bottombar{grid-column:auto;flex:none;min-height:0;display:flex;flex-direction:column;gap:12px;padding:4px 0 0;background:none;box-shadow:none;border:0;border-radius:0}
 #betRow{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:12px}#betRow>.lbl{color:#dce5ff;font-size:9px}

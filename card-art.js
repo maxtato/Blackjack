@@ -50,13 +50,17 @@ const ColdDeckArt = (() => {
   // HD raster illustrations shared by inventory, shops, effects and menus.
   const illustrationKeys=new Set(["lunettes", "jeton", "clope", "as", "froid", "compteur", "mecene", "usurier", "collector", "maitresse", "bruleur", "portebonheur", "diplomate", "talisman", "aimant", "phare", "etoile", "jugement", "soleil", "diable", "lune", "etoileD", "pendu", "magicien", "roue", "soin", "assurance", "videur", "bank", "pourboire", "net", "tarot", "contact", "relic2", "plafond", "elan", "cashplus", "boon2", "mult", "baraplus", "evt3"]);
   const effectAliases={bankI:'bank',pourboireI:'pourboire',income:'pourboire',betmax:'plafond',filet:'net',cash:'soin'};
-  const interfaceArt={flag:'phare',trophy:'etoile',scroll:'boon2',forcee:'baraplus',glass:'baraplus',arc:'lune',suite:'elan',couleur:'tarot',doree:'etoile',diamond:'relic2'};
+  const interfaceArt={flag:'phare',trophy:'ui-trophy',scroll:'boon2',forcee:'baraplus',glass:'baraplus',arc:'lune',suite:'elan',couleur:'tarot',doree:'etoile',diamond:'relic2'};
   const image=key=>`assets/illustrations/${key}.webp`;
+  const backKeys={cb9:'back-lightning',cb10:'back-luck',cb11:'back-heart',cb12:'back-moon',cb13:'back-dice',cb14:'back-crown',cb15:'back-eye',cb16:'back-cherry',cb18:'back-flame',cb19:'back-diamond',cb22:'back-snake',cb26:'back-sun'};
+  const backKey=id=>backKeys[id]||backKeys.cb9;
+  const illustration=(key,className='scene-art',lazy=false)=>`<img class="${className}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`;
+  const back=(id,lazy=false)=>`<img class="card-back-image" src="${image(backKey(id))}" width="1024" height="1536" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`;
   function effect(id){
     const requested=effectAliases[id]||id;
     const key=illustrationKeys.has(requested)?requested:'etoile';
     return `<img class="effect-symbol effect-illustration" data-effect-symbol="${key}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">`;
   }
   const icon=n=>`<img class="pxi raster-icon" src="${image(interfaceArt[n]||'etoile')}" width="1024" height="1024" alt="" aria-hidden="true" decoding="async" draggable="false">`;
-  return {suit,face,icon,actionIcon,effect,image};
+  return {suit,face,icon,actionIcon,effect,image,illustration,back,backKey};
 })();

@@ -16,6 +16,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="stylesheet" href="modern.css">
 <link rel="stylesheet" href="electric.css">
+<link rel="stylesheet" href="illustrated.css">
 </head>
 <body>
 <div id="bg">
@@ -141,7 +142,7 @@
   <main class="hideout-grid">
    <section class="ready-panel"><span class="section-label" data-i18n="menu.nextHand">LA PROCHAINE MAIN T'ATTEND</span><div id="readySuit" class="ready-suit" aria-hidden="true"></div><div id="palierResume" style="display:none"></div><button class="btn b-gold menu" id="planqueLaunch" data-action="launchMode"></button><button class="btn b-red menu" id="planqueZ2" data-action="start-zone-two" style="display:none"><span data-i18n="planque.zone2">ZONE 2</span><small data-i18n="planque.zone2Sub"></small></button></section>
    <section class="prep-panel"><div class="section-label" data-i18n="menu.preparation">TA PRÉPARATION</div><div class="repBar"><div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl" data-i18n="planque.rep">réputation</span></div><div class="recBox" id="recBox"></div></div><button class="prep-link" id="upgradesBtn" data-action="openUpgrades"><span><strong data-i18n="planque.upgrades">AMÉLIORATIONS</strong><small id="upgradesSub"></small></span><span aria-hidden="true">↗</span></button>
-    <div class="backPick"><div class="back-caption"><span class="section-label" data-i18n="planque.back">DOS DE CARTE</span><button class="quiet-btn bpAll" data-action="openBacks" data-i18n="planque.seeAll">LA COLLECTION →</button></div><div class="bpCurrent"><button class="bpArrow" id="bpPrev" data-action="back-previous" data-i18n-title="planque.prevBack" aria-label="Previous back">←</button><div class="bpPrevWrap"><div class="card back bpCard" id="bpPreview"><i class="bpat"></i></div><div class="bpNum" id="bpSub"></div></div><button class="bpArrow" id="bpNext" data-action="back-next" data-i18n-title="planque.nextBack" aria-label="Next back">→</button></div></div>
+    <div class="backPick"><div class="back-caption"><span class="section-label" data-i18n="planque.back">DOS DE CARTE</span><button class="quiet-btn bpAll" data-action="openBacks" data-i18n="planque.seeAll">LA COLLECTION →</button></div><div class="bpCurrent"><button class="bpArrow" id="bpPrev" data-action="back-previous" data-i18n-title="planque.prevBack" aria-label="Previous back">←</button><div class="bpPrevWrap"><div class="card back bpCard" id="bpPreview" aria-hidden="true"></div><div class="bpNum" id="bpSub" aria-live="polite"></div></div><button class="bpArrow" id="bpNext" data-action="back-next" data-i18n-title="planque.nextBack" aria-label="Next back">→</button></div></div>
    </section>
   </main>
   <footer class="hideout-footer"><button class="quiet-btn" data-action="openSettings" data-i18n="nav.settings">RÉGLAGES</button><button id="restartBtn" class="quiet-btn danger-link" data-action="restartAll" data-i18n="nav.reset">Réinitialiser ce mode</button></footer>

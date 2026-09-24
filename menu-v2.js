@@ -18,7 +18,9 @@ Object.assign(STR.fr,{
  'planque.startCircuit':n=>'circuit · '+n+' tables',
  'set.title':'RÉGLAGES','set.close':'TERMINÉ','set.dev':'OUTILS DE DÉMONSTRATION',
  'rules.close':'RETOUR','rules.basic':'Les bases du blackjack','rules.bonuses':'Baraka & combinaisons','rules.modes':'Les modes de jeu',
- 'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>'
+ 'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>',
+ 'back.cb9':'Éclair','back.cb10':'Chance','back.cb11':'Cœur','back.cb12':'Lune','back.cb13':'Dés','back.cb14':'Couronne','back.cb15':'Œil','back.cb16':'Cerises','back.cb18':'Flamme','back.cb19':'Diamant','back.cb22':'Serpent','back.cb26':'Soleil',
+ 'set.open':'RÉGLAGES'
 });
 Object.assign(STR.en,{
  'ui.gain':'BANK','ui.turnsLeft':'HANDS',
@@ -38,10 +40,34 @@ Object.assign(STR.en,{
  'planque.startInf':'no missions · unlimited hands','planque.startCircuit':n=>'circuit · '+n+' tables',
  'set.close':'DONE','set.dev':'DEMO TOOLS','rules.close':'BACK',
  'rules.basic':'Blackjack basics','rules.bonuses':'Streaks & combinations','rules.modes':'Game modes',
- 'tok.bankI':'+$','tok.pourboireI':'+$<small>/hand</small>'
+ 'tok.bankI':'+$','tok.pourboireI':'+$<small>/hand</small>',
+ 'back.cb9':'Lightning','back.cb10':'Luck','back.cb11':'Heart','back.cb12':'Moon','back.cb13':'Dice','back.cb14':'Crown','back.cb15':'Eye','back.cb16':'Cherries','back.cb18':'Flame','back.cb19':'Diamond','back.cb22':'Snake','back.cb26':'Sun',
+ 'set.open':'SETTINGS'
 });
 for(const key of Object.keys(STR.fr))if(typeof STR.fr[key]==='string')STR.fr[key]=STR.fr[key].replaceAll('SANS FIN','LIBRE').replaceAll('LA TOURNÉE','CIRCUIT');
 for(const key of Object.keys(STR.en))if(typeof STR.en[key]==='string')STR.en[key]=STR.en[key].replaceAll('ENDLESS','FREE PLAY');
+// One illustrated language throughout the dialogs and celebration effects.
+for(const [name,key] of [['chip','ui-chip'],['burst','ui-burst'],['star','etoile']]){
+ document.documentElement.style.setProperty('--art-'+name,`url("${ColdDeckArt.image(key)}")`);
+}
+for(const [id,key] of Object.entries({rulesScreen:'boon2',upgradesScreen:'relic2',backPickScreen:'as',confirmRestart:'roue',pauseScreen:'ui-pause',palierScreen:'elan',shop:'ui-trophy',loseScreen:'net',endScreen:'ui-trophy',settingsScreen:'ui-settings'})){
+ const heading=$(id)?.querySelector('h1');if(!heading)continue;
+ const header=document.createElement('div');header.className='illustrated-heading';
+ heading.before(header);header.innerHTML=ColdDeckArt.illustration(key,'dialog-art',true);header.append(heading);
+}
+document.querySelectorAll('.hero-chip').forEach(el=>{
+ const value=el.textContent;el.innerHTML=ColdDeckArt.illustration('ui-chip','chip-art')+'<b>'+value+'</b>';
+});
+document.querySelectorAll('.hero-star').forEach(el=>el.innerHTML=ColdDeckArt.illustration('etoile','scene-art'));
+document.querySelector('.hero-art')?.insertAdjacentHTML('afterbegin',ColdDeckArt.illustration('ui-burst','hero-burst'));
+document.querySelector('#upgradesBtn')?.insertAdjacentHTML('afterbegin',ColdDeckArt.illustration('relic2','prep-art',true));
+const demoArt=document.querySelector('.adCube');if(demoArt)demoArt.innerHTML=ColdDeckArt.illustration('as','scene-art',true);
+const originalEndRender=renderEndScreen;
+renderEndScreen=function(){
+ originalEndRender();
+ const art=$('endScreen').querySelector('.dialog-art');
+ if(art&&G.endInfo)art.src=ColdDeckArt.image(G.endInfo.cashout?'ui-trophy':'jeton');
+};
 STR.fr['top.metaInf']=(p,a,b)=>'∞ LIBRE · palier '+p+' · mise '+a+'–'+b;
 STR.en['top.metaInf']=(p,a,b)=>'∞ FREE PLAY · tier '+p+' · bet '+a+'–'+b;
 STR.fr['rules.table']='<span class="rt">LES TABLES DU CIRCUIT</span>Atteins l’objectif de jetons avant d’épuiser tes mains. La table se termine dès que l’objectif est atteint. Les mises ont un minimum et un maximum propres à la table.';
@@ -56,8 +82,10 @@ renderMenu=function(){
   const detail=played?t(mode==='infini'?'menu.recTier':'menu.recTables',played):t('menu.first');
   return `<div class="mrec"><span class="mrl">${t(label)}</span><span class="mrv">${detail}</span></div>`;
  }).join('');
- if(!$('menuHand').children.length){
-  $('menuHand').innerHTML=['back-lightning','back-luck'].map((name,index)=>`<img class="card menu-card-image" src="${ColdDeckArt.image(name)}" width="1024" height="1536" alt="" decoding="async" ${index===0?'fetchpriority="high"':''} draggable="false">`).join('');
+ const menuBacks=[ColdDeckArt.backKey(cardBack),cardBack==='cb10'?'back-lightning':'back-luck'];
+ if($('menuHand').dataset.backs!==menuBacks.join(',')){
+  $('menuHand').dataset.backs=menuBacks.join(',');
+  $('menuHand').innerHTML=menuBacks.map((name,index)=>`<img class="card menu-card-image" src="${ColdDeckArt.image(name)}" width="1024" height="1536" alt="" decoding="async" ${index===0?'fetchpriority="high"':''} draggable="false">`).join('');
  }
  $('readySuit').innerHTML=ColdDeckArt.effect('as');
 };
@@ -73,7 +101,7 @@ renderBackPicker=function(){
  originalBackRender();
  document.querySelectorAll('#bpRow .bpCard').forEach((card,i)=>{
   card.setAttribute('role','button');card.tabIndex=0;
-  card.setAttribute('aria-label',t('planque.backSub',i+1,CARD_BACKS.length));
+  card.setAttribute('aria-label',t('back.'+CARD_BACKS[i])+' · '+t('planque.backSub',i+1,CARD_BACKS.length));
   card.setAttribute('aria-pressed',String(card.classList.contains('sel')));
   card.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();card.click();}};
  });

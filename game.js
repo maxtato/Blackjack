@@ -2,8 +2,8 @@
    COLD DECK — moteur + présentation Balatro
    ============================================================ */
 const $=id=>document.getElementById(id);
-const STAR=ColdDeckArt.icon('doree'),STARE='<span class="empty-star">'+ColdDeckArt.icon('doree')+'</span>';   // Vector reputation badges
-const PXI=n=>ColdDeckArt.icon(n);                          // Smooth interface icons
+const STAR=ColdDeckArt.icon('doree'),STARE='<span class="empty-star">'+ColdDeckArt.icon('doree')+'</span>';
+const PXI=n=>ColdDeckArt.icon(n);
 const rndInt=n=>Math.floor(Math.random()*n);
 /* abrège les grands nombres : 1 500 → 1.5K, 2 000 000 → 2M, etc. */
 function abbr(n){
@@ -67,22 +67,23 @@ const sfx={
 /* ---------- dos de carte (préférence persistante) ---------- */
 const CARD_BACKS=['cb9','cb10','cb11','cb12','cb13','cb14','cb15','cb16','cb18','cb19','cb22','cb26'];
 let cardBack=(()=>{try{const v=localStorage.getItem('t21back');return CARD_BACKS.includes(v)?v:'cb9';}catch(e){return 'cb9';}})();
-function setCardBack(cb){cardBack=cb;try{localStorage.setItem('t21back',cb);}catch(e){}renderBackPicker();renderHands();}
+function setCardBack(cb){if(!CARD_BACKS.includes(cb))return;cardBack=cb;try{localStorage.setItem('t21back',cb);}catch(e){}renderBackPicker();renderHands();}
 function renderBackPicker(){
   // aperçu du dos sélectionné dans La Planque (la galerie complète vit dans l'overlay)
   const prev=document.getElementById('bpPreview');
-  if(prev)prev.className='card back '+cardBack+' bpCard';
+  if(prev){prev.className='card back '+cardBack+' bpCard';prev.innerHTML=ColdDeckArt.back(cardBack);}
   const sub=document.getElementById('bpSub');
-  if(sub)sub.textContent=t('planque.backSub',CARD_BACKS.indexOf(cardBack)+1,CARD_BACKS.length);
+  if(sub)sub.textContent=t('back.'+cardBack)+' · '+t('planque.backSub',CARD_BACKS.indexOf(cardBack)+1,CARD_BACKS.length);
   const row=document.getElementById('bpRow');if(!row)return;row.innerHTML='';
   CARD_BACKS.forEach((cb,i)=>{
     const slot=document.createElement('div');slot.className='bpslot';
-    const d=document.createElement('div');d.className='card back '+cb+' bpCard'+(cardBack===cb?' sel':'');d.innerHTML='<i class="bpat"></i>';
+    const d=document.createElement('button');d.type='button';d.className='card back '+cb+' bpCard'+(cardBack===cb?' sel':'');d.innerHTML=ColdDeckArt.back(cb,true);
     const sd=hashStr(cb+'#'+i),sd2=hashStr(cb+'~'+i),dur=5.5+sd*2.5;   // phase+durée propres -> mouvement indépendant
     d.style.setProperty('--cdur',dur.toFixed(2)+'s');
     d.style.setProperty('--cd','-'+(sd2*dur).toFixed(2)+'s');
-    slot.onclick=()=>{setCardBack(cb);try{sfx.flip();}catch(e){}};
-    slot.appendChild(d);row.appendChild(slot);
+    d.onclick=()=>{setCardBack(cb);try{sfx.flip();}catch(e){}};
+    const label=document.createElement('span');label.className='back-name';label.textContent=t('back.'+cb);
+    slot.append(d,label);row.appendChild(slot);
   });
 }
 
@@ -569,7 +570,7 @@ function heartSVG(size){return ColdDeckArt.suit('♥',size);}
 function cardEl(c,opts={}){
   const d=document.createElement('div');d.className='card';
   if(opts.back){
-    d.classList.add('back',cardBack);d.innerHTML='<i class="bpat"></i>';
+    d.classList.add('back',cardBack);d.innerHTML=ColdDeckArt.back(cardBack);
     d.setAttribute('aria-label',LANG==='fr'?'Carte cachée':'Hidden card');
   }else{
     d.dataset.suit=c.s;d.dataset.rank=c.r;
@@ -985,7 +986,7 @@ function renderChips(){
     const b=document.createElement('button');b.type='button';
     const tooDear=v>G.bank;            // palier hors budget
     b.className='chip'+((G.betChosen&&G.bet===v)?' on':'')+((locked||tooDear)?' locked':'');
-    b.textContent=abbr(v);b.disabled=locked||tooDear;b.setAttribute('aria-label',cash(v));b.setAttribute('aria-pressed',String(G.betChosen&&G.bet===v));
+    b.innerHTML=ColdDeckArt.illustration('ui-chip','chip-art')+'<span class="chip-value">'+abbr(v)+'</span>';b.disabled=locked||tooDear;b.setAttribute('aria-label',cash(v));b.setAttribute('aria-pressed',String(G.betChosen&&G.bet===v));
     if(!locked&&!tooDear)b.onclick=()=>{G.bet=v;G.betChosen=true;renderChips();renderActions();renderMult();};
     wrap.appendChild(b);
   });

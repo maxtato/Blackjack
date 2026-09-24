@@ -1,0 +1,106 @@
+/* Illustrated collection: shared cut-paper artwork, quiet graphite surfaces. */
+.card.back{padding:0;border:0;background:#20252a;overflow:hidden;box-shadow:0 2px 3px #0003,0 8px 14px #0004}
+.card.back::before,.card.back::after{content:none!important;display:none!important}
+.card-back-image{display:block;width:100%;height:100%;object-fit:fill;border-radius:inherit;pointer-events:none;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+
+/* Gallery artwork and selection remain readable at narrow phone widths. */
+#backPickScreen .ovpanel{max-width:670px}
+#bpRow{grid-template-columns:repeat(4,minmax(0,1fr));gap:24px 16px;padding:12px 5px}
+.bpslot{min-width:0;flex-direction:column;gap:12px;padding:4px}
+#bpRow .bpCard{--card-w:clamp(74px,12vw,110px);height:calc(var(--card-w)*1.5);transition:translate .16s,box-shadow .16s}
+.bpCard.sel{outline:3px solid #ffce3a;outline-offset:4px;box-shadow:0 8px 22px #0005}
+.back-name{font-size:10px;line-height:1.35;letter-spacing:.04em;color:#b9bfc7;text-align:center}
+.bpslot:has(.sel) .back-name{color:#ffce3a;font-weight:800}
+#bpPreview{cursor:default;height:calc(var(--card-w)*1.5)}
+#bpPreview:hover{translate:none}
+.bpNum{color:#ced3dc;line-height:1.5;text-align:center}
+.bpArrow{background:#343a40;min-height:44px;min-width:44px}
+
+/* Small images give menus a common identity without adding decoration to the table. */
+.scene-art,.dialog-art,.prep-art{display:block;object-fit:contain;pointer-events:none}
+.illustrated-heading{display:flex;align-items:center;gap:17px;text-align:left;margin:0 0 16px;min-width:0}
+.dialog-art{width:68px;height:68px;flex:none;transform:rotate(-6deg);filter:drop-shadow(0 5px 3px #0002)}
+.overlay .illustrated-heading h1{margin:0;flex:1;min-width:0;font-size:29px!important;letter-spacing:-1px}
+.prep-art{width:43px;height:43px;flex:none;margin-right:12px}
+.prep-link>span:nth-last-child(2){flex:1}
+.ready-suit::before{display:none}
+.ready-panel,.prep-panel{background:#252a30;border:0;box-shadow:0 9px 22px #0002}
+.prep-link{background:#32383f}.prep-link:hover{background:#3a4149}
+.menu-page::before{background:radial-gradient(ellipse at 75% 32%,#39313d60,transparent 62%)}
+.hero-art::before,.hero-art::after,.hero-orbit{display:none}
+.hero-burst{position:absolute;inset:8% -7%;width:114%;height:84%;object-fit:contain;pointer-events:none;z-index:-1;opacity:.9}
+.hero-chip,.hero-chip.chip-two{background:transparent;border:0;outline:0;box-shadow:none;color:#252525;isolation:isolate}
+.hero-chip::before,.hero-chip::after{content:none}
+.hero-chip .chip-art{position:absolute;inset:-5%;width:110%;height:110%;z-index:-1}
+.hero-chip b{font:900 .95em/1 var(--game-type)}
+.hero-star{width:28px;height:28px;line-height:0}
+.hero-star .scene-art{width:100%;height:100%}
+.menu-hand .card{box-shadow:0 4px 8px #0004,0 26px 38px -16px #0009}
+
+/* Store, settings, pause, rules and results share the game's charcoal palette. */
+.overlay:not(.menu-page) .ovpanel,#adOverlay{
+ color-scheme:dark;--paper:#fff7e6;--cream:#fff7e6;--muted:#c0c7d0;--mutedDk:#aeb6c1;
+ --accent:#ffce3a;--blue:#65acff;--teal:#1fd1c8;--line:#ffffff18;--red:#ff6d85;--panelDk2:#30363d;
+}
+.overlay:not(.menu-page) .ovpanel{background:#252a30;color:#fff7e6;border:1px solid #ffffff0d;border-radius:24px;box-shadow:0 20px 70px #0006}
+.overlay:not(.menu-page) .btn{border-radius:13px;min-height:44px;box-shadow:0 3px 0 #0002}
+.overlay:not(.menu-page) .b-gold{background:#ffce3a;color:#252525}
+.overlay:not(.menu-page) .b-blue{background:#2869c4;color:#fff}
+.overlay:not(.menu-page) .b-purple{background:#813cd0;color:#fff}
+.overlay:not(.menu-page) .b-teal{background:#1fd1c8;color:#173437}
+.overlay:not(.menu-page) .b-red{background:#ff5470;color:#251c23}
+.overlay:not(.menu-page) .btn:disabled{background:#383e46;color:#aeb6c1;box-shadow:none;opacity:1}
+.shopItem,.runstats>div,.rstat{background:#31373f;border-radius:16px}
+.shopItem{padding:14px;gap:15px}
+.shopTok,.inspCard{background:transparent;border:0;box-shadow:none;flex:none}
+.shopTok{width:76px;height:76px;padding:0}
+.shopTok .effect-illustration,.inspCard .effect-illustration{border-radius:0;filter:drop-shadow(0 4px 3px #0002)}
+.inspCard{width:150px;height:150px;margin-bottom:16px}
+.shopItem .nm{color:#fff7e6;font-size:14px}.shopItem .ds{color:#c0c7d0}
+.shopItem.bought{opacity:.5}.runstats b{color:#ffce3a}
+.boon-choice{gap:14px;padding:15px!important;text-align:left}
+.boon-choice .effect-mark{background:transparent;width:54px;height:54px}
+.setOpts .btn{background:#363d45;color:#e1e5eb}
+.setOpts .btn.on{background:#ffce3a;color:#252525}
+.dev-options{background:#20252a;border:0}
+#shopNextObj{border-radius:12px}
+#shopStars .raster-icon{width:25px;height:25px}
+.adFrame{background:#252a30;color:#fff7e6}.adBar{background:#31373f}
+.adCube .scene-art{width:90px;height:90px}.adBody{gap:14px}
+
+/* Illustrated chips retain the exact betting-row geometry and focus targets. */
+.chip,.chip.on{position:relative;background:transparent;border:0;box-shadow:none;isolation:isolate}
+.chip::before,.chip::after{content:none}
+.chip-art{display:block;object-fit:contain;pointer-events:none}
+.chip>.chip-art{position:absolute;inset:0;width:100%;height:100%;z-index:-1;filter:grayscale(1) brightness(.4);transition:filter .15s}
+.chip>.chip-value{position:relative;color:#fff;z-index:1;font-weight:900;font-size:inherit}
+.chip.on>.chip-art{filter:drop-shadow(0 2px 2px #0003)}
+.chip.on>.chip-value{color:#252525}
+.chip:disabled>.chip-art{opacity:.5}
+.chip:disabled>.chip-value{color:#adb4be}
+.chip:focus-visible{outline:2px solid #fff7e6;outline-offset:3px}
+
+/* Raster impact art replaces generated bolts; existing timing and motion stay in charge. */
+.arcade-lightning{filter:none}
+.lightning-art{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
+.arcade-coin,.coin{background:var(--art-chip) center / contain no-repeat;border:0;border-radius:0;box-shadow:none}
+.arcade-spark.star{background:var(--art-star) center / contain no-repeat}
+.arcade-spark.star::before{content:none}
+#multPop .burst{background:var(--art-burst) center / contain no-repeat;border:0;box-shadow:none;clip-path:none}
+
+@media(max-width:720px){
+ .dialog-art{width:54px;height:54px}.illustrated-heading{gap:13px;margin-bottom:14px}
+ .overlay .illustrated-heading h1{font-size:24px!important}
+ .shopTok{width:60px;height:60px}.shopItem{padding:12px;gap:11px}
+ .shopItem .nm{font-size:12px}.shopItem .ds{font-size:11px}
+ .shopItem>.btn{min-width:54px}
+ .prep-art{width:34px;height:34px;margin-right:10px}
+ .ready-suit .effect-illustration{width:70px;height:70px}
+ .hero-burst{inset:4% -8%;width:116%;height:92%}
+ #bpRow{grid-template-columns:repeat(3,minmax(0,1fr));gap:23px 12px}
+ #bpRow .bpCard{--card-w:clamp(64px,19vw,96px)}
+ .back-name{font-size:9px}
+}
+@media(max-width:350px){#bpRow{gap:20px 8px}.shopItem{gap:8px}.shopTok{width:48px;height:48px}}
+@media(prefers-reduced-motion:reduce){.bpCard,.chip>.chip-art{transition:none}}
+:root[data-motion=gentle] .bpCard,:root[data-motion=gentle] .chip>.chip-art{transition:none}
