@@ -1080,7 +1080,8 @@ function deal(){
 }
 // timings de la distribution animée (la carte apparaît d'un coup, puis se retourne)
 // délai IDENTIQUE pour chaque carte : intervalle = CARD_HOLD + CARD_FLIP entre deux cartes
-const CARD_HOLD=85,CARD_FLIP=400;
+const CARD_HOLD=65,CARD_FLIP=300;
+document.documentElement.style.setProperty('--card-flip-duration',CARD_FLIP+'ms');
 // anime UNE carte : elle apparaît d'un coup (dos), puis se retourne. Plus de glissade.
 // stayDown : reste dos (trou du croupier). reveal : main du croupier dévoilée.
 function dealCardIn(c,opts,done){

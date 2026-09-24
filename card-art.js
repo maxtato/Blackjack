@@ -12,8 +12,11 @@ const ColdDeckArt = (() => {
     [.258,.746],[.297,.713],[.244,.751],[.230,.737],[.344,.608],[.316,.636]
   ];
   const numberCells=Array.from('0123456789+×$−∞?');
+  // Ink bounds of 0–9 in the generated atlas; pair kerning removes only the
+  // empty space between adjacent digits, leaving symbols and word gaps alone.
+  const digitBounds=[[.245,.769],[.271,.721],[.232,.766],[.248,.750],[.204,.788],[.248,.760],[.232,.766],[.226,.769],[.229,.776],[.216,.779]];
   const safe=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  function glyph(character,index=0){
+  function glyph(character,index=0,previous=''){
     const c=character.toUpperCase().replace('-','−');
     const direction={'←':'left','→':'right','↗':'forward','✕':'close'}[c];
     if(direction)return `<i class="raster-nav" data-direction="${direction}" aria-hidden="true"></i>`;
@@ -22,11 +25,13 @@ const ColdDeckArt = (() => {
     const cols=letter>=0?6:4,cell=letter>=0?letter:number;
     const rows=letter>=0?6:4;
     const trim=letter>=0?`--glyph-start:${letterBounds[letter][0]};--glyph-end:${(1-letterBounds[letter][1]).toFixed(3)};`:'';
-    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}" style="${trim}--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${1.05+(index%4)*.08}s;--letter-delay:-${(index%7)*.19}s"></i>`;
+    const digit=/^[0-9]$/.test(c),joined=digit&&/^[0-9]$/.test(previous);
+    const kern=joined?`--digit-kern:${(1-digitBounds[Number(previous)][1]+digitBounds[number][0]).toFixed(3)};`:'';
+    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}"${digit?' data-digit=""':''} style="${trim}${kern}--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${1.05+(index%4)*.08}s;--letter-delay:-${(index%7)*.19}s"></i>`;
   }
   function lettering(value){
     const text=String(value);let index=0;
-    const words=text.split(/(\s+)/u).map(word=>word.trim()?`<span class="raster-word">${Array.from(word).map(c=>glyph(c,index++)).join('')}</span>`:safe(word)).join('');
+    const words=text.split(/(\s+)/u).map(word=>word.trim()?`<span class="raster-word">${Array.from(word).map((c,i,chars)=>glyph(c,index++,chars[i-1])).join('')}</span>`:safe(word)).join('');
     return `<span class="raster-copy"><span class="sr-only">${safe(text)}</span><span class="raster-ink" aria-hidden="true">${words}</span></span>`;
   }
   const suit=(s,size=24)=>`<i class="suit raster-suit" data-suit-art="${suitKeys[s]||'spade'}" style="width:${size}px;height:${size}px" aria-hidden="true"></i>`;
