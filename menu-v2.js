@@ -57,9 +57,9 @@ renderMenu=function(){
   return `<div class="mrec"><span class="mrl">${t(label)}</span><span class="mrv">${detail}</span></div>`;
  }).join('');
  if(!$('menuHand').children.length){
-  $('menuHand').append(cardEl({r:'A',s:'♠'}),cardEl({r:'Q',s:'♥'}),cardEl({r:'7',s:'♣'}));
+  $('menuHand').innerHTML=['back-lightning','back-luck'].map((name,index)=>`<img class="card menu-card-image" src="${ColdDeckArt.image(name)}" width="1024" height="1536" alt="" decoding="async" ${index===0?'fetchpriority="high"':''} draggable="false">`).join('');
  }
- $('readySuit').innerHTML=suitSVG('♠',85);
+ $('readySuit').innerHTML=ColdDeckArt.effect('as');
 };
 
 renderRules=function(){

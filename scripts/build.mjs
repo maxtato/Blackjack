@@ -15,7 +15,11 @@ if(process.argv[2]){
   for(const css of ['modern.css','electric.css']){
     html=html.replace('<link rel="stylesheet" href="'+css+'">',()=>'<style>\n'+fs.readFileSync(path.join(root,css),'utf8')+'\n</style>');
   }
-  html=html.replace('<script src="cold-deck.js"></script>',()=>'<script>\n'+bundle.replace(/<\/script/gi,'<\\/script')+'\n</script>');
+  const artDir=path.join(root,'assets/illustrations');
+  const artData=Object.fromEntries(fs.readdirSync(artDir).filter(file=>file.endsWith('.webp')).map(file=>[file.slice(0,-5),'data:image/webp;base64,'+fs.readFileSync(path.join(artDir,file)).toString('base64')]));
+  const portableBundle=bundle.replace('const image=key=>`assets/illustrations/${key}.webp`;',()=>`const illustrationData=${JSON.stringify(artData)}; const image=key=>illustrationData[key];`);
+  html=html.replace(/src="assets\/illustrations\/([^"/]+)\.webp"/g,(_,key)=>`src="${artData[key]}"`);
+  html=html.replace('<script src="cold-deck.js"></script>',()=>'<script>\n'+portableBundle.replace(/<\/script/gi,'<\\/script')+'\n</script>');
   html=html.replace(/<link rel="manifest"[^>]+>\s*/,'');
   html=html.replace(/href="(icons\/[^"]+)"/g,(_,file)=>{
     const mime=file.endsWith('.svg')?'image/svg+xml':'image/png';

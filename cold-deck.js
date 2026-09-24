@@ -559,69 +559,18 @@ const ColdDeckArt = (() => {
     deal:'M5 7 2 8l4 13 3-1M9 4 5 5l4 15 4-1M12 3l9 2-3 16-9-2Z'
   };
   const actionIcon=kind=>`<svg class="action-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${actionPaths[kind]||actionPaths.hit}"/></svg>`;
-  const icons={
-    flag:'M5 21V3m0 1c5-4 9 5 15 1v10c-6 4-10-5-15-1',
-    trophy:'M8 3h8v8a4 4 0 0 1-8 0V3Zm0 2H3v3a5 5 0 0 0 5 5m8-8h5v3a5 5 0 0 1-5 5m-4 2v6m-5 0h10',
-    scroll:'M7 3h13v14H9m-2-14a3 3 0 0 0-3 3v2h5V6a3 3 0 0 0-2-3Zm2 3v13a2 2 0 0 0 4 0v-2m-1-10h5m-5 4h5',
-    forcee:'m14 2-9 12h7l-2 8 9-12h-7l2-8Z',
-    glass:'m5 3 2 18h10l2-18H5Zm1 6h12',
-    arc:'M3 18a9 9 0 0 1 18 0M7 18a5 5 0 0 1 10 0',
-    suite:'M3 17h5v-5h5V7h5V3m0 4h4',
-    couleur:'M12 3C8 8 5 10 5 14a7 7 0 0 0 14 0c0-4-3-6-7-11Z',
-    doree:'m12 2 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z',
-    diamond:'m12 2 9 10-9 10L3 12 12 2Z'
-  };
-  const icon=n=>`<svg class="pxi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${icons[n]||icons.doree}"/></svg>`;
-  // The same symbol follows each item through the table, shop and inspection.
-  const effectArt={
-    lunettes:'<path d="m3 12 1-6h3m14 6-1-6h-3M9 14h6"/><circle cx="6" cy="15" r="4"/><circle cx="18" cy="15" r="4"/>',
-    jeton:'<circle cx="12" cy="12" r="9"/><path d="m13 3-3 7 4 3-3 8M5 8l2 1m10 6 2 1M5 16l2-1m10-6 2-1"/><path d="m13 3-3 7 4 3-3 8a9 9 0 0 0 2-18Z" fill="currentColor" opacity=".14" stroke="none"/>',
-    clope:'<path d="M3 14h17v5H3Zm12 0v5M7 10c-4-3 3-4 0-7m6 7c-4-3 3-4 0-7"/><path d="M16 15h3v3h-3Z" fill="currentColor" stroke="none"/>',
-    as:'<rect x="5" y="2" width="14" height="20" rx="3"/><path d="m12 7-4 5q-2 4 3 3l-1 3h4l-1-3q5 1 3-3Z" fill="currentColor" stroke="none"/>',
-    froid:'<path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7M9 4l3 3 3-3M9 20l3-3 3 3M3.5 10l4-1-1-4m14 9-4 1 1 4M6.5 19l1-4-4-1m14-9-1 4 4 1"/>',
-    compteur:'<path d="M4 19a9 9 0 1 1 16 0ZM12 5v2M5 9l2 1m12-1-2 1m-5 5 4-5"/><circle cx="12" cy="15" r="2" fill="currentColor"/>',
-    mecene:'<path d="M3 16h5l3-3h4q3 0 1 3l-3 2m-5-2 4 4h5l5-6M3 14v7"/><circle cx="12" cy="6" r="4"/><path d="M12 4v4m-1-3h2m-2 2h2"/>',
-    usurier:'<ellipse cx="8" cy="8" rx="5" ry="2.5"/><path d="M3 8v9c0 3 10 3 10 0V8M3 12c0 3 10 3 10 0m4 4V4m-3 3 3-3 3 3"/>',
-    collector:'<path d="M4 17H2V3h12v2M7 20H5V6h12v2"/><rect x="8" y="9" width="13" height="13" rx="2"/><path d="m14.5 12 1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1Z" fill="currentColor" stroke="none"/>',
-    maitresse:'<rect x="4" y="3" width="15" height="19" rx="3"/><path d="m15 2 1.5 4.5L21 8l-4.5 1.5L15 14l-1.5-4.5L9 8l4.5-1.5Z" fill="currentColor" stroke="none"/><path d="M8 15v3m0-3h3"/>',
-    bruleur:'<path d="M13 2c1 6 6 7 6 13a7 7 0 0 1-14 0c0-3 2-6 4-8 0 3 1 4 2 4 2-2 3-4 2-9Z" fill="currentColor" opacity=".2"/><path d="M13 2c1 6 6 7 6 13a7 7 0 0 1-14 0c0-3 2-6 4-8 0 3 1 4 2 4 2-2 3-4 2-9Z"/><path d="M12 13c4 3 4 6 0 8-4-2-4-5 0-8Z" fill="currentColor" stroke="none"/>',
-    portebonheur:'<path d="M12 12C1 13 1 4 6 4c4 0 6 5 6 8Zm0 0C11 1 20 1 20 6c0 4-5 6-8 6Zm0 0c11-1 11 8 6 8-4 0-6-5-6-8Zm0 0c1 11-8 11-8 6 0-4 5-6 8-6Z" fill="currentColor" opacity=".8" stroke="none"/><path d="M12 12c2 5 0 8-3 10"/>',
-    diplomate:'<path d="m2 11 5-5 5 2 5-2 5 5-5 8-3 1-7-4Zm5-5 5 5 4-2M7 16l3-3m0 5 3-3m0 5 3-3"/>',
-    talisman:'<path d="m12 2 8 4v6c0 5-5 9-8 10-3-1-8-5-8-10V6Z" fill="currentColor" opacity=".14"/><path d="m12 2 8 4v6c0 5-5 9-8 10-3-1-8-5-8-10V6Z"/><path d="M12 9c-4-4-8 2 0 7 8-5 4-11 0-7Z" fill="currentColor" stroke="none"/>',
-    aimant:'<path d="M4 3h5v10a3 3 0 0 0 6 0V3h5v10a8 8 0 0 1-16 0ZM4 8h5m6 0h5"/><path d="M4 8h5v5a3 3 0 0 0 6 0V8h5v5a8 8 0 0 1-16 0Z" fill="currentColor" opacity=".16" stroke="none"/>',
-    phare:'<path d="M7 22 9 10h6l2 12ZM8 10V6l4-3 4 3v4M7 22h10M9 16h6M2 5l3 2m-4 5h4m17-7-3 2m4 5h-4"/><path d="M9 6h6v4H9Z" fill="currentColor" stroke="none"/>',
-    etoile:'<path d="m12 2 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z" fill="currentColor" opacity=".2"/><path d="m12 2 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z"/>',
-    jugement:'<path d="M12 3v14m-6-8 6-6 6 6M5 21h14M3 15v3m18-3v3"/><path d="m12 4-5 5h10Z" fill="currentColor" opacity=".2" stroke="none"/>',
-    soleil:'<circle cx="12" cy="12" r="5" fill="currentColor" opacity=".2"/><circle cx="12" cy="12" r="5"/><path d="M12 1v3m0 16v3M1 12h3m16 0h3M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2"/>',
-    diable:'<path d="M7 9 3 3v10c0 5 4 8 9 9 5-1 9-4 9-9V3l-4 6Z" fill="currentColor" opacity=".14"/><path d="M7 9 3 3v10c0 5 4 8 9 9 5-1 9-4 9-9V3l-4 6Zm1 4 2 1m6-1-2 1m-4 4h4"/>',
-    lune:'<path d="M20 16A9 9 0 0 1 8 3a9.5 9.5 0 1 0 12 13Z" fill="currentColor" opacity=".2"/><path d="M20 16A9 9 0 0 1 8 3a9.5 9.5 0 1 0 12 13Z"/><path d="m17 2 1 3 3 1-3 1-1 3-1-3-3-1 3-1Z" fill="currentColor" stroke="none"/>',
-    etoileD:'<path d="m17 2 2 5 4 1-4 3v5l-4-3-5 2 2-5-3-4h6Z" fill="currentColor" opacity=".85" stroke="none"/><path d="m3 13 4-4m-5 9 6-6m-2 9 6-6"/>',
-    pendu:'<rect x="10" y="3" width="11" height="17" rx="2"/><path d="M7 21H3V4m-1 9h11m-8-4-4 4 4 4"/><path d="M14 8h3m-3 4h3"/>',
-    magicien:'<path d="m3 19 13-13 3 3L6 22Zm11-11 3 3M6 3v4m-2-2h4m12-4v4m-2-2h4m-1 13v4m-2-2h4"/><path d="m13 2 1 3 3 1-3 1-1 3-1-3-3-1 3-1Z" fill="currentColor" stroke="none"/>',
-    roue:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor"/><path d="M12 3v6m0 6v6M3 12h6m6 0h6M5.5 5.5l4.4 4.4m4.2 4.2 4.4 4.4m-13 0 4.4-4.4m4.2-4.2 4.4-4.4"/>',
-    soin:'<rect x="2" y="6" width="20" height="14" rx="3"/><path d="M3 6V4h13m0 7v5m-2.5-2.5h5"/><path d="M3 7h18v4H3Z" fill="currentColor" opacity=".15" stroke="none"/>',
-    assurance:'<path d="m12 2 8 4v6c0 5-5 9-8 10-3-1-8-5-8-10V6Z" fill="currentColor" opacity=".14"/><path d="m12 2 8 4v6c0 5-5 9-8 10-3-1-8-5-8-10V6ZM8 12l3 3 5-6"/>',
-    videur:'<path d="M5 8a8 8 0 1 1-1 9M5 3v5H1"/><path d="M11 9h4v10m-4 0h7"/>',
-    bank:'<path d="M4 7h16v14H4Zm-1 0 9-5 9 5M8 10v7m4-7v7m4-7v7M2 21h20"/><path d="M5 18h14v3H5Z" fill="currentColor" opacity=".18" stroke="none"/>',
-    pourboire:'<ellipse cx="9" cy="11" rx="6" ry="3"/><path d="M3 11v7c0 4 12 4 12 0v-7M3 15c0 4 12 4 12 0m3-13v6m-3-3h6"/>',
-    net:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="m5.5 5.5 3.7 3.7m5.6 5.6 3.7 3.7m-13 0 3.7-3.7m5.6-5.6 3.7-3.7"/>',
-    tarot:'<path d="M5 3h14v12l-7 7-7-7ZM5 9h14"/><path d="m12 12 3 3-3 3-3-3Z" fill="currentColor" stroke="none"/>',
-    contact:'<circle cx="8" cy="7" r="4"/><path d="M2 21v-3a6 6 0 0 1 10-4m5-8 5 5-5 5-5-5Z"/><path d="m17 8 3 3-3 3-3-3Z" fill="currentColor" opacity=".2" stroke="none"/>',
-    relic2:'<rect x="3" y="3" width="18" height="18" rx="3"/><rect x="6" y="6" width="12" height="12" rx="1"/><circle cx="12" cy="12" r="3"/><path d="M12 9v6m-3-3h6M7 21v2m10-2v2"/>',
-    plafond:'<path d="M3 4h18M12 21V8m-5 5 5-5 5 5"/><path d="m7 13 5-5 5 5Z" fill="currentColor" opacity=".2" stroke="none"/>',
-    elan:'<path d="M2 21h6v-6h6V9h7m-6-6h6v6M4 13l17-10"/>',
-    cashplus:'<rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="10" cy="13" r="3"/><path d="M15 3h6m-3-2 3 2-3 3"/>',
-    boon2:'<path d="M7 3h13v14H9m-2-14a3 3 0 0 0-3 3v2h5V6a3 3 0 0 0-2-3Zm2 3v13a2 2 0 0 0 4 0v-2"/><path d="m14 6 1 2 2 1-2 1-1 2-1-2-2-1 2-1Z" fill="currentColor" stroke="none"/>',
-    mult:'<path d="m5 5 14 14M5 19 19 5m0 0h-5m5 0v5"/>',
-    baraplus:'<path d="m14 2-9 12h7l-2 8 9-12h-7l2-8Z" fill="currentColor" opacity=".2"/><path d="m14 2-9 12h7l-2 8 9-12h-7l2-8Z"/>',
-    evt3:'<rect x="3" y="5" width="12" height="17" rx="2"/><path d="M7 2h13v17m-9-10-5 7h4l-1 4 5-7h-4Z"/>'
-  };
+  // HD raster illustrations shared by inventory, shops, effects and menus.
+  const illustrationKeys=new Set(["lunettes", "jeton", "clope", "as", "froid", "compteur", "mecene", "usurier", "collector", "maitresse", "bruleur", "portebonheur", "diplomate", "talisman", "aimant", "phare", "etoile", "jugement", "soleil", "diable", "lune", "etoileD", "pendu", "magicien", "roue", "soin", "assurance", "videur", "bank", "pourboire", "net", "tarot", "contact", "relic2", "plafond", "elan", "cashplus", "boon2", "mult", "baraplus", "evt3"]);
   const effectAliases={bankI:'bank',pourboireI:'pourboire',income:'pourboire',betmax:'plafond',filet:'net',cash:'soin'};
+  const interfaceArt={flag:'phare',trophy:'etoile',scroll:'boon2',forcee:'baraplus',glass:'baraplus',arc:'lune',suite:'elan',couleur:'tarot',doree:'etoile',diamond:'relic2'};
+  const image=key=>`assets/illustrations/${key}.webp`;
   function effect(id){
-    const key=effectAliases[id]||id;
-    return `<svg class="effect-symbol" data-effect-symbol="${key}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${effectArt[key]||effectArt.etoile}</svg>`;
+    const requested=effectAliases[id]||id;
+    const key=illustrationKeys.has(requested)?requested:'etoile';
+    return `<img class="effect-symbol effect-illustration" data-effect-symbol="${key}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">`;
   }
-  return {suit,face,icon,actionIcon,effect};
+  const icon=n=>`<img class="pxi raster-icon" src="${image(interfaceArt[n]||'etoile')}" width="1024" height="1024" alt="" aria-hidden="true" decoding="async" draggable="false">`;
+  return {suit,face,icon,actionIcon,effect,image};
 })();
 
 
@@ -3033,9 +2982,9 @@ renderMenu=function(){
   return `<div class="mrec"><span class="mrl">${t(label)}</span><span class="mrv">${detail}</span></div>`;
  }).join('');
  if(!$('menuHand').children.length){
-  $('menuHand').append(cardEl({r:'A',s:'♠'}),cardEl({r:'Q',s:'♥'}),cardEl({r:'7',s:'♣'}));
+  $('menuHand').innerHTML=['back-lightning','back-luck'].map((name,index)=>`<img class="card menu-card-image" src="${ColdDeckArt.image(name)}" width="1024" height="1536" alt="" decoding="async" ${index===0?'fetchpriority="high"':''} draggable="false">`).join('');
  }
- $('readySuit').innerHTML=suitSVG('♠',85);
+ $('readySuit').innerHTML=ColdDeckArt.effect('as');
 };
 
 renderRules=function(){
