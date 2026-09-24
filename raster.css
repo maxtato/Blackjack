@@ -1,0 +1,94 @@
+/* Every card mark is sampled from generated bitmap artwork. */
+.raster-copy{display:inline;line-height:inherit}
+.raster-ink{display:inline;white-space:normal}
+.raster-word{display:inline-flex;align-items:center;white-space:nowrap;vertical-align:middle;line-height:1}
+.raster-glyph{display:inline-block;flex:none;width:.68em;height:1.08em;background:currentColor;vertical-align:middle;font-style:normal;
+ -webkit-mask-image:var(--art-type-letters);mask-image:var(--art-type-letters);
+ -webkit-mask-size:600% 600%;mask-size:600% 600%;
+ -webkit-mask-position:var(--glyph-x) var(--glyph-y);mask-position:var(--glyph-x) var(--glyph-y);
+ -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;mask-mode:luminance;
+}
+.raster-glyph[data-font="numbers"]{-webkit-mask-image:var(--art-type-numbers);mask-image:var(--art-type-numbers);-webkit-mask-size:400% 400%;mask-size:400% 400%}
+.raster-punctuation{display:inline-block;line-height:1}
+.raster-suit{display:inline-block;background:currentColor;font-style:normal;-webkit-mask:var(--suit-art) center/contain no-repeat;mask:var(--suit-art) center/contain no-repeat;mask-mode:luminance}
+[data-suit-art="spade"]{--suit-art:var(--art-suit-spade)}
+[data-suit-art="heart"]{--suit-art:var(--art-suit-heart)}
+[data-suit-art="diamond"]{--suit-art:var(--art-suit-diamond)}
+[data-suit-art="club"]{--suit-art:var(--art-suit-club)}
+.card:not(.back):not(.menu-card-image){background-color:#fff7e6;background-image:var(--art-card-stock);background-size:100% 100%}
+.card:not(.back)::after{display:none}
+.raster-card-art{position:relative;width:100%;height:100%;transform:none;overflow:hidden;border-radius:inherit}
+.card-pip{position:absolute;display:block;pointer-events:none}
+.court-image{position:absolute;left:21%;top:13%;width:58%;height:74%;object-fit:contain;pointer-events:none}
+.corner-r .raster-glyph{width:.7em;height:1.08em;animation:none!important}
+.corner-r .raster-word{line-height:1}
+.corner .raster-suit{width:calc(var(--card-w)*.09)!important;height:calc(var(--card-w)*.09)!important}
+.card[data-rank="10"] .corner-r{font-size:calc(var(--card-w)*.16)}
+.card .corner{gap:1px}
+.lives .raster-suit{width:12px!important;height:12px!important}
+.card.foil{box-shadow:0 0 0 2px #ffce3a,0 4px 12px #0004}
+.card.holo{box-shadow:0 0 0 2px #1fd1c8,0 4px 12px #0004}
+.card.poly{box-shadow:0 0 0 2px #a64dff,0 4px 12px #0004}
+
+/* Background images stay fixed to the viewport, independently of action rows. */
+#bg{background:#20252a var(--art-background-table) center/cover no-repeat}
+#feltDeco,#pattern,#heat,#heat2{display:none}
+.menu-page{background:#20252a}
+.menu-page::before{background:#20252a var(--art-background-menu) center/cover no-repeat}
+.overlay:not(.menu-page){background:#111419c9}
+.ready-panel,.prep-panel,.overlay:not(.menu-page) .ovpanel,.shopItem,.runstats>div,.adFrame{
+ background-image:var(--art-button-graphite);background-size:100% 100%;background-repeat:no-repeat;border:0;
+}
+.hand:empty::before,.hand:empty::after{background:var(--art-card-stock) center/100% 100% no-repeat;border:0;opacity:.035}
+
+/* Drawn button surfaces, with live readable labels and unchanged click targets. */
+button:not(.chip):not(.bpCard){
+ --button-art:var(--art-button-yellow);--button-ink:#282a2e;
+ background-image:var(--button-art)!important;background-color:transparent!important;background-size:100% 100%!important;background-repeat:no-repeat!important;
+ color:var(--button-ink)!important;border:0;box-shadow:none!important;
+}
+button.b-gold,button.mode-circuit{--button-art:var(--art-button-yellow)!important;--button-ink:#282a2e!important}
+button.b-blue,button[data-game-action="stand"],button[data-game-action="split"]{--button-art:var(--art-button-blue)!important;--button-ink:#fff7e6!important}
+button.b-teal,button.mode-free{--button-art:var(--art-button-teal)!important;--button-ink:#183434!important}
+button.b-purple,button[data-game-action="force"]{--button-art:var(--art-button-purple)!important;--button-ink:#fff7e6!important}
+button.b-red{--button-art:var(--art-button-coral)!important;--button-ink:#291d26!important}
+button.quiet-btn,button.bpArrow,button.prBtn,button.prep-link,button#pauseBtn,button#adX,.setOpts button:not(.on){--button-art:var(--art-button-graphite)!important;--button-ink:#fff7e6!important}
+button:not(.chip):not(.bpCard):disabled{--button-art:var(--art-button-graphite)!important;--button-ink:#aeb6c1!important;opacity:.7;filter:none}
+button.quiet-btn{padding:9px 15px}
+button .raster-glyph{width:.62em}
+.quiet-btn .raster-glyph{width:.58em}
+#actions .blbl{white-space:normal;max-width:100%;line-height:1.05}
+#actions .action-copy{max-width:100%;width:100%}
+#actions .raster-glyph{width:.56em}
+.mode-card .mode-topline{font-size:8px}.mode-card .mode-description{font-size:10px;line-height:1.4}
+.mode-topline .raster-glyph,.mode-description .raster-glyph{width:.57em}
+.btn small{font-family:var(--font)}
+.chip-value .raster-glyph{width:.64em;height:1em}
+.raster-nav{display:inline-block;flex:none;width:1.1em;height:1.1em;background:currentColor;-webkit-mask:var(--art-nav-arrow) center/contain no-repeat;mask:var(--art-nav-arrow) center/contain no-repeat;mask-mode:luminance;vertical-align:middle;font-style:normal}
+.raster-nav[data-direction="right"]{transform:rotate(180deg)}
+.raster-nav[data-direction="forward"]{transform:rotate(135deg)}
+.raster-nav[data-direction="close"]{-webkit-mask-image:var(--art-type-numbers);mask-image:var(--art-type-numbers);-webkit-mask-size:400% 400%;mask-size:400% 400%;-webkit-mask-position:100% 66.666667%;mask-position:100% 66.666667%}
+.raster-nav.pause-mark{width:25px;height:25px;-webkit-mask-image:var(--art-nav-pause);mask-image:var(--art-nav-pause)}
+#pauseBtn span{background:none;width:auto;height:auto}
+.rules summary::after{content:"";width:20px;height:20px;background:currentColor;-webkit-mask:var(--art-nav-arrow) center/contain no-repeat;mask:var(--art-nav-arrow) center/contain no-repeat;mask-mode:luminance;transform:rotate(-90deg)}
+.rules details[open] summary::after{transform:rotate(90deg)}
+
+/* The drawn brand fits the existing header footprint. */
+.brand-image{display:block;width:100%;height:100%;background:currentColor;-webkit-mask:var(--art-brand-wordmark) center/100% 140% no-repeat;mask:var(--art-brand-wordmark) center/100% 140% no-repeat;mask-mode:luminance;pointer-events:none}
+.table-brand{display:block;line-height:0;height:1.58em;max-width:100%}
+.menuTitle{width:3.3em;height:1.7em;max-width:100%}
+.wordmark{display:block;width:102px;height:42px;flex:none}
+.mode-card strong .raster-word{font-size:1.05em}
+#gainVal .raster-glyph{width:.6em}
+#pVal .raster-glyph,#dVal .raster-glyph{width:.67em}
+.tnum .raster-glyph{width:.62em}
+.raster-copy .raster-glyph{animation-timing-function:steps(2,end)}
+.card .raster-copy .raster-glyph{animation:none!important}
+@media(max-width:720px){
+ .wordmark{width:84px;height:34px}.raster-nav.pause-mark{width:20px;height:20px}
+ #actions .btn[data-game-action="force"] .blbl{font-size:14px}
+ .quiet-btn .raster-glyph{width:.53em}.quiet-btn{letter-spacing:0}
+ .overlay .illustrated-heading h1{font-size:22px!important}
+ .menuTitle{height:1.75em}
+}
+@media(max-width:350px){#actions .btn[data-game-action="force"] .blbl{font-size:12px}.overlay .illustrated-heading h1{font-size:19px!important}}

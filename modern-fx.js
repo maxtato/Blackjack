@@ -340,6 +340,7 @@
   const letterTargets='.menuTitle,#tableName,#gainVal,#multVal,#pVal,#dVal,.zlbl>[data-i18n],#actions .blbl,#planqueTitle,.mode-card strong';
   function enlivenLetters(){
     document.querySelectorAll(letterTargets).forEach(el=>{
+      if(el.matches('.menuTitle,#gainVal,#multVal,#pVal,#dVal,.zlbl>[data-i18n],#actions .blbl,.mode-card strong,#planqueTitle'))return;
       if(el.querySelector('.live-letter'))return;
       const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
       const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);

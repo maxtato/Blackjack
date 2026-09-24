@@ -1,13 +1,26 @@
-/* Electric edition: geometric courts and precise, readable suit pips. */
+/* Generated bitmap artwork with exact game-controlled ranks and pip counts. */
 const ColdDeckArt = (() => {
-  const paths = {
-    '♠':'M50 8 16 42Q3 55 14 69q12 14 30 0l-8 22h28l-8-22q18 14 30 0 11-14-2-27Z',
-    '♥':'M50 90 14 54Q0 39 13 23q15-16 37 6 22-22 37-6 13 16-1 31Z',
-    '♦':'M50 7 87 50 50 93 13 50Z',
-    '♣':'M50 8a21 21 0 0 1 18 32 22 22 0 1 1-11 36l7 16H36l7-16a22 22 0 1 1-11-36A21 21 0 0 1 50 8Z'
-  };
-  const suit = (s,size=24) => `<svg class="suit" viewBox="0 0 100 100" width="${size}" height="${size}" fill="currentColor" aria-hidden="true"><path d="${paths[s]||paths['♠']}"/></svg>`;
-  const pip = (s,x,y,size=15,angle=0) => `<g transform="translate(${x} ${y}) rotate(${angle})"><svg x="${-size/2}" y="${-size/2}" width="${size}" height="${size}" viewBox="0 0 100 100"><path fill="currentColor" d="${paths[s]}"/></svg></g>`;
+  const suitKeys={'♠':'spade','♥':'heart','♦':'diamond','♣':'club'};
+  const letterCells=Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZÉÈÀÇÙÊÔÛÎÏ');
+  const numberCells=Array.from('0123456789+×$−∞?');
+  const safe=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function glyph(character,index=0){
+    const c=character.toUpperCase().replace('-','−');
+    const direction={'←':'left','→':'right','↗':'forward','✕':'close'}[c];
+    if(direction)return `<i class="raster-nav" data-direction="${direction}" aria-hidden="true"></i>`;
+    const letter=letterCells.indexOf(c),number=numberCells.indexOf(c);
+    if(letter<0&&number<0)return `<span class="raster-punctuation">${safe(character)}</span>`;
+    const cols=letter>=0?6:4,cell=letter>=0?letter:number;
+    const rows=letter>=0?6:4;
+    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}" style="--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${1.05+(index%4)*.08}s;--letter-delay:-${(index%7)*.19}s"></i>`;
+  }
+  function lettering(value){
+    const text=String(value);let index=0;
+    const words=text.split(/(\s+)/u).map(word=>word.trim()?`<span class="raster-word">${Array.from(word).map(c=>glyph(c,index++)).join('')}</span>`:safe(word)).join('');
+    return `<span class="raster-copy"><span class="sr-only">${safe(text)}</span><span class="raster-ink" aria-hidden="true">${words}</span></span>`;
+  }
+  const suit=(s,size=24)=>`<i class="suit raster-suit" data-suit-art="${suitKeys[s]||'spade'}" style="width:${size}px;height:${size}px" aria-hidden="true"></i>`;
+  const pip=(s,x,y,size=15,angle=0)=>`<i class="card-pip raster-suit" data-suit-art="${suitKeys[s]}" style="left:${x}%;top:${y/142*100}%;width:${size}%;height:${size/142*100}%;transform:translate(-50%,-50%) rotate(${angle}deg)" aria-hidden="true"></i>`;
   const layouts={
     2:[[50,43],[50,99]],3:[[50,38],[50,71],[50,104]],
     4:[[33,42],[67,42],[33,100],[67,100]],
@@ -19,34 +32,12 @@ const ColdDeckArt = (() => {
     10:[[33,39],[67,39],[33,55],[67,55],[33,71],[67,71],[33,87],[67,87],[33,103],[67,103]]
   };
   function face(rank,s){
-    let art;
-    if(rank==='A'){
-      art=`${pip(s,50,66,50)}<g fill="none" stroke="var(--art-accent)" stroke-width=".65"><path d="M34 101h32m-26 3h20m-10-9v3M32 41q-4 5-5 11m41-11q4 5 5 11"/><path d="m47 32 3-3 3 3-3 3Z"/></g>`;
-    }else if(['J','Q','K'].includes(rank))art=royal(rank,s);
-    else art=(layouts[Number(rank)]||[]).map(([x,y])=>pip(s,x,y,Number(rank)===10?18:Number(rank)>8?20:22,y>71?180:0)).join('');
-    return `<svg class="card-art" viewBox="0 0 100 142" aria-hidden="true">${art}</svg>`;
+    const courts={K:'king',Q:'queen',J:'jack'};
+    const art=courts[rank]
+      ?`<img class="court-image" data-court="${rank}" src="${image('court-'+courts[rank])}" width="1024" height="1024" alt="" decoding="async" draggable="false">`
+      :rank==='A'?pip(s,50,70,53):(layouts[Number(rank)]||[]).map(([x,y])=>pip(s,x,y,Number(rank)===10?18:Number(rank)>8?20:22,y>71?180:0)).join('');
+    return `<div class="card-art raster-card-art" aria-hidden="true">${art}</div>`;
   }
-  function royal(rank,s){
-    const ink='var(--court-ink)',shade='var(--court-shade)',skin='var(--court-skin)',accent='var(--art-accent)';
-    const head=rank==='K'
-      ? `<path d="M30 48 35 40h30l5 8-3 25-17 14-17-14Z" fill="${ink}"/><path d="M36 43h28v20L50 76 36 63Z" fill="${skin}"/><path d="M50 43h14v20L50 76Z" fill="${shade}"/><path d="m35 62 9 5 6-3 6 3 9-5-4 16-11 8-11-8Z" fill="${ink}"/><path d="M32 24 41 32 50 20 59 32 68 24 65 40H35Z" fill="${accent}"/><path d="M47 17h6m-3-4v8" stroke="${ink}" stroke-width="2"/>`
-      : rank==='Q'
-        ? `<path d="M30 48q0-9 20-9t20 9l5 37-20-5-5-8-5 8-20 5Z" fill="${ink}"/><path d="M36 45h28v20L50 76 36 65Z" fill="${skin}"/><path d="M50 45h14v20L50 76Z" fill="${shade}"/><path d="M34 50 39 40h23l5 11-15-7-10 7Z" fill="${ink}"/><path d="M33 27 43 33 50 22 57 33 67 27 64 40H36Z" fill="${accent}"/><path d="m32 61 3 5-3 5-3-5Zm36 0 3 5-3 5-3-5Z" fill="${accent}"/>`
-        : `<path d="M31 45 35 40 66 41 69 49 66 71 58 77 37 69Z" fill="${ink}"/><path d="M36 44h28v22L50 77 36 64Z" fill="${skin}"/><path d="M50 44h14v22L50 77Z" fill="${shade}"/><path d="M62 31 66 19 72 21 66 34Z" fill="${shade}"/><path d="M29 41 38 27 59 25 69 34 72 44 51 40 39 47Z" fill="${ink}"/><path d="M33 37 62 30 67 36 39 43Z" fill="${accent}"/>`;
-    const coat=rank==='Q'
-      ? `<path d="m37 77 13 7 13-7 12 16v22H25V93Z" fill="${ink}"/><path d="m37 77 13 15 13-15-5 24H42Z" fill="${accent}"/>`
-      : `<path d="m35 77 15 8 15-8 12 16v22H23V93Z" fill="${ink}"/><path d="m35 77 15 8-9 12-10-14Zm30 0-15 8 9 12 10-14Z" fill="${accent}"/><path d="M50 86v29" stroke="${shade}" stroke-width="1.5"/>`;
-    return `<g data-court="${rank}"><path d="M27 39v-8h7m32 0h7v8M27 107v10h8m30 0h8v-10" fill="none" stroke="${shade}" stroke-width=".7"/>${coat}${head}<g fill="none" stroke="${ink}" stroke-width="1.6" stroke-linecap="square"><path d="m40 53 5-1m10 0 5 1M49 54l-2 7h4"/><path d="M46 67h8"/></g><g color="${skin}">${pip(s,50,105,12)}</g></g>`;
-  }
-  const actionPaths={
-    hit:'M5 7 2 8l4 13 3-1M9 4 5 5l4 15 4-1M12 3l9 2-3 16-9-2Z',
-    stand:'M7 12V6a1 1 0 0 1 2 0v6-8a1 1 0 0 1 2 0v8-9a1 1 0 0 1 2 0v9-7a1 1 0 0 1 2 0v8l2-4q2-1 2 1l-3 9q-1 3-5 3-4 0-6-4l-3-5q-1-2 1-2l4 3Z',
-    double:'M5 6c0-4 15-4 15 0S5 10 5 6Zm0 0v4c0 4 15 4 15 0V6M5 10v4c0 4 15 4 15 0v-4M5 14v4c0 4 15 4 15 0v-4',
-    split:'M8 3 3 8l5 5M3 8h6v13m7-18 5 5-5 5m5-5h-6v13',
-    force:'m14 2-9 12h7l-2 8 9-12h-7l2-8Z',
-    deal:'M5 7 2 8l4 13 3-1M9 4 5 5l4 15 4-1M12 3l9 2-3 16-9-2Z'
-  };
-  const actionIcon=kind=>`<svg class="action-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${actionPaths[kind]||actionPaths.hit}"/></svg>`;
   // HD raster illustrations shared by inventory, shops, effects and menus.
   const illustrationKeys=new Set(["lunettes", "jeton", "clope", "as", "froid", "compteur", "mecene", "usurier", "collector", "maitresse", "bruleur", "portebonheur", "diplomate", "talisman", "aimant", "phare", "etoile", "jugement", "soleil", "diable", "lune", "etoileD", "pendu", "magicien", "roue", "soin", "assurance", "videur", "bank", "pourboire", "net", "tarot", "contact", "relic2", "plafond", "elan", "cashplus", "boon2", "mult", "baraplus", "evt3"]);
   const effectAliases={bankI:'bank',pourboireI:'pourboire',income:'pourboire',betmax:'plafond',filet:'net',cash:'soin'};
@@ -62,5 +53,5 @@ const ColdDeckArt = (() => {
     return `<img class="effect-symbol effect-illustration" data-effect-symbol="${key}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">`;
   }
   const icon=n=>`<img class="pxi raster-icon" src="${image(interfaceArt[n]||'etoile')}" width="1024" height="1024" alt="" aria-hidden="true" decoding="async" draggable="false">`;
-  return {suit,face,icon,actionIcon,effect,image,illustration,back,backKey};
+  return {suit,face,icon,effect,image,illustration,back,backKey,lettering};
 })();

@@ -24,6 +24,62 @@
     "generator": "built-in image_gen"
   },
   {
+    "id": "back-cherry",
+    "file": "back-cherry.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Deep coral #d64662 background. Two oversized warm ivory cherries joined by a chunky turquoise stem and leaf, one broad yellow swoosh and two tiny ivory stars. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "back-crown",
+    "file": "back-crown.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Mustard yellow #ffce3a background. A single oversized bold charcoal three-point crown, one ivory diamond inset, a coral slash below and two tiny ivory sparks. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "back-diamond",
+    "file": "back-diamond.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Warm ivory #fff7e6 background. One oversized faceted violet diamond made of just three large flat shapes, one turquoise slash behind and two yellow starbursts. Use charcoal inset border. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "back-dice",
+    "file": "back-dice.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Turquoise #18b8b3 background. Two oversized wonky warm ivory dice tilted in opposing directions, charcoal chunky circular pips, one small yellow lightning between them. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "back-eye",
+    "file": "back-eye.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Charcoal #20252a background. A huge ivory almond-shaped eye with a turquoise iris and charcoal pupil, one big coral lightning crossing behind the eye and two yellow rays. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "back-flame",
+    "file": "back-flame.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Deep petrol #125356 background. One oversized sculptural coral flame with a yellow inner flame, a short ivory zigzag crossing its base and two tiny turquoise sparks. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "back-heart",
+    "file": "back-heart.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Deep coral #ed4d67 background. Oversized warm ivory heart, one yellow flame licks upward from its top and two chunky turquoise sparks. Bold centered composition. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
+    "generator": "built-in image_gen"
+  },
+  {
     "id": "back-lightning",
     "file": "back-lightning.webp",
     "width": 1024,
@@ -37,6 +93,46 @@
     "width": 1024,
     "height": 1536,
     "prompt": "Production high-definition raster illustration for Cold Deck, modern minimalist arcade videogame. STRICT FLAT 2D CUT-PAPER STYLE. Five to eight large geometric shapes maximum. Solid opaque colors only: charcoal #20252a, warm ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. Slightly wonky angular proportions, fun grown-up graphic design. CARD BACK, portrait 2:3 edge-to-edge solid violet background. Huge irregular golden yellow four-leaf clover in the center, one ivory curved swoosh and two little turquoise star sparks. Thin ivory inset rounded rectangle border. No letter or number. Flat texture of a playing card BACK, no mockup or perspective. NO gradients, NO textures, NO 3D, NO realism, NO metallic gold, NO reflections, NO bevels, NO ornate details, NO thin outline icon, NO decorative borders or badges. No writing. Bold shapes readable at 32 pixels.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "back-moon",
+    "file": "back-moon.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Deep violet #6440a8 background. Huge warm ivory crescent moon curving around one irregular yellow star, a turquoise sweeping orbit and just two tiny ivory dots. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "back-snake",
+    "file": "back-snake.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Turquoise #1fc9bc background. One playful adult graphic charcoal snake curling into a loose S, yellow belly in two large panels, one ivory eye and tiny coral forked tongue. No scales. Two little ivory sparks. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "back-sun",
+    "file": "back-sun.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Violet #a64dff background. Huge yellow sun with seven uneven chunky triangular rays, an ivory crescent sweep in front and a small turquoise four-point star. No face. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "background-menu",
+    "file": "background-menu.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. Full-screen menu BACKGROUND ONLY, large square2048x2048. Dominant graphite #20252a. Center70%width is entirely plain continuous charcoal. At extreme top right corner, a cropped large deep violet angular paper shape with one muted yellow slash; extreme bottom left corner, a cropped deep petrol paper curve with one tiny coral triangle. Shapes are very dark, subdued, sparse and slightly wonky, no details. Keep top left and center free for menu typography and buttons. No letters, text, numbers, logo, cards, icons, frames, UI, realistic room or textures. Calm spacious adult videogame menu with cut-paper edges.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "background-table",
+    "file": "background-table.webp",
+    "width": 971,
+    "height": 1619,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. Full-screen mobile game BACKGROUND ONLY, portrait 1536x2560 or similar tall ratio. Dominant dark charcoal #20252a, center 80%width entire height is a clear uniform dark charcoal playing area. At extreme left and right outermost10%edges only, two large subtly different graphite angular cut-paper lightning silhouettes, deep petrol shadows and a few small muted mustard and muted violet wedges near the lower outer corners. Barely visible and very sparse decoration. Flat graphic layered paper, no grain. NO card slots, no cards, no table furniture, no frame, no UI, no button, no words, no numbers, no glowing rays, no realistic room. Quiet minimal background with large continuous empty center, safe for high contrast card game foreground.",
     "generator": "built-in image_gen"
   },
   {
@@ -64,11 +160,75 @@
     "generator": "built-in image_gen"
   },
   {
+    "id": "brand-wordmark",
+    "file": "brand-wordmark.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "A square videogame wordmark image on a pure opaque black background. White chunky uppercase geometric letters on two equal-width stacked lines. The exact words are COLD on the first line and DECK on the second line. The O is a white circle with a simple black lightning cutout. Slightly playful irregular cut-paper letter shapes, large clear letters. Design fills 92 percent of image width and 72 percent of image height, centered. Strictly flat black and white only. Clean edges. No texture, speckles, decoration, shadow or glow. Not transparent.",
+    "generator": "built-in image_gen"
+  },
+  {
     "id": "bruleur",
     "file": "bruleur.webp",
     "width": 1254,
     "height": 1254,
     "prompt": "Production high-definition raster illustration for Cold Deck, modern minimalist arcade videogame. STRICT FLAT 2D CUT-PAPER STYLE. Five to eight large geometric shapes maximum. Solid opaque colors only: charcoal #20252a, warm ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. Slightly wonky angular proportions, fun grown-up graphic design. one big orange flame with one yellow inner flame Single centered isolated object fills 78% of square canvas, transparent background and ample empty margin. NO gradients, NO textures, NO 3D, NO realism, NO metallic gold, NO reflections, NO bevels, NO ornate details, NO thin outline icon, NO decorative borders or badges. No writing. Bold shapes readable at 32 pixels.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "button-blue",
+    "file": "button-blue.webp",
+    "width": 2172,
+    "height": 724,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. A single BLANK GAME BUTTON surface, wide landscape canvas1536x512, flat face-on view, chunky softly rounded irregular rectangle. Main face color #2468ce, lower edge dark navy. Clean near-solid center covering80% of width reserved for text later. Slightly uneven cut-paper edges, tiny darker flat band at bottom suggests pressed depth, one very subtle lighter flat strip near top. Fills96%canvaswidth and86%height with transparent margins. NO text, letters, symbols, icons, sparks, borders, visible grain, gradient or realism. True transparent background. This is an unlabelled reusable game interface skin.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "button-coral",
+    "file": "button-coral.webp",
+    "width": 2172,
+    "height": 724,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. A single BLANK GAME BUTTON surface, wide landscape canvas1536x512, flat face-on view, chunky softly rounded irregular rectangle. Main face color #ff5470, lower edge burgundy. Clean near-solid center covering80% of width reserved for text later. Slightly uneven cut-paper edges, tiny darker flat band at bottom suggests pressed depth, one very subtle lighter flat strip near top. Fills96%canvaswidth and86%height with transparent margins. NO text, letters, symbols, icons, sparks, borders, visible grain, gradient or realism. True transparent background. This is an unlabelled reusable game interface skin.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "button-graphite",
+    "file": "button-graphite.webp",
+    "width": 2172,
+    "height": 724,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. A single BLANK GAME BUTTON surface, wide landscape canvas1536x512, flat face-on view, chunky softly rounded irregular rectangle. Main face color #343c45, lower edge charcoal. Clean near-solid center covering80% of width reserved for text later. Slightly uneven cut-paper edges, tiny darker flat band at bottom suggests pressed depth, one very subtle lighter flat strip near top. Fills96%canvaswidth and86%height with transparent margins. NO text, letters, symbols, icons, sparks, borders, visible grain, gradient or realism. True transparent background. This is an unlabelled reusable game interface skin.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "button-purple",
+    "file": "button-purple.webp",
+    "width": 2172,
+    "height": 724,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. A single BLANK GAME BUTTON surface, wide landscape canvas1536x512, flat face-on view, chunky softly rounded irregular rectangle. Main face color #813cd0, lower edge dark purple. Clean near-solid center covering80% of width reserved for text later. Slightly uneven cut-paper edges, tiny darker flat band at bottom suggests pressed depth, one very subtle lighter flat strip near top. Fills96%canvaswidth and86%height with transparent margins. NO text, letters, symbols, icons, sparks, borders, visible grain, gradient or realism. True transparent background. This is an unlabelled reusable game interface skin.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "button-teal",
+    "file": "button-teal.webp",
+    "width": 2172,
+    "height": 724,
+    "prompt": "An extra wide rectangular 3:1 videogame button surface. Solid opaque turquoise #1fd1c8 filling entire canvas from edge to edge. A small flat darker turquoise band across the bottom 12 percent. Subtle angular overlapping paper shapes confined to the two outer corners. Central 85 percent stays perfectly flat, blank and uncluttered. Strictly flat colors, playful minimalist paper-cut arcade game style. No text, symbols, holes, gradient, gloss, shadow, noise or texture. No margin. Not transparent.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "button-yellow",
+    "file": "button-yellow.webp",
+    "width": 2172,
+    "height": 724,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. A single BLANK GAME BUTTON surface, wide landscape canvas1536x512, flat face-on view, chunky softly rounded irregular rectangle. Main face color #ffce3a, lower edge muted ochre. Clean near-solid center covering80% of width reserved for text later. Slightly uneven cut-paper edges, tiny darker flat band at bottom suggests pressed depth, one very subtle lighter flat strip near top. Fills96%canvaswidth and86%height with transparent margins. NO text, letters, symbols, icons, sparks, borders, visible grain, gradient or realism. True transparent background. This is an unlabelled reusable game interface skin.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "card-stock",
+    "file": "card-stock.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. A completely BLANK ivory playing card front texture, 1024x1536portrait flat edge-to-edge warm ivory #fff7e6, very faint lighter ivory two broad paper-cut slivers ONLY at outermost3%edges, clean uniform center. No perspective, no card on table, no border, no writing, no numbers, no symbols, no object. Canvas full rectangle opaque ivory, no outer margins, no rounded transparent corners. This is the surface material onto which precise game card artwork will be placed.",
     "generator": "built-in image_gen"
   },
   {
@@ -109,6 +269,30 @@
     "width": 1254,
     "height": 1254,
     "prompt": "Production high-definition raster illustration for Cold Deck, modern minimalist arcade videogame. STRICT FLAT 2D CUT-PAPER STYLE. Five to eight large geometric shapes maximum. Solid opaque colors only: charcoal #20252a, warm ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. Slightly wonky angular proportions, fun grown-up graphic design. a chunky charcoal telephone with a yellow receiver and turquoise round dial Single centered isolated object fills 78% of square canvas, transparent background and ample empty margin. NO gradients, NO textures, NO 3D, NO realism, NO metallic gold, NO reflections, NO bevels, NO ornate details, NO thin outline icon, NO decorative borders or badges. No writing. Bold shapes readable at 32 pixels.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "court-jack",
+    "file": "court-jack.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. Draw JACK, young adult court valet with angular charcoal hair, one simple tilted coral cap with yellow band naturally on hair, ivory angular face, turquoise tunic with large yellow collar, one violet shoulder, confident expression from two small eye strokes. Upright waist-up bust. Extremely simple character made of about twelve broad paper-cut shapes. Head centered above torso, crown or hat physically attached to hair without gap. No hands, weapons, props, text, number, card suits, border, ornaments, detailed clothing or background. Genuine transparent background, centered isolated figure within middle75% of square canvas. A playing-card court portrait, graphic and grown up, not childlike or realistic.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "court-king",
+    "file": "court-king.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. Draw KING, adult male monarch with angular square beard, confident broad face, three-point yellow crown sitting directly on the top of his charcoal hair, turquoise geometric tunic with one coral shoulder, ivory face. Only two tiny charcoal strokes for eyes, one wedge for nose. Upright waist-up bust. Extremely simple character made of about twelve broad paper-cut shapes. Head centered above torso, crown or hat physically attached to hair without gap. No hands, weapons, props, text, number, card suits, border, ornaments, detailed clothing or background. Genuine transparent background, centered isolated figure within middle75% of square canvas. A playing-card court portrait, graphic and grown up, not childlike or realistic.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "court-queen",
+    "file": "court-queen.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. Draw QUEEN, adult woman monarch with large sweeping charcoal hair silhouette, yellow three-point crown aligned directly on top of her hair, ivory angular face, confident expression made with two small eye strokes, violet geometric dress with one turquoise collar. Upright waist-up bust. Extremely simple character made of about twelve broad paper-cut shapes. Head centered above torso, crown or hat physically attached to hair without gap. No hands, weapons, props, text, number, card suits, border, ornaments, detailed clothing or background. Genuine transparent background, centered isolated figure within middle75% of square canvas. A playing-card court portrait, graphic and grown up, not childlike or realistic.",
     "generator": "built-in image_gen"
   },
   {
@@ -232,6 +416,22 @@
     "generator": "built-in image_gen"
   },
   {
+    "id": "nav-arrow",
+    "file": "nav-arrow.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "A white left pointing navigation arrow on a pure opaque black background. Thick simple angular shape, clean edges. Centered, filling 75 percent of a square image. Minimalist game interface asset. Flat two colors, no noise, no decoration, no texture. Not transparent.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "nav-pause",
+    "file": "nav-pause.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "Use case: stylized-concept. Production game bitmap mask, bold chunky slightly irregular angular cut-paper silhouette for adult arcade game Cold Deck. A PAUSE sign: exactly two parallel thick vertical rectangular bars, same height, large clear black gap between them. Occupies middle 68 percent of square. Two colors ONLY: solid pure WHITE shapes on a perfectly flat solid opaque BLACK background. NO transparency. NO texture, noise, distressed edges, stippling, paint flecks, shadows, gradients, glows, reflections, border, frame or extra decoration. Clean sharp straight edges. Square canvas 1536 by 1536. This is a luminance mask, all empty areas and holes must be pure black.",
+    "generator": "built-in image_gen"
+  },
+  {
     "id": "net",
     "file": "net.webp",
     "width": 1254,
@@ -312,6 +512,38 @@
     "generator": "built-in image_gen"
   },
   {
+    "id": "suit-club",
+    "file": "suit-club.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. A single large conventional CLUBS playing card suit mark, three distinct chunky roundish lobes and short thick stem, slightly angular cut-paper silhouette. One centered flat SOLID WHITE silhouette only, fills 78% of square canvas with black margin. Opaque pure black background. No internal decoration, no text, no extra shapes or shadows. It will be recolored by the game.\nCRITICAL: Render perfectly SOLID WHITE #ffffff marks on perfectly SOLID BLACK #000000 full canvas. No alpha transparency and absolutely no white noise, flecks or texture outside the shapes. Clean font mask asset. All empty background and all holes inside letters must be pure BLACK. Hard clean edges.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "suit-diamond",
+    "file": "suit-diamond.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. A single large conventional DIAMONDS playing card suit mark, a tall four-point lozenge, slightly irregular cut-paper sides. One centered flat SOLID WHITE silhouette only, fills 78% of square canvas with black margin. Opaque pure black background. No internal decoration, no text, no extra shapes or shadows. It will be recolored by the game.\nCRITICAL: Render perfectly SOLID WHITE #ffffff marks on perfectly SOLID BLACK #000000 full canvas. No alpha transparency and absolutely no white noise, flecks or texture outside the shapes. Clean font mask asset. All empty background and all holes inside letters must be pure BLACK. Hard clean edges.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "suit-heart",
+    "file": "suit-heart.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. A single large conventional HEARTS playing card suit mark, two upper lobes and one sharp bottom point, slight angular cut-paper irregularity. One centered flat SOLID WHITE silhouette only, fills 78% of square canvas with black margin. Opaque pure black background. No internal decoration, no text, no extra shapes or shadows. It will be recolored by the game.\nCRITICAL: Render perfectly SOLID WHITE #ffffff marks on perfectly SOLID BLACK #000000 full canvas. No alpha transparency and absolutely no white noise, flecks or texture outside the shapes. Clean font mask asset. All empty background and all holes inside letters must be pure BLACK. Hard clean edges.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "suit-spade",
+    "file": "suit-spade.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "Use case: stylized-concept. Production high-definition raster artwork for Cold Deck minimalist adult arcade videogame. Match approved reference style: bold chunky cut-paper silhouettes, clean flat color areas, slightly irregular angular forms, very few details, playful and confident, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. No photographic realism, no glossy materials, no ornate decoration, no thin line icons, no texture noise. A single large conventional SPADES playing card suit mark, recognizable sharp pointed leaf with two lower lobes and short thick triangular stem. Slightly wonky cut-paper silhouette, balanced and clear. One centered flat SOLID WHITE silhouette only, fills 78% of square canvas with black margin. Opaque pure black background. No internal decoration, no text, no extra shapes or shadows. It will be recolored by the game.\nCRITICAL: Render perfectly SOLID WHITE #ffffff marks on perfectly SOLID BLACK #000000 full canvas. No alpha transparency and absolutely no white noise, flecks or texture outside the shapes. Clean font mask asset. All empty background and all holes inside letters must be pure BLACK. Hard clean edges.",
+    "generator": "built-in image_gen"
+  },
+  {
     "id": "talisman",
     "file": "talisman.webp",
     "width": 1254,
@@ -328,99 +560,19 @@
     "generator": "built-in image_gen"
   },
   {
-    "id": "usurier",
-    "file": "usurier.webp",
+    "id": "type-letters",
+    "file": "type-letters.webp",
     "width": 1254,
     "height": 1254,
-    "prompt": "Production high-definition raster illustration for Cold Deck, modern minimalist arcade videogame. STRICT FLAT 2D CUT-PAPER STYLE. Five to eight large geometric shapes maximum. Solid opaque colors only: charcoal #20252a, warm ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. Slightly wonky angular proportions, fun grown-up graphic design. a stack of three flat yellow coins with a coral clamp Single centered isolated object fills 78% of square canvas, transparent background and ample empty margin. NO gradients, NO textures, NO 3D, NO realism, NO metallic gold, NO reflections, NO bevels, NO ornate details, NO thin outline icon, NO decorative borders or badges. No writing. Bold shapes readable at 32 pixels.",
+    "prompt": "Use case: logo-brand. A production game typography SPRITE ATLAS, six columns by six rows, exact evenly spaced invisible grid, square 1536x1536. EXACTLY one uppercase character in each cell, correct sequence. Row 1: A B C D E F. Row 2: G H I J K L. Row 3: M N O P Q R. Row 4: S T U V W X. Row 5: Y Z É È À Ç. Row 6: Ù Ê Ô Û Î Ï. Each cell is exactly 256x256 on the canvas. Center every character in its cell with ample black margin, same cap height 175px, glyphs fit inside 170px width, accents contained inside the cell. Characters are heavy condensed, slightly wonky hand-cut geometric block type, like a bold adult arcade cut-paper poster. Upright and readable, smooth sharp edge, solid WHITE opaque glyphs on completely OPAQUE pure BLACK #000000 background. NO shadows, colors, backgrounds, cell boxes, grid lines, outlines, decoration or labels. Never include an extra character. This is one uniform bitmap font atlas to cut into 36 equal square cells.\nCRITICAL: Render perfectly SOLID WHITE #ffffff marks on perfectly SOLID BLACK #000000 full canvas. No alpha transparency and absolutely no white noise, flecks or texture outside the shapes. Clean font mask asset. All empty background and all holes inside letters must be pure BLACK. Hard clean edges.",
     "generator": "built-in image_gen"
   },
   {
-    "id": "videur",
-    "file": "videur.webp",
+    "id": "type-numbers",
+    "file": "type-numbers.webp",
     "width": 1254,
     "height": 1254,
-    "prompt": "Production high-definition raster illustration for Cold Deck, modern minimalist arcade videogame. STRICT FLAT 2D CUT-PAPER STYLE. Five to eight large geometric shapes maximum. Solid opaque colors only: charcoal #20252a, warm ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. Slightly wonky angular proportions, fun grown-up graphic design. a stylized angular nightclub bouncer bust, charcoal suit, turquoise shirt, square chin and folded arms, no facial detail except eyebrows Single centered isolated object fills 78% of square canvas, transparent background and ample empty margin. NO gradients, NO textures, NO 3D, NO realism, NO metallic gold, NO reflections, NO bevels, NO ornate details, NO thin outline icon, NO decorative borders or badges. No writing. Bold shapes readable at 32 pixels.",
-    "generator": "built-in image_gen"
-  },
-  {
-    "id": "back-cherry",
-    "file": "back-cherry.webp",
-    "width": 1024,
-    "height": 1536,
-    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Deep coral #d64662 background. Two oversized warm ivory cherries joined by a chunky turquoise stem and leaf, one broad yellow swoosh and two tiny ivory stars. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
-    "generator": "built-in image_gen"
-  },
-  {
-    "id": "back-crown",
-    "file": "back-crown.webp",
-    "width": 1024,
-    "height": 1536,
-    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Mustard yellow #ffce3a background. A single oversized bold charcoal three-point crown, one ivory diamond inset, a coral slash below and two tiny ivory sparks. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
-    "generator": "built-in image_gen"
-  },
-  {
-    "id": "back-diamond",
-    "file": "back-diamond.webp",
-    "width": 1024,
-    "height": 1536,
-    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Warm ivory #fff7e6 background. One oversized faceted violet diamond made of just three large flat shapes, one turquoise slash behind and two yellow starbursts. Use charcoal inset border. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
-    "generator": "built-in image_gen"
-  },
-  {
-    "id": "back-dice",
-    "file": "back-dice.webp",
-    "width": 1024,
-    "height": 1536,
-    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Turquoise #18b8b3 background. Two oversized wonky warm ivory dice tilted in opposing directions, charcoal chunky circular pips, one small yellow lightning between them. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
-    "generator": "built-in image_gen"
-  },
-  {
-    "id": "back-eye",
-    "file": "back-eye.webp",
-    "width": 1024,
-    "height": 1536,
-    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Charcoal #20252a background. A huge ivory almond-shaped eye with a turquoise iris and charcoal pupil, one big coral lightning crossing behind the eye and two yellow rays. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
-    "generator": "built-in image_gen"
-  },
-  {
-    "id": "back-flame",
-    "file": "back-flame.webp",
-    "width": 1024,
-    "height": 1536,
-    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Deep petrol #125356 background. One oversized sculptural coral flame with a yellow inner flame, a short ivory zigzag crossing its base and two tiny turquoise sparks. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
-    "generator": "built-in image_gen"
-  },
-  {
-    "id": "back-heart",
-    "file": "back-heart.webp",
-    "width": 1024,
-    "height": 1536,
-    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Deep coral #ed4d67 background. Oversized warm ivory heart, one yellow flame licks upward from its top and two chunky turquoise sparks. Bold centered composition. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
-    "generator": "built-in image_gen"
-  },
-  {
-    "id": "back-moon",
-    "file": "back-moon.webp",
-    "width": 1024,
-    "height": 1536,
-    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Deep violet #6440a8 background. Huge warm ivory crescent moon curving around one irregular yellow star, a turquoise sweeping orbit and just two tiny ivory dots. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
-    "generator": "built-in image_gen"
-  },
-  {
-    "id": "back-snake",
-    "file": "back-snake.webp",
-    "width": 1024,
-    "height": 1536,
-    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Turquoise #1fc9bc background. One playful adult graphic charcoal snake curling into a loose S, yellow belly in two large panels, one ivory eye and tiny coral forked tongue. No scales. Two little ivory sparks. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
-    "generator": "built-in image_gen"
-  },
-  {
-    "id": "back-sun",
-    "file": "back-sun.webp",
-    "width": 1024,
-    "height": 1536,
-    "prompt": "Use case: stylized-concept. Production HD raster asset for Cold Deck, a minimalist grown-up arcade card videogame. Create ONE playing-card BACK texture, upright portrait 2:3, 1024x1536 or higher. Match the reference's bold paper-cut silhouettes and sparse energetic composition. Seven to ten large shapes at most, slightly wonky angular edges, flat opaque color areas. Violet #a64dff background. Huge yellow sun with seven uneven chunky triangular rays, an ivory crescent sweep in front and a small turquoise four-point star. No face. Full bleed rectangular background reaches all canvas edges. Thin warm ivory rounded rectangle inset 3% from each edge, uniform frame. Center art occupies middle 75%, generous breathing room. NO text, numbers, ranks or card face corners. NO realism, gradients, textures, glossy 3D, ornate pattern, fine details, scenery, drop shadow, tabletop, hand or perspective. This is print-flat card BACK art, NOT a photo of a card. Reference image supplies style only; draw the requested new subject.",
+    "prompt": "Use case: logo-brand. A production game typography SPRITE ATLAS, four columns by four rows, exact evenly spaced invisible grid, square 1536x1536. EXACTLY one character in each cell in correct sequence. Row 1: 0 1 2 3. Row 2: 4 5 6 7. Row 3: 8 9 + ×. Row 4: $ − ∞ ?. Each cell exactly384x384. Center every character in its own cell. Same character height265px, glyph width at most270px, generous black margin, no overlap. Heavy condensed slightly wonky hand-cut geometric block type, bold adult arcade cut-paper poster, upright and extremely readable. Digits 6 and9 clearly distinct; 0 oval with open center; plus and multiplication clearly distinct. Solid WHITE opaque glyphs on completely OPAQUE pure BLACK #000000 background. NO shadows, colors, backgrounds, cell boxes, grid lines, outlines, decoration or labels. Never include an extra character. This is one uniform bitmap font atlas to cut into16 equal square cells.\nCRITICAL: Render perfectly SOLID WHITE #ffffff marks on perfectly SOLID BLACK #000000 full canvas. No alpha transparency and absolutely no white noise, flecks or texture outside the shapes. Clean font mask asset. All empty background and all holes inside letters must be pure BLACK. Hard clean edges.",
     "generator": "built-in image_gen"
   },
   {
@@ -461,6 +613,22 @@
     "width": 1254,
     "height": 1254,
     "prompt": "Use case: stylized-concept. High-definition raster illustration for Cold Deck modern minimalist grown-up arcade game. Match the reference paper-cut icon style, bold flat colors, fun slightly wonky geometric shapes, almost no detail, charcoal #20252a, ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. One oversized lopsided yellow trophy cup, large turquoise side handle and purple foot, one ivory four-point sparkle on the cup. Five broad shapes, no writing. Centered single subject fills 80% of square canvas, generous transparent margin on all edges. True transparent background. NO realistic lighting, metallic materials, fine strokes, textures, detailed decoration, background, border or labels. Bold flat shapes readable at 32 pixels.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "usurier",
+    "file": "usurier.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "Production high-definition raster illustration for Cold Deck, modern minimalist arcade videogame. STRICT FLAT 2D CUT-PAPER STYLE. Five to eight large geometric shapes maximum. Solid opaque colors only: charcoal #20252a, warm ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. Slightly wonky angular proportions, fun grown-up graphic design. a stack of three flat yellow coins with a coral clamp Single centered isolated object fills 78% of square canvas, transparent background and ample empty margin. NO gradients, NO textures, NO 3D, NO realism, NO metallic gold, NO reflections, NO bevels, NO ornate details, NO thin outline icon, NO decorative borders or badges. No writing. Bold shapes readable at 32 pixels.",
+    "generator": "built-in image_gen"
+  },
+  {
+    "id": "videur",
+    "file": "videur.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "Production high-definition raster illustration for Cold Deck, modern minimalist arcade videogame. STRICT FLAT 2D CUT-PAPER STYLE. Five to eight large geometric shapes maximum. Solid opaque colors only: charcoal #20252a, warm ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. Slightly wonky angular proportions, fun grown-up graphic design. a stylized angular nightclub bouncer bust, charcoal suit, turquoise shirt, square chin and folded arms, no facial detail except eyebrows Single centered isolated object fills 78% of square canvas, transparent background and ample empty margin. NO gradients, NO textures, NO 3D, NO realism, NO metallic gold, NO reflections, NO bevels, NO ornate details, NO thin outline icon, NO decorative borders or badges. No writing. Bold shapes readable at 32 pixels.",
     "generator": "built-in image_gen"
   }
 ]

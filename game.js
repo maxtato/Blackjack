@@ -577,7 +577,7 @@ function cardEl(c,opts={}){
     d.setAttribute('aria-label',c.r+' '+c.s);
     if(c.s==='♥'||c.s==='♦')d.classList.add('red');
     if(!opts.dealer&&c.ed)d.classList.add(c.ed);
-    const corner='<span class="corner-r">'+c.r+'</span>'+suitSVG(c.s,12);
+    const corner='<span class="corner-r">'+ColdDeckArt.lettering(c.r)+'</span>'+suitSVG(c.s,12);
     const tag=(!opts.dealer&&c.ed)?'<span class="edtag '+c.ed+'">'+ED_NAME[c.ed]+'</span>':'';
     d.innerHTML='<span class="corner tl">'+corner+'</span>'+ColdDeckArt.face(c.r,c.s)+'<span class="corner br">'+corner+'</span>'+tag;
   }
