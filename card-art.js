@@ -2,6 +2,15 @@
 const ColdDeckArt = (() => {
   const suitKeys={'♠':'spade','♥':'heart','♦':'diamond','♣':'club'};
   const letterCells=Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZÉÈÀÇÙÊÔÛÎÏ');
+  // Visible ink bounds in the generated 6 × 6 atlas, excluding its empty side margins.
+  const letterBounds=[
+    [.268,.766],[.292,.761],[.244,.746],[.254,.751],[.282,.699],[.268,.699],
+    [.244,.770],[.268,.756],[.388,.603],[.244,.718],[.249,.751],[.278,.722],
+    [.225,.789],[.249,.761],[.239,.746],[.263,.732],[.220,.751],[.249,.756],
+    [.263,.742],[.263,.746],[.234,.751],[.211,.761],[.139,.837],[.201,.751],
+    [.234,.794],[.263,.742],[.287,.703],[.278,.694],[.211,.742],[.234,.732],
+    [.258,.746],[.297,.713],[.244,.751],[.230,.737],[.344,.608],[.316,.636]
+  ];
   const numberCells=Array.from('0123456789+×$−∞?');
   const safe=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function glyph(character,index=0){
@@ -12,7 +21,8 @@ const ColdDeckArt = (() => {
     if(letter<0&&number<0)return `<span class="raster-punctuation">${safe(character)}</span>`;
     const cols=letter>=0?6:4,cell=letter>=0?letter:number;
     const rows=letter>=0?6:4;
-    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}" style="--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${1.05+(index%4)*.08}s;--letter-delay:-${(index%7)*.19}s"></i>`;
+    const trim=letter>=0?`--glyph-start:${letterBounds[letter][0]};--glyph-end:${(1-letterBounds[letter][1]).toFixed(3)};`:'';
+    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}" style="${trim}--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${1.05+(index%4)*.08}s;--letter-delay:-${(index%7)*.19}s"></i>`;
   }
   function lettering(value){
     const text=String(value);let index=0;
