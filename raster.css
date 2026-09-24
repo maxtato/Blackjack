@@ -19,7 +19,7 @@
 .card:not(.back)::after{display:none}
 .raster-card-art{position:relative;width:100%;height:100%;transform:none;overflow:hidden;border-radius:inherit}
 .card-pip{position:absolute;display:block;pointer-events:none}
-.court-image{position:absolute;left:21%;top:13%;width:58%;height:74%;object-fit:contain;pointer-events:none}
+.court-image{position:absolute;left:20%;top:11%;width:60%;height:78%;object-fit:contain;pointer-events:none}
 .corner-r .raster-glyph{width:.7em;height:1.08em;animation:none!important}
 .corner-r .raster-word{line-height:1}
 .corner .raster-suit{width:calc(var(--card-w)*.09)!important;height:calc(var(--card-w)*.09)!important}
@@ -41,19 +41,20 @@
 }
 .hand:empty::before,.hand:empty::after{background:var(--art-card-stock) center/100% 100% no-repeat;border:0;opacity:.035}
 
-/* Drawn button surfaces, with live readable labels and unchanged click targets. */
+/* Matte printed surfaces share the cut-paper art; depth comes from a dark offset only. */
 button:not(.chip):not(.bpCard){
  --button-art:var(--art-button-yellow);--button-ink:#282a2e;
  background-image:var(--button-art)!important;background-color:transparent!important;background-size:100% 100%!important;background-repeat:no-repeat!important;
- color:var(--button-ink)!important;border:0;box-shadow:none!important;
+ color:var(--button-ink)!important;border:0;box-shadow:0 3px 0 #0003!important;filter:none!important;text-shadow:none;
 }
+button:not(.chip):not(.bpCard):enabled:active{box-shadow:0 1px 0 #0003!important}
 button.b-gold,button.mode-circuit{--button-art:var(--art-button-yellow)!important;--button-ink:#282a2e!important}
 button.b-blue,button[data-game-action="stand"],button[data-game-action="split"]{--button-art:var(--art-button-blue)!important;--button-ink:#fff7e6!important}
 button.b-teal,button.mode-free{--button-art:var(--art-button-teal)!important;--button-ink:#183434!important}
 button.b-purple,button[data-game-action="force"]{--button-art:var(--art-button-purple)!important;--button-ink:#fff7e6!important}
 button.b-red{--button-art:var(--art-button-coral)!important;--button-ink:#291d26!important}
 button.quiet-btn,button.bpArrow,button.prBtn,button.prep-link,button#pauseBtn,button#adX,.setOpts button:not(.on){--button-art:var(--art-button-graphite)!important;--button-ink:#fff7e6!important}
-button:not(.chip):not(.bpCard):disabled{--button-art:var(--art-button-graphite)!important;--button-ink:#aeb6c1!important;opacity:.7;filter:none}
+button:not(.chip):not(.bpCard):disabled{--button-art:var(--art-button-graphite)!important;--button-ink:#aeb6c1!important;opacity:.7;box-shadow:none!important}
 button.quiet-btn{padding:9px 15px}
 button .raster-glyph{width:.62em}
 .quiet-btn .raster-glyph{width:.58em}
