@@ -2,9 +2,9 @@
 (() => {
   const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','card-shape','background-table','background-menu','nav-arrow','nav-pause','brand-wordmark'];
   for(const key of assets)document.documentElement.style.setProperty('--art-'+key,`url("${ColdDeckArt.image(key)}")`);
-  // WebKit can ignore luminance masks for large/animated atlas tiles. Decode the
-  // exact same artwork to alpha once, then animate an unpainted glyph wrapper.
-  function prepareLetterAtlas(font){
+  // WebKit can ignore luminance masks for large/animated artwork. Decode each
+  // mask to alpha once; its text fallback stays visible until decoding succeeds.
+  function prepareAlphaMask(key,readyClass){
     return new Promise(resolve=>{
       const source=new Image();source.decoding='async';
       source.onerror=()=>resolve(false);
@@ -24,17 +24,21 @@
           const url=canvas.toDataURL('image/png'),decoded=new Image();
           decoded.onerror=()=>resolve(false);
           decoded.onload=()=>{
-            document.documentElement.style.setProperty('--alpha-type-'+font,`url("${url}")`);
-            document.documentElement.classList.add('raster-'+font+'-ready');
+            document.documentElement.style.setProperty('--alpha-'+key,`url("${url}")`);
+            document.documentElement.classList.add(readyClass);
             resolve(true);
           };
           decoded.src=url;
         }catch{resolve(false);}
       };
-      source.src=ColdDeckArt.image('type-'+font);
+      source.src=ColdDeckArt.image(key);
     });
   }
-  const ready=Promise.all(['letters','numbers'].map(prepareLetterAtlas));
+  const ready=Promise.all([
+    prepareAlphaMask('type-letters','raster-letters-ready'),
+    prepareAlphaMask('type-numbers','raster-numbers-ready'),
+    prepareAlphaMask('brand-wordmark','raster-brand-ready')
+  ]);
   const labelSelector='button,h1:not(.menuTitle),.mode-card strong,.chip-value,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum,.zlbl>[data-i18n]';
   function label(el){
     const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),nodes=[];
@@ -49,7 +53,7 @@
   }
   function brand(el){
     if(el.querySelector('.brand-image'))return;
-    el.innerHTML='<span class="brand-image" role="img" aria-label="Cold Deck"></span>';
+    el.innerHTML='<span class="brand-image" role="img" aria-label="Cold Deck"><span class="brand-fallback" aria-hidden="true"><span>COLD</span><span>DECK</span></span></span>';
   }
   function decorate(){
     observer.disconnect();

@@ -70,13 +70,25 @@ button.b-purple,button[data-game-action="force"]{--button-art:var(--art-button-p
 button.b-red{--button-art:var(--art-button-coral)!important;--button-ink:#291d26!important}
 button.quiet-btn,button.bpArrow,button.prBtn,button.prep-link,button#pauseBtn,button#adX,.setOpts button:not(.on){--button-art:var(--art-button-graphite)!important;--button-ink:#fff7e6!important}
 button:not(.chip):not(.bpCard):disabled{--button-art:var(--art-button-graphite)!important;--button-ink:#aeb6c1!important;opacity:.7;box-shadow:none!important}
-button.quiet-btn{padding:9px 15px}
+/* One type scale overrides the old per-button and inline font sizes. */
+:root{--button-label-size:22px;--menu-label-size:26px;--quiet-label-size:16px}
+button.btn{font-size:var(--button-label-size)!important;letter-spacing:0;line-height:1.15}
+button.btn.menu,button#planqueLaunch{font-size:var(--menu-label-size)!important}
+button.quiet-btn,.back-caption button.quiet-btn{font-size:var(--quiet-label-size);padding:9px 15px;letter-spacing:0;line-height:1.15}
+.prep-link strong{font-size:20px;letter-spacing:0}
+.setOpts button.btn,.shopItem>button.btn{font-size:18px!important}
+.chip{font-size:18px}
 button .raster-glyph{--glyph-width:.62em}
 .quiet-btn .raster-glyph{--glyph-width:.58em}
-#actions .blbl{white-space:normal;max-width:100%;line-height:1.05}
+#actions{--action-label-size:clamp(28px,3vw,34px)}
+#actions .btn{font-size:var(--action-label-size)!important;padding:6px 10px}
+#actions .btn[data-game-action] .blbl{font-size:inherit;white-space:normal;max-width:100%;line-height:1.08}
 #actions .action-copy{max-width:100%;width:100%}
+#actions .raster-word{vertical-align:top}
 #actions .raster-glyph{--glyph-width:.56em}
-.mode-card .mode-topline{font-size:8px}.mode-card .mode-description{font-size:10px;line-height:1.4}
+.mode-card .mode-content{min-width:0;gap:4px}
+.mode-card strong{font-size:28px;line-height:1.1}
+.mode-card .mode-topline{font-size:11px}.mode-card .mode-description{font-size:13px;line-height:1.4}
 .mode-topline .raster-glyph,.mode-description .raster-glyph{--glyph-width:.57em}
 .btn small{font-family:var(--font)}
 .chip-value .raster-glyph{--glyph-width:.64em;height:1em}
@@ -89,22 +101,34 @@ button .raster-glyph{--glyph-width:.62em}
 .rules summary::after{content:"";width:20px;height:20px;background:currentColor;-webkit-mask:var(--art-nav-arrow) center/contain no-repeat;mask:var(--art-nav-arrow) center/contain no-repeat;mask-mode:luminance;transform:rotate(-90deg)}
 .rules details[open] summary::after{transform:rotate(90deg)}
 
-/* The drawn brand fits the existing header footprint. */
-.brand-image{display:block;width:100%;height:100%;background:currentColor;-webkit-mask:var(--art-brand-wordmark) center/100% 140% no-repeat;mask:var(--art-brand-wordmark) center/100% 140% no-repeat;mask-mode:luminance;pointer-events:none}
+/* Never paint the logo's rectangle. Show text until its alpha artwork is ready. */
+.brand-image{position:relative;display:block;width:100%;height:100%;background:none;pointer-events:none}
+.brand-fallback{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;font:950 1em/.8 var(--display);letter-spacing:-.06em}
+@supports (mask-image:url("")) or (-webkit-mask-image:url("")){
+ .raster-brand-ready .brand-fallback{visibility:hidden}
+ .raster-brand-ready .brand-image::after{content:"";position:absolute;inset:0;background:currentColor;-webkit-mask:var(--alpha-brand-wordmark) center/100% 140% no-repeat;mask:var(--alpha-brand-wordmark) center/100% 140% no-repeat;mask-mode:alpha}
+}
 .table-brand{display:block;line-height:0;height:1.58em;max-width:100%}
 .menuTitle{width:3.3em;height:1.7em;max-width:100%}
 .wordmark{display:block;width:102px;height:42px;flex:none}
-.mode-card strong .raster-word{font-size:1.05em}
+.mode-card strong .raster-word{font-size:inherit}
 #gainVal .raster-glyph{--glyph-width:.6em}
 #pVal .raster-glyph,#dVal .raster-glyph{--glyph-width:.67em}
 .tnum .raster-glyph{--glyph-width:.62em}
 .raster-copy .raster-glyph{animation-timing-function:steps(2,end)}
 .card .raster-copy .raster-glyph{animation:none!important}
 @media(max-width:720px){
+ :root{--button-label-size:20px;--menu-label-size:24px;--quiet-label-size:14px}
  .wordmark{width:84px;height:34px}.raster-nav.pause-mark{width:20px;height:20px}
- #actions .btn[data-game-action="force"] .blbl{font-size:14px}
+ #actions{--action-label-size:24px}
+ .menu-top button.quiet-btn{padding:8px 10px}
+ .mode-card strong{font-size:26px}
+ .mode-card .mode-topline{font-size:10px}.mode-card .mode-description{font-size:12px}
+ .prep-link strong{font-size:18px}
+ .chip{font-size:17px}
  .quiet-btn .raster-glyph{--glyph-width:.53em}.quiet-btn{letter-spacing:0}
  .overlay .illustrated-heading h1{font-size:22px!important}
  .menuTitle{height:1.75em}
 }
-@media(max-width:350px){#actions .btn[data-game-action="force"] .blbl{font-size:12px}.overlay .illustrated-heading h1{font-size:19px!important}}
+@media(max-width:350px){#actions{--action-label-size:22px}.overlay .illustrated-heading h1{font-size:19px!important}}
+@media(max-height:600px) and (orientation:landscape){#actions{--action-label-size:24px}#actions .btn{padding:4px 8px}}
