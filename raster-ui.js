@@ -1,6 +1,6 @@
 /* Generated surfaces and bitmap lettering. Text remains available to assistive tools. */
 (() => {
-  const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','background-table','background-menu','nav-arrow','nav-pause','brand-wordmark'];
+  const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','card-shape','background-table','background-menu','nav-arrow','nav-pause','brand-wordmark'];
   for(const key of assets)document.documentElement.style.setProperty('--art-'+key,`url("${ColdDeckArt.image(key)}")`);
   const labelSelector='button,h1:not(.menuTitle),.mode-card strong,.chip-value,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum,.zlbl>[data-i18n]';
   function label(el){

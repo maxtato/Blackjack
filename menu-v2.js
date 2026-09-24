@@ -85,7 +85,7 @@ renderMenu=function(){
  const menuBacks=[ColdDeckArt.backKey(cardBack),cardBack==='cb10'?'back-lightning':'back-luck'];
  if($('menuHand').dataset.backs!==menuBacks.join(',')){
   $('menuHand').dataset.backs=menuBacks.join(',');
-  $('menuHand').innerHTML=menuBacks.map((name,index)=>`<img class="card menu-card-image" src="${ColdDeckArt.image(name)}" width="1024" height="1536" alt="" decoding="async" ${index===0?'fetchpriority="high"':''} draggable="false">`).join('');
+  $('menuHand').innerHTML=menuBacks.map((name,index)=>`<div class="card menu-card-image" aria-hidden="true">${ColdDeckArt.surface(`<img class="card-back-image" src="${ColdDeckArt.image(name)}" width="1024" height="1536" alt="" decoding="async" ${index===0?'fetchpriority="high"':''} draggable="false">`)}</div>`).join('');
  }
  $('readySuit').innerHTML=ColdDeckArt.effect('as');
 };

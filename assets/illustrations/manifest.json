@@ -224,6 +224,14 @@
     "generator": "built-in image_gen"
   },
   {
+    "id": "card-shape",
+    "file": "card-shape.webp",
+    "width": 1053,
+    "height": 1494,
+    "prompt": "Generate a NEW grayscale raster silhouette mask for a videogame playing card, using the supplied image ONLY as a reference for its cut-paper card outline. This is a mask asset, not a playing-card illustration. OPAQUE PURE BLACK #000000 full canvas, 1024x1454 upright portrait. On it draw ONE large solid PURE WHITE #ffffff card silhouette filling 100% width and height except the cut corners. Its sides are upright, top and bottom horizontal, no overall rotation or perspective. Four charming slightly asymmetric chamfered corners with subtly softened joins: top-left diagonal cut 8% of width and 5% of height; top-right 5% width and 6% height; bottom-right 9% width and 5% height; bottom-left 6% width and 6% height. The long sides are nearly straight with very slight handmade asymmetry. The white interior is ENTIRELY SOLID WHITE EVERYWHERE, edge to edge, no gray or holes. Absolutely NO spade, symbols, writing, numbers, texture, grain, shadow, glow, gradient, border, rim or interior decoration. This should look like a simple bright white blank card-shaped cutout directly against solid black. Edges clean and anti-aliased. No detached specks. No transparent pixels; strictly an opaque black-and-white image.",
+    "generator": "built-in image_gen"
+  },
+  {
     "id": "card-stock",
     "file": "card-stock.webp",
     "width": 1024,

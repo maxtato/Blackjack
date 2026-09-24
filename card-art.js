@@ -45,13 +45,14 @@ const ColdDeckArt = (() => {
   const image=key=>`assets/illustrations/${key}.webp`;
   const backKeys={cb9:'back-lightning',cb10:'back-luck',cb11:'back-heart',cb12:'back-moon',cb13:'back-dice',cb14:'back-crown',cb15:'back-eye',cb16:'back-cherry',cb18:'back-flame',cb19:'back-diamond',cb22:'back-snake',cb26:'back-sun'};
   const backKey=id=>backKeys[id]||backKeys.cb9;
+  const surface=content=>`<div class="card-surface">${content}</div>`;
   const illustration=(key,className='scene-art',lazy=false)=>`<img class="${className}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`;
-  const back=(id,lazy=false)=>`<img class="card-back-image" src="${image(backKey(id))}" width="1024" height="1536" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`;
+  const back=(id,lazy=false)=>surface(`<img class="card-back-image" src="${image(backKey(id))}" width="1024" height="1536" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`);
   function effect(id){
     const requested=effectAliases[id]||id;
     const key=illustrationKeys.has(requested)?requested:'etoile';
     return `<img class="effect-symbol effect-illustration" data-effect-symbol="${key}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">`;
   }
   const icon=n=>`<img class="pxi raster-icon" src="${image(interfaceArt[n]||'etoile')}" width="1024" height="1024" alt="" aria-hidden="true" decoding="async" draggable="false">`;
-  return {suit,face,icon,effect,image,illustration,back,backKey,lettering};
+  return {suit,face,icon,effect,image,illustration,back,backKey,surface,lettering};
 })();

@@ -15,7 +15,13 @@
 [data-suit-art="heart"]{--suit-art:var(--art-suit-heart)}
 [data-suit-art="diamond"]{--suit-art:var(--art-suit-diamond)}
 [data-suit-art="club"]{--suit-art:var(--art-suit-club)}
-.card:not(.back):not(.menu-card-image){background-color:#fff7e6;background-image:var(--art-card-stock);background-size:100% 100%}
+/* The generated cut-paper mask lives inside the card so shadows, flips and focus stay outside. */
+.card,.card.back,.menu-hand .card{background:none!important;border-radius:0!important;box-shadow:none!important;overflow:visible;filter:drop-shadow(0 3px 2px #0003) drop-shadow(0 7px 5px #0003)}
+.card-surface{position:absolute;inset:0;overflow:hidden;pointer-events:none;
+ -webkit-mask:var(--art-card-shape) center/108% 106% no-repeat;mask:var(--art-card-shape) center/108% 106% no-repeat;mask-mode:luminance;
+}
+.card:not(.back):not(.menu-card-image)>.card-surface{background:#fff7e6 var(--art-card-stock) center/100% 100% no-repeat}
+.card-back-image,.raster-card-art{border-radius:0}
 .card:not(.back)::after{display:none}
 .raster-card-art{position:relative;width:100%;height:100%;transform:none;overflow:hidden;border-radius:inherit}
 .card-pip{position:absolute;display:block;pointer-events:none}
@@ -26,9 +32,9 @@
 .card[data-rank="10"] .corner-r{font-size:calc(var(--card-w)*.16)}
 .card .corner{gap:1px}
 .lives .raster-suit{width:12px!important;height:12px!important}
-.card.foil{box-shadow:0 0 0 2px #ffce3a,0 4px 12px #0004}
-.card.holo{box-shadow:0 0 0 2px #1fd1c8,0 4px 12px #0004}
-.card.poly{box-shadow:0 0 0 2px #a64dff,0 4px 12px #0004}
+.card.foil{filter:drop-shadow(0 0 2px #ffce3a) drop-shadow(0 4px 6px #0004)}
+.card.holo{filter:drop-shadow(0 0 2px #1fd1c8) drop-shadow(0 4px 6px #0004)}
+.card.poly{filter:drop-shadow(0 0 2px #a64dff) drop-shadow(0 4px 6px #0004)}
 
 /* Background images stay fixed to the viewport, independently of action rows. */
 #bg{background:#20252a var(--art-background-table) center/cover no-repeat}
@@ -39,7 +45,7 @@
 .ready-panel,.prep-panel,.overlay:not(.menu-page) .ovpanel,.shopItem,.runstats>div,.adFrame{
  background-image:var(--art-button-graphite);background-size:100% 100%;background-repeat:no-repeat;border:0;
 }
-.hand:empty::before,.hand:empty::after{background:var(--art-card-stock) center/100% 100% no-repeat;border:0;opacity:.035}
+.hand:empty::before,.hand:empty::after{background:var(--art-card-stock) center/100% 100% no-repeat;border:0;border-radius:0;opacity:.035;-webkit-mask:var(--art-card-shape) center/108% 106% no-repeat;mask:var(--art-card-shape) center/108% 106% no-repeat;mask-mode:luminance}
 
 /* Matte printed surfaces share the cut-paper art; depth comes from a dark offset only. */
 button:not(.chip):not(.bpCard){

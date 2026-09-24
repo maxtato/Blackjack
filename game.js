@@ -579,7 +579,7 @@ function cardEl(c,opts={}){
     if(!opts.dealer&&c.ed)d.classList.add(c.ed);
     const corner='<span class="corner-r">'+ColdDeckArt.lettering(c.r)+'</span>'+suitSVG(c.s,12);
     const tag=(!opts.dealer&&c.ed)?'<span class="edtag '+c.ed+'">'+ED_NAME[c.ed]+'</span>':'';
-    d.innerHTML='<span class="corner tl">'+corner+'</span>'+ColdDeckArt.face(c.r,c.s)+'<span class="corner br">'+corner+'</span>'+tag;
+    d.innerHTML=ColdDeckArt.surface('<span class="corner tl">'+corner+'</span>'+ColdDeckArt.face(c.r,c.s)+'<span class="corner br">'+corner+'</span>'+tag);
   }
   if(opts.arrive)d.classList.add('arrive');
   else if(opts.flip)d.classList.add('flip');

@@ -557,15 +557,16 @@ const ColdDeckArt = (() => {
   const image=key=>`assets/illustrations/${key}.webp`;
   const backKeys={cb9:'back-lightning',cb10:'back-luck',cb11:'back-heart',cb12:'back-moon',cb13:'back-dice',cb14:'back-crown',cb15:'back-eye',cb16:'back-cherry',cb18:'back-flame',cb19:'back-diamond',cb22:'back-snake',cb26:'back-sun'};
   const backKey=id=>backKeys[id]||backKeys.cb9;
+  const surface=content=>`<div class="card-surface">${content}</div>`;
   const illustration=(key,className='scene-art',lazy=false)=>`<img class="${className}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`;
-  const back=(id,lazy=false)=>`<img class="card-back-image" src="${image(backKey(id))}" width="1024" height="1536" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`;
+  const back=(id,lazy=false)=>surface(`<img class="card-back-image" src="${image(backKey(id))}" width="1024" height="1536" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`);
   function effect(id){
     const requested=effectAliases[id]||id;
     const key=illustrationKeys.has(requested)?requested:'etoile';
     return `<img class="effect-symbol effect-illustration" data-effect-symbol="${key}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">`;
   }
   const icon=n=>`<img class="pxi raster-icon" src="${image(interfaceArt[n]||'etoile')}" width="1024" height="1024" alt="" aria-hidden="true" decoding="async" draggable="false">`;
-  return {suit,face,icon,effect,image,illustration,back,backKey,lettering};
+  return {suit,face,icon,effect,image,illustration,back,backKey,surface,lettering};
 })();
 
 
@@ -1151,7 +1152,7 @@ function cardEl(c,opts={}){
     if(!opts.dealer&&c.ed)d.classList.add(c.ed);
     const corner='<span class="corner-r">'+ColdDeckArt.lettering(c.r)+'</span>'+suitSVG(c.s,12);
     const tag=(!opts.dealer&&c.ed)?'<span class="edtag '+c.ed+'">'+ED_NAME[c.ed]+'</span>':'';
-    d.innerHTML='<span class="corner tl">'+corner+'</span>'+ColdDeckArt.face(c.r,c.s)+'<span class="corner br">'+corner+'</span>'+tag;
+    d.innerHTML=ColdDeckArt.surface('<span class="corner tl">'+corner+'</span>'+ColdDeckArt.face(c.r,c.s)+'<span class="corner br">'+corner+'</span>'+tag);
   }
   if(opts.arrive)d.classList.add('arrive');
   else if(opts.flip)d.classList.add('flip');
@@ -3006,7 +3007,7 @@ renderMenu=function(){
  const menuBacks=[ColdDeckArt.backKey(cardBack),cardBack==='cb10'?'back-lightning':'back-luck'];
  if($('menuHand').dataset.backs!==menuBacks.join(',')){
   $('menuHand').dataset.backs=menuBacks.join(',');
-  $('menuHand').innerHTML=menuBacks.map((name,index)=>`<img class="card menu-card-image" src="${ColdDeckArt.image(name)}" width="1024" height="1536" alt="" decoding="async" ${index===0?'fetchpriority="high"':''} draggable="false">`).join('');
+  $('menuHand').innerHTML=menuBacks.map((name,index)=>`<div class="card menu-card-image" aria-hidden="true">${ColdDeckArt.surface(`<img class="card-back-image" src="${ColdDeckArt.image(name)}" width="1024" height="1536" alt="" decoding="async" ${index===0?'fetchpriority="high"':''} draggable="false">`)}</div>`).join('');
  }
  $('readySuit').innerHTML=ColdDeckArt.effect('as');
 };
@@ -3096,7 +3097,7 @@ syncMenuFocus();
 /* raster-ui.js */
 /* Generated surfaces and bitmap lettering. Text remains available to assistive tools. */
 (() => {
-  const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','background-table','background-menu','nav-arrow','nav-pause','brand-wordmark'];
+  const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','card-shape','background-table','background-menu','nav-arrow','nav-pause','brand-wordmark'];
   for(const key of assets)document.documentElement.style.setProperty('--art-'+key,`url("${ColdDeckArt.image(key)}")`);
   const labelSelector='button,h1:not(.menuTitle),.mode-card strong,.chip-value,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum,.zlbl>[data-i18n]';
   function label(el){
