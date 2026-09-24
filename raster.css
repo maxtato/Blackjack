@@ -2,15 +2,22 @@
 .raster-copy{display:inline;line-height:inherit;letter-spacing:0}
 .raster-ink{display:inline;white-space:normal}
 .raster-word{display:inline-flex;align-items:center;white-space:nowrap;vertical-align:middle;line-height:1}
-.raster-glyph{--glyph-width:.68em;display:inline-block;flex:none;width:var(--glyph-width);height:1.08em;background:currentColor;vertical-align:middle;font-style:normal;
- -webkit-mask-image:var(--art-type-letters);mask-image:var(--art-type-letters);
- -webkit-mask-size:600% 600%;mask-size:600% 600%;
- -webkit-mask-position:var(--glyph-x) var(--glyph-y);mask-position:var(--glyph-x) var(--glyph-y);
- -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;mask-mode:luminance;
+.raster-glyph{--glyph-width:.68em;--glyph-grid:600%;--glyph-mask:var(--alpha-type-letters);position:relative;display:inline-block;flex:none;width:var(--glyph-width);height:1.08em;background:none;vertical-align:middle;font-style:normal}
+/* A readable glyph stays visible until its transparent atlas has decoded. */
+.raster-glyph::before{content:attr(data-glyph);position:absolute;inset:0;display:grid;place-items:center;font:900 .75em/1 var(--game-type);letter-spacing:0;pointer-events:none}
+.raster-glyph[data-font="numbers"]{--glyph-grid:400%;--glyph-mask:var(--alpha-type-numbers)}
+@supports (mask-image:url("")) or (-webkit-mask-image:url("")){
+ .raster-letters-ready .raster-glyph[data-font="letters"]::before,.raster-numbers-ready .raster-glyph[data-font="numbers"]::before{content:none}
+ .raster-letters-ready .raster-glyph[data-font="letters"]::after,.raster-numbers-ready .raster-glyph[data-font="numbers"]::after{
+  content:"";position:absolute;inset:0;background:currentColor;pointer-events:none;
+  -webkit-mask-image:var(--glyph-mask);mask-image:var(--glyph-mask);
+  -webkit-mask-size:var(--glyph-grid) var(--glyph-grid);mask-size:var(--glyph-grid) var(--glyph-grid);
+  -webkit-mask-position:var(--glyph-x) var(--glyph-y);mask-position:var(--glyph-x) var(--glyph-y);
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;mask-mode:alpha;
+ }
 }
 .raster-glyph[data-font="letters"]{margin-inline-start:calc(var(--glyph-width)*var(--glyph-start,0)*-1);margin-inline-end:calc(var(--glyph-width)*var(--glyph-end,0)*-1 + var(--glyph-gap,.055em))}
 .raster-glyph[data-font="letters"]:last-child{--glyph-gap:0em}
-.raster-glyph[data-font="numbers"]{-webkit-mask-image:var(--art-type-numbers);mask-image:var(--art-type-numbers);-webkit-mask-size:400% 400%;mask-size:400% 400%}
 .raster-punctuation{display:inline-block;line-height:1}
 .raster-suit{display:inline-block;background:currentColor;font-style:normal;-webkit-mask:var(--suit-art) center/contain no-repeat;mask:var(--suit-art) center/contain no-repeat;mask-mode:luminance}
 [data-suit-art="spade"]{--suit-art:var(--art-suit-spade)}

@@ -3109,6 +3109,39 @@ syncMenuFocus();
 (() => {
   const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','card-shape','background-table','background-menu','nav-arrow','nav-pause','brand-wordmark'];
   for(const key of assets)document.documentElement.style.setProperty('--art-'+key,`url("${ColdDeckArt.image(key)}")`);
+  // WebKit can ignore luminance masks for large/animated atlas tiles. Decode the
+  // exact same artwork to alpha once, then animate an unpainted glyph wrapper.
+  function prepareLetterAtlas(font){
+    return new Promise(resolve=>{
+      const source=new Image();source.decoding='async';
+      source.onerror=()=>resolve(false);
+      source.onload=()=>{
+        try{
+          const canvas=document.createElement('canvas');
+          canvas.width=source.naturalWidth;canvas.height=source.naturalHeight;
+          const context=canvas.getContext('2d',{willReadFrequently:true});
+          if(!context){resolve(false);return;}
+          context.drawImage(source,0,0);
+          const pixels=context.getImageData(0,0,canvas.width,canvas.height),data=pixels.data;
+          for(let i=0;i<data.length;i+=4){
+            data[i+3]=Math.round((data[i]*.2125+data[i+1]*.7154+data[i+2]*.0721)*data[i+3]/255);
+            data[i]=data[i+1]=data[i+2]=255;
+          }
+          context.putImageData(pixels,0,0);
+          const url=canvas.toDataURL('image/png'),decoded=new Image();
+          decoded.onerror=()=>resolve(false);
+          decoded.onload=()=>{
+            document.documentElement.style.setProperty('--alpha-type-'+font,`url("${url}")`);
+            document.documentElement.classList.add('raster-'+font+'-ready');
+            resolve(true);
+          };
+          decoded.src=url;
+        }catch{resolve(false);}
+      };
+      source.src=ColdDeckArt.image('type-'+font);
+    });
+  }
+  const ready=Promise.all(['letters','numbers'].map(prepareLetterAtlas));
   const labelSelector='button,h1:not(.menuTitle),.mode-card strong,.chip-value,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum,.zlbl>[data-i18n]';
   function label(el){
     const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),nodes=[];
@@ -3137,7 +3170,7 @@ syncMenuFocus();
   const observer=new MutationObserver(decorate);
   decorate();
   // Deterministic entry point for renders and tests, without any game-state writes.
-  window.ColdDeckRaster={refresh:decorate};
+  window.ColdDeckRaster={refresh:decorate,ready};
 })();
 
 
