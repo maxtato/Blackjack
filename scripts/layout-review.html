@@ -6,7 +6,7 @@
 <style>
 *{box-sizing:border-box}body{margin:0;background:#10161b;color:#fff7e6;font:14px system-ui}header{display:flex;align-items:center;gap:16px;padding:12px;background:#10161b}label{display:flex;gap:8px;align-items:center}select{font:inherit;padding:6px}main{padding:16px;display:flex;justify-content:center}iframe{border:0;background:#20252a;flex:none;box-shadow:0 0 0 1px #58616a}
 </style>
-<header><strong>Contrôle des proportions</strong><label>Écran<select id="screen"><option value="home">Accueil</option><option value="circuit">Circuit</option><option value="free">Libre</option><option value="two">Deux cartes</option><option value="four">Quatre cartes</option><option value="six">Six cartes</option><option value="split">Main séparée</option></select></label><label>Format<select id="size"><option value="390,844">390 × 844</option><option value="430,932">430 × 932</option><option value="375,667">375 × 667</option><option value="844,390">844 × 390</option><option value="478,1624">Maquette préparation</option></select></label><span id="status"></span></header>
+<header><strong>Contrôle des proportions</strong><label>Écran<select id="screen"><option value="home">Accueil</option><option value="circuit">Circuit</option><option value="free">Libre</option><option value="two">Deux cartes</option><option value="four">Quatre cartes</option><option value="six">Six cartes</option><option value="split">Main séparée</option><option value="editions">Éditions brillantes</option></select></label><label>Format<select id="size"><option value="390,844">390 × 844</option><option value="430,932">430 × 932</option><option value="375,667">375 × 667</option><option value="844,390">844 × 390</option><option value="478,1624">Maquette préparation</option></select></label><span id="status"></span></header>
 <main><iframe id="review" title="Rendu réel Cold Deck"></iframe></main>
 <script type="module">
 // Internal visual fixture: loads the deployed app's exact HTML, styles and bundle.
@@ -23,9 +23,9 @@ async function render(){
  else if(visualScreen==='circuit'||visualScreen==='free')chooseMode(visualScreen==='free'?'infini':'nuit');
  else {
   chooseMode('nuit');startGame(0);
-  const visualRanks=visualScreen==='six'?[2,2,3,3,4,3]:visualScreen==='four'?[3,4,5,5]:[8,9];
+  const visualRanks=visualScreen==='editions'?[5,6,7]:visualScreen==='six'?[2,2,3,3,4,3]:visualScreen==='four'?[3,4,5,5]:[8,9];
   const visualSuits=['♣','♥','♠','♦','♣','♥'];
-  const visualHand=visualRanks.map((r,i)=>({r:String(r),s:visualSuits[i]}));
+  const visualHand=visualRanks.map((r,i)=>({r:String(r),s:visualSuits[i],...(visualScreen==='editions'?{ed:['foil','holo','poly'][i]}:{})}));
   Object.assign(G,{phase:'play',bank:120,bet:10,betChosen:true,tokens:3,hand:2,pHand:visualHand,dHand:[{r:'K',s:'♣'},{r:'7',s:'♥',_fd:true}],_dealing:false,insisted:false,table:{...G.table,goal:200},shoe:Array.from({length:50},()=>({r:'2',s:'♣'}))});
   if(visualScreen==='split'){G.splitActive=true;G.hands=[[{r:'8',s:'♣'},{r:'3',s:'♦'}],[{r:'8',s:'♥'},{r:'4',s:'♣'}]];G.hi=0;G.pHand=G.hands[0];}
   renderAll();renderHands();

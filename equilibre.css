@@ -1,5 +1,5 @@
 /* Équilibre: the approved portrait composition, using the existing artwork. */
-:root{--bg0:#20252a;--paper:#fff7e6;--cream:#fff7e6;--inkCard:#15242b;--suitRed:#f34d61;--frame-cut:polygon(4% 0,96% 0,100% 16%,100% 84%,96% 100%,4% 100%,0 84%,0 16%)}
+:root{--bg0:#20252a;--paper:#fff7e6;--cream:#fff7e6;--inkCard:#203b47;--suitRed:#d4645f;--frame-cut:polygon(4% 0,96% 0,100% 16%,100% 84%,96% 100%,4% 100%,0 84%,0 16%)}
 #bg{background-color:#20252a;background-size:min(100vw,560px) 100%}
 #bg::after{content:"";display:block;position:absolute;top:0;right:max(0px,calc((100vw - 560px)/2));width:80px;height:94px;background:#583876;clip-path:polygon(0 0,100% 0,100% 100%,40% 30%,20% 34%);opacity:.8}
 /* One centered composition, scaled to the height available above the home bar. */
@@ -52,7 +52,7 @@
 #topbar #tableName{font-size:18px;line-height:1.25;text-align:left;padding:0;margin:0 0 8px}
 #topbar #tableName::after{content:none}
 #topbar .thead-right{display:contents}
-#topbar .lives{grid-column:1 / 3;grid-row:1;justify-self:center;display:flex;flex-wrap:nowrap;align-items:center;gap:7px;max-width:none;color:#ff5364;pointer-events:none}
+#topbar .lives{grid-column:1 / 3;grid-row:1;justify-self:center;display:flex;flex-wrap:nowrap;align-items:center;gap:7px;max-width:none;color:var(--suitRed);pointer-events:none}
 #topbar .lives .raster-suit{width:21px!important;height:23px!important}
 #topbar .life.off{opacity:.18}
 #topbar #pauseBtn{grid-column:2;grid-row:1;justify-self:end;display:grid;place-items:center;width:35px;height:35px;clip-path:var(--frame-cut);border:1px solid #5b6c78;background:#152229!important;color:#fff7e6!important;box-shadow:inset 0 0 0 2px #33434e!important;border-radius:0;padding:6px}
@@ -110,8 +110,8 @@
 #feltInner .hand:empty::before,#feltInner .hand:empty::after{transform:none;height:calc(var(--card-w)*1.48)}
 #app[data-phase="play"] #pHand>.cardslot,#app[data-phase="play"] .splithand.active>.cardslot{filter:none}
 .court-image{left:10%;top:9%;width:82%;height:84%;object-fit:contain}
-.card[data-suit="♠"],.card[data-suit="♣"]{color:#15242b}
-.card[data-suit="♥"],.card[data-suit="♦"]{color:#f24c61}
+.card[data-suit="♠"],.card[data-suit="♣"]{color:var(--inkCard)}
+.card[data-suit="♥"],.card[data-suit="♦"]{color:var(--suitRed)}
 #center{grid-column:1;grid-row:2;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:var(--combo-room);max-height:var(--combo-room);min-height:0;gap:3px;margin:0;padding:2px 0;overflow:visible}
 #comboRow{width:100%;min-height:0;max-height:100%;flex:0 1 auto;justify-content:safe center;align-items:center;gap:6px;padding:2px 0;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:#42525c transparent}
 #comboRow .cpill:not(.on){min-width:0;max-width:100%;align-items:center;flex:0 0 auto;border:0;background:none;box-shadow:none;padding:0 8px;gap:1px;color:#b6c3cf;font:500 14px/1.2 var(--copy-font)}
@@ -469,3 +469,29 @@
 .nav-triangle[data-direction="forward"]{transform:rotate(135deg)}
 #modeMenu .mode-arrow .nav-triangle{width:calc(4 * var(--home-u));height:calc(4 * var(--home-u));filter:brightness(.13)}
 #intro .bpArrow .nav-triangle{width:calc(5 * var(--prep-u));height:calc(5 * var(--prep-u))}
+
+/* Printed inks share the table palette; special editions have their own visible finish. */
+.card.foil{--edition-edge:#e9b849;--edition-glow:#e9b84988;--edition-wash:repeating-linear-gradient(0deg,#ac7b2520 0 1px,transparent 1px 4px),linear-gradient(115deg,#d3933688,#ffe6a0bb 28%,#c3904188 46%,#fff0bccc 60%,#dfa84099 80%,#ffdf9588)}
+.card.holo{--edition-edge:#71c7c4;--edition-glow:#51b9b388;--edition-wash:repeating-linear-gradient(135deg,#fff7e628 0 1px,transparent 1px 6px),linear-gradient(125deg,#57aaa588,#a1ddd4bb 23%,#a48ec4aa 45%,#85c8d2aa 68%,#d9c29888)}
+.card.poly{--edition-edge:#b292d4;--edition-glow:#ae82ce88;--edition-wash:conic-gradient(from 35deg at 45% 55%,#e7bd68bb,#d47a7799,#aa83c7aa,#83bad1bb,#6fc8b9aa,#e7bd68bb)}
+.card:is(.foil,.holo,.poly){filter:drop-shadow(0 0 1px var(--edition-edge)) drop-shadow(0 0 7px var(--edition-glow)) drop-shadow(0 5px 5px #0005)}
+.card:is(.foil,.holo,.poly)>.card-surface{isolation:isolate}
+.card:is(.foil,.holo,.poly) .raster-card-art{z-index:1}
+.card:is(.foil,.holo,.poly) .corner{z-index:3}
+.card:is(.foil,.holo,.poly)>.card-surface::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background-image:var(--edition-wash);background-size:180% 180%;background-position:20% 30%;animation:edition-iridescence 6s ease-in-out infinite alternate}
+.card:is(.foil,.holo,.poly)>.card-surface::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:inset 0 0 0 calc(var(--card-w)*.025) var(--edition-edge),inset 0 0 12px var(--edition-glow);background:linear-gradient(112deg,transparent 34%,#fff7e63d 42%,#fff7e6bb 48%,#fffef5ed 50%,#fff7e675 54%,transparent 63%) 150% 50%/300% 100% no-repeat;animation:edition-sheen 3.8s ease-in-out infinite}
+.card.holo>.card-surface::after{animation-delay:-1.2s}
+.card.poly>.card-surface::after{animation-delay:-2.4s;animation-duration:4.2s}
+.card:is(.foil,.holo,.poly) .raster-card-art::before,.card:is(.foil,.holo,.poly) .raster-card-art::after{content:"";position:absolute;z-index:4;width:calc(var(--card-w)*.15);height:calc(var(--card-w)*.2);top:12%;right:9%;background:#fffcec;clip-path:polygon(50% 0,62% 36%,100% 50%,62% 64%,50% 100%,38% 64%,0 50%,38% 36%);filter:drop-shadow(0 0 2px var(--edition-edge));animation:edition-glint 3.8s ease-in-out infinite}
+.card:is(.foil,.holo,.poly) .raster-card-art::after{top:auto;right:auto;bottom:13%;left:9%;width:calc(var(--card-w)*.1);height:calc(var(--card-w)*.14);animation-delay:-1.9s}
+.card:is(.foil,.holo,.poly) .edtag{z-index:4;background:#203b47;color:#fff7e6;border:1px solid var(--edition-edge);border-radius:2px;font:600 max(7px,calc(var(--card-w)*.075))/1.1 var(--copy-font);padding:2px 4px}
+@keyframes edition-iridescence{to{background-position:85% 75%}}
+@keyframes edition-sheen{0%,10%{background-position:150% 50%}58%,100%{background-position:-70% 50%}}
+@keyframes edition-glint{0%,100%{opacity:.45;transform:scale(.7)}40%{opacity:1;transform:scale(1.12)}65%{opacity:.65;transform:scale(.85)}}
+#shaker[inert] .card:is(.foil,.holo,.poly) .card-surface::before,#shaker[inert] .card:is(.foil,.holo,.poly) .card-surface::after,#shaker[inert] .card:is(.foil,.holo,.poly) .raster-card-art::before,#shaker[inert] .card:is(.foil,.holo,.poly) .raster-card-art::after{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){
+ .card:is(.foil,.holo,.poly) .card-surface::before,.card:is(.foil,.holo,.poly) .card-surface::after,.card:is(.foil,.holo,.poly) .raster-card-art::before,.card:is(.foil,.holo,.poly) .raster-card-art::after{animation:none}
+ .card:is(.foil,.holo,.poly) .card-surface::after{background-position:45% 50%;opacity:.6}
+}
+:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .card-surface::before,:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .card-surface::after,:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .raster-card-art::before,:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .raster-card-art::after{animation:none}
+:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .card-surface::after{background-position:45% 50%;opacity:.6}
