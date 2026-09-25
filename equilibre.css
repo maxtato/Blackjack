@@ -104,7 +104,10 @@
 #feltInner .splitwrap{--card-w:min(calc(var(--base-card-w)*.72),max(30px,calc((100cqh - var(--combo-room) - 66px)/2.84)),calc((100cqw - 108px)/var(--split-count,4)));gap:10px}
 #feltInner .hand-total{grid-column:3;grid-row:2;align-self:center;justify-self:end;position:relative;display:grid;place-items:center;z-index:6;width:43px;height:48px;min-width:0;margin:0;color:#fff7e6;background:#17262e;border:1px solid #536a78;box-shadow:inset 0 0 0 2px #263943;clip-path:polygon(19% 0,81% 0,100% 18%,100% 82%,81% 100%,19% 100%,0 82%,0 18%);font-size:32px;line-height:1;letter-spacing:0}
 .hand-total .raster-glyph{--glyph-width:.83em;height:1.05em}
-#pHand::before,#pHand::after{display:none!important}
+#pHand:not(:empty)::before,#pHand:not(:empty)::after{display:none!important}
+/* Empty card marks keep their own space, independently of the dealt-card fan. */
+#feltInner .hand:empty{gap:calc(3 * var(--ui-u))}
+#feltInner .hand:empty::before,#feltInner .hand:empty::after{transform:none;height:calc(var(--card-w)*1.48)}
 #app[data-phase="play"] #pHand>.cardslot,#app[data-phase="play"] .splithand.active>.cardslot{filter:none}
 .court-image{left:10%;top:9%;width:82%;height:84%;object-fit:contain}
 .card[data-suit="♠"],.card[data-suit="♣"]{color:#15242b}
@@ -293,7 +296,7 @@
  #shaker{display:grid;place-items:center;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);overflow:hidden}
  #bg{background-size:calc(100 * var(--game-u)) calc(211.111 * var(--game-u))}
  #bg::after{display:none}
- #app{--ui-u:var(--game-u);--base-card-w:calc(22 * var(--ui-u));--dock-main:calc(19.3 * var(--ui-u));--dock-secondary:calc(12.4 * var(--ui-u));width:calc(100 * var(--ui-u));max-width:none;height:calc(211.111 * var(--ui-u));min-height:0;margin:0;padding:calc(3 * var(--ui-u)) calc(5.5 * var(--ui-u)) calc(10.5 * var(--ui-u));grid-template-rows:calc(31.5 * var(--ui-u)) minmax(0,1fr) calc(34.5 * var(--ui-u));gap:calc(2.7 * var(--ui-u))}
+ #app{--ui-u:var(--game-u);--base-card-w:calc(22 * var(--ui-u));--dock-main:calc(16.8 * var(--ui-u));--dock-secondary:calc(12.4 * var(--ui-u));width:calc(100 * var(--ui-u));max-width:none;height:calc(211.111 * var(--ui-u));min-height:0;margin:0;padding:calc(3 * var(--ui-u)) calc(5.5 * var(--ui-u)) calc(10.5 * var(--ui-u));grid-template-rows:calc(31.5 * var(--ui-u)) minmax(0,1fr) calc(32 * var(--ui-u));gap:calc(2.7 * var(--ui-u))}
  #topbar{grid-template-rows:calc(8.7 * var(--ui-u)) calc(16.5 * var(--ui-u)) calc(3.6 * var(--ui-u));row-gap:calc(1.35 * var(--ui-u))}
  #topbar .table-number{font-size:calc(5.2 * var(--ui-u));padding:0}
  #topbar .lives{gap:calc(1.9 * var(--ui-u))}
@@ -312,7 +315,7 @@
  #objPct{min-width:calc(7.2 * var(--ui-u))}
  #objWrap #objBar{height:calc(2.5 * var(--ui-u))}
  #mid{position:relative;gap:calc(3 * var(--ui-u))}
- #effects{flex-wrap:nowrap;gap:calc(1.1 * var(--ui-u));height:calc(13.2 * var(--ui-u));padding:calc(1.1 * var(--ui-u));--slot-size:calc((100% - 4.4 * var(--ui-u))/5)}
+ #effects{flex-wrap:nowrap;gap:calc(1.8 * var(--ui-u));height:calc(13.2 * var(--ui-u));padding:calc(1.1 * var(--ui-u));--slot-size:calc((100% - 7.2 * var(--ui-u))/5)}
  #effects .joker,#effects .tarot,#effects .inventory-empty{height:100%;padding:calc(.7 * var(--ui-u))}
  #effects .effect-illustration{max-width:none;max-height:none}
  #pBar{position:absolute;top:calc(14 * var(--ui-u));left:15%;width:70%;height:calc(1.4 * var(--ui-u));min-height:0;margin:0;z-index:3}
@@ -333,7 +336,7 @@
  #tip:not(:empty){font-size:calc(2.9 * var(--ui-u));line-height:1.2;max-height:calc(5 * var(--ui-u))}
  #bottombar,#actions{gap:calc(2.8 * var(--ui-u))}
  #actions .actMain,#actions .actWide{gap:calc(2 * var(--ui-u))}
- #actions .btn{font-size:calc(13.4 * var(--ui-u))!important;padding:calc(.5 * var(--ui-u)) calc(1.3 * var(--ui-u))!important}
+ #actions .btn{font-size:calc(11.5 * var(--ui-u))!important;padding:calc(.5 * var(--ui-u)) calc(1.3 * var(--ui-u))!important}
  #actions .actWide .btn{font-size:calc(8.6 * var(--ui-u))!important}
  #app #actions .actMain .btn small{font-size:calc(3.6 * var(--ui-u));line-height:1.15}
  #actions .action-copy{gap:calc(.5 * var(--ui-u))}
@@ -375,45 +378,70 @@
 .corner .raster-suit{width:calc(var(--card-w)*.13)!important;height:calc(var(--card-w)*.13)!important}
 /* Trim the atlas's blank cell margins around currency signs, just like letters. */
 :is(#gainVal,#chipsVal,#menuBestGain) .raster-glyph[data-glyph="$"],#multVal .raster-glyph[data-glyph="×"]{margin-inline-start:calc(var(--glyph-width)*-.2);margin-inline-end:calc(var(--glyph-width)*-.2)}
-/* The preparation reference is taller: preserve its proportions and allow scrolling. */
-#intro{--prep-u:min(1vw,5.3px);align-items:flex-start}
-#intro::before{background-size:calc(100 * var(--prep-u)) calc(340 * var(--prep-u));background-position:center top}
-#intro .ovpanel{width:calc(100 * var(--prep-u));max-width:none;height:auto;min-height:calc(340 * var(--prep-u));margin:0 auto;padding:calc(14 * var(--prep-u)) calc(6 * var(--prep-u)) calc(25 * var(--prep-u));gap:0;flex:none}
-#intro .menu-top{height:calc(10 * var(--prep-u));min-height:0;flex:none}
-#intro .menu-top .quiet-btn{min-height:0;padding:0;font-size:calc(4.8 * var(--prep-u));line-height:1.2}
-#intro .hideout-heading{height:calc(48 * var(--prep-u));padding:0;margin:calc(8 * var(--prep-u)) 0 0;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:space-between}
-#intro .planqueMode{font-size:calc(5.2 * var(--prep-u));line-height:1;margin:0;letter-spacing:0}
-#intro #planqueTitle{font-size:calc(28 * var(--prep-u))!important;line-height:1;margin:0;max-width:100%;letter-spacing:0!important;outline:none}
+/* Preparation pages fit the available screen; the card preview absorbs spare height. */
+#intro{--prep-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));--prep-u:min(1vw,calc(var(--prep-height)/200),5.3px);align-items:flex-start;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+#intro::before{background-size:calc(100 * var(--prep-u)) 100%;background-position:center}
+#intro .ovpanel{width:calc(100 * var(--prep-u));max-width:none;height:var(--prep-height);min-height:calc(200 * var(--prep-u));margin:0 auto;padding:calc(3 * var(--prep-u)) calc(5 * var(--prep-u));gap:0;flex:none}
+#intro .menu-top{height:calc(9 * var(--prep-u));min-height:0;flex:none}
+#intro .menu-top .quiet-btn{min-height:32px;padding:0;font-size:max(12px,calc(4 * var(--prep-u)));line-height:1.2}
+#intro .hideout-heading{height:calc(34 * var(--prep-u));padding:0;margin:calc(2 * var(--prep-u)) 0 0;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:space-between}
+#intro .planqueMode{font-size:max(12px,calc(3.7 * var(--prep-u)));line-height:1;margin:0;letter-spacing:0}
+#intro #planqueTitle,#intro[data-mode="infini"] #planqueTitle{font-size:calc(20 * var(--prep-u))!important;height:.85em;line-height:0;margin:0;max-width:100%;letter-spacing:0!important;outline:none;flex:none}
+#intro #planqueTitle>.raster-copy{display:block;line-height:0}
+#intro #planqueTitle .raster-word{display:flex;justify-content:center;transform:translateY(-.17em)}
 #intro #planqueTitle .raster-glyph{--glyph-width:.94em}
-#intro[data-mode="infini"] #planqueTitle{font-size:calc(28 * var(--prep-u))!important}
-#intro #planqueSub{font-size:calc(5.2 * var(--prep-u));line-height:1.25;max-width:100%;margin:0}
-#intro .hideout-grid{margin-top:calc(10 * var(--prep-u));gap:0;flex:none;min-height:0}
-#intro .repBar{height:calc(31 * var(--prep-u));padding:calc(4 * var(--prep-u)) 0;margin:0 0 calc(9 * var(--prep-u));gap:0;flex:none}
-#intro .repBig{width:43%;min-width:0;height:100%;justify-content:center;gap:0;border-right:1px solid #657e8e}
-#intro .repNum{font-size:calc(20 * var(--prep-u));line-height:.95;color:#ffce3a}
-#intro .repLbl{font-size:calc(4.7 * var(--prep-u));line-height:1.2}
-#intro .recBox{width:55%;max-width:55%;font-size:calc(4.6 * var(--prep-u));line-height:1.6;text-align:center}
-#intro .backPick{height:calc(93 * var(--prep-u));min-height:0;flex:none;margin:0 0 calc(7 * var(--prep-u));gap:0;justify-content:space-between}
-#intro .back-caption{height:calc(6 * var(--prep-u));gap:0}
-#intro .back-caption .section-label,#intro .back-caption .quiet-btn{font-size:calc(4.6 * var(--prep-u));line-height:1.1;min-height:0;padding:0}
-#intro .bpCurrent{width:100%;justify-content:space-between;gap:calc(3 * var(--prep-u));flex:1;align-items:center;padding-top:calc(6 * var(--prep-u))}
-#intro .bpPrevWrap{gap:calc(4 * var(--prep-u))}
-#intro #bpPreview{--card-w:calc(45 * var(--prep-u));width:var(--card-w);height:calc(var(--card-w)*1.48);transform:rotate(-4deg)}
-#intro .bpNum{font-size:calc(4.5 * var(--prep-u));line-height:1.2}
-#intro .bpArrow{display:grid;place-items:center;width:calc(15 * var(--prep-u));height:calc(16 * var(--prep-u));min-width:0;min-height:0;flex:none;padding:calc(2 * var(--prep-u));font-size:calc(8 * var(--prep-u));background-image:linear-gradient(#173441b8,#173441b8),var(--art-button-blue)!important;box-shadow:inset 0 0 0 2px #527687!important;transform:translateY(calc(-4 * var(--prep-u)))}
-#intro #upgradesBtn{height:calc(25 * var(--prep-u));min-height:0;flex:none;margin:0 0 calc(7 * var(--prep-u));padding:calc(3 * var(--prep-u));gap:calc(4 * var(--prep-u))}
-#intro #upgradesBtn .prep-art{width:calc(17 * var(--prep-u));height:calc(17 * var(--prep-u));display:block;margin:0;padding-right:calc(3 * var(--prep-u));border-right:1px solid #5a7d8d}
-#intro #upgradesBtn strong{font-size:calc(9 * var(--prep-u));line-height:1}
+#intro #planqueSub{font-size:max(12px,calc(3.8 * var(--prep-u)));line-height:1.25;max-width:100%;margin:0}
+#intro .hideout-grid{margin-top:calc(3 * var(--prep-u));gap:0;flex:1;min-height:0}
+#intro .repBar{height:calc(20 * var(--prep-u));padding:calc(2 * var(--prep-u)) 0;margin:0 0 calc(3 * var(--prep-u));gap:0;flex:none}
+#intro .repBig{width:40%;min-width:0;height:100%;justify-content:center;gap:0;border-right:1px solid #657e8e}
+#intro .repNum{font-size:calc(12 * var(--prep-u));line-height:.9;color:#ffce3a}
+#intro .repLbl{font-size:max(12px,calc(3.5 * var(--prep-u)));line-height:1.2}
+#intro .recBox{width:58%;max-width:58%;font-size:max(12px,calc(3.5 * var(--prep-u)));line-height:1.5;text-align:center}
+#intro .backPick{height:auto;min-height:0;flex:1;margin:0 0 calc(3 * var(--prep-u));gap:0;justify-content:space-between}
+#intro .back-caption{height:calc(7 * var(--prep-u));min-height:26px;gap:0;flex:none}
+#intro .back-caption .section-label,#intro .back-caption .quiet-btn{font-size:max(12px,calc(3.6 * var(--prep-u)));line-height:1.1;min-height:26px;padding:0}
+#intro .bpCurrent{container-type:size;width:100%;min-height:0;justify-content:space-between;gap:calc(3 * var(--prep-u));flex:1;align-items:center;padding-top:calc(1 * var(--prep-u))}
+#intro .bpPrevWrap{height:100%;justify-content:center;gap:calc(2 * var(--prep-u));min-height:0}
+#intro #bpPreview{--card-w:min(calc(32 * var(--prep-u)),max(20px,calc((100cqh - 10 * var(--prep-u))/1.48)));width:var(--card-w);height:calc(var(--card-w)*1.48);flex:none;transform:rotate(-4deg)}
+#intro .bpNum{font-size:max(12px,calc(3.4 * var(--prep-u)));line-height:1.2;flex:none}
+#intro .bpArrow{display:grid;place-items:center;width:calc(11 * var(--prep-u));height:calc(12 * var(--prep-u));min-width:36px;min-height:36px;flex:none;padding:calc(2 * var(--prep-u));font-size:calc(6 * var(--prep-u));background-image:linear-gradient(#173441b8,#173441b8),var(--art-button-blue)!important;box-shadow:inset 0 0 0 2px #527687!important;transform:translateY(calc(-3 * var(--prep-u)))}
+#intro #upgradesBtn{height:calc(16 * var(--prep-u));min-height:0;flex:none;margin:0 0 calc(3 * var(--prep-u));padding:calc(2 * var(--prep-u));gap:calc(3 * var(--prep-u))}
+#intro #upgradesBtn .prep-art{width:calc(12 * var(--prep-u));height:calc(12 * var(--prep-u));display:block;margin:0;padding-right:calc(2 * var(--prep-u));border-right:1px solid #5a7d8d}
+#intro #upgradesBtn strong{font-size:calc(7 * var(--prep-u));line-height:1}
 #intro #upgradesBtn strong .raster-glyph{--glyph-width:.94em}
-#intro #upgradesBtn small{font-size:calc(4.5 * var(--prep-u));line-height:1.2;margin-top:calc(1 * var(--prep-u))}
+#intro #upgradesBtn small{font-size:max(12px,calc(3.4 * var(--prep-u)));line-height:1.2;margin-top:calc(.5 * var(--prep-u))}
 #intro #upgradesBtn>span:last-child{display:none}
-#intro #planqueLaunch{height:calc(33 * var(--prep-u));min-height:0;flex:none;padding:calc(2 * var(--prep-u));font-size:calc(23 * var(--prep-u))!important;line-height:1;gap:0}
-#intro #planqueLaunch small{font-size:calc(5.4 * var(--prep-u));line-height:1.25;margin:0}
-#intro #palierResume:not([style*="none"]){margin-bottom:calc(6 * var(--prep-u));font-size:calc(4 * var(--prep-u))}
-#intro #planqueZ2:not([style*="none"]){margin-top:calc(6 * var(--prep-u))}
-#intro .hideout-footer{margin:calc(10 * var(--prep-u)) 0 0;height:calc(10 * var(--prep-u));min-height:0;flex:none}
-#intro .hideout-footer .quiet-btn{min-height:0;font-size:calc(3.8 * var(--prep-u));line-height:1.2;padding:0}
-@media(max-height:600px) and (orientation:landscape){#intro{--prep-u:3.5px}}
+#intro #planqueLaunch{height:calc(22 * var(--prep-u));min-height:0;flex:none;padding:calc(2 * var(--prep-u));font-size:calc(15 * var(--prep-u))!important;line-height:1;gap:0}
+#intro #planqueLaunch small{font-size:max(12px,calc(3.8 * var(--prep-u)));line-height:1.25;margin:0}
+#intro #palierResume:not([style*="none"]){flex:none;margin:0 0 calc(2 * var(--prep-u));font-size:max(12px,calc(3.5 * var(--prep-u)))}
+#intro #planqueZ2:not([style*="none"]){flex:none;min-height:44px;margin-top:calc(2 * var(--prep-u));font-size:calc(6 * var(--prep-u))}
+#intro .hideout-footer{margin:calc(3 * var(--prep-u)) 0 0;height:calc(10 * var(--prep-u));min-height:32px;flex:none}
+#intro .hideout-footer .quiet-btn{min-height:32px;font-size:max(12px,calc(3.2 * var(--prep-u)));line-height:1.2;padding:0}
+@media(max-height:600px) and (orientation:landscape){
+ #intro{--prep-u:3px}
+ #intro .ovpanel{width:min(100%,900px);min-height:0;padding:10px 24px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:32px minmax(0,1fr) 32px;column-gap:28px}
+ #intro .menu-top{grid-column:1 / 3;grid-row:1;height:32px}
+ #intro .hideout-heading{grid-column:1;grid-row:2;align-self:center;margin:0;height:145px}
+ #intro .hideout-grid{grid-column:2;grid-row:2;align-self:stretch;margin:6px 0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:48px minmax(0,1fr) 55px;gap:7px}
+ #intro .repBar{grid-column:1 / 3;grid-row:1;height:48px;margin:0}
+ #intro .repNum{font-size:30px}
+ #intro .backPick{grid-column:1;grid-row:2 / 4;margin:0}
+ #intro .back-caption{justify-content:center}
+ #intro .back-caption .section-label{display:none}
+ #intro .bpCurrent{gap:4px}
+ #intro .bpArrow{min-width:28px;min-height:32px;width:28px;height:32px}
+ #intro #bpPreview{--card-w:min(70px,max(20px,calc((100cqh - 30px)/1.48)))}
+ #intro #upgradesBtn{grid-column:2;grid-row:2;height:100%;margin:0;padding:8px;justify-content:center}
+ #intro #upgradesBtn .prep-art{display:none}
+ #intro #upgradesBtn strong{font-size:20px}
+ #intro #upgradesBtn small{font-size:11px}
+ #intro #planqueLaunch{grid-column:2;grid-row:3;height:55px;font-size:35px!important}
+ #intro #planqueLaunch small{font-size:11px}
+ #intro .hideout-footer{grid-column:1 / 3;grid-row:3;height:32px;margin:0}
+ #intro .hideout-grid:has(#palierResume:not([style*="none"])),#intro .hideout-grid:has(#planqueZ2:not([style*="none"])){grid-template-rows:48px minmax(0,1fr) 35px 55px}
+ #intro #palierResume:not([style*="none"]),#intro #planqueZ2:not([style*="none"]){grid-column:2;grid-row:3;min-height:0;margin:0}
+ #intro .hideout-grid:has(#palierResume:not([style*="none"])) #planqueLaunch,#intro .hideout-grid:has(#planqueZ2:not([style*="none"])) #planqueLaunch{grid-row:4}
+}
 
 /* Align the visible bitmap ink, excluding the blank margins in each atlas cell. */
 .hand-total>.raster-copy{height:100%;min-height:0;display:flex;align-items:center;justify-content:center;line-height:0}
@@ -424,7 +452,6 @@
 #actions .blbl .raster-word{display:flex;justify-content:center;transform:translateY(-.18em)}
 #intro #planqueLaunch>.raster-copy{display:block;height:.83em;line-height:0;flex:none}
 #intro #planqueLaunch .raster-word{display:flex;justify-content:center;transform:translateY(-.17em)}
-#intro #planqueTitle,#intro[data-mode="infini"] #planqueTitle{font-size:calc(27 * var(--prep-u))!important}
 @media (min-height:601px), (orientation:portrait){
  #topbar #gainVal{height:calc(11.3 * var(--ui-u));font-size:calc(14.5 * var(--ui-u) * var(--number-scale,1));line-height:0;flex:none}
  #topbar #gainVal .raster-copy{display:block;line-height:0}
