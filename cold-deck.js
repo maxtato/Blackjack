@@ -1261,7 +1261,7 @@ function renderHands(reveal=false){
   const dUp=dShown.filter(c=>!c._fd&&!c._flip);
   if(reveal){$('dVal').textContent=dUp.length?handValue(dUp).total:'—';}
   else if(G.table.rule==='mute'){$('dVal').textContent='?';}
-  else{$('dVal').textContent=dUp.length?handValue([dUp[0]]).total+' +?':'—';}
+  else{$('dVal').textContent=dUp.length?handValue([dUp[0]]).total:'—';}
 }
 function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les appels)
   const pct=barakaPct(),lvl=barakaLevel();
@@ -2793,7 +2793,8 @@ function renderPlanque(){
   const pt=$('planqueTitle');if(pt)pt.textContent=t(inf?'menu.endless':'menu.circuit');
   const ps=$('planqueSub');if(ps)ps.innerHTML=t(inf?'planque.subInf':'planque.subCircuit');
   const tag=$('planqueMode');if(tag){tag.textContent=LANG==='fr'?'La planque':'The hideout';tag.className='planqueMode '+(inf?'inf':'nuit');}
-  const rb=$('recBox');if(rb)rb.innerHTML=t('planque.best')+'<br><span style="white-space:nowrap">'+(inf
+  const hasRecord=inf?(m.record.peak||m.record.palier):(m.record.chips||m.record.depth);
+  const rb=$('recBox');if(rb)rb.innerHTML=t('planque.best')+'<br><span style="white-space:nowrap">'+(!hasRecord?t('planque.noRecord'):inf
     ?`<b>${t('planque.tierN',m.record.palier||0)}</b> · <b>${cashS(m.record.peak||0)}</b>`
     :`<b>${t('planque.tables',m.record.depth||0)}</b> · <b>${cashS(m.record.chips||0)}</b>`)+'</span>';
   // sélecteur de palier de reprise (mode cagnotte) : reprendre au palier atteint (sauvegardé)
@@ -2974,7 +2975,8 @@ Object.assign(STR.fr,{
  'ui.bet':'Mise','ui.mult':'Multi','ui.gain':'Cagnotte','ui.potLbl':'Cagnotte','ui.turnsLeft':'mains<br>restantes','ui.you':'Ta main','ui.dealer':'Croupier','act.double':'DOUBLER','act.force':'FORCER','modern.table':'Table',
  'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HAUTE TENSION',
  'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','cb.to21':n=>'21 parfait ×3 · Possible avec la prochaine carte','modern.goal':'Objectif','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
- 'nav.rules':'Règles','nav.settings':'Réglages','nav.back':'← MODES DE JEU','nav.reset':'Réinitialiser ce mode',
+ 'nav.rules':'Règles','nav.settings':'Réglages','nav.back':'‹ Modes de jeu','nav.reset':'Réinitialiser ce mode',
+ 'planque.best':'Meilleur parcours','planque.noRecord':'Aucune partie','planque.back':'Dos de carte','planque.backSub':(i,n)=>i+'/'+n,
  'menu.choose':'CHOISIS TA TABLE','menu.freeTag':'À TON RYTHME','menu.circuitTag':"L'AVENTURE",
  'menu.endless':'LIBRE','menu.endlessSub':'Du blackjack à ton rythme.',
  'menu.circuit':'CIRCUIT','menu.circuitSub':n=>"L'aventure, table après table.",
@@ -2984,9 +2986,9 @@ Object.assign(STR.fr,{
  'menu.first':'Aucune partie jouée','planque.subInf':'Enchaîne les mains à ton rythme. Tu décides quand encaisser.',
  'planque.subCircuit':'Prépare tes atouts, puis tente la traversée du casino.',
  'planque.modeInf':'MODE LIBRE','planque.modeCircuit':'MODE CIRCUIT',
- 'planque.seeAll':'LA COLLECTION →','planque.start':'JOUER',
- 'planque.startInf':'sans mission · sans limite de mains',
- 'planque.startCircuit':n=>'circuit · '+n+' tables',
+ 'planque.seeAll':'Collection ›','planque.start':'JOUER',
+ 'planque.startInf':'Sans limite de mains',
+ 'planque.startCircuit':n=>'Commencer le circuit',
  'set.title':'RÉGLAGES','set.close':'TERMINÉ','set.dev':'OUTILS DE DÉMONSTRATION',
  'rules.close':'RETOUR','rules.basic':'Les bases du blackjack','rules.bonuses':'Baraka & combinaisons','rules.modes':'Les modes de jeu',
  'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>',
@@ -2997,7 +2999,8 @@ Object.assign(STR.en,{
  'ui.bet':'Bet','ui.mult':'Multi','ui.gain':'Bank','ui.potLbl':'Bank','ui.turnsLeft':'hands<br>left','ui.you':'Your hand','ui.dealer':'Dealer','act.force':'PUSH LUCK','modern.table':'Table',
  'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HIGH VOLTAGE',
  'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'Target','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'THE HOUSE IS WATCHING.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
- 'nav.rules':'Rules','nav.settings':'Settings','nav.back':'← GAME MODES','nav.reset':'Reset this mode',
+ 'nav.rules':'Rules','nav.settings':'Settings','nav.back':'‹ Game modes','nav.reset':'Reset this mode',
+ 'planque.best':'Best run','planque.noRecord':'No games played','planque.back':'Card back','planque.backSub':(i,n)=>i+'/'+n,
  'menu.choose':'CHOOSE YOUR TABLE','menu.freeTag':'AT YOUR OWN PACE','menu.circuitTag':'THE ADVENTURE',
  'menu.endless':'FREE PLAY','menu.endlessSub':'Blackjack at your own pace.',
  'menu.circuit':'CIRCUIT','menu.circuitSub':n=>'An adventure, table by table.',
@@ -3007,8 +3010,8 @@ Object.assign(STR.en,{
  'menu.first':'No games played yet','planque.subInf':'Play hand after hand at your own pace. Cash out when you choose.',
  'planque.subCircuit':'Prepare your perks, then take on the casino.',
  'planque.modeInf':'FREE PLAY','planque.modeCircuit':'CIRCUIT MODE',
- 'planque.seeAll':'THE COLLECTION →','planque.start':'PLAY',
- 'planque.startInf':'no missions · unlimited hands','planque.startCircuit':n=>'circuit · '+n+' tables',
+ 'planque.seeAll':'Collection ›','planque.start':'PLAY',
+ 'planque.startInf':'Unlimited hands','planque.startCircuit':n=>'Start the circuit',
  'set.close':'DONE','set.dev':'DEMO TOOLS','rules.close':'BACK',
  'rules.basic':'Blackjack basics','rules.bonuses':'Streaks & combinations','rules.modes':'Game modes',
  'tok.bankI':'+$','tok.pourboireI':'+$<small>/hand</small>',

@@ -669,7 +669,7 @@ function renderHands(reveal=false){
   const dUp=dShown.filter(c=>!c._fd&&!c._flip);
   if(reveal){$('dVal').textContent=dUp.length?handValue(dUp).total:'—';}
   else if(G.table.rule==='mute'){$('dVal').textContent='?';}
-  else{$('dVal').textContent=dUp.length?handValue([dUp[0]]).total+' +?':'—';}
+  else{$('dVal').textContent=dUp.length?handValue([dUp[0]]).total:'—';}
 }
 function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les appels)
   const pct=barakaPct(),lvl=barakaLevel();
@@ -2201,7 +2201,8 @@ function renderPlanque(){
   const pt=$('planqueTitle');if(pt)pt.textContent=t(inf?'menu.endless':'menu.circuit');
   const ps=$('planqueSub');if(ps)ps.innerHTML=t(inf?'planque.subInf':'planque.subCircuit');
   const tag=$('planqueMode');if(tag){tag.textContent=LANG==='fr'?'La planque':'The hideout';tag.className='planqueMode '+(inf?'inf':'nuit');}
-  const rb=$('recBox');if(rb)rb.innerHTML=t('planque.best')+'<br><span style="white-space:nowrap">'+(inf
+  const hasRecord=inf?(m.record.peak||m.record.palier):(m.record.chips||m.record.depth);
+  const rb=$('recBox');if(rb)rb.innerHTML=t('planque.best')+'<br><span style="white-space:nowrap">'+(!hasRecord?t('planque.noRecord'):inf
     ?`<b>${t('planque.tierN',m.record.palier||0)}</b> · <b>${cashS(m.record.peak||0)}</b>`
     :`<b>${t('planque.tables',m.record.depth||0)}</b> · <b>${cashS(m.record.chips||0)}</b>`)+'</span>';
   // sélecteur de palier de reprise (mode cagnotte) : reprendre au palier atteint (sauvegardé)

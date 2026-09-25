@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>Cold Deck · contrôle des proportions</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#10161b;color:#fff7e6;font:14px system-ui}header{display:flex;align-items:center;gap:16px;padding:12px;position:sticky;top:0;background:#10161b;z-index:2}label{display:flex;gap:8px;align-items:center}select{font:inherit;padding:6px}main{padding:16px;display:flex;justify-content:center}iframe{border:0;background:#20252a;flex:none;box-shadow:0 0 0 1px #58616a}
+</style>
+<header><strong>Contrôle des proportions</strong><label>Écran<select id="screen"><option value="home">Accueil</option><option value="circuit">Circuit</option><option value="free">Libre</option><option value="two">Deux cartes</option><option value="four">Quatre cartes</option><option value="six">Six cartes</option><option value="split">Main séparée</option></select></label><label>Format<select id="size"><option value="390,844">390 × 844</option><option value="430,932">430 × 932</option><option value="375,667">375 × 667</option><option value="844,390">844 × 390</option><option value="478,1624">Maquette préparation</option></select></label><span id="status"></span></header>
+<main><iframe id="review" title="Rendu réel Cold Deck"></iframe></main>
+<script type="module">
+// Internal visual fixture: loads the deployed app's exact HTML, styles and bundle.
+// Test hands stay inside this frame. No fixture is added to the playable app.
+const base=new URL('../',location.href).href;
+const [html,bundle]=await Promise.all(['index.html','cold-deck.js'].map(path=>fetch(new URL(path,base),{cache:'no-store'}).then(r=>r.text())));
+const frame=document.querySelector('iframe'),screen=document.querySelector('#screen'),size=document.querySelector('#size');
+async function render(){
+ const [width,height]=size.value.split(',');frame.width=width;frame.height=height;
+ const fixture=`
+ setLang('fr');
+ const visualScreen=${JSON.stringify(screen.value)};
+ if(visualScreen==='home')openMenu();
+ else if(visualScreen==='circuit'||visualScreen==='free')chooseMode(visualScreen==='free'?'infini':'nuit');
+ else {
+  startGame(0);
+  const visualRanks=visualScreen==='six'?[2,2,3,3,4,3]:visualScreen==='four'?[3,4,5,5]:[8,9];
+  const visualSuits=['♣','♥','♠','♦','♣','♥'];
+  const visualHand=visualRanks.map((r,i)=>({r:String(r),s:visualSuits[i]}));
+  Object.assign(G,{phase:'play',bank:120,bet:10,betChosen:true,tokens:3,hand:2,pHand:visualHand,dHand:[{r:'K',s:'♣'},{r:'7',s:'♥',_fd:true}],_dealing:false,insisted:false,table:{...G.table,goal:200},shoe:Array.from({length:50},()=>({r:'2',s:'♣'}))});
+  if(visualScreen==='split'){G.splitActive=true;G.hands=[[{r:'8',s:'♣'},{r:'3',s:'♦'}],[{r:'8',s:'♥'},{r:'4',s:'♣'}]];G.hi=0;G.pHand=G.hands[0];}
+  renderAll();renderHands();
+ }
+ window.ColdDeckRaster.refresh();
+ `;
+ const end=bundle.lastIndexOf('})();');
+ const source=bundle.slice(0,end)+fixture+bundle.slice(end);
+ frame.srcdoc=html.replace('<head>','<head><base href="'+base+'">').replace('<script src="cold-deck.js"><'+'/script>','<script>'+source.replace(/<\/script/gi,'<\\/script')+'<'+'/script>');
+ document.querySelector('#status').textContent=width+' × '+height;
+}
+screen.addEventListener('change',render);size.addEventListener('change',render);render();
+</script>
+</html>
