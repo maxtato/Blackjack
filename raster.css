@@ -238,3 +238,23 @@ button .raster-glyph{--glyph-width:.62em}
 }
 @media(prefers-reduced-motion:reduce){.flip-impact{display:none}}
 :root[data-motion=gentle] .flip-impact{display:none}
+
+/* Possibilities are quiet annotations; a completed combination earns color. */
+#comboRow .cpill:not(.on){background:none;color:#acb7c2;font-size:11px;min-width:0;padding-inline:9px;font-weight:650}
+#comboRow .cpill:not(.on) .combo-detail{color:#909da9;font-weight:500}
+#comboRow .cpill.on{font-size:12px;min-width:0}
+#comboRow{scrollbar-color:#52606c transparent}
+#tip:not(:empty){background:transparent;color:#bac5cf!important;box-shadow:none}
+#app[data-phase="done"] #tip:not(:empty){color:#ffda72!important;background:#ffce3a0b}
+/* Only a newly requested card moves; the slot and existing hand stay anchored. */
+.hand .cardslot:has(.arrive){animation:none;translate:none;rotate:none}
+.hand .card.arrive{animation:requested-card-land 220ms cubic-bezier(.16,.78,.28,1) both;transform-origin:50% 85%}
+@keyframes requested-card-land{
+  0%{transform:translateY(90px) rotate(9deg) scale(.88);opacity:0}
+  16%{opacity:1}
+  70%{transform:translateY(-5px) rotate(-1.5deg) scale(1.02)}
+  87%{transform:translateY(2px) rotate(.5deg) scale(1.025,.975)}
+  100%{transform:translateY(0) rotate(0deg) scale(1);opacity:1}
+}
+@media(prefers-reduced-motion:reduce){.hand .card.arrive{animation:none!important}}
+:root[data-motion=gentle] .hand .card.arrive{animation:none!important}

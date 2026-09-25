@@ -1193,6 +1193,7 @@ function fannedCard(c,idx,total,opts){
   const motionSeed=c.r+c.s+'#'+idx+(opts.dealer?'d':'p');
   slot.style.setProperty('--card-delay','-'+(idx*.5+hashStr(motionSeed+'~')*3).toFixed(3)+'s');
   slot.appendChild(opts.flip?flipCard(c,Object.assign({idx:idx},opts)):cardEl(c,Object.assign({idx:idx},opts)));
+  if(opts.arrive)window.ColdDeckFX?.onArrival(slot);
   return slot;
 }
 // carte à deux faces pour un vrai retournement (dos visible -> pivote -> face)
@@ -1677,21 +1678,23 @@ function deal(){
   renderAll();renderHands();                                     // tapis vide, boutons grisés
   dealSequence([p1,d1,p2,d2]);
 }
-// timings de la distribution animée (la carte apparaît d'un coup, puis se retourne)
+// Initial deal stays brisk; requested cards land before revealing.
 // délai IDENTIQUE pour chaque carte : intervalle = CARD_HOLD + CARD_FLIP entre deux cartes
 const CARD_HOLD=65,CARD_FLIP=300;
 document.documentElement.style.setProperty('--card-flip-duration',CARD_FLIP+'ms');
-// anime UNE carte : elle apparaît d'un coup (dos), puis se retourne. Plus de glissade.
+// A requested card rises face down, lands, then reveals in its final slot.
 // stayDown : reste dos (trou du croupier). reveal : main du croupier dévoilée.
 function dealCardIn(c,opts,done){
   const reveal=!!(opts&&opts.reveal);
-  c._pending=false;c._fd=true;c._flip=false;c._arr=false;       // apparaît d'un coup, dos
+  const toss=!!opts?.toss;
+  c._pending=false;c._fd=true;c._flip=false;c._arr=toss;
   renderHands(reveal);sfx.card();
   setTimeout(()=>{
+    c._arr=false;
     if(opts&&opts.stayDown){c._fd=true;renderHands(reveal);done&&done();return;}
     c._fd=false;c._flip=true;renderHands(reveal);sfx.flip();    // on la retourne
     setTimeout(()=>{c._flip=false;renderHands(reveal);window.ColdDeckFX?.onCard(c);done&&done();},CARD_FLIP);
-  },CARD_HOLD);
+  },toss?260:CARD_HOLD);
 }
 // distribution initiale : mes 2 cartes + 2 du croupier, une par une. La 2e du croupier reste dos.
 function dealSequence(order){
@@ -1709,10 +1712,10 @@ function finishDeal(){
 function playerHit(forced){
   if(G.phase!=='play'||G._dealing)return;
   const c=(G.magicNext&&!forced)?drawIdeal():draw();G.magicNext=false;
-  c._pending=true;G.pHand.push(c);if(!forced)shake(8);
+  c._pending=true;G.pHand.push(c);
   $('tip').textContent='';
   G._dealing=true;renderActions();                              // boutons grisés pendant l'arrivée
-  dealCardIn(c,{},()=>{
+  dealCardIn(c,{toss:true},()=>{
     G._dealing=false;
     if(hasRelic('aimant')){G.bank+=1;renderTop();}              // 🧲 +1 $ par carte tirée
     addPressure(forced?0:10);updateBustReadout();renderMult();
@@ -1749,7 +1752,7 @@ function dealSplitCard(){
   const c=G.magicNext?drawIdeal():draw();G.magicNext=false;
   c._pending=true;G.pHand.push(c);
   G._dealing=true;renderActions();renderHands(false);
-  dealCardIn(c,{},()=>{
+  dealCardIn(c,{toss:true},()=>{
     G._dealing=false;
     updateBustReadout();renderMult();renderHands(false);
     if(c.ed)announceEd(c);
@@ -1775,7 +1778,7 @@ function playerDouble(){
   const c=G.magicNext?drawIdeal():draw();G.magicNext=false;
   c._pending=true;G.pHand.push(c);
   G._dealing=true;renderActions();
-  dealCardIn(c,{},()=>{
+  dealCardIn(c,{toss:true},()=>{
     G._dealing=false;
     addPressure(14);updateBustReadout();renderMult();
     if(c.ed)announceEd(c);
@@ -1793,7 +1796,7 @@ function forcerChance(){
   popText(t('msg.forced'),t('msg.kept',keep.r+keep.s));
   keep._pending=true;G.pHand.push(keep);
   G._dealing=true;renderActions();
-  dealCardIn(keep,{},()=>{
+  dealCardIn(keep,{toss:true},()=>{
     G._dealing=false;
     addPressure(26);updateBustReadout();renderMult();
     const v=handValue(G.pHand).total;
@@ -3404,6 +3407,13 @@ syncMenuFocus();
     const el = cardNode(card); if (!el) return;
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
   }
+  function onArrival(slot){
+    if(reduced()||document.hidden)return;
+    later(()=>{
+      if(!slot.isConnected||document.querySelector('.overlay.show,#adOverlay.show'))return;
+      burst(slot,{count:4,reach:28,color:'#ffce3a'});haptic();
+    },190);
+  }
   function onFlip(wrap,card,duration=300){
     if(reduced()||document.hidden)return;
     // Anchor to the stable slot, not to the narrowing face. This covers the
@@ -3512,7 +3522,7 @@ syncMenuFocus();
   }
   window.ColdDeckFX = {
     get reduced() { return reduced(); },
-    clear, onCard, onFlip, onResult, onScoreCard, onRelic, onPressure, onAnnouncement, onCombo,
+    clear, onCard, onArrival, onFlip, onResult, onScoreCard, onRelic, onPressure, onAnnouncement, onCombo,
     setMotion(value){
       preference=value==='gentle'?'gentle':'punchy';
       try{localStorage.setItem('colddeck-motion',preference);}catch(e){}

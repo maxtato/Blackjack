@@ -206,6 +206,13 @@
     const el = cardNode(card); if (!el) return;
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
   }
+  function onArrival(slot){
+    if(reduced()||document.hidden)return;
+    later(()=>{
+      if(!slot.isConnected||document.querySelector('.overlay.show,#adOverlay.show'))return;
+      burst(slot,{count:4,reach:28,color:'#ffce3a'});haptic();
+    },190);
+  }
   function onFlip(wrap,card,duration=300){
     if(reduced()||document.hidden)return;
     // Anchor to the stable slot, not to the narrowing face. This covers the
@@ -314,7 +321,7 @@
   }
   window.ColdDeckFX = {
     get reduced() { return reduced(); },
-    clear, onCard, onFlip, onResult, onScoreCard, onRelic, onPressure, onAnnouncement, onCombo,
+    clear, onCard, onArrival, onFlip, onResult, onScoreCard, onRelic, onPressure, onAnnouncement, onCombo,
     setMotion(value){
       preference=value==='gentle'?'gentle':'punchy';
       try{localStorage.setItem('colddeck-motion',preference);}catch(e){}
