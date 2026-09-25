@@ -1,5 +1,9 @@
 /* Review-only alternatives, applied to the real game markup and real combo hints. */
 #app[data-combo-variant] #comboRow .combo-name{font-size:inherit}
+#app[data-combo-variant]:not([data-combo-variant=""]) #center{padding:0}
+@media(orientation:portrait){
+ #app[data-combo-variant]:not([data-combo-variant=""]) #stage{--combo-room:max(52px,calc(14 * var(--ui-u)))}
+}
 
 /* A: centered, transparent lines. */
 #app[data-combo-variant="a"] #comboRow{gap:3px;padding:0 2px}
@@ -11,18 +15,18 @@
 #app[data-combo-variant="a"] #comboRow .context{font-size:9px;color:#879aa7}
 
 /* B: small printed tokens, with quiet potential rewards below. */
-#app[data-combo-variant="b"] #comboRow{gap:3px;padding:0}
+#app[data-combo-variant="b"] #comboRow{gap:2px;padding:0}
 #app[data-combo-variant="b"] #comboRow .combo-line{grid-template-columns:48px minmax(0,1fr);min-height:0;gap:6px;font-size:11px;line-height:1.1}
 #app[data-combo-variant="b"] #comboRow .combo-label{font-size:9px}
 #app[data-combo-variant="b"] #comboRow .combo-items{gap:5px}
-#app[data-combo-variant="b"] #comboRow .combo-item{padding:3px 6px;border-radius:3px;background:#a7bcc40a}
+#app[data-combo-variant="b"] #comboRow .combo-item{padding:2px 6px;border-radius:3px;background:#a7bcc40a}
 #app[data-combo-variant="b"] #comboRow .earned .combo-item{color:#ffce3a;background:#ffce3a1c}
 #app[data-combo-variant="b"] #comboRow .combo-item+.combo-item::before{content:none}
 #app[data-combo-variant="b"] #comboRow .context{font-size:9px}
 #app[data-combo-variant="b"] #comboRow .context .combo-item{padding:0;background:none}
 
 /* C: two compact columns, with the optional contract underneath. */
-#app[data-combo-variant="c"] #comboRow:not(:empty){display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:3px 12px;padding:2px 9px;background:#0e172129;border-radius:3px}
+#app[data-combo-variant="c"] #comboRow:not(:empty){display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:2px 12px;padding:1px 9px;background:#0e172129;border-radius:3px}
 #app[data-combo-variant="c"] #comboRow .combo-line{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:0;font-size:11px;line-height:1.1}
 #app[data-combo-variant="c"] #comboRow .combo-label{font-size:9px;letter-spacing:.025em}
 #app[data-combo-variant="c"] #comboRow .combo-items{flex-direction:column;align-items:flex-start;gap:1px;max-width:100%;max-height:26px;overflow:auto}
