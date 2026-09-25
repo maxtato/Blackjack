@@ -731,21 +731,30 @@ function renderCombos(){
   const row=$('comboRow');if(!row)return;
   if(G.phase!=='play'||!G.pHand.length||G._dealing){row.innerHTML='';row.style.display='none';return;}
   const {on,soon}=comboHints();
-  const pill=(text,kind='',caption='')=>{
-    const [title,...detail]=text.split(' · ');
-    return `<div class="cpill ${kind}" role="listitem"><span class="combo-title">${ColdDeckArt.lettering(title)}</span><small class="combo-detail">${detail.join(' · ')||caption}</small></div>`;
+  const positions=new Map([...row.querySelectorAll('.combo-items')].map(list=>[list.dataset.kind,list.scrollLeft]));
+  row.replaceChildren();
+  const group=(label,texts,kind)=>{
+    if(!texts.length)return;
+    const line=document.createElement('div');line.className='combo-line '+kind;
+    const heading=document.createElement('span');heading.className='combo-label';heading.textContent=label;
+    const list=document.createElement('div');list.className='combo-items';list.dataset.kind=kind;
+    list.setAttribute('role','list');list.setAttribute('aria-label',label);list.tabIndex=0;
+    texts.forEach(text=>{
+      const item=document.createElement('span');item.className='combo-item';item.setAttribute('role','listitem');
+      const [title,...detail]=text.split(' · ');
+      const name=document.createElement('span');name.className='combo-name';name.textContent=title.charAt(0)+title.slice(1).toLocaleLowerCase();item.appendChild(name);
+      if(detail.length){const hint=document.createElement('span');hint.className='combo-hint';hint.textContent=' · '+detail.join(' · ');item.appendChild(hint);}
+      list.appendChild(item);
+    });
+    line.append(heading,list);row.appendChild(line);list.scrollLeft=positions.get(kind)||0;
   };
-  const pills=on.map(text=>pill(text,'on',LANG==='fr'?'Si victoire':'On a win'))
-    .concat(soon.map(text=>pill(text,'',LANG==='fr'?'À tenter':'Within reach')));
-  if(G.endless&&G.event)pills.push(pill(evtTitle(G.event),'evt',LANG==='fr'?'Événement':'Event'));
-  if(!G.endless&&G.contract&&!G.contract.done)pills.push(pill(contractText(G.contract),'ctr',LANG==='fr'?'Contrat':'Contract'));
-  // One horizontal row keeps every complete label reachable without resizing the table.
-  const previous=row.scrollLeft;
-  row.innerHTML=pills.join('');
-  row.setAttribute('role','list');row.tabIndex=0;
-  row.setAttribute('aria-label',LANG==='fr'?'Combinaisons et coups possibles, défilement horizontal':'Combinations and possible plays, scroll horizontally');
-  row.style.display=pills.length?'flex':'none';
-  row.scrollLeft=previous;
+  group(LANG==='fr'?'Si victoire':'On a win',on,'earned');
+  if(handValue(G.pHand).total<21)group(LANG==='fr'?'À tenter':'In reach',soon,'possible');
+  if(G.endless&&G.event)group(LANG==='fr'?'Événement':'Event',[evtTitle(G.event)],'context');
+  if(!G.endless&&G.contract&&!G.contract.done)group(LANG==='fr'?'Contrat':'Contract',[contractText(G.contract)],'context');
+  row.removeAttribute('tabindex');row.setAttribute('role','group');
+  row.setAttribute('aria-label',LANG==='fr'?'Combinaisons et coups possibles':'Combinations and possible plays');
+  row.style.display=row.childElementCount?'flex':'none';
 }
 function renderTop(){
   const tb=G.table;
@@ -1035,12 +1044,13 @@ function renderActions(){
   const main=document.createElement('div');main.className='actMain';
   const wide=document.createElement('div');wide.className='actWide';
   const add=(parent,label,cls,fn,sub,dis)=>{
+    if(dis)return null;
     const b=document.createElement('button');b.className='btn '+cls;b.setAttribute('aria-label',label);
     const kind=fn===deal?'deal':fn===playerStand?'stand':fn===playerDouble?'double':fn===playerSplit?'split':fn===forcerChance?'force':'hit';
     b.dataset.gameAction=kind;
     b.innerHTML=`<span class="action-copy"><span class="blbl">${label}</span>`+(sub?`<small>${sub}</small>`:'')+'</span>';
     if(sub){const description=document.createElement('span');description.innerHTML=sub;b.title=description.textContent;b.setAttribute('aria-description',description.textContent);}
-    if(dis)b.disabled=true;else b.onclick=fn;parent.appendChild(b);return b;
+    b.onclick=fn;parent.appendChild(b);return b;
   };
   if(G.phase==='bet'){
     main.classList.add('betmain');
@@ -1049,9 +1059,9 @@ function renderActions(){
     add(main,t('act.bet'),'b-gold span',deal,sub,G.bank<curTable().min||!G.betChosen);
     a.appendChild(main);return;
   }
-  // phases jeu / croupier / résolution : on garde toujours les 3 boutons,
-  // désactivés (grisés) quand ce n'est pas notre tour ou que l'action n'est pas dispo.
+  // Le dock garde sa place pendant les animations, seules les actions jouables sont affichées.
   const live=(G.phase==='play'&&!G._dealing);
+  if(!live){renderCombos();return;}
   const v=G.pHand.length?handValue(G.pHand).total:0;
   const flirt=v>=17&&v<=20;
   if(flirt){
@@ -1059,18 +1069,18 @@ function renderActions(){
     hit.title=t('act.hitSub')+' · '+t('act.riskSub');hit.setAttribute('aria-description',hit.title);
     add(main,t('act.stand'),'b-blue',playerStand,t('act.standSub'),!live);
   }else{
-    add(main,t('act.hit'),'b-gold',()=>playerHit(),t('act.hitSub'),!live);
-    add(main,t('act.stand'),'b-blue',playerStand,t('act.standSub'),!live);
+    add(main,t('act.hit'),'b-gold',()=>playerHit(),t('act.hitSub'),v>=21);
+    add(main,t('act.stand'),'b-blue',playerStand,t('act.standSub'),v>21);
   }
   // actions spéciales (2 max, côte à côte). SÉPARER = paire · DOUBLER = total bas · FORCER = 17-20
   const two=G.pHand.length===2, pair=two&&G.pHand[0].r===G.pHand[1].r;
   const canSplit=!G.splitActive&&two&&pair&&G.bank>=G.bet;
-  const canDouble=!G.splitActive&&two&&!flirt&&G.bank>=G.bet;   // fenêtre de double : total bas (9/10/11…)
-  // The two secondary positions stay stable; availability follows the same rules.
+  const canDouble=!G.splitActive&&two&&!flirt&&v<21&&G.bank>=G.bet;
   if(pair&&!G.splitActive)add(wide,t('act.split'),'b-blue',playerSplit,t('act.splitSub'),!live||!canSplit);
   else add(wide,t('act.double'),'b-blue',playerDouble,t('act.doubleSub'),!live||!canDouble);
   add(wide,t('act.force'),'b-purple',forcerChance,G.forcedUsed?t('act.forceUsed'):t('act.forceSub'),!live||!flirt||G.forcedUsed);
-  a.appendChild(main);a.appendChild(wide);
+  if(main.childElementCount)a.appendChild(main);
+  if(wide.childElementCount)a.appendChild(wide);
 }
 function usePeek(){
   if(G.peekUsed||G.phase!=='play'||!hasRelic('lunettes'))return;G.peekUsed=true;
@@ -1109,13 +1119,14 @@ function deal(){
   renderAll();renderHands();                                     // tapis vide, boutons grisés
   dealSequence([p1,d1,p2,d2]);
 }
-// Original pixel-release cadence: show the back for 85ms, then turn for 400ms.
-const CARD_HOLD=85,CARD_FLIP=400;
+// Land face down, lift into the turn, then settle before revealing the new total.
+const CARD_HOLD=180,CARD_FLIP=520;
+document.documentElement.style.setProperty('--card-hold-duration',CARD_HOLD+'ms');
 document.documentElement.style.setProperty('--card-flip-duration',CARD_FLIP+'ms');
 // stayDown : reste dos (trou du croupier). reveal : main du croupier dévoilée.
 function dealCardIn(c,opts,done){
   const reveal=!!(opts&&opts.reveal);
-  c._pending=false;c._fd=true;c._flip=false;c._arr=false;
+  c._pending=false;c._fd=true;c._flip=false;c._arr=true;
   renderHands(reveal);sfx.card();
   setTimeout(()=>{
     c._arr=false;
@@ -1142,7 +1153,7 @@ function playerHit(forced){
   const c=(G.magicNext&&!forced)?drawIdeal():draw();G.magicNext=false;
   c._pending=true;G.pHand.push(c);
   $('tip').textContent='';
-  G._dealing=true;renderActions();                              // boutons grisés pendant l'arrivée
+  G._dealing=true;renderActions();                             // actions et indications masquées pendant l'arrivée
   dealCardIn(c,{},()=>{
     G._dealing=false;
     if(hasRelic('aimant')){G.bank+=1;renderTop();}              // 🧲 +1 $ par carte tirée

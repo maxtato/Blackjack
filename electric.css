@@ -408,25 +408,27 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 @media(max-height:600px) and (orientation:portrait){:root{--base-card-w:48px}}
 @media(max-height:600px) and (orientation:landscape){:root{--base-card-w:clamp(40px,13dvh,68px)}}
 
-/* Original 400ms turn, 700px perspective and 1.02 / 1.07 / 1 scale.
-   Each masked face has its own plane to retain Safari-compatible compositing. */
-.flipwrap{transform-style:flat;transform:none;animation:none;transform-origin:50% 50%}
-.flipwrap>.card{transform-origin:50% 50%;-webkit-backface-visibility:hidden;backface-visibility:hidden}
-.flipwrap>.back{animation:pixel-card-back var(--card-flip-duration,400ms) cubic-bezier(.35,.05,.3,1) both,clean-card-back var(--card-flip-duration,400ms) steps(1,end) both}
-.flipwrap>.front{animation:pixel-card-front var(--card-flip-duration,400ms) cubic-bezier(.35,.05,.3,1) both,clean-card-front var(--card-flip-duration,400ms) steps(1,end) both}
+/* Both faces share one rigid 3D turn: lift, cross the edge, land and settle.
+   The printed masks and edition effects remain inside each face. */
+.hand .cardslot:has(.flipwrap),.hand .cardslot:has(.arrive){z-index:7}
+.hand .card.arrive{transform-origin:50% 65%;animation:table-card-land var(--card-hold-duration,180ms) cubic-bezier(.2,.75,.3,1) both}
+.flipwrap{transform-style:preserve-3d;transform-origin:50% 50%;animation:table-card-turn var(--card-flip-duration,520ms) linear both;will-change:transform}
+.flipwrap>.card{transform-origin:50% 50%;-webkit-backface-visibility:hidden;backface-visibility:hidden;animation:none}
+.flipwrap>.back{transform:translateZ(.4px)}
+.flipwrap>.front{transform:rotateY(180deg) translateZ(.4px)}
 .flipwrap>.back::before{content:none!important;display:none}
-@keyframes pixel-card-back{
-  0%{transform:perspective(700px) rotateY(0deg) scale(1.02)}
-  50%{transform:perspective(700px) rotateY(90deg) scale(1.07)}
-  100%{transform:perspective(700px) rotateY(180deg) scale(1)}
+@keyframes table-card-land{
+  0%{transform:translate(8%,-18%) rotate(7deg) scale(1.09)}
+  65%{transform:translate(0,2%) rotate(-1deg) scale(1.025,.97)}
+  100%{transform:none}
 }
-@keyframes pixel-card-front{
-  0%{transform:perspective(700px) rotateY(-180deg) scale(1.02)}
-  50%{transform:perspective(700px) rotateY(-90deg) scale(1.07)}
-  100%{transform:perspective(700px) rotateY(0deg) scale(1)}
+@keyframes table-card-turn{
+  0%{transform:perspective(900px) translate3d(0,0,0) rotateZ(0) rotateY(0) rotateX(0);animation-timing-function:cubic-bezier(.35,0,.55,1)}
+  45%{transform:perspective(900px) translate3d(0,-8px,30px) rotateZ(-3deg) rotateY(85deg) rotateX(8deg);animation-timing-function:cubic-bezier(.18,.6,.24,1)}
+  82%{transform:perspective(900px) translate3d(0,1px,0) rotateZ(.7deg) rotateY(181deg) rotateX(-1deg);animation-timing-function:ease-out}
+  100%{transform:perspective(900px) translate3d(0,0,0) rotateZ(0) rotateY(180deg) rotateX(0)}
 }
-@keyframes clean-card-back{0%{visibility:visible}50%,100%{visibility:hidden}}
-@keyframes clean-card-front{0%{visibility:hidden}50%,100%{visibility:visible}}
+#shaker[inert] .flipwrap{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){
   .flipwrap{animation:none!important;transform:none!important}
   .flipwrap>.back{animation:none!important;visibility:hidden}
