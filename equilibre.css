@@ -347,24 +347,24 @@
  #modeMenu::before{background-size:calc(100 * var(--home-u)) calc(205.3 * var(--home-u))}
  #modeMenu .ovpanel{width:calc(100 * var(--home-u));max-width:none;height:calc(205.3 * var(--home-u));min-height:0;flex:none;margin:0;padding:calc(10 * var(--home-u)) calc(5 * var(--home-u)) calc(4 * var(--home-u));gap:calc(3 * var(--home-u))}
  #modeMenu .home-grid{grid-template-rows:calc(63 * var(--home-u)) minmax(0,1fr) calc(45 * var(--home-u));gap:calc(2 * var(--home-u));flex:1}
- #modeMenu .menuTitle{width:calc(76 * var(--home-u));height:calc(44 * var(--home-u));transform:none;outline:none;color:#fff7e6}
+ #modeMenu .menuTitle{width:calc(72 * var(--home-u));height:calc(46 * var(--home-u));transform:none;outline:none;color:#fff7e6}
  #modeMenu .eyebrow{font-size:calc(3.8 * var(--home-u));margin:calc(1.7 * var(--home-u)) 0 calc(2.6 * var(--home-u))}
  #modeMenu .hero-copy{font-size:calc(4.3 * var(--home-u));line-height:1.16}
  #modeMenu .hero-art,#modeMenu .menu-hand{min-height:0}
  #modeMenu .menu-hand{--card-w:calc(31 * var(--home-u))}
  #modeMenu .menu-hand .card{height:calc(var(--card-w)*1.48)}
- #modeMenu .menu-hand .card:nth-child(1){transform:translate(-134%,-48%) rotate(-13deg)}
+ #modeMenu .menu-hand .card:nth-child(1){transform:translate(-123%,-48%) rotate(-13deg)}
  #modeMenu .menu-hand .card:nth-child(2){transform:translate(-50%,-53%) rotate(-2deg)}
- #modeMenu .menu-hand .card:nth-child(3){--card-w:calc(31 * var(--home-u));transform:translate(33%,-48%) rotate(13deg)}
+ #modeMenu .menu-hand .card:nth-child(3){--card-w:calc(31 * var(--home-u));transform:translate(23%,-48%) rotate(13deg)}
  #modeMenu .mode-list{gap:calc(2.5 * var(--home-u))}
  #modeMenu .mode-card{height:calc(21.25 * var(--home-u));min-height:0;padding:calc(.7 * var(--home-u)) calc(5 * var(--home-u))}
- #modeMenu .mode-card strong{font-size:calc(14.5 * var(--home-u));line-height:.94}
+ #modeMenu .mode-card strong{font-size:calc(13 * var(--home-u));line-height:.94}
  #modeMenu .mode-content{gap:0}
  #modeMenu .mode-description{font-size:calc(3.8 * var(--home-u));line-height:1.15!important}
  #modeMenu .mode-free .mode-arrow{display:block}
- #modeMenu .home-footer{height:calc(23 * var(--home-u));gap:calc(2 * var(--home-u))}
+ #modeMenu .home-footer{height:calc(26 * var(--home-u));gap:calc(1 * var(--home-u))}
  #modeMenu .home-nav-button{min-height:0;height:calc(7 * var(--home-u));font-size:calc(3.6 * var(--home-u));gap:calc(2.7 * var(--home-u))}
- #modeMenu .menuRecs{min-height:0;height:calc(14 * var(--home-u))}
+ #modeMenu .menuRecs{min-height:0;height:calc(18 * var(--home-u));flex-wrap:nowrap;gap:0}
  .menu-record-label{font-size:calc(3.6 * var(--home-u))}
  #menuBestGain{font-size:calc(11.5 * var(--home-u))}
 }
@@ -383,7 +383,7 @@
 #intro .menu-top .quiet-btn{min-height:0;padding:0;font-size:calc(4.8 * var(--prep-u));line-height:1.2}
 #intro .hideout-heading{height:calc(48 * var(--prep-u));padding:0;margin:calc(8 * var(--prep-u)) 0 0;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:space-between}
 #intro .planqueMode{font-size:calc(5.2 * var(--prep-u));line-height:1;margin:0;letter-spacing:0}
-#intro #planqueTitle{font-size:calc(28 * var(--prep-u))!important;line-height:1;margin:0;max-width:100%;letter-spacing:0!important}
+#intro #planqueTitle{font-size:calc(28 * var(--prep-u))!important;line-height:1;margin:0;max-width:100%;letter-spacing:0!important;outline:none}
 #intro #planqueTitle .raster-glyph{--glyph-width:.94em}
 #intro[data-mode="infini"] #planqueTitle{font-size:calc(28 * var(--prep-u))!important}
 #intro #planqueSub{font-size:calc(5.2 * var(--prep-u));line-height:1.25;max-width:100%;margin:0}

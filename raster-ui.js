@@ -71,7 +71,7 @@
     document.querySelectorAll('.menuTitle,.table-brand,.wordmark').forEach(brand);
     const pause=$('pauseBtn');
     if(pause&&!pause.querySelector('.pause-mark'))pause.innerHTML='<i class="raster-nav pause-mark" aria-hidden="true"></i>';
-    for(const el of roots)observer.observe(el,{childList:true,subtree:true,characterData:true});
+    for(const el of roots)observer.observe(el,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['aria-hidden']});
   }
   const roots=[...document.querySelectorAll('.overlay,#adOverlay,#topbar,#bottombar,#center,.zlbl,#pVal,#dVal,#peekBtn,#pBar,#effects')];
   const observer=new MutationObserver(decorate);
