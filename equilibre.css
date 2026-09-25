@@ -82,13 +82,21 @@
 #objWrap #objBar{flex:1;min-width:24px;height:10px;border-radius:8px;background:#364650;box-shadow:inset 0 1px 2px #0002;overflow:hidden}
 #objWrap #objFill{height:100%;background:#ffce3a;box-shadow:inset 0 2px 0 #ffe8828c;border-radius:8px}
 #objPct{font:500 14px/1 var(--copy-font);min-width:30px;text-align:right}
-/* Fixed inventory shelf: no invented items; empty slots are decorative. */
+/* Small portrait cards, with generous touch areas and a fixed-height shelf. */
 #mid{display:flex;flex-direction:column;gap:10px;grid-column:1;grid-row:2;min-height:0;min-width:0}
-#effects{--slot-size:calc((100% - 28px)/5);display:flex;align-items:center;justify-content:flex-start;gap:7px;min-height:0;flex:none;width:100%;padding:6px;background:#36465080;border-radius:3px;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:#546977 transparent}
+#effects{--inventory-height:54px;--mini-card-h:calc(var(--inventory-height) - 4px);--mini-card-w:calc(var(--mini-card-h)/1.48);--slot-size:max(44px,calc(var(--mini-card-w) + 6px));display:flex;align-items:center;justify-content:safe center;gap:5px;min-height:0;flex:none;width:100%;height:var(--inventory-height);padding:0 2px;background:none;border-radius:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+#effects::-webkit-scrollbar{display:none}
 #effects #relicRow,#effects #consumeRow,#effects #relics,#effects #consumes{display:contents!important}
-#effects .joker,#effects .tarot,#effects .inventory-empty{display:grid;place-items:center;flex:0 0 var(--slot-size);width:var(--slot-size);height:clamp(41px,6.1dvh,61px);min-width:0;padding:4px;border:0;border-radius:0;background:#15242ccc;clip-path:polygon(8% 0,92% 0,100% 13%,100% 87%,92% 100%,8% 100%,0 87%,0 13%);box-shadow:inset 0 1px 5px #0004}
-#effects .effect-illustration{width:100%;height:100%;max-width:50px;max-height:50px;object-fit:contain;border-radius:0}
-#effects .joker:hover,#effects .tarot:hover{background:#2b3d48;translate:0 -1px}
+#effects .joker,#effects .tarot,#effects .inventory-empty{position:relative;isolation:isolate;display:grid;place-items:center;flex:0 0 var(--slot-size);width:var(--slot-size);height:var(--inventory-height);min-width:0;padding:0;border:0;border-radius:0;background:none;clip-path:none;box-shadow:none}
+#effects .joker::before,#effects .tarot::before,#effects .inventory-empty::before{content:"";position:absolute;z-index:0;left:50%;top:2px;transform:translateX(-50%);width:var(--mini-card-w);height:var(--mini-card-h);background:#fff7e6 var(--art-card-stock) center/100% 100% no-repeat;-webkit-mask:var(--art-card-shape) center/108% 106% no-repeat;mask:var(--art-card-shape) center/108% 106% no-repeat;mask-mode:luminance;pointer-events:none}
+#effects .tarot::before{background-image:linear-gradient(#be9ed644,#be9ed644),var(--art-card-stock)}
+#effects .inventory-empty::before{background:#8fa0aa13}
+#effects .joker::after,#effects .tarot::after{content:"";position:absolute;z-index:2;left:50%;bottom:7px;transform:translateX(-50%);width:calc(var(--mini-card-w)*.45);height:2px;background:#b08b42;pointer-events:none}
+#effects .tarot::after{background:#83619f}
+#effects .effect-mark{position:relative;z-index:1;display:grid;place-items:center;width:var(--mini-card-w);height:var(--mini-card-h);padding:4px 3px 7px;background:none}
+#effects .effect-illustration{width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;border-radius:0;filter:saturate(.85)}
+#effects .joker:hover,#effects .tarot:hover{background:none;translate:0 -1px}
+#effects .joker.hot::before{filter:brightness(1.12)}
 #pBar{position:relative;inset:auto;align-self:center;width:78%;height:15px;min-height:15px;margin:-5px 0 0;transform:none;background:#27333c;border:0;border-radius:10px;flex:none}
 #pBar:not([data-active="true"]){display:none}
 #pBar::before{content:none}
@@ -173,7 +181,7 @@
  #topbar .tstats{min-height:0}
  #topbar #gainVal{font-size:44px}
  #topbar .gainstat .lbl,#topbar .seg .k,#topbar .tt{font-size:11px}
- #effects .joker,#effects .tarot,#effects .inventory-empty{height:36px}
+ #effects{--inventory-height:48px}
  #stage{--combo-room:50px}
  #mid{gap:7px}
  #feltInner .zone .zlbl{font-size:13px}
@@ -205,9 +213,8 @@
  #topbar .seg .v,#topbar .tnum{font-size:24px}
  #topbar .gainstat .lbl,#topbar .seg .k,#topbar .tt{font-size:10px}
  #objWrap{grid-column:2;grid-row:2}
- #mid{display:grid;grid-template-columns:90px minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:10px}
- #effects{grid-column:1;grid-row:1;display:flex;flex-wrap:wrap;align-content:start;gap:4px;padding:4px;overflow-y:auto;overflow-x:hidden;--slot-size:38px}
- #effects .joker,#effects .tarot,#effects .inventory-empty{height:38px}
+ #mid{display:flex;flex-direction:column;gap:6px}
+ #effects{--inventory-height:48px;flex-wrap:nowrap;gap:4px;padding:0 2px;overflow-x:auto;overflow-y:hidden}
  #pBar{display:none}
  #stage{grid-column:2;grid-row:1;--combo-room:30px}
  #feltInner{grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr) 30px;gap:0 12px}
@@ -326,10 +333,8 @@
  #objPct{min-width:calc(7.2 * var(--ui-u))}
  #objWrap #objBar{height:calc(2.5 * var(--ui-u))}
  #mid{position:relative;gap:calc(3 * var(--ui-u))}
- #effects{flex-wrap:nowrap;gap:calc(1.8 * var(--ui-u));height:calc(13.2 * var(--ui-u));padding:calc(1.1 * var(--ui-u));--slot-size:calc((100% - 7.2 * var(--ui-u))/5)}
- #effects .joker,#effects .tarot,#effects .inventory-empty{height:100%;padding:calc(.7 * var(--ui-u))}
- #effects .effect-illustration{max-width:none;max-height:none}
- #pBar{position:absolute;top:calc(14 * var(--ui-u));left:15%;width:70%;height:calc(1.4 * var(--ui-u));min-height:0;margin:0;z-index:3}
+ #effects{--inventory-height:max(48px,calc(14.5 * var(--ui-u)));flex-wrap:nowrap;gap:max(4px,calc(1.3 * var(--ui-u)))}
+ #pBar{position:absolute;top:calc(max(48px,14.5 * var(--ui-u)) + 2px);left:15%;width:70%;height:calc(1.4 * var(--ui-u));min-height:0;margin:0;z-index:3}
  #pBar .pmeta{font-size:calc(1.3 * var(--ui-u));line-height:calc(1.4 * var(--ui-u))}
  #stage{--combo-room:max(52px,calc(14 * var(--ui-u)))}
  #feltInner .zone{grid-template-rows:calc(3.6 * var(--ui-u)) calc(9 * var(--ui-u)) minmax(0,1fr);gap:calc(.7 * var(--ui-u))}
@@ -490,15 +495,15 @@
 .card:is(.foil,.holo,.poly) .raster-card-art{z-index:1}
 .card:is(.foil,.holo,.poly) .corner{z-index:3}
 .card:is(.foil,.holo,.poly)>.card-surface::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background-image:var(--edition-wash);background-size:100% 100%;animation:none}
-.card.holo>.card-surface::before{background-size:115% 115%;background-position:40% 50%;animation:edition-facets 7s ease-in-out infinite alternate}
-.card:is(.foil,.holo,.poly)>.card-surface::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:none;background:linear-gradient(112deg,transparent 28%,#fffced38 40%,#fffceea6 49%,#ffffffbd 50%,#fffced22 61%,transparent 72%) 150% 50%/300% 100% no-repeat;animation:edition-sheen 5s ease-in-out infinite}
-.card.holo>.card-surface::after{background-image:linear-gradient(126deg,transparent 35%,#fff8 36% 41%,transparent 42% 46%,#fff4 47% 51%,transparent 52%);animation-duration:4.8s;animation-delay:-1.2s}
-.card.poly>.card-surface::after{background-image:linear-gradient(112deg,transparent 38%,#ffffff52 49%,#ffffff88 50%,transparent 62%);animation-duration:6s;animation-delay:-2.4s}
-.card.poly .card-pip,.card.poly .raster-glyph::after{background-image:var(--edition-ink);background-size:240% 100%;animation:edition-ink 5s ease-in-out infinite alternate}
+.card.holo>.card-surface::before{background-size:115% 115%;background-position:40% 50%;animation:edition-facets 4.5s ease-in-out infinite alternate}
+.card:is(.foil,.holo,.poly)>.card-surface::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:none;background:linear-gradient(112deg,transparent 28%,#fffced38 40%,#fffceea6 49%,#ffffffbd 50%,#fffced22 61%,transparent 72%) 150% 50%/300% 100% no-repeat;animation:edition-sheen 2.6s ease-in-out infinite}
+.card.holo>.card-surface::after{background-image:linear-gradient(126deg,transparent 35%,#fff8 36% 41%,transparent 42% 46%,#fff4 47% 51%,transparent 52%);animation-duration:2.4s;animation-delay:-.65s}
+.card.poly>.card-surface::after{background-image:linear-gradient(112deg,transparent 38%,#ffffff52 49%,#ffffff88 50%,transparent 62%);animation-duration:2.9s;animation-delay:-1.4s}
+.card.poly .card-pip,.card.poly .raster-glyph::after{background-image:var(--edition-ink);background-size:240% 100%;animation:edition-ink 3.2s ease-in-out infinite alternate}
 .card.poly .court-image{filter:saturate(.65) contrast(1.08) drop-shadow(1px 0 0 #9563b1)}
 .card:is(.foil,.holo,.poly) .edtag{z-index:4;background:#20333be8;color:#fff7e6;border:0;border-radius:2px;font:500 max(7px,calc(var(--card-w)*.075))/1.1 var(--copy-font);padding:2px 4px}
 @keyframes edition-facets{to{background-position:65% 75%}}
-@keyframes edition-sheen{0%,12%{background-position:150% 50%}75%,100%{background-position:-70% 50%}}
+@keyframes edition-sheen{0%,5%{background-position:150% 50%}88%,100%{background-position:-70% 50%}}
 @keyframes edition-ink{to{background-position:100% 50%}}
 #shaker[inert] .card:is(.foil,.holo,.poly) .card-surface::before,#shaker[inert] .card:is(.foil,.holo,.poly) .card-surface::after,#shaker[inert] .card.poly .card-pip,#shaker[inert] .card.poly .raster-glyph::after{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){

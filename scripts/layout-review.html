@@ -26,6 +26,8 @@ screen.add(new Option('Combo complété','combo-ready'));
 screen.add(new Option('Lisibilité des 10','tens'));
 screen.add(new Option('Échantillons de finitions','finish-sample'));
 screen.add(new Option('Victoire puis nouvelle mise','win-flow'));
+screen.add(new Option('Reliques et tarots','inventory'));
+screen.add(new Option('Inventaire rempli','inventory-full'));
 if([...screen.options].some(option=>option.value===params.get('screen')))screen.value=params.get('screen');
 if([...size.options].some(option=>option.value===params.get('size')))size.value=params.get('size');
 document.documentElement.classList.toggle('embed',params.get('embed')==='1');
@@ -48,10 +50,15 @@ async function render(){
  else if(visualScreen==='circuit'||visualScreen==='free')chooseMode(visualScreen==='free'?'infini':'nuit');
  else {
   chooseMode('nuit');startGame(0);
-  const visualRanks=visualScreen.startsWith('flip-')?[5,6,7]:visualScreen==='tens'?[10,10]:visualScreen==='win-flow'?[10,9]:visualScreen==='combo-ready'?[5,6,4]:visualScreen==='double'?[5,6]:visualScreen==='no-special'?[3,4,5]:visualScreen==='editions'?[5,6,7]:visualScreen==='six'?[2,2,3,3,4,3]:visualScreen==='four'?[3,4,5,5]:[8,9];
+  const visualRanks=visualScreen.startsWith('flip-')?[5,6,7]:visualScreen==='tens'?[10,10]:visualScreen==='win-flow'?[10,9]:visualScreen==='combo-ready'?[5,6,4]:visualScreen==='double'?[5,6]:visualScreen==='no-special'?[3,4,5]:(visualScreen==='editions'||visualScreen.startsWith('inventory'))?[5,6,7]:visualScreen==='six'?[2,2,3,3,4,3]:visualScreen==='four'?[3,4,5,5]:[8,9];
   const visualSuits=['♣','♥','♠','♦','♣','♥'];
-  const visualHand=visualRanks.map((r,i)=>({r:String(r),s:visualSuits[i],...(visualScreen==='editions'?{ed:['foil','holo','poly'][i]}:{})}));
+  const visualHand=visualRanks.map((r,i)=>({r:String(r),s:visualSuits[i],...((visualScreen==='editions'||visualScreen.startsWith('inventory'))?{ed:['foil','holo','poly'][i]}:{})}));
   Object.assign(G,{phase:'play',bank:120,bet:10,betChosen:true,tokens:3,hand:2,pHand:visualHand,dHand:[{r:'K',s:'♣'},{r:'7',s:'♥',_fd:true}],_dealing:false,insisted:false,contract:{id:'csuite',reward:10,done:false},table:{...G.table,goal:200},shoe:Array.from({length:50},()=>({r:'2',s:'♣'}))});
+  if(visualScreen.startsWith('inventory')){
+   const relicIds=visualScreen==='inventory-full'?['lunettes','jeton','as','mecene','collector']:['lunettes','jeton','as'];
+   G.relics=relicIds.map(id=>({...RELIC_POOL.find(item=>item.id===id)}));
+   G.consumables=['soleil','lune'].map(id=>({...TAROT_POOL.find(item=>item.id===id)}));
+  }
   if(visualScreen==='bet'){G.phase='bet';G.pHand=[];G.dHand=[];}
   if(visualScreen==='split'){G.splitActive=true;G.hands=[[{r:'8',s:'♣'},{r:'3',s:'♦'}],[{r:'8',s:'♥'},{r:'4',s:'♣'}]];G.hi=0;G.pHand=G.hands[0];}
   renderAll();renderHands();
