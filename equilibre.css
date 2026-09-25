@@ -414,3 +414,24 @@
 #intro .hideout-footer{margin:calc(10 * var(--prep-u)) 0 0;height:calc(10 * var(--prep-u));min-height:0;flex:none}
 #intro .hideout-footer .quiet-btn{min-height:0;font-size:calc(3.8 * var(--prep-u));line-height:1.2;padding:0}
 @media(max-height:600px) and (orientation:landscape){#intro{--prep-u:3.5px}}
+
+/* Align the visible bitmap ink, excluding the blank margins in each atlas cell. */
+.hand-total>.raster-copy{height:100%;min-height:0;display:flex;align-items:center;justify-content:center;line-height:0}
+.hand-total .raster-ink{display:flex;line-height:0}
+.hand-total .raster-word{transform:translateY(-.055em)}
+#actions .btn .blbl{height:.8em;line-height:0!important}
+#actions .blbl>.raster-copy{display:block;line-height:0}
+#actions .blbl .raster-word{display:flex;justify-content:center;transform:translateY(-.18em)}
+#intro #planqueLaunch>.raster-copy{display:block;height:.83em;line-height:0;flex:none}
+#intro #planqueLaunch .raster-word{display:flex;justify-content:center;transform:translateY(-.17em)}
+#intro #planqueTitle,#intro[data-mode="infini"] #planqueTitle{font-size:calc(27 * var(--prep-u))!important}
+@media (min-height:601px), (orientation:portrait){
+ #topbar #gainVal{height:calc(11.3 * var(--ui-u));font-size:calc(14.5 * var(--ui-u) * var(--number-scale,1));line-height:0;flex:none}
+ #topbar #gainVal .raster-copy{display:block;line-height:0}
+ #topbar #gainVal .raster-word{transform:translateY(-.2em)}
+ #topbar #gainVal .raster-glyph{--glyph-width:.74em}
+ #topbar .seg .v,#topbar .tnum{font-size:calc(7.2 * var(--ui-u) * var(--number-scale,1))}
+ #topbar .seg .v .raster-glyph,#topbar .tnum .raster-glyph{--glyph-width:.82em}
+ #pauseBtn .pause-mark{width:calc(5.2 * var(--ui-u));height:calc(5.2 * var(--ui-u))}
+ #actions .actWide .btn{font-size:calc(8 * var(--ui-u))!important}
+}

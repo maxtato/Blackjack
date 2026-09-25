@@ -617,6 +617,7 @@ function abbrS(n){return abbr(n).replace(/ /g,'<span class="thouSep"></span>')
 function cash(n){const a=abbr(n);return LANG==='fr'?(a+' $'):(a.charAt(0)==='-'?('-$'+a.slice(1)):('$'+a));}
 // Compact currency used by the Équilibre scoreboard and home record.
 function boardCash(n){const a=abbr(n);return a.charAt(0)==='-'?('-$'+a.slice(1)):('$'+a);}
+function sizeBoardValue(el,capacity){el.style.setProperty('--number-scale',Math.min(1,capacity/Math.max(1,el.textContent.length)).toFixed(3));}
 function cashS(n){const a=abbrS(n);return LANG==='fr'?(a+' $'):(a.charAt(0)==='-'?('-$'+a.slice(1)):('$'+a));}
 
 /* ---------- audio ---------- */
@@ -1282,6 +1283,7 @@ function renderMult(){
   const stake=G.bet*(G.stakeMult||1);
   $('chipsVal').textContent=bonus?(boardCash(stake)+'+'+bonus):boardCash(stake);
   $('multVal').textContent=fmtMult(m);
+  sizeBoardValue($('chipsVal'),3.4);sizeBoardValue($('multVal'),3.4);
   $('scorebox').classList.toggle('hot',m>1||bonus>0);
   renderCombos();
 }
@@ -1377,7 +1379,7 @@ function renderTop(){
 }
 /* barre de progression GAIN → OBJECTIF (au-dessus du tapis) */
 function renderObjective(){
-  const gv=$('gainVal');if(gv)gv.textContent=boardCash(G.bank);
+  const gv=$('gainVal');if(gv){gv.textContent=boardCash(G.bank);sizeBoardValue(gv,4.3);}
   const lbl=document.querySelector('#gainStat .lbl');if(lbl)lbl.textContent=G.endless?t('ui.potLbl'):t('ui.gain');
   // nouvelle table / palier : la barre repart de 0 SANS glisser depuis l'objectif précédent (on coupe la transition le temps de la remettre à zéro)
   const _of=$('objFill'),_snap=_of&&G._objBarIdx!==G.tableIdx;
