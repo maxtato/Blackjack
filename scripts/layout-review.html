@@ -34,7 +34,7 @@ async function render(){
  `;
  const end=bundle.lastIndexOf('})();');
  const source=bundle.slice(0,end)+fixture+bundle.slice(end);
- frame.srcdoc=html.replace('<head>','<head><base href="'+base+'">').replace('<script src="cold-deck.js"><'+'/script>','<script>'+source.replace(/<\/script/gi,'<\\/script')+'<'+'/script>');
+ frame.srcdoc=html.replace('<head>','<head><base href="'+base+'">').replace('<script src="cold-deck.js"><'+'/script>',()=>'<script>'+source.replace(/<\/script/gi,'<\\/script')+'<'+'/script>');
  document.querySelector('#status').textContent=width+' × '+height;
 }
 screen.addEventListener('change',render);size.addEventListener('change',render);render();
