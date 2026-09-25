@@ -246,15 +246,40 @@ button .raster-glyph{--glyph-width:.62em}
 #comboRow{scrollbar-color:#52606c transparent}
 #tip:not(:empty){background:transparent;color:#bac5cf!important;box-shadow:none}
 #app[data-phase="done"] #tip:not(:empty){color:#ffda72!important;background:#ffce3a0b}
-/* Only a newly requested card moves; the slot and existing hand stay anchored. */
-.hand .cardslot:has(.arrive){animation:none;translate:none;rotate:none}
-.hand .card.arrive{animation:requested-card-land 220ms cubic-bezier(.16,.78,.28,1) both;transform-origin:50% 85%}
-@keyframes requested-card-land{
-  0%{transform:translateY(90px) rotate(9deg) scale(.88);opacity:0}
-  16%{opacity:1}
-  70%{transform:translateY(-5px) rotate(-1.5deg) scale(1.02)}
-  87%{transform:translateY(2px) rotate(.5deg) scale(1.025,.975)}
-  100%{transform:translateY(0) rotate(0deg) scale(1);opacity:1}
+/* The shadow stays on the table while the card moves above it. Distances are
+   proportional to card size, including the smaller cards in split hands. */
+.hand .cardslot:has(.arrive,.flipwrap){animation:none;translate:none;rotate:none;z-index:6}
+.hand .cardslot:has(.arrive,.flipwrap)::before{content:"";position:absolute;inset:4% 3%;pointer-events:none;background:#000;opacity:0;border-radius:8%;filter:blur(4px);transform-origin:50% 70%}
+.hand .cardslot:has(.arrive)::before{animation:card-flight-shadow var(--card-arrival-duration,340ms) linear both}
+.hand .cardslot:has(.flipwrap)::before{animation:card-turn-shadow var(--card-flip-duration,440ms) linear both}
+.hand .card.arrive{animation:card-table-slap var(--card-arrival-duration,340ms) linear both;transform-origin:50% 80%}
+@keyframes card-table-slap{
+  0%{transform:perspective(600px) translate3d(-32%,58%,65px) rotateX(38deg) rotateY(-18deg) rotateZ(-17deg);opacity:0;animation-timing-function:cubic-bezier(.12,.65,.3,1)}
+  12%{opacity:1}
+  40%{transform:perspective(600px) translate3d(-12%,-36%,90px) rotateX(24deg) rotateY(-8deg) rotateZ(-8deg);opacity:1;animation-timing-function:cubic-bezier(.65,0,.95,.5)}
+  70%{transform:perspective(600px) translate3d(0,0,0) rotateX(0deg) rotateY(0deg) rotateZ(0deg);opacity:1;animation-timing-function:ease-out}
+  82%{transform:perspective(600px) translate3d(0,-5%,8px) rotateX(-9deg) rotateY(0deg) rotateZ(.8deg);animation-timing-function:ease-in}
+  100%{transform:perspective(600px) translate3d(0,0,0) rotateX(0deg) rotateY(0deg) rotateZ(0deg);opacity:1}
 }
+@keyframes card-flight-shadow{
+  0%{transform:translate(-15%,20%) scale(.65);opacity:0;filter:blur(10px)}
+  40%{transform:translate(-8%,14%) scale(.84);opacity:.12;filter:blur(9px);animation-timing-function:cubic-bezier(.65,0,.95,.5)}
+  70%{transform:translate(0,3%) scale(1);opacity:.32;filter:blur(2px)}
+  82%{transform:translate(0,6%) scale(.96);opacity:.18;filter:blur(4px)}
+  100%{transform:translate(0,3%) scale(1);opacity:0;filter:blur(2px)}
+}
+@keyframes card-turn-shadow{
+  0%,100%{transform:translateY(4%) scaleX(1);opacity:0;filter:blur(2px)}
+  38%{transform:translateY(10%) scaleX(.5);opacity:.22;filter:blur(5px)}
+  50%{transform:translateY(12%) scaleX(.16);opacity:.28;filter:blur(6px)}
+  62%{transform:translateY(10%) scaleX(.5);opacity:.22;filter:blur(5px)}
+  88%{transform:translateY(4%) scaleX(1);opacity:.25;filter:blur(2px)}
+}
+/* A narrow ivory edge makes the halfway point readable without a face flash. */
+.flipwrap::after{content:"";position:absolute;left:50%;top:1%;width:1px;height:98%;background:#e7d6b7;pointer-events:none;animation:card-visible-edge var(--card-flip-duration,440ms) linear both}
+@keyframes card-visible-edge{0%,43%,57%,100%{opacity:0}48%,52%{opacity:.85}}
 @media(prefers-reduced-motion:reduce){.hand .card.arrive{animation:none!important}}
 :root[data-motion=gentle] .hand .card.arrive{animation:none!important}
+@media(prefers-reduced-motion:reduce){.hand .cardslot::before,.flipwrap::after{display:none!important}}
+:root[data-motion=gentle] .hand .cardslot::before,:root[data-motion=gentle] .flipwrap::after{display:none!important}
+#shaker[inert] .arrive,#shaker[inert] .flipwrap,#shaker[inert] .flipwrap>.card,#shaker[inert] .flipwrap::after,#shaker[inert] .cardslot::before{animation-play-state:paused}

@@ -641,6 +641,7 @@ function blip(f,d,type,v,slideTo){
 function arp(freqs,step,d,v,type){freqs.forEach((f,i)=>setTimeout(()=>blip(f,d,type||'square',v),i*step));}
 const sfx={
   card(){blip(160+rndInt(40),.035,'square',.045);},
+  land(){blip(125,.07,'triangle',.07,55);blip(1150,.018,'triangle',.022,420);},
   flip(){blip(660,.04,'square',.05);setTimeout(()=>blip(880,.05,'square',.045),42);},
   win(){arp([523,659,784],46,.09,.08);},                              // do-mi-sol montant
   combo(){arp([784,1047,1319],38,.06,.07);},                          // étincelle aiguë
@@ -1193,7 +1194,7 @@ function fannedCard(c,idx,total,opts){
   const motionSeed=c.r+c.s+'#'+idx+(opts.dealer?'d':'p');
   slot.style.setProperty('--card-delay','-'+(idx*.5+hashStr(motionSeed+'~')*3).toFixed(3)+'s');
   slot.appendChild(opts.flip?flipCard(c,Object.assign({idx:idx},opts)):cardEl(c,Object.assign({idx:idx},opts)));
-  if(opts.arrive)window.ColdDeckFX?.onArrival(slot);
+  if(opts.arrive)window.ColdDeckFX?.onArrival(slot,CARD_ARRIVAL);
   return slot;
 }
 // carte à deux faces pour un vrai retournement (dos visible -> pivote -> face)
@@ -1216,7 +1217,7 @@ function renderHands(reveal=false){
     const hideMute=(G.table.rule==='mute'&&!reveal);
     const hideHole=(i===1&&!reveal&&G.phase!=='done');
     const back=(c._fd!=null)?c._fd:(hideMute||hideHole);          // _fd : pilotage par la distribution
-    const arrive=!!c._arr;                                        // glissade depuis la droite
+    const arrive=!!c._arr;
     const flip=c._flip||(G.doFlip&&reveal&&(G.table.rule==='mute'||i===1));
     dh.appendChild(fannedCard(c,i,dShown.length,{back,dealer:true,arrive,flip,placed:!arrive&&!flip}));
   });
@@ -1678,15 +1679,16 @@ function deal(){
   renderAll();renderHands();                                     // tapis vide, boutons grisés
   dealSequence([p1,d1,p2,d2]);
 }
-// Initial deal stays brisk; requested cards land before revealing.
-// délai IDENTIQUE pour chaque carte : intervalle = CARD_HOLD + CARD_FLIP entre deux cartes
-const CARD_HOLD=65,CARD_FLIP=300;
+// Flight, table contact, a short rest, then a full edge-on turn.
+// CSS and the engine share durations so actions unlock only after the landing.
+const CARD_ARRIVAL=340,CARD_HOLD=50,CARD_FLIP=440;
+document.documentElement.style.setProperty('--card-arrival-duration',CARD_ARRIVAL+'ms');
 document.documentElement.style.setProperty('--card-flip-duration',CARD_FLIP+'ms');
-// A requested card rises face down, lands, then reveals in its final slot.
+// Every incoming card, including the opening deal, lands face down first.
 // stayDown : reste dos (trou du croupier). reveal : main du croupier dévoilée.
 function dealCardIn(c,opts,done){
   const reveal=!!(opts&&opts.reveal);
-  const toss=!!opts?.toss;
+  const toss=opts?.toss!==false;
   c._pending=false;c._fd=true;c._flip=false;c._arr=toss;
   renderHands(reveal);sfx.card();
   setTimeout(()=>{
@@ -1694,7 +1696,7 @@ function dealCardIn(c,opts,done){
     if(opts&&opts.stayDown){c._fd=true;renderHands(reveal);done&&done();return;}
     c._fd=false;c._flip=true;renderHands(reveal);sfx.flip();    // on la retourne
     setTimeout(()=>{c._flip=false;renderHands(reveal);window.ColdDeckFX?.onCard(c);done&&done();},CARD_FLIP);
-  },toss?260:CARD_HOLD);
+  },(toss?CARD_ARRIVAL:0)+CARD_HOLD);
 }
 // distribution initiale : mes 2 cartes + 2 du croupier, une par une. La 2e du croupier reste dos.
 function dealSequence(order){
@@ -1822,7 +1824,7 @@ function dealerPlay(natural){
       dealCardIn(c,{reveal:true},()=>setTimeout(step,160));
     } else setTimeout(()=>resolve(natural?'natural':'stand'),420);
   };
-  setTimeout(step,420);
+  setTimeout(step,CARD_FLIP+80);
 }
 
 /* ---------- résolution ---------- */
@@ -3407,33 +3409,36 @@ syncMenuFocus();
     const el = cardNode(card); if (!el) return;
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
   }
-  function onArrival(slot){
+  function onArrival(slot,duration=CARD_ARRIVAL){
     if(reduced()||document.hidden)return;
     later(()=>{
-      if(!slot.isConnected||document.querySelector('.overlay.show,#adOverlay.show'))return;
-      burst(slot,{count:4,reach:28,color:'#ffce3a'});haptic();
-    },190);
+      if(!slot.isConnected||reduced()||document.hidden||document.querySelector('.overlay.show,#adOverlay.show'))return;
+      // The accent and dry tap coincide with the first table contact at 70%.
+      contact(slot,.58);sfx.land();haptic();
+    },Math.round(duration*.7));
   }
-  function onFlip(wrap,card,duration=300){
+  function contact(slot,strength){
+    const p=rect(slot);if(!p)return;
+    const target=lightningLayer||layer;
+    const origin=lightningLayer?lightningLayer.getBoundingClientRect():{left:0,top:0};
+    const shock=piece('flip-impact',p.x-origin.left,p.y-origin.top,null,target);if(!shock)return;
+    shock.style.width=(p.width*1.7)+'px';shock.style.height=(p.height*1.35)+'px';
+    shock.innerHTML=ColdDeckArt.illustration('ui-burst','flip-impact-art');
+    animate(shock,[
+      {transform:'translate(-50%,-50%) scale(.76)',opacity:0},
+      {transform:'translate(-50%,-50%) scale(.94)',opacity:strength,offset:.12},
+      {transform:'translate(-50%,-50%) scale(1.12)',opacity:0}
+    ],{duration:190,easing:'cubic-bezier(.15,.8,.3,1)'},true);
+  }
+  function onFlip(wrap,card,duration=CARD_FLIP){
     if(reduced()||document.hidden)return;
     // Anchor to the stable slot, not to the narrowing face. This covers the
     // dealer's hidden card too and survives the final hand redraw.
     later(()=>{
       if(!wrap.isConnected||reduced()||document.hidden||document.querySelector('.overlay.show,#adOverlay.show'))return;
-      const p=rect(wrap.closest('.cardslot'));if(!p)return;
-      const target=lightningLayer||layer;
-      const origin=lightningLayer?lightningLayer.getBoundingClientRect():{left:0,top:0};
-      const shock=piece('flip-impact',p.x-origin.left,p.y-origin.top,null,target);if(!shock)return;
-      shock.style.width=(p.width*2.1)+'px';shock.style.height=(p.height*1.9)+'px';
-      shock.innerHTML=ColdDeckArt.illustration('ui-burst','flip-impact-art');
-      animate(shock,[
-        {transform:'translate(-50%,-50%) scale(.72)',opacity:0},
-        {transform:'translate(-50%,-50%) scale(.96)',opacity:card.ed?1:.86,offset:.18},
-        {transform:'translate(-50%,-50%) scale(1.04)',opacity:.62,offset:.45},
-        {transform:'translate(-50%,-50%) scale(1.18)',opacity:0}
-      ],{duration:260,easing:'cubic-bezier(.15,.8,.3,1)'},true);
+      contact(wrap.closest('.cardslot'),card.ed ? .6 : .38);
       haptic();
-    },Math.round(duration*.64));
+    },Math.round(duration*.88));
   }
   // Reference rhythm: a local card accent, then an energy transfer to the HUD.
   function energyLink(from,to){

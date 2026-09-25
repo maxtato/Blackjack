@@ -206,33 +206,36 @@
     const el = cardNode(card); if (!el) return;
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
   }
-  function onArrival(slot){
+  function onArrival(slot,duration=CARD_ARRIVAL){
     if(reduced()||document.hidden)return;
     later(()=>{
-      if(!slot.isConnected||document.querySelector('.overlay.show,#adOverlay.show'))return;
-      burst(slot,{count:4,reach:28,color:'#ffce3a'});haptic();
-    },190);
+      if(!slot.isConnected||reduced()||document.hidden||document.querySelector('.overlay.show,#adOverlay.show'))return;
+      // The accent and dry tap coincide with the first table contact at 70%.
+      contact(slot,.58);sfx.land();haptic();
+    },Math.round(duration*.7));
   }
-  function onFlip(wrap,card,duration=300){
+  function contact(slot,strength){
+    const p=rect(slot);if(!p)return;
+    const target=lightningLayer||layer;
+    const origin=lightningLayer?lightningLayer.getBoundingClientRect():{left:0,top:0};
+    const shock=piece('flip-impact',p.x-origin.left,p.y-origin.top,null,target);if(!shock)return;
+    shock.style.width=(p.width*1.7)+'px';shock.style.height=(p.height*1.35)+'px';
+    shock.innerHTML=ColdDeckArt.illustration('ui-burst','flip-impact-art');
+    animate(shock,[
+      {transform:'translate(-50%,-50%) scale(.76)',opacity:0},
+      {transform:'translate(-50%,-50%) scale(.94)',opacity:strength,offset:.12},
+      {transform:'translate(-50%,-50%) scale(1.12)',opacity:0}
+    ],{duration:190,easing:'cubic-bezier(.15,.8,.3,1)'},true);
+  }
+  function onFlip(wrap,card,duration=CARD_FLIP){
     if(reduced()||document.hidden)return;
     // Anchor to the stable slot, not to the narrowing face. This covers the
     // dealer's hidden card too and survives the final hand redraw.
     later(()=>{
       if(!wrap.isConnected||reduced()||document.hidden||document.querySelector('.overlay.show,#adOverlay.show'))return;
-      const p=rect(wrap.closest('.cardslot'));if(!p)return;
-      const target=lightningLayer||layer;
-      const origin=lightningLayer?lightningLayer.getBoundingClientRect():{left:0,top:0};
-      const shock=piece('flip-impact',p.x-origin.left,p.y-origin.top,null,target);if(!shock)return;
-      shock.style.width=(p.width*2.1)+'px';shock.style.height=(p.height*1.9)+'px';
-      shock.innerHTML=ColdDeckArt.illustration('ui-burst','flip-impact-art');
-      animate(shock,[
-        {transform:'translate(-50%,-50%) scale(.72)',opacity:0},
-        {transform:'translate(-50%,-50%) scale(.96)',opacity:card.ed?1:.86,offset:.18},
-        {transform:'translate(-50%,-50%) scale(1.04)',opacity:.62,offset:.45},
-        {transform:'translate(-50%,-50%) scale(1.18)',opacity:0}
-      ],{duration:260,easing:'cubic-bezier(.15,.8,.3,1)'},true);
+      contact(wrap.closest('.cardslot'),card.ed ? .6 : .38);
       haptic();
-    },Math.round(duration*.64));
+    },Math.round(duration*.88));
   }
   // Reference rhythm: a local card accent, then an energy transfer to the HUD.
   function energyLink(from,to){

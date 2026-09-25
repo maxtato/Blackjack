@@ -411,18 +411,31 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 @media(max-height:600px) and (orientation:portrait){:root{--base-card-w:48px}}
 @media(max-height:600px) and (orientation:landscape){:root{--base-card-w:clamp(40px,13dvh,68px)}}
 
-/* A flat edge-on swap avoids transparent back emblems in composited 3D layers.
-   Both faces change at the same midpoint; duration is supplied by the engine. */
-.flipwrap{transform-style:flat;animation:clean-card-turn var(--card-flip-duration,300ms) ease-in-out both}
-.flipwrap>.card{transform:none;-webkit-backface-visibility:hidden;backface-visibility:hidden}
-.flipwrap>.back{animation:clean-card-back var(--card-flip-duration,300ms) steps(1,end) both}
-.flipwrap>.front{animation:clean-card-front var(--card-flip-duration,300ms) steps(1,end) both}
+/* Rotate each masked face in its own perspective plane. A flat parent avoids
+   WebKit flattening the two faces together; visibility changes at the edge. */
+.flipwrap{transform-style:flat;transform-origin:50% 50%;animation:physical-card-lift var(--card-flip-duration,440ms) linear both}
+.flipwrap>.card{transform-origin:50% 50%;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.flipwrap>.back{animation:physical-card-back var(--card-flip-duration,440ms) linear both,clean-card-back var(--card-flip-duration,440ms) steps(1,end) both}
+.flipwrap>.front{animation:physical-card-front var(--card-flip-duration,440ms) linear both,clean-card-front var(--card-flip-duration,440ms) steps(1,end) both}
 .flipwrap>.back::before{content:none!important;display:none}
-@keyframes clean-card-turn{
-  0%,100%{transform:scaleX(1) scaleY(1) rotate(0deg)}
-  25%{transform:scaleX(.72) scaleY(1.01) rotate(-.6deg)}
-  50%{transform:scaleX(0) scaleY(1.015) rotate(0deg)}
-  75%{transform:scaleX(.76) scaleY(1.01) rotate(.4deg)}
+@keyframes physical-card-lift{
+  0%{transform:translateY(0) rotate(0deg);animation-timing-function:cubic-bezier(.2,.65,.35,1)}
+  38%{transform:translateY(-12%) rotate(-3deg)}
+  50%{transform:translateY(-14%) rotate(-2deg)}
+  62%{transform:translateY(-12%) rotate(-1deg);animation-timing-function:cubic-bezier(.6,0,.9,.45)}
+  88%{transform:translateY(0) rotate(0deg);animation-timing-function:ease-out}
+  94%{transform:translateY(-1.5%) rotate(.3deg)}
+  100%{transform:translateY(0) rotate(0deg)}
+}
+@keyframes physical-card-back{
+  0%{transform:perspective(600px) rotateY(0deg);animation-timing-function:ease-in}
+  50%{transform:perspective(600px) rotateY(90deg);animation-timing-function:ease-out}
+  88%,100%{transform:perspective(600px) rotateY(180deg)}
+}
+@keyframes physical-card-front{
+  0%{transform:perspective(600px) rotateY(-180deg);animation-timing-function:ease-in}
+  50%{transform:perspective(600px) rotateY(-90deg);animation-timing-function:ease-out}
+  88%,100%{transform:perspective(600px) rotateY(0deg)}
 }
 @keyframes clean-card-back{0%{visibility:visible}50%,100%{visibility:hidden}}
 @keyframes clean-card-front{0%{visibility:hidden}50%,100%{visibility:visible}}
