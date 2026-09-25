@@ -154,7 +154,9 @@
 #bottombar #betRow[hidden]{display:none!important}
 #betRow .lbl{font:500 13px/1 var(--copy-font);color:#c8d3db;text-transform:none;letter-spacing:0}
 #chips{gap:9px}
-#chips .chip{width:37px;height:37px;font-size:17px}
+#chips .chip{display:grid;place-items:center;flex:none;width:47px;height:47px;padding:0;font-size:20px}
+#chips .chip-value{display:flex;align-items:center;justify-content:center;line-height:1;transform:translateY(-2px)}
+#chips .chip-value .raster-ink{display:flex;align-items:center}
 /* Short phones scroll the menu; the game still keeps cards and actions separated. */
 @media(max-height:720px) and (orientation:portrait){
  #modeMenu .ovpanel{min-height:640px;padding-top:18px;gap:8px}
@@ -305,7 +307,7 @@
  #bg{background-size:calc(100 * var(--game-u)) calc(211.111 * var(--game-u))}
  #bg::after{display:none}
  #app{--ui-u:calc(.95 * var(--game-u));--base-card-w:calc(22 * var(--ui-u));--dock-main:var(--dock-secondary);--dock-secondary:max(44px,calc(12.4 * var(--ui-u)));width:calc(100 * var(--game-u));max-width:none;height:calc(211.111 * var(--game-u));min-height:0;margin:0;padding:calc(4.5 * var(--game-u)) calc(6.5 * var(--game-u)) calc(11 * var(--game-u));grid-template-rows:calc(31.5 * var(--ui-u)) minmax(0,1fr) calc(var(--dock-main) + var(--dock-secondary) + 2.8 * var(--ui-u));gap:calc(3.4 * var(--game-u))}
- #app[data-phase="bet"]{--dock-main:max(54px,calc(16.8 * var(--ui-u)))}
+ #app[data-phase="bet"]{--dock-main:max(54px,calc(16.8 * var(--ui-u)));--dock-secondary:max(50px,calc(13.6 * var(--ui-u)))}
  #topbar{grid-template-rows:calc(8.7 * var(--ui-u)) calc(16.5 * var(--ui-u)) calc(3.6 * var(--ui-u));row-gap:calc(1.35 * var(--ui-u))}
  #topbar .table-number{font-size:calc(5.2 * var(--ui-u));padding:0}
  #topbar .lives{gap:calc(1.9 * var(--ui-u))}
@@ -353,8 +355,8 @@
  #actions .action-copy{gap:calc(.5 * var(--ui-u))}
  #app[data-phase="bet"] #actions .btn{font-size:calc(12 * var(--ui-u))!important}
  #bottombar #betRow{height:var(--dock-secondary);gap:calc(2 * var(--ui-u))}
- #chips{gap:calc(2 * var(--ui-u))}
- #chips .chip{width:calc(9 * var(--ui-u));height:calc(9 * var(--ui-u));font-size:calc(4.5 * var(--ui-u))}
+ #chips{gap:calc(2.5 * var(--ui-u))}
+ #chips .chip{width:max(44px,calc(12 * var(--ui-u)));height:max(44px,calc(12 * var(--ui-u)));font-size:max(18px,calc(5.2 * var(--ui-u)))}
  #betRow .lbl{font-size:calc(3 * var(--ui-u))}
  /* The home board keeps the same 530:1088 aspect ratio as the selected image. */
  #modeMenu{--home-u:var(--home-frame-u);align-items:center;justify-content:center;overflow:auto;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
