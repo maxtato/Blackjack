@@ -113,15 +113,15 @@
 .card[data-suit="♠"],.card[data-suit="♣"]{color:var(--inkCard)}
 .card[data-suit="♥"],.card[data-suit="♦"]{color:var(--suitRed)}
 #center{grid-column:1;grid-row:2;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:var(--combo-room);max-height:var(--combo-room);min-height:0;gap:3px;margin:0;padding:0;overflow:visible}
-/* Equal, quiet boxes: neutral while in reach, gold when the condition is met. */
+/* Miniature action-button shapes: graphite while in reach, gold when fulfilled. */
 #comboRow{width:100%;min-height:0;max-height:100%;flex:0 1 auto;flex-flow:row wrap;justify-content:center;align-items:stretch;align-content:flex-start;gap:4px;padding:0;overflow-x:hidden;overflow-y:auto;scrollbar-width:none;scroll-snap-type:none}
 #comboRow::-webkit-scrollbar{display:none}
-#comboRow .combo-tile{box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 80px;min-width:0;max-width:80px;height:24px;gap:0;padding:1px 3px;border:1px solid #84949e45;border-radius:3px;background:#c5d4dd04;color:#a8b6bf;overflow:hidden;transition:border-color .24s ease,background-color .24s ease,color .24s ease}
-#comboRow .combo-name{display:block;max-width:100%;font:500 9.5px/1.1 var(--copy-font);white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+#comboRow .combo-tile{box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 80px;min-width:0;max-width:80px;height:24px;gap:0;padding:1px 4px;border:0;border-radius:0;clip-path:var(--frame-cut);background:#3b454f var(--art-button-graphite) center/100% 100% no-repeat;color:#e0e6eb;overflow:hidden;transition:background-color .24s ease,color .24s ease}
+#comboRow .combo-name{display:block;max-width:100%;font:800 9.5px/1.1 var(--copy-font);font-weight:800!important;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
 #comboRow .combo-tile.compact .combo-name{font-size:8.5px}
-#comboRow .combo-detail{display:block;max-width:100%;margin:0;color:#889aa6;font:500 8px/1.1 var(--copy-font);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;letter-spacing:0}
-#comboRow .combo-tile.on{border-color:#c6aa5d80;background:#ffce3a0b;color:#e5c96c}
-#comboRow .combo-tile.on .combo-detail{color:#b7a573}
+#comboRow .combo-detail{display:block;max-width:100%;margin:0;color:#b3bdc5;font:500 8px/1.1 var(--copy-font);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;letter-spacing:0}
+#comboRow .combo-tile.on{background-image:var(--art-button-yellow);background-color:#ffce3a;color:#30291e}
+#comboRow .combo-tile.on .combo-detail{color:#655431}
 @media(prefers-reduced-motion:reduce){#comboRow .combo-tile{transition:none}}
 :root[data-motion="gentle"] #comboRow .combo-tile{transition:none}
 #tip:not(:empty){max-height:28px;padding:0 3px;background:transparent;box-shadow:none;border:0;border-radius:0;font:500 12px/1.25 var(--copy-font);color:#b7c4cf!important;overflow:auto}
