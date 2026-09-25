@@ -112,18 +112,18 @@
 .court-image{left:10%;top:9%;width:82%;height:84%;object-fit:contain}
 .card[data-suit="♠"],.card[data-suit="♣"]{color:var(--inkCard)}
 .card[data-suit="♥"],.card[data-suit="♦"]{color:var(--suitRed)}
-#center{grid-column:1;grid-row:2;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:var(--combo-room);max-height:var(--combo-room);min-height:0;gap:3px;margin:0;padding:2px 0;overflow:visible}
-#comboRow{width:100%;min-height:0;max-height:100%;flex:0 1 auto;flex-direction:column;justify-content:flex-start;align-items:stretch;gap:3px;padding:1px 2px;overflow-x:hidden;overflow-y:auto;scrollbar-width:none}
-#comboRow .combo-line{display:grid;grid-template-columns:55px minmax(0,1fr);align-items:center;gap:8px;min-height:15px;flex:none;color:#b0bec7;font:500 12px/1.25 var(--copy-font)}
-#comboRow .combo-label{font-size:10px;color:#91a4b0;white-space:nowrap}
-#comboRow .combo-items{display:flex;align-items:center;min-width:0;gap:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;scroll-snap-type:x proximity}
-#comboRow .combo-items::-webkit-scrollbar,#comboRow::-webkit-scrollbar{display:none}
-#comboRow .combo-items:focus-visible{outline:1px solid #ffce3a;outline-offset:1px}
-#comboRow .combo-item{flex:none;white-space:nowrap;scroll-snap-align:start}
-#comboRow .combo-item+.combo-item::before{content:'·';padding:0 9px;color:#6e8592}
-#comboRow .combo-hint{color:#94a6b2}
-#comboRow .earned,#comboRow .earned .combo-label{color:#ffce3a}
-#comboRow .context{color:#91a4b0;font-size:11px}
+#center{grid-column:1;grid-row:2;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:var(--combo-room);max-height:var(--combo-room);min-height:0;gap:3px;margin:0;padding:0;overflow:visible}
+/* Equal, quiet boxes: neutral while in reach, gold when the condition is met. */
+#comboRow{width:100%;min-height:0;max-height:100%;flex:0 1 auto;flex-flow:row wrap;justify-content:center;align-items:stretch;align-content:flex-start;gap:4px;padding:0;overflow-x:hidden;overflow-y:auto;scrollbar-width:none;scroll-snap-type:none}
+#comboRow::-webkit-scrollbar{display:none}
+#comboRow .combo-tile{box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 calc((100% - 12px)/4);min-width:0;max-width:82px;height:24px;gap:0;padding:1px 3px;border:1px solid #84949e45;border-radius:3px;background:#c5d4dd04;color:#a8b6bf;overflow:hidden;transition:border-color .24s ease,background-color .24s ease,color .24s ease}
+#comboRow .combo-name{display:block;max-width:100%;font:500 9.5px/1.1 var(--copy-font);white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+#comboRow .combo-tile.compact .combo-name{font-size:8.5px}
+#comboRow .combo-detail{display:block;max-width:100%;margin:0;color:#889aa6;font:500 8px/1.1 var(--copy-font);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;letter-spacing:0}
+#comboRow .combo-tile.on{border-color:#c6aa5d80;background:#ffce3a0b;color:#e5c96c}
+#comboRow .combo-tile.on .combo-detail{color:#b7a573}
+@media(prefers-reduced-motion:reduce){#comboRow .combo-tile{transition:none}}
+:root[data-motion="gentle"] #comboRow .combo-tile{transition:none}
 #tip:not(:empty){max-height:28px;padding:0 3px;background:transparent;box-shadow:none;border:0;border-radius:0;font:500 12px/1.25 var(--copy-font);color:#b7c4cf!important;overflow:auto}
 #peekBtn{right:0;bottom:0;z-index:8;font-size:13px;padding:8px;min-height:35px}
 /* Keep the primary positions stable; a sole available special action is centered. */
@@ -217,10 +217,8 @@
  #feltInner .zone .zlbl{font-size:12px}
  #feltInner .hand-total{width:33px;height:37px;font-size:25px}
  #center{grid-column:1 / 3;grid-row:2;height:30px;max-height:30px}
- #comboRow{flex-direction:row;gap:16px;overflow-x:auto;overflow-y:hidden}
- #comboRow .combo-line{display:flex;gap:6px;min-width:0;flex:0 1 auto;font-size:11px}
- #comboRow .combo-label{font-size:9px}
- #comboRow .combo-items{flex:0 1 auto}
+ #comboRow{flex-wrap:nowrap;justify-content:safe center;overflow-x:auto;overflow-y:hidden}
+ #comboRow .combo-tile{flex-basis:80px}
  #bottombar,#app[data-phase="bet"] #bottombar{flex-direction:row;align-items:stretch;gap:12px}
  #actions{display:grid;grid-template-columns:1.35fr 1fr;grid-template-rows:1fr;height:48px;gap:12px}
  #actions .actMain{grid-column:1;grid-row:1}
@@ -331,7 +329,7 @@
  #effects .effect-illustration{max-width:none;max-height:none}
  #pBar{position:absolute;top:calc(14 * var(--ui-u));left:15%;width:70%;height:calc(1.4 * var(--ui-u));min-height:0;margin:0;z-index:3}
  #pBar .pmeta{font-size:calc(1.3 * var(--ui-u));line-height:calc(1.4 * var(--ui-u))}
- #stage{--combo-room:calc(14 * var(--ui-u))}
+ #stage{--combo-room:max(52px,calc(14 * var(--ui-u)))}
  #feltInner .zone{grid-template-rows:calc(3.6 * var(--ui-u)) calc(9 * var(--ui-u)) minmax(0,1fr);gap:calc(.7 * var(--ui-u))}
  #feltInner .zone .zlbl{font-size:calc(3.7 * var(--ui-u));line-height:1}
  #feltInner .zone .hand-total{width:calc(12.6 * var(--ui-u));height:calc(9 * var(--ui-u));font-size:calc(8.9 * var(--ui-u));line-height:1}
@@ -341,10 +339,8 @@
  #feltInner .splitwrap{--card-w:min(calc(16 * var(--ui-u)),calc((100cqw - 10 * var(--ui-u))/var(--split-count,4)));gap:calc(2 * var(--ui-u))}
  #feltInner .splithand{gap:calc(.7 * var(--ui-u));padding:calc(.7 * var(--ui-u))}
  #feltInner .splithand .cardslot+.cardslot{margin-left:0!important}
- #comboRow{gap:calc(.7 * var(--ui-u))}
- #comboRow .combo-line{grid-template-columns:calc(14.5 * var(--ui-u)) minmax(0,1fr);gap:calc(1.6 * var(--ui-u));min-height:calc(3.8 * var(--ui-u));font-size:max(10px,calc(3.2 * var(--ui-u)));line-height:1.2}
- #comboRow .combo-label{font-size:max(9px,calc(2.75 * var(--ui-u)))}
- #comboRow .context{font-size:max(9px,calc(2.9 * var(--ui-u)))}
+ #comboRow .combo-name{font-size:clamp(8.5px,calc(2.6 * var(--ui-u)),10px)}
+ #comboRow .combo-tile.compact .combo-name{font-size:clamp(8px,calc(2.3 * var(--ui-u)),9px)}
  #tip:not(:empty){font-size:calc(2.9 * var(--ui-u));line-height:1.2;max-height:calc(5 * var(--ui-u))}
  #bottombar,#actions{gap:calc(2.8 * var(--ui-u))}
  #actions .actMain,#actions .actWide{gap:calc(2 * var(--ui-u))}

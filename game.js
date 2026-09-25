@@ -699,61 +699,72 @@ function renderMult(){
    Le vrai jeu est de CONSTRUIRE ses mains ; ces pastilles l'enseignent en jouant. */
 function comboHints(){
   const on=[],soon=[];
+  const add=(list,key,text)=>list.push({key,text});
   const h=G.pHand,n=h.length,v=handValue(h).total;
   const suits=new Set(h.map(c=>c.s));
   const sevens=h.filter(c=>c.r==='7').length;
   /* --- déjà acquis (s'appliquent si tu gagnes la main) --- */
-  if(v===21&&n===2)on.push(t('m.blackjack')+' ×1.5');
-  if(v===21&&n>2)on.push(t('m.perfect')+' ×3');
-  if(n>=5&&v<=21)on.push(t('m.charlie')+' ×2');
-  if(sevens>=2)on.push(t('m.pair7')+' ×1.5');
-  if(n>=3&&suits.size===1)on.push(t('m.flush')+' ×2');
-  if(isStraight(h))on.push(t('m.straight')+' ×2');
-  if(n>=4&&suits.size===4)on.push(t('m.rainbow')+' ×1.5');
-  if(G.insisted)on.push(t('m.pushing')+' ×1.5');
-  {const bl=barakaLevel();if(bl>0)on.push(t('m.streak',bl)+' ×'+BARAKA_MULT[bl]);}
+  if(v===21&&n===2)add(on,'blackjack',t('m.blackjack')+' ×1.5');
+  if(v===21&&n>2)add(on,'perfect',t('m.perfect')+' ×3');
+  if(n>=5&&v<=21)add(on,'charlie',t('m.charlie')+' ×2');
+  if(sevens>=2)add(on,'pair7',t('m.pair7')+' ×1.5');
+  if(n>=3&&suits.size===1)add(on,'flush',t('m.flush')+' ×2');
+  if(isStraight(h))add(on,'straight',t('m.straight')+' ×2');
+  if(n>=4&&suits.size===4)add(on,'rainbow',t('m.rainbow')+' ×1.5');
+  if(G.insisted)add(on,'pushing',t('m.pushing')+' ×1.5');
+  {const bl=barakaLevel();if(bl>0)add(on,'streak'+bl,t('m.streak',bl)+' ×'+BARAKA_MULT[bl]);}
   /* petits bonus situationnels prévisibles en direct */
-  if(h.filter(c=>c.r==='J'||c.r==='Q'||c.r==='K').length>=2)on.push(t('m.court')+' ×1.5');
-  if(n&&v<=15)on.push(t('m.lowball')+' ×1.5');
-  if(n>=3&&handValue(h.slice(0,2)).total<=11&&v>=17)on.push(t('m.comeback')+' ×1.3');
-  if(!G.endless&&isFinite(G.table.mains)&&G.hand>=G.table.mains)on.push(t('m.clutch')+' ×1.5');
+  if(h.filter(c=>c.r==='J'||c.r==='Q'||c.r==='K').length>=2)add(on,'court',t('m.court')+' ×1.5');
+  if(n&&v<=15)add(on,'lowball',t('m.lowball')+' ×1.5');
+  if(n>=3&&handValue(h.slice(0,2)).total<=11&&v>=17)add(on,'comeback',t('m.comeback')+' ×1.3');
+  if(!G.endless&&isFinite(G.table.mains)&&G.hand>=G.table.mains)add(on,'clutch',t('m.clutch')+' ×1.5');
   /* --- à portée (une carte / un cran) --- */
-  if(v<21&&v>=11&&21-v<=10)soon.push(t('cb.to21',21-v));
-  if(n===4&&v<=20)soon.push(t('cb.charlie'));
-  if(n===2&&suits.size===1)soon.push(t('cb.flush',h[0].s));
-  if(n===3&&suits.size===3)soon.push(t('cb.rainbow'));
-  if(sevens===1&&n<=3)soon.push(t('cb.pair7'));
-  if(!isStraight(h)&&n>=2&&n<=4&&RANKS.some(r=>isStraight(h.concat([{r,s:'♠'}]))))soon.push(t('cb.straight'));
-  {const bl=barakaLevel();if(bl<4){const need=BARAKA_STEPS[bl]-(G.baraka||0);if(need<=2&&need>0)soon.push(t('cb.streak',bl+1,need));}}
+  if(v<21&&v>=11&&21-v<=10)add(soon,'perfect',t('cb.to21',21-v));
+  if(n===4&&v<=20)add(soon,'charlie',t('cb.charlie'));
+  if(n===2&&suits.size===1)add(soon,'flush',t('cb.flush',h[0].s));
+  if(n===3&&suits.size===3)add(soon,'rainbow',t('cb.rainbow'));
+  if(sevens===1&&n<=3)add(soon,'pair7',t('cb.pair7'));
+  if(!isStraight(h)&&n>=2&&n<=4&&RANKS.some(r=>isStraight(h.concat([{r,s:'♠'}]))))add(soon,'straight',t('cb.straight'));
+  {const bl=barakaLevel();if(bl<4){const need=BARAKA_STEPS[bl]-(G.baraka||0);if(need<=2&&need>0)add(soon,'streak'+(bl+1),t('cb.streak',bl+1,need));}}
   return {on,soon};
 }
 function renderCombos(){
   const row=$('comboRow');if(!row)return;
-  if(G.phase!=='play'||!G.pHand.length||G._dealing){row.innerHTML='';row.style.display='none';return;}
+  if(G.phase!=='play'||!G.pHand.length){row.replaceChildren();row.style.display='none';row.removeAttribute('aria-busy');return;}
+  // Keep each visible box in place while the next card lands and turns.
+  if(G._dealing){row.setAttribute('aria-busy','true');return;}
+  if(handValue(G.pHand).total>21){row.replaceChildren();row.style.display='none';row.removeAttribute('aria-busy');return;}
   const {on,soon}=comboHints();
-  const positions=new Map([...row.querySelectorAll('.combo-items')].map(list=>[list.dataset.kind,list.scrollLeft]));
-  row.replaceChildren();
-  const group=(label,texts,kind)=>{
-    if(!texts.length)return;
-    const line=document.createElement('div');line.className='combo-line '+kind;
-    const heading=document.createElement('span');heading.className='combo-label';heading.textContent=label;
-    const list=document.createElement('div');list.className='combo-items';list.dataset.kind=kind;
-    list.setAttribute('role','list');list.setAttribute('aria-label',label);list.tabIndex=0;
-    texts.forEach(text=>{
-      const item=document.createElement('span');item.className='combo-item';item.setAttribute('role','listitem');
-      const [title,...detail]=text.split(' · ');
-      const name=document.createElement('span');name.className='combo-name';name.textContent=title.charAt(0)+title.slice(1).toLocaleLowerCase();item.appendChild(name);
-      if(detail.length){const hint=document.createElement('span');hint.className='combo-hint';hint.textContent=' · '+detail.join(' · ');item.appendChild(hint);}
-      list.appendChild(item);
-    });
-    line.append(heading,list);row.appendChild(line);list.scrollLeft=positions.get(kind)||0;
+  const win=LANG==='fr'?'Si victoire':'On a win';
+  const entries=new Map();
+  const add=({key,text},ready)=>{
+    const [title,...detail]=text.split(' · ');
+    entries.set(key,{key,title:title.charAt(0)+title.slice(1).toLocaleLowerCase(),detail:ready?win:(detail.join(' · ')||(LANG==='fr'?'À compléter':'In reach')),ready});
   };
-  group(LANG==='fr'?'Si victoire':'On a win',on,'earned');
-  if(handValue(G.pHand).total<21)group(LANG==='fr'?'À tenter':'In reach',soon,'possible');
-  if(G.endless&&G.event)group(LANG==='fr'?'Événement':'Event',[evtTitle(G.event)],'context');
-  if(!G.endless&&G.contract&&!G.contract.done)group(LANG==='fr'?'Contrat':'Contract',[contractText(G.contract)],'context');
-  row.removeAttribute('tabindex');row.setAttribute('role','group');
-  row.setAttribute('aria-label',LANG==='fr'?'Combinaisons et coups possibles':'Combinations and possible plays');
+  if(handValue(G.pHand).total<21)soon.forEach(item=>add(item,false));
+  on.forEach(item=>add(item,true));
+  if(G.endless&&G.event)entries.set('event',{key:'event',title:LANG==='fr'?'Événement':'Event',detail:evtTitle(G.event),ready:false});
+  if(!G.endless&&G.contract){
+    const short={c5:LANG==='fr'?'5 cartes':'5 cards',c21:'21',cpress:'Baraka 75%',cmult:'Multi ×3',cdbl:t('act.double'),csuite:t('m.straight'),ccoul:t('m.flush')};
+    entries.set('contract',{key:'contract',title:LANG==='fr'?'Contrat':'Contract',detail:G.contract.done?(LANG==='fr'?'Validé':'Complete'):short[G.contract.id]||contractText(G.contract),ready:!!G.contract.done,full:contractText(G.contract)});
+  }
+  const order=['blackjack','perfect','charlie','pair7','flush','straight','rainbow','lowball','court','comeback','pushing','clutch','streak1','streak2','streak3','streak4','event','contract'];
+  const boxes=new Map([...row.children].map(box=>[box.dataset.comboKey,box]));
+  [...entries.values()].sort((a,b)=>order.indexOf(a.key)-order.indexOf(b.key)).forEach((entry,index)=>{
+    let box=boxes.get(entry.key);
+    if(!box){box=document.createElement('div');box.className='combo-tile';box.dataset.comboKey=entry.key;box.setAttribute('role','listitem');
+      const title=document.createElement('span');title.className='combo-name';
+      const detail=document.createElement('span');detail.className='combo-detail';box.append(title,detail);}
+    box.classList.toggle('on',entry.ready);box.classList.toggle('compact',entry.title.length>14);
+    box.querySelector('.combo-name').textContent=entry.title;
+    box.querySelector('.combo-detail').textContent=entry.detail;
+    box.title=entry.title+' · '+(entry.full||entry.detail)+(entry.full&&entry.ready?' · '+entry.detail:'');
+    box.setAttribute('aria-label',box.title);
+    if(row.children[index]!==box)row.insertBefore(box,row.children[index]||null);
+  });
+  for(const box of [...row.children])if(!entries.has(box.dataset.comboKey))box.remove();
+  row.setAttribute('aria-busy','false');row.tabIndex=0;row.setAttribute('role','list');
+  row.setAttribute('aria-label',LANG==='fr'?'Combos : gris à compléter, jaune condition remplie, bonus si victoire':'Combos: grey in reach, yellow condition met, bonuses on a win');
   row.style.display=row.childElementCount?'flex':'none';
 }
 function renderTop(){

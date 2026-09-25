@@ -17,25 +17,20 @@ const [html,bundle]=await Promise.all(['index.html','cold-deck.js'].map(path=>fe
 const frame=document.querySelector('iframe'),screen=document.querySelector('#screen'),size=document.querySelector('#size');
 const params=new URLSearchParams(location.search);
 screen.add(new Option('Choix de la mise','bet'));
-const variantLabel=document.createElement('label');variantLabel.textContent='Combos';
-const variant=document.createElement('select');variant.id='variant';
-for(const [value,label] of [['','Actuel'],['a','A · Centré'],['b','B · Pastilles'],['c','C · Deux colonnes']])variant.add(new Option(label,value));
-variantLabel.appendChild(variant);document.querySelector('header').insertBefore(variantLabel,document.querySelector('#status'));
+screen.add(new Option('Combo complété','combo-ready'));
 if([...screen.options].some(option=>option.value===params.get('screen')))screen.value=params.get('screen');
 if([...size.options].some(option=>option.value===params.get('size')))size.value=params.get('size');
-if(['a','b','c'].includes(params.get('variant')))variant.value=params.get('variant');
 document.documentElement.classList.toggle('embed',params.get('embed')==='1');
 async function render(){
  const [width,height]=size.value.split(',');frame.width=width;frame.height=height;
  const fixture=`
  setLang('fr');
- $('app').dataset.comboVariant=${JSON.stringify(variant.value)};
  const visualScreen=${JSON.stringify(screen.value)};
  if(visualScreen==='home')openMenu();
  else if(visualScreen==='circuit'||visualScreen==='free')chooseMode(visualScreen==='free'?'infini':'nuit');
  else {
   chooseMode('nuit');startGame(0);
-  const visualRanks=visualScreen.startsWith('flip-')?[5,6,7]:visualScreen==='double'?[5,6]:visualScreen==='no-special'?[3,4,5]:visualScreen==='editions'?[5,6,7]:visualScreen==='six'?[2,2,3,3,4,3]:visualScreen==='four'?[3,4,5,5]:[8,9];
+  const visualRanks=visualScreen.startsWith('flip-')?[5,6,7]:visualScreen==='combo-ready'?[5,6,4]:visualScreen==='double'?[5,6]:visualScreen==='no-special'?[3,4,5]:visualScreen==='editions'?[5,6,7]:visualScreen==='six'?[2,2,3,3,4,3]:visualScreen==='four'?[3,4,5,5]:[8,9];
   const visualSuits=['♣','♥','♠','♦','♣','♥'];
   const visualHand=visualRanks.map((r,i)=>({r:String(r),s:visualSuits[i],...(visualScreen==='editions'?{ed:['foil','holo','poly'][i]}:{})}));
   Object.assign(G,{phase:'play',bank:120,bet:10,betChosen:true,tokens:3,hand:2,pHand:visualHand,dHand:[{r:'K',s:'♣'},{r:'7',s:'♥',_fd:true}],_dealing:false,insisted:false,contract:{id:'csuite',reward:10,done:false},table:{...G.table,goal:200},shoe:Array.from({length:50},()=>({r:'2',s:'♣'}))});
@@ -55,9 +50,9 @@ async function render(){
  `;
  const end=bundle.lastIndexOf('})();');
  const source=bundle.slice(0,end)+fixture+bundle.slice(end);
- frame.srcdoc=html.replace('<head>','<head><base href="'+base+'">').replace('</head>','<link rel="stylesheet" href="scripts/combo-variants.css"></head>').replace('<script src="cold-deck.js"><'+'/script>',()=>'<script>'+source.replace(/<\/script/gi,'<\\/script')+'<'+'/script>');
+ frame.srcdoc=html.replace('<head>','<head><base href="'+base+'">').replace('<script src="cold-deck.js"><'+'/script>',()=>'<script>'+source.replace(/<\/script/gi,'<\\/script')+'<'+'/script>');
  document.querySelector('#status').textContent=width+' × '+height;
 }
-screen.addEventListener('change',render);size.addEventListener('change',render);variant.addEventListener('change',render);render();
+screen.addEventListener('change',render);size.addEventListener('change',render);render();
 </script>
 </html>
