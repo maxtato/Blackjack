@@ -53,7 +53,6 @@ function blip(f,d,type,v,slideTo){
 function arp(freqs,step,d,v,type){freqs.forEach((f,i)=>setTimeout(()=>blip(f,d,type||'square',v),i*step));}
 const sfx={
   card(){blip(160+rndInt(40),.035,'square',.045);},
-  land(){blip(125,.07,'triangle',.07,55);blip(1150,.018,'triangle',.022,420);},
   flip(){blip(660,.04,'square',.05);setTimeout(()=>blip(880,.05,'square',.045),42);},
   win(){arp([523,659,784],46,.09,.08);},                              // do-mi-sol montant
   combo(){arp([784,1047,1319],38,.06,.07);},                          // étincelle aiguë
@@ -585,6 +584,7 @@ function cardEl(c,opts={}){
   if(opts.arrive)d.classList.add('arrive');
   else if(opts.flip)d.classList.add('flip');
   else if(opts.placed)d.classList.add('placed');
+  if(!opts.back&&opts.placed&&barakaLevel()>=3&&G.phase==='play')d.classList.add('jit');
   return d;
 }
 function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0)/4294967296;}
@@ -606,7 +606,6 @@ function fannedCard(c,idx,total,opts){
   const motionSeed=c.r+c.s+'#'+idx+(opts.dealer?'d':'p');
   slot.style.setProperty('--card-delay','-'+(idx*.5+hashStr(motionSeed+'~')*3).toFixed(3)+'s');
   slot.appendChild(opts.flip?flipCard(c,Object.assign({idx:idx},opts)):cardEl(c,Object.assign({idx:idx},opts)));
-  if(opts.arrive)window.ColdDeckFX?.onArrival(slot,CARD_ARRIVAL);
   return slot;
 }
 // carte à deux faces pour un vrai retournement (dos visible -> pivote -> face)
@@ -616,7 +615,6 @@ function flipCard(c,opts){
   const front=cardEl(c,Object.assign({},opts,{back:false,flip:false,arrive:false,placed:false}));
   front.classList.add('front');
   wrap.appendChild(back);wrap.appendChild(front);
-  window.ColdDeckFX?.onFlip(wrap,c,CARD_FLIP);
   return wrap;
 }
 function renderHands(reveal=false){
@@ -1091,24 +1089,20 @@ function deal(){
   renderAll();renderHands();                                     // tapis vide, boutons grisés
   dealSequence([p1,d1,p2,d2]);
 }
-// Flight, table contact, a short rest, then a full edge-on turn.
-// CSS and the engine share durations so actions unlock only after the landing.
-const CARD_ARRIVAL=340,CARD_HOLD=50,CARD_FLIP=440;
-document.documentElement.style.setProperty('--card-arrival-duration',CARD_ARRIVAL+'ms');
+// Original pixel-release cadence: show the back for 85ms, then turn for 400ms.
+const CARD_HOLD=85,CARD_FLIP=400;
 document.documentElement.style.setProperty('--card-flip-duration',CARD_FLIP+'ms');
-// Every incoming card, including the opening deal, lands face down first.
 // stayDown : reste dos (trou du croupier). reveal : main du croupier dévoilée.
 function dealCardIn(c,opts,done){
   const reveal=!!(opts&&opts.reveal);
-  const toss=opts?.toss!==false;
-  c._pending=false;c._fd=true;c._flip=false;c._arr=toss;
+  c._pending=false;c._fd=true;c._flip=false;c._arr=false;
   renderHands(reveal);sfx.card();
   setTimeout(()=>{
     c._arr=false;
     if(opts&&opts.stayDown){c._fd=true;renderHands(reveal);done&&done();return;}
     c._fd=false;c._flip=true;renderHands(reveal);sfx.flip();    // on la retourne
     setTimeout(()=>{c._flip=false;renderHands(reveal);window.ColdDeckFX?.onCard(c);done&&done();},CARD_FLIP);
-  },(toss?CARD_ARRIVAL:0)+CARD_HOLD);
+  },CARD_HOLD);
 }
 // distribution initiale : mes 2 cartes + 2 du croupier, une par une. La 2e du croupier reste dos.
 function dealSequence(order){
@@ -1129,7 +1123,7 @@ function playerHit(forced){
   c._pending=true;G.pHand.push(c);
   $('tip').textContent='';
   G._dealing=true;renderActions();                              // boutons grisés pendant l'arrivée
-  dealCardIn(c,{toss:true},()=>{
+  dealCardIn(c,{},()=>{
     G._dealing=false;
     if(hasRelic('aimant')){G.bank+=1;renderTop();}              // 🧲 +1 $ par carte tirée
     addPressure(forced?0:10);updateBustReadout();renderMult();
@@ -1166,7 +1160,7 @@ function dealSplitCard(){
   const c=G.magicNext?drawIdeal():draw();G.magicNext=false;
   c._pending=true;G.pHand.push(c);
   G._dealing=true;renderActions();renderHands(false);
-  dealCardIn(c,{toss:true},()=>{
+  dealCardIn(c,{},()=>{
     G._dealing=false;
     updateBustReadout();renderMult();renderHands(false);
     if(c.ed)announceEd(c);
@@ -1192,7 +1186,7 @@ function playerDouble(){
   const c=G.magicNext?drawIdeal():draw();G.magicNext=false;
   c._pending=true;G.pHand.push(c);
   G._dealing=true;renderActions();
-  dealCardIn(c,{toss:true},()=>{
+  dealCardIn(c,{},()=>{
     G._dealing=false;
     addPressure(14);updateBustReadout();renderMult();
     if(c.ed)announceEd(c);
@@ -1210,7 +1204,7 @@ function forcerChance(){
   popText(t('msg.forced'),t('msg.kept',keep.r+keep.s));
   keep._pending=true;G.pHand.push(keep);
   G._dealing=true;renderActions();
-  dealCardIn(keep,{toss:true},()=>{
+  dealCardIn(keep,{},()=>{
     G._dealing=false;
     addPressure(26);updateBustReadout();renderMult();
     const v=handValue(G.pHand).total;
@@ -1236,7 +1230,7 @@ function dealerPlay(natural){
       dealCardIn(c,{reveal:true},()=>setTimeout(step,160));
     } else setTimeout(()=>resolve(natural?'natural':'stand'),420);
   };
-  setTimeout(step,CARD_FLIP+80);
+  setTimeout(step,CARD_FLIP+20);
 }
 
 /* ---------- résolution ---------- */

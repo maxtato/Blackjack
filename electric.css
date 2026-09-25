@@ -324,27 +324,24 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
   #actions .btn{min-height:44px;font-size:17px;padding:8px 12px;border-radius:18px}#actions .action-glyph{width:22px;height:24px}
 }
 
-/* Moderate, irregular idle accents, independent from each card's fan and flip. */
-.hand .cardslot{--idle-duration:1.65s;--card-hop:1.25px;--card-tilt:.4deg;animation:card-idle-punch var(--idle-duration) steps(1,end) var(--card-delay,0s) infinite;translate:none;rotate:none;top:0}
-.hand .cardslot:nth-child(2n){--idle-duration:1.9s}
-.hand .cardslot:nth-child(3n){--idle-duration:1.75s}
-.dealer-zone .cardslot{--card-hop:.9px;--card-tilt:.3deg}
-.splithand .cardslot{--card-hop:.75px;--card-tilt:.25deg}
-.hand .cardslot:has(.flipwrap){animation:none;translate:none;rotate:none}
-@keyframes card-idle-punch{
-  0%,58%,100%{translate:0 0;rotate:0deg}
-  12%{translate:-.25px calc(var(--card-hop)*-.65);rotate:calc(var(--card-tilt)*-1)}
-  28%{translate:0 -.25px;rotate:calc(var(--card-tilt)*.4)}
-  42%{translate:.25px calc(var(--card-hop)*-1);rotate:var(--card-tilt)}
-  74%{translate:-.25px -.5px;rotate:calc(var(--card-tilt)*-.55)}
-  88%{translate:.25px .25px;rotate:calc(var(--card-tilt)*.3)}
+/* Motion copied from the pixel release on main (a041d2d).
+   Idle motion is one physical pixel, with independent phases. */
+.hand .cardslot{animation:none;translate:none;rotate:none;top:0;perspective:none}
+.hand .card.placed:not(.jit){animation:pixel-card-life 3.6s steps(1,end) var(--card-delay,0s) infinite}
+@keyframes pixel-card-life{
+  0%,33%,66%,100%{top:0}
+  16%,50%,83%{top:calc(-1 * var(--device-pixel,1px))}
 }
-.live-letter{--text-hop:clamp(.3px,.022em,.75px);position:relative;top:0;translate:none;rotate:none;animation:letter-idle-punch calc(var(--letter-duration,1.1s)*1.15) steps(1,end) var(--letter-delay,0s) infinite}
-@keyframes letter-idle-punch{
-  0%,34%,70%,100%{translate:0 0;rotate:0deg}
-  14%{translate:0 calc(var(--text-hop)*-1);rotate:-.5deg}
-  48%{translate:.1px calc(var(--text-hop)*-.7);rotate:.5deg}
-  84%{translate:0 calc(var(--text-hop)*-1);rotate:-.5deg}
+.hand .card.jit{animation:pixel-card-jit .12s steps(1,end) infinite}
+@keyframes pixel-card-jit{
+  0%,50%{transform:translate(0,0)}
+  25%{transform:translate(var(--device-pixel,1px),calc(-1 * var(--device-pixel,1px)))}
+  75%{transform:translate(calc(-1 * var(--device-pixel,1px)),var(--device-pixel,1px))}
+}
+.live-letter{position:relative;top:0;translate:none;rotate:none;animation:pixel-letter-shake var(--letter-duration,1.1s) steps(1,end) var(--letter-delay,0s) infinite}
+@keyframes pixel-letter-shake{
+  0%,33%,66%,100%{top:0}
+  16%,50%,83%{top:calc(-1 * var(--device-pixel,1px))}
 }
 #bottombar #actions .btn{color:#fff}
 #bottombar #actions .btn.b-gold:not(:disabled),.btn.b-gold{color:#303236}
@@ -411,31 +408,22 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 @media(max-height:600px) and (orientation:portrait){:root{--base-card-w:48px}}
 @media(max-height:600px) and (orientation:landscape){:root{--base-card-w:clamp(40px,13dvh,68px)}}
 
-/* Rotate each masked face in its own perspective plane. A flat parent avoids
-   WebKit flattening the two faces together; visibility changes at the edge. */
-.flipwrap{transform-style:flat;transform-origin:50% 50%;animation:physical-card-lift var(--card-flip-duration,440ms) linear both}
+/* Original 400ms turn, 700px perspective and 1.02 / 1.07 / 1 scale.
+   Each masked face has its own plane to retain Safari-compatible compositing. */
+.flipwrap{transform-style:flat;transform:none;animation:none;transform-origin:50% 50%}
 .flipwrap>.card{transform-origin:50% 50%;-webkit-backface-visibility:hidden;backface-visibility:hidden}
-.flipwrap>.back{animation:physical-card-back var(--card-flip-duration,440ms) linear both,clean-card-back var(--card-flip-duration,440ms) steps(1,end) both}
-.flipwrap>.front{animation:physical-card-front var(--card-flip-duration,440ms) linear both,clean-card-front var(--card-flip-duration,440ms) steps(1,end) both}
+.flipwrap>.back{animation:pixel-card-back var(--card-flip-duration,400ms) cubic-bezier(.35,.05,.3,1) both,clean-card-back var(--card-flip-duration,400ms) steps(1,end) both}
+.flipwrap>.front{animation:pixel-card-front var(--card-flip-duration,400ms) cubic-bezier(.35,.05,.3,1) both,clean-card-front var(--card-flip-duration,400ms) steps(1,end) both}
 .flipwrap>.back::before{content:none!important;display:none}
-@keyframes physical-card-lift{
-  0%{transform:translateY(0) rotate(0deg);animation-timing-function:cubic-bezier(.2,.65,.35,1)}
-  38%{transform:translateY(-12%) rotate(-3deg)}
-  50%{transform:translateY(-14%) rotate(-2deg)}
-  62%{transform:translateY(-12%) rotate(-1deg);animation-timing-function:cubic-bezier(.6,0,.9,.45)}
-  88%{transform:translateY(0) rotate(0deg);animation-timing-function:ease-out}
-  94%{transform:translateY(-1.5%) rotate(.3deg)}
-  100%{transform:translateY(0) rotate(0deg)}
+@keyframes pixel-card-back{
+  0%{transform:perspective(700px) rotateY(0deg) scale(1.02)}
+  50%{transform:perspective(700px) rotateY(90deg) scale(1.07)}
+  100%{transform:perspective(700px) rotateY(180deg) scale(1)}
 }
-@keyframes physical-card-back{
-  0%{transform:perspective(600px) rotateY(0deg);animation-timing-function:ease-in}
-  50%{transform:perspective(600px) rotateY(90deg);animation-timing-function:ease-out}
-  88%,100%{transform:perspective(600px) rotateY(180deg)}
-}
-@keyframes physical-card-front{
-  0%{transform:perspective(600px) rotateY(-180deg);animation-timing-function:ease-in}
-  50%{transform:perspective(600px) rotateY(-90deg);animation-timing-function:ease-out}
-  88%,100%{transform:perspective(600px) rotateY(0deg)}
+@keyframes pixel-card-front{
+  0%{transform:perspective(700px) rotateY(-180deg) scale(1.02)}
+  50%{transform:perspective(700px) rotateY(-90deg) scale(1.07)}
+  100%{transform:perspective(700px) rotateY(0deg) scale(1)}
 }
 @keyframes clean-card-back{0%{visibility:visible}50%,100%{visibility:hidden}}
 @keyframes clean-card-front{0%{visibility:hidden}50%,100%{visibility:visible}}

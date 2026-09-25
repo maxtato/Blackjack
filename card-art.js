@@ -16,6 +16,9 @@ const ColdDeckArt = (() => {
   // empty space between adjacent digits, leaving symbols and word gaps alone.
   const digitBounds=[[.245,.769],[.271,.721],[.232,.766],[.248,.750],[.204,.788],[.248,.760],[.232,.766],[.226,.769],[.229,.776],[.216,.779]];
   const safe=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  // Independent presentation RNG: original per-glyph cadence without changing draws.
+  let motionSeed=0x43d3c901;
+  const motionSample=()=>{motionSeed=(Math.imul(motionSeed,1664525)+1013904223)>>>0;return motionSeed/4294967296;};
   function glyph(character,index=0,previous=''){
     const c=character.toUpperCase().replace('-','−');
     const direction={'←':'left','→':'right','↗':'forward','✕':'close'}[c];
@@ -27,7 +30,8 @@ const ColdDeckArt = (() => {
     const trim=letter>=0?`--glyph-start:${letterBounds[letter][0]};--glyph-end:${(1-letterBounds[letter][1]).toFixed(3)};`:'';
     const digit=/^[0-9]$/.test(c),joined=digit&&/^[0-9]$/.test(previous);
     const kern=joined?`--digit-kern:${(1-digitBounds[Number(previous)][1]+digitBounds[number][0]).toFixed(3)};`:'';
-    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}"${digit?' data-digit=""':''} style="${trim}${kern}--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${1.05+(index%4)*.08}s;--letter-delay:-${(index%7)*.19}s"></i>`;
+    const duration=.95+motionSample()*.3,delay=-motionSample()*duration;
+    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}"${digit?' data-digit=""':''} style="${trim}${kern}--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${duration.toFixed(3)}s;--letter-delay:${delay.toFixed(3)}s"></i>`;
   }
   function lettering(value){
     const text=String(value);let index=0;

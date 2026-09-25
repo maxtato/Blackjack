@@ -528,6 +528,9 @@ const ColdDeckArt = (() => {
   // empty space between adjacent digits, leaving symbols and word gaps alone.
   const digitBounds=[[.245,.769],[.271,.721],[.232,.766],[.248,.750],[.204,.788],[.248,.760],[.232,.766],[.226,.769],[.229,.776],[.216,.779]];
   const safe=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  // Independent presentation RNG: original per-glyph cadence without changing draws.
+  let motionSeed=0x43d3c901;
+  const motionSample=()=>{motionSeed=(Math.imul(motionSeed,1664525)+1013904223)>>>0;return motionSeed/4294967296;};
   function glyph(character,index=0,previous=''){
     const c=character.toUpperCase().replace('-','−');
     const direction={'←':'left','→':'right','↗':'forward','✕':'close'}[c];
@@ -539,7 +542,8 @@ const ColdDeckArt = (() => {
     const trim=letter>=0?`--glyph-start:${letterBounds[letter][0]};--glyph-end:${(1-letterBounds[letter][1]).toFixed(3)};`:'';
     const digit=/^[0-9]$/.test(c),joined=digit&&/^[0-9]$/.test(previous);
     const kern=joined?`--digit-kern:${(1-digitBounds[Number(previous)][1]+digitBounds[number][0]).toFixed(3)};`:'';
-    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}"${digit?' data-digit=""':''} style="${trim}${kern}--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${1.05+(index%4)*.08}s;--letter-delay:-${(index%7)*.19}s"></i>`;
+    const duration=.95+motionSample()*.3,delay=-motionSample()*duration;
+    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}"${digit?' data-digit=""':''} style="${trim}${kern}--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${duration.toFixed(3)}s;--letter-delay:${delay.toFixed(3)}s"></i>`;
   }
   function lettering(value){
     const text=String(value);let index=0;
@@ -641,7 +645,6 @@ function blip(f,d,type,v,slideTo){
 function arp(freqs,step,d,v,type){freqs.forEach((f,i)=>setTimeout(()=>blip(f,d,type||'square',v),i*step));}
 const sfx={
   card(){blip(160+rndInt(40),.035,'square',.045);},
-  land(){blip(125,.07,'triangle',.07,55);blip(1150,.018,'triangle',.022,420);},
   flip(){blip(660,.04,'square',.05);setTimeout(()=>blip(880,.05,'square',.045),42);},
   win(){arp([523,659,784],46,.09,.08);},                              // do-mi-sol montant
   combo(){arp([784,1047,1319],38,.06,.07);},                          // étincelle aiguë
@@ -1173,6 +1176,7 @@ function cardEl(c,opts={}){
   if(opts.arrive)d.classList.add('arrive');
   else if(opts.flip)d.classList.add('flip');
   else if(opts.placed)d.classList.add('placed');
+  if(!opts.back&&opts.placed&&barakaLevel()>=3&&G.phase==='play')d.classList.add('jit');
   return d;
 }
 function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0)/4294967296;}
@@ -1194,7 +1198,6 @@ function fannedCard(c,idx,total,opts){
   const motionSeed=c.r+c.s+'#'+idx+(opts.dealer?'d':'p');
   slot.style.setProperty('--card-delay','-'+(idx*.5+hashStr(motionSeed+'~')*3).toFixed(3)+'s');
   slot.appendChild(opts.flip?flipCard(c,Object.assign({idx:idx},opts)):cardEl(c,Object.assign({idx:idx},opts)));
-  if(opts.arrive)window.ColdDeckFX?.onArrival(slot,CARD_ARRIVAL);
   return slot;
 }
 // carte à deux faces pour un vrai retournement (dos visible -> pivote -> face)
@@ -1204,7 +1207,6 @@ function flipCard(c,opts){
   const front=cardEl(c,Object.assign({},opts,{back:false,flip:false,arrive:false,placed:false}));
   front.classList.add('front');
   wrap.appendChild(back);wrap.appendChild(front);
-  window.ColdDeckFX?.onFlip(wrap,c,CARD_FLIP);
   return wrap;
 }
 function renderHands(reveal=false){
@@ -1679,24 +1681,20 @@ function deal(){
   renderAll();renderHands();                                     // tapis vide, boutons grisés
   dealSequence([p1,d1,p2,d2]);
 }
-// Flight, table contact, a short rest, then a full edge-on turn.
-// CSS and the engine share durations so actions unlock only after the landing.
-const CARD_ARRIVAL=340,CARD_HOLD=50,CARD_FLIP=440;
-document.documentElement.style.setProperty('--card-arrival-duration',CARD_ARRIVAL+'ms');
+// Original pixel-release cadence: show the back for 85ms, then turn for 400ms.
+const CARD_HOLD=85,CARD_FLIP=400;
 document.documentElement.style.setProperty('--card-flip-duration',CARD_FLIP+'ms');
-// Every incoming card, including the opening deal, lands face down first.
 // stayDown : reste dos (trou du croupier). reveal : main du croupier dévoilée.
 function dealCardIn(c,opts,done){
   const reveal=!!(opts&&opts.reveal);
-  const toss=opts?.toss!==false;
-  c._pending=false;c._fd=true;c._flip=false;c._arr=toss;
+  c._pending=false;c._fd=true;c._flip=false;c._arr=false;
   renderHands(reveal);sfx.card();
   setTimeout(()=>{
     c._arr=false;
     if(opts&&opts.stayDown){c._fd=true;renderHands(reveal);done&&done();return;}
     c._fd=false;c._flip=true;renderHands(reveal);sfx.flip();    // on la retourne
     setTimeout(()=>{c._flip=false;renderHands(reveal);window.ColdDeckFX?.onCard(c);done&&done();},CARD_FLIP);
-  },(toss?CARD_ARRIVAL:0)+CARD_HOLD);
+  },CARD_HOLD);
 }
 // distribution initiale : mes 2 cartes + 2 du croupier, une par une. La 2e du croupier reste dos.
 function dealSequence(order){
@@ -1717,7 +1715,7 @@ function playerHit(forced){
   c._pending=true;G.pHand.push(c);
   $('tip').textContent='';
   G._dealing=true;renderActions();                              // boutons grisés pendant l'arrivée
-  dealCardIn(c,{toss:true},()=>{
+  dealCardIn(c,{},()=>{
     G._dealing=false;
     if(hasRelic('aimant')){G.bank+=1;renderTop();}              // 🧲 +1 $ par carte tirée
     addPressure(forced?0:10);updateBustReadout();renderMult();
@@ -1754,7 +1752,7 @@ function dealSplitCard(){
   const c=G.magicNext?drawIdeal():draw();G.magicNext=false;
   c._pending=true;G.pHand.push(c);
   G._dealing=true;renderActions();renderHands(false);
-  dealCardIn(c,{toss:true},()=>{
+  dealCardIn(c,{},()=>{
     G._dealing=false;
     updateBustReadout();renderMult();renderHands(false);
     if(c.ed)announceEd(c);
@@ -1780,7 +1778,7 @@ function playerDouble(){
   const c=G.magicNext?drawIdeal():draw();G.magicNext=false;
   c._pending=true;G.pHand.push(c);
   G._dealing=true;renderActions();
-  dealCardIn(c,{toss:true},()=>{
+  dealCardIn(c,{},()=>{
     G._dealing=false;
     addPressure(14);updateBustReadout();renderMult();
     if(c.ed)announceEd(c);
@@ -1798,7 +1796,7 @@ function forcerChance(){
   popText(t('msg.forced'),t('msg.kept',keep.r+keep.s));
   keep._pending=true;G.pHand.push(keep);
   G._dealing=true;renderActions();
-  dealCardIn(keep,{toss:true},()=>{
+  dealCardIn(keep,{},()=>{
     G._dealing=false;
     addPressure(26);updateBustReadout();renderMult();
     const v=handValue(G.pHand).total;
@@ -1824,7 +1822,7 @@ function dealerPlay(natural){
       dealCardIn(c,{reveal:true},()=>setTimeout(step,160));
     } else setTimeout(()=>resolve(natural?'natural':'stand'),420);
   };
-  setTimeout(step,CARD_FLIP+80);
+  setTimeout(step,CARD_FLIP+20);
 }
 
 /* ---------- résolution ---------- */
@@ -3168,7 +3166,7 @@ syncMenuFocus();
     prepareAlphaMask('type-numbers','raster-numbers-ready'),
     prepareAlphaMask('brand-wordmark','raster-brand-ready')
   ]);
-  const labelSelector='button,h1:not(.menuTitle),.mode-card strong,.chip-value,#gainVal,#chipsVal,#multVal,#pVal,#dVal,#tip,.tnum,.repNum,.zlbl>[data-i18n]';
+  const labelSelector='button,h1:not(.menuTitle),.mode-card strong,.chip-value,#gainVal,#chipsVal,#multVal,#pVal,#dVal,#tip,.tnum,.repNum,.zlbl>[data-i18n],.tstats,#tableName,#comboRow,#pBar .pmeta,#effects .joker,#effects .tarot';
   function label(el){
     const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),nodes=[];
     while(walker.nextNode()){
@@ -3192,7 +3190,7 @@ syncMenuFocus();
     if(pause&&!pause.querySelector('.pause-mark'))pause.innerHTML='<i class="raster-nav pause-mark" aria-hidden="true"></i>';
     for(const el of roots)observer.observe(el,{childList:true,subtree:true,characterData:true});
   }
-  const roots=[...document.querySelectorAll('.overlay,#adOverlay,#topbar,#bottombar,#center,.zlbl,#peekBtn')];
+  const roots=[...document.querySelectorAll('.overlay,#adOverlay,#topbar,#bottombar,#center,.zlbl,#peekBtn,#pBar,#effects')];
   const observer=new MutationObserver(decorate);
   decorate();
   // Deterministic entry point for renders and tests, without any game-state writes.
@@ -3409,37 +3407,6 @@ syncMenuFocus();
     const el = cardNode(card); if (!el) return;
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
   }
-  function onArrival(slot,duration=CARD_ARRIVAL){
-    if(reduced()||document.hidden)return;
-    later(()=>{
-      if(!slot.isConnected||reduced()||document.hidden||document.querySelector('.overlay.show,#adOverlay.show'))return;
-      // The accent and dry tap coincide with the first table contact at 70%.
-      contact(slot,.58);sfx.land();haptic();
-    },Math.round(duration*.7));
-  }
-  function contact(slot,strength){
-    const p=rect(slot);if(!p)return;
-    const target=lightningLayer||layer;
-    const origin=lightningLayer?lightningLayer.getBoundingClientRect():{left:0,top:0};
-    const shock=piece('flip-impact',p.x-origin.left,p.y-origin.top,null,target);if(!shock)return;
-    shock.style.width=(p.width*1.7)+'px';shock.style.height=(p.height*1.35)+'px';
-    shock.innerHTML=ColdDeckArt.illustration('ui-burst','flip-impact-art');
-    animate(shock,[
-      {transform:'translate(-50%,-50%) scale(.76)',opacity:0},
-      {transform:'translate(-50%,-50%) scale(.94)',opacity:strength,offset:.12},
-      {transform:'translate(-50%,-50%) scale(1.12)',opacity:0}
-    ],{duration:190,easing:'cubic-bezier(.15,.8,.3,1)'},true);
-  }
-  function onFlip(wrap,card,duration=CARD_FLIP){
-    if(reduced()||document.hidden)return;
-    // Anchor to the stable slot, not to the narrowing face. This covers the
-    // dealer's hidden card too and survives the final hand redraw.
-    later(()=>{
-      if(!wrap.isConnected||reduced()||document.hidden||document.querySelector('.overlay.show,#adOverlay.show'))return;
-      contact(wrap.closest('.cardslot'),card.ed ? .6 : .38);
-      haptic();
-    },Math.round(duration*.88));
-  }
   // Reference rhythm: a local card accent, then an energy transfer to the HUD.
   function energyLink(from,to){
     if(reduced()||document.hidden)return;
@@ -3527,7 +3494,7 @@ syncMenuFocus();
   }
   window.ColdDeckFX = {
     get reduced() { return reduced(); },
-    clear, onCard, onArrival, onFlip, onResult, onScoreCard, onRelic, onPressure, onAnnouncement, onCombo,
+    clear, onCard, onResult, onScoreCard, onRelic, onPressure, onAnnouncement, onCombo,
     setMotion(value){
       preference=value==='gentle'?'gentle':'punchy';
       try{localStorage.setItem('colddeck-motion',preference);}catch(e){}
