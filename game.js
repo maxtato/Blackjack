@@ -1116,7 +1116,7 @@ function deal(){
   [p1,p2,d1,d2].forEach(c=>{c._pending=true;});                 // pas encore arrivées
   G.pHand.push(p1,p2);G.dHand.push(d1,d2);
   G._dealing=true;
-  renderAll();renderHands();                                     // tapis vide, boutons grisés
+  renderAll();renderHands();                                     // tapis vide, actions masquées
   dealSequence([p1,d1,p2,d2]);
 }
 // Land face down, lift into the turn, then settle before revealing the new total.

@@ -2,7 +2,7 @@
 Object.assign(STR.fr,{
  'ui.bet':'Mise','ui.mult':'Multi','ui.gain':'Cagnotte','ui.potLbl':'Cagnotte','ui.turnsLeft':'mains<br>restantes','ui.you':'Ta main','ui.dealer':'Croupier','act.double':'DOUBLER','act.force':'FORCER','modern.table':'Table',
  'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HAUTE TENSION',
- 'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','cb.to21':n=>'21 parfait ×3 · Possible avec la prochaine carte','modern.goal':'Objectif','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
+ 'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','cb.to21':n=>'21 parfait ×3 · +'+n,'modern.goal':'Objectif','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
  'nav.rules':'Règles','nav.settings':'Réglages','nav.back':'‹ Modes de jeu','nav.reset':'Réinitialiser ce mode',
  'planque.best':'Meilleur parcours','planque.noRecord':'Aucune partie','planque.back':'Dos de carte','planque.backSub':(i,n)=>i+'/'+n,
  'menu.choose':'CHOISIS TA TABLE','menu.freeTag':'À TON RYTHME','menu.circuitTag':"L'AVENTURE",
