@@ -480,30 +480,32 @@
 #modeMenu .mode-arrow .nav-triangle{width:calc(4 * var(--home-u));height:calc(4 * var(--home-u));filter:brightness(.13)}
 #intro .bpArrow .nav-triangle{width:calc(5 * var(--prep-u));height:calc(5 * var(--prep-u))}
 
-/* Printed inks share the table palette; special editions have their own visible finish. */
-.card.foil{--edition-edge:#e9b849;--edition-glow:#e9b84988;--edition-wash:repeating-linear-gradient(0deg,#ac7b2520 0 1px,transparent 1px 4px),linear-gradient(115deg,#d3933688,#ffe6a0bb 28%,#c3904188 46%,#fff0bccc 60%,#dfa84099 80%,#ffdf9588)}
-.card.holo{--edition-edge:#71c7c4;--edition-glow:#51b9b388;--edition-wash:repeating-linear-gradient(135deg,#fff7e628 0 1px,transparent 1px 6px),linear-gradient(125deg,#57aaa588,#a1ddd4bb 23%,#a48ec4aa 45%,#85c8d2aa 68%,#d9c29888)}
-.card.poly{--edition-edge:#b292d4;--edition-glow:#ae82ce88;--edition-wash:conic-gradient(from 35deg at 45% 55%,#e7bd68bb,#d47a7799,#aa83c7aa,#83bad1bb,#6fc8b9aa,#e7bd68bb)}
-.card:is(.foil,.holo,.poly){filter:drop-shadow(0 0 1px var(--edition-edge)) drop-shadow(0 0 7px var(--edition-glow)) drop-shadow(0 5px 5px #0005)}
+/* Approved finishes: smooth metal for Foil, prism for Holo, printed varnish for Poly. */
+.card.foil{--edition-wash:linear-gradient(120deg,#bc9552,#f1dbaa 26%,#cfaa6a 46%,#fff4d2 57%,#c7a165 77%,#f3ddad)}
+.card.holo{--edition-wash:conic-gradient(from 30deg at 35% 35%,#fffa 0deg 46deg,transparent 46deg 118deg,#2737482a 118deg 167deg,#ffffff50 167deg 219deg,transparent 219deg 292deg,#ffffff75 292deg 320deg,transparent 320deg),conic-gradient(from 210deg at 72% 75%,#fff7 0deg 44deg,transparent 44deg 155deg,#3143591e 155deg 224deg,transparent 224deg),linear-gradient(135deg,#84c0be,#d7ebe2 30%,#b0a0c6 60%,#85b7ce)}
+.card.poly{--edition-wash:none;--edition-ink:linear-gradient(110deg,#65366e,#408586 24%,#a56537 48%,#98586e 72%,#65366e)}
+.card:is(.foil,.holo,.poly){filter:drop-shadow(0 4px 4px #0005)}
+.card.poly{filter:drop-shadow(0 0 2px #9563b1) drop-shadow(0 4px 4px #0005)}
 .card:is(.foil,.holo,.poly)>.card-surface{isolation:isolate}
 .card:is(.foil,.holo,.poly) .raster-card-art{z-index:1}
 .card:is(.foil,.holo,.poly) .corner{z-index:3}
-.card:is(.foil,.holo,.poly)>.card-surface::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background-image:var(--edition-wash);background-size:180% 180%;background-position:20% 30%;animation:edition-iridescence 6s ease-in-out infinite alternate}
-.card:is(.foil,.holo,.poly)>.card-surface::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:inset 0 0 0 calc(var(--card-w)*.025) var(--edition-edge),inset 0 0 12px var(--edition-glow);background:linear-gradient(112deg,transparent 34%,#fff7e63d 42%,#fff7e6bb 48%,#fffef5ed 50%,#fff7e675 54%,transparent 63%) 150% 50%/300% 100% no-repeat;animation:edition-sheen 3.8s ease-in-out infinite}
-.card.holo>.card-surface::after{animation-delay:-1.2s}
-.card.poly>.card-surface::after{animation-delay:-2.4s;animation-duration:4.2s}
-.card:is(.foil,.holo,.poly) .raster-card-art::before,.card:is(.foil,.holo,.poly) .raster-card-art::after{content:"";position:absolute;z-index:4;width:calc(var(--card-w)*.15);height:calc(var(--card-w)*.2);top:12%;right:9%;background:#fffcec;clip-path:polygon(50% 0,62% 36%,100% 50%,62% 64%,50% 100%,38% 64%,0 50%,38% 36%);filter:drop-shadow(0 0 2px var(--edition-edge));animation:edition-glint 3.8s ease-in-out infinite}
-.card:is(.foil,.holo,.poly) .raster-card-art::after{top:auto;right:auto;bottom:13%;left:9%;width:calc(var(--card-w)*.1);height:calc(var(--card-w)*.14);animation-delay:-1.9s}
-.card:is(.foil,.holo,.poly) .edtag{z-index:4;background:#203b47;color:#fff7e6;border:1px solid var(--edition-edge);border-radius:2px;font:600 max(7px,calc(var(--card-w)*.075))/1.1 var(--copy-font);padding:2px 4px}
-@keyframes edition-iridescence{to{background-position:85% 75%}}
-@keyframes edition-sheen{0%,10%{background-position:150% 50%}58%,100%{background-position:-70% 50%}}
-@keyframes edition-glint{0%,100%{opacity:.45;transform:scale(.7)}40%{opacity:1;transform:scale(1.12)}65%{opacity:.65;transform:scale(.85)}}
-#shaker[inert] .card:is(.foil,.holo,.poly) .card-surface::before,#shaker[inert] .card:is(.foil,.holo,.poly) .card-surface::after,#shaker[inert] .card:is(.foil,.holo,.poly) .raster-card-art::before,#shaker[inert] .card:is(.foil,.holo,.poly) .raster-card-art::after{animation-play-state:paused}
+.card:is(.foil,.holo,.poly)>.card-surface::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background-image:var(--edition-wash);background-size:100% 100%;animation:none}
+.card.holo>.card-surface::before{background-size:115% 115%;background-position:40% 50%;animation:edition-facets 7s ease-in-out infinite alternate}
+.card:is(.foil,.holo,.poly)>.card-surface::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:none;background:linear-gradient(112deg,transparent 28%,#fffced38 40%,#fffceea6 49%,#ffffffbd 50%,#fffced22 61%,transparent 72%) 150% 50%/300% 100% no-repeat;animation:edition-sheen 5s ease-in-out infinite}
+.card.holo>.card-surface::after{background-image:linear-gradient(126deg,transparent 35%,#fff8 36% 41%,transparent 42% 46%,#fff4 47% 51%,transparent 52%);animation-duration:4.8s;animation-delay:-1.2s}
+.card.poly>.card-surface::after{background-image:linear-gradient(112deg,transparent 38%,#ffffff52 49%,#ffffff88 50%,transparent 62%);animation-duration:6s;animation-delay:-2.4s}
+.card.poly .card-pip,.card.poly .raster-glyph::after{background-image:var(--edition-ink);background-size:240% 100%;animation:edition-ink 5s ease-in-out infinite alternate}
+.card.poly .court-image{filter:saturate(.65) contrast(1.08) drop-shadow(1px 0 0 #9563b1)}
+.card:is(.foil,.holo,.poly) .edtag{z-index:4;background:#20333be8;color:#fff7e6;border:0;border-radius:2px;font:500 max(7px,calc(var(--card-w)*.075))/1.1 var(--copy-font);padding:2px 4px}
+@keyframes edition-facets{to{background-position:65% 75%}}
+@keyframes edition-sheen{0%,12%{background-position:150% 50%}75%,100%{background-position:-70% 50%}}
+@keyframes edition-ink{to{background-position:100% 50%}}
+#shaker[inert] .card:is(.foil,.holo,.poly) .card-surface::before,#shaker[inert] .card:is(.foil,.holo,.poly) .card-surface::after,#shaker[inert] .card.poly .card-pip,#shaker[inert] .card.poly .raster-glyph::after{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){
- .card:is(.foil,.holo,.poly) .card-surface::before,.card:is(.foil,.holo,.poly) .card-surface::after,.card:is(.foil,.holo,.poly) .raster-card-art::before,.card:is(.foil,.holo,.poly) .raster-card-art::after{animation:none}
+ .card:is(.foil,.holo,.poly) .card-surface::before,.card:is(.foil,.holo,.poly) .card-surface::after,.card.poly .card-pip,.card.poly .raster-glyph::after{animation:none}
  .card:is(.foil,.holo,.poly) .card-surface::after{background-position:45% 50%;opacity:.6}
 }
-:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .card-surface::before,:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .card-surface::after,:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .raster-card-art::before,:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .raster-card-art::after{animation:none}
+:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .card-surface::before,:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .card-surface::after,:root[data-motion="gentle"] .card.poly .card-pip,:root[data-motion="gentle"] .card.poly .raster-glyph::after{animation:none}
 :root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .card-surface::after{background-position:45% 50%;opacity:.6}
 
 /* Open, high-contrast totals: the number itself is the marker above each hand. */

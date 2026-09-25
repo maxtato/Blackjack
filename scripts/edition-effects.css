@@ -1,4 +1,4 @@
-/* Optional art directions, loaded only by the comparison pages until approved. */
+/* Archived art directions for the comparison page; the live game uses equilibre.css. */
 [data-finish] .card:is(.foil,.holo,.poly){filter:drop-shadow(0 4px 4px #0005);--finish-light:#fff4c9;--finish-mid:#b88a37;--finish-ink:linear-gradient(110deg,#755327,#d7a34c 30%,#77512d 52%,#c59a4c 72%,#755327)}
 [data-finish] .card.holo{--finish-light:#dcfff7;--finish-mid:#659eae;--finish-ink:linear-gradient(110deg,#294f65,#749f91 30%,#465b89 52%,#977099 72%,#294f65)}
 [data-finish] .card.poly{--finish-light:#f2ddff;--finish-mid:#9563b1;--finish-ink:linear-gradient(110deg,#65366e,#408586 24%,#a56537 48%,#98586e 72%,#65366e)}
@@ -6,11 +6,13 @@
 [data-finish] .card:is(.foil,.holo,.poly)>.card-surface::after{box-shadow:none}
 [data-finish] .card:is(.foil,.holo,.poly) .edtag{border:0;background:#20333be8;color:#fff7e6;font-weight:500}
 
-/* A: continuous metallic stock, fine horizontal grain and a broad reflection. */
+[data-finish] .card:is(.foil,.holo,.poly) .card-pip,[data-finish] .card:is(.foil,.holo,.poly) .raster-glyph::after{background-image:none;animation:none}
+
+/* A: smooth metallic stock and a broad reflection, without striations. */
 [data-finish="metal"] .card.foil{--finish-stock:linear-gradient(120deg,#bc9552,#f1dbaa 26%,#cfaa6a 46%,#fff4d2 57%,#c7a165 77%,#f3ddad)}
 [data-finish="metal"] .card.holo{--finish-stock:linear-gradient(120deg,#88aaa8,#e1efdf 26%,#96b9bf 46%,#f4f5ed 57%,#aea6bf 77%,#dae7de)}
 [data-finish="metal"] .card.poly{--finish-stock:linear-gradient(120deg,#cda39c,#e4d3a1 23%,#a6c7b5 43%,#eff3e0 56%,#b7adce 75%,#d6afbf)}
-[data-finish="metal"] .card:is(.foil,.holo,.poly)>.card-surface::before{background-image:repeating-linear-gradient(0deg,#fff8 0 .35px,#4f40380c .35px 1px,transparent 1px 3px),var(--finish-stock);background-size:100% 100%;animation:none}
+[data-finish="metal"] .card:is(.foil,.holo,.poly)>.card-surface::before{background-image:var(--finish-stock);background-size:100% 100%;animation:none}
 [data-finish="metal"] .card:is(.foil,.holo,.poly)>.card-surface::after{background:linear-gradient(112deg,transparent 28%,#fffced38 40%,#fffceea6 49%,#ffffffbd 50%,#fffced22 61%,transparent 72%) 150% 50%/300% 100% no-repeat;animation:finish-sweep 5s ease-in-out infinite}
 
 /* B: broad crystalline facets, with a moving refracted band. */
