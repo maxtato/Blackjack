@@ -41,7 +41,9 @@
 #menuBestGain::after{left:auto;right:-26px;transform:skewY(-25deg)}
 /* Header: table/lives/pause, cash/hands/stake/multiplier, then a single objective. */
 #app{--ui-u:min(1vw,5.3px);--base-card-w:calc(24.5 * var(--ui-u));--dock-main:clamp(65px,9.8dvh,88px);--dock-secondary:clamp(42px,5.7dvh,58px);width:100%;max-width:530px;height:100dvh;min-height:620px;padding:max(14px,env(safe-area-inset-top)) calc(3.2 * var(--ui-u)) max(12px,env(safe-area-inset-bottom));display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) calc(var(--dock-main) + var(--dock-secondary) + 10px);gap:clamp(9px,1.35dvh,15px)}
-#shaker{overflow-y:auto;overflow-x:hidden}
+/* The table stays anchored; card and reward effects animate inside it. */
+#shaker{overflow-y:auto;overflow-x:hidden;transform:none!important}
+#app{translate:none!important;rotate:none!important;scale:none!important}
 #topbar{grid-column:1;grid-row:1;display:grid;grid-template-columns:1fr auto;grid-template-rows:32px auto 23px;align-items:center;gap:clamp(9px,1.4dvh,16px) 0;padding:0;background:none;box-shadow:none;border:0;overflow:visible}
 #topbar .brand-block{grid-column:1;grid-row:1;min-width:0;align-self:center}
 #topbar .table-context{display:block;position:relative;grid-area:auto;justify-self:auto;max-width:100%;z-index:25}
@@ -300,12 +302,12 @@
 
 /* Measured portrait frames. Every dimension uses the same unit as its artwork. */
 @media (min-height:601px), (orientation:portrait){
- :root{--eq-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));--game-u:min(1vw,calc(var(--eq-height)/211.111),5.3px);--home-frame-u:min(1vw,calc(var(--eq-height)/205.3),5.3px)}
+ :root{--eq-height:calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom));--game-u:min(1vw,calc(var(--eq-height)/211.111),5.3px);--home-frame-u:min(1vw,calc(var(--eq-height)/205.3),5.3px)}
  #shaker{display:grid;place-items:center;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);overflow:hidden}
  #bg{background-size:calc(100 * var(--game-u)) calc(211.111 * var(--game-u))}
  #bg::after{display:none}
  #app{--ui-u:calc(.95 * var(--game-u));--base-card-w:calc(22 * var(--ui-u));--dock-main:var(--dock-secondary);--dock-secondary:max(44px,calc(12.4 * var(--ui-u)));width:calc(100 * var(--game-u));max-width:none;height:calc(211.111 * var(--game-u));min-height:0;margin:0;padding:calc(4.5 * var(--game-u)) calc(6.5 * var(--game-u)) calc(11 * var(--game-u));grid-template-rows:calc(31.5 * var(--ui-u)) minmax(0,1fr) calc(var(--dock-main) + var(--dock-secondary) + 2.8 * var(--ui-u));gap:calc(3.4 * var(--game-u))}
- #app[data-phase="bet"]{--dock-main:max(54px,calc(16.8 * var(--ui-u)));--dock-secondary:max(50px,calc(13.6 * var(--ui-u)))}
+ /* Reserve the same action space during betting, play and settlement. */
  #topbar{grid-template-rows:calc(8.7 * var(--ui-u)) calc(16.5 * var(--ui-u)) calc(3.6 * var(--ui-u));row-gap:calc(1.35 * var(--ui-u))}
  #topbar .table-number{font-size:calc(5.2 * var(--ui-u));padding:0}
  #topbar .lives{gap:calc(1.9 * var(--ui-u))}
@@ -349,7 +351,7 @@
  #actions .actWide .btn{font-size:calc(8 * var(--ui-u))!important}
  #app #actions .actMain .btn small{font-size:max(11px,calc(3.3 * var(--ui-u)));line-height:1.15}
  #actions .action-copy{gap:calc(.5 * var(--ui-u))}
- #app[data-phase="bet"] #actions .btn{font-size:calc(12 * var(--ui-u))!important}
+ #app[data-phase="bet"] #actions .btn{font-size:calc(8 * var(--ui-u))!important}
  #bottombar #betRow{height:var(--dock-secondary);gap:calc(2 * var(--ui-u))}
  #chips{gap:calc(2.5 * var(--ui-u))}
  #chips .chip{width:max(44px,calc(12 * var(--ui-u)));height:max(44px,calc(12 * var(--ui-u)));font-size:max(18px,calc(5.2 * var(--ui-u)))}
@@ -384,7 +386,6 @@
 .corner-r{font-size:calc(var(--card-w)*.28)}
 .corner-r .raster-glyph{--glyph-width:1em}
 .card[data-rank="10"] .corner-r{font-size:calc(var(--card-w)*.22)}
-.corner .raster-suit{width:calc(var(--card-w)*.13)!important;height:calc(var(--card-w)*.13)!important}
 /* Trim the atlas's blank cell margins around currency signs, just like letters. */
 :is(#gainVal,#chipsVal,#menuBestGain) .raster-glyph[data-glyph="$"],#multVal .raster-glyph[data-glyph="×"]{margin-inline-start:calc(var(--glyph-width)*-.2);margin-inline-end:calc(var(--glyph-width)*-.2)}
 /* Preparation pages fit the available screen; the card preview absorbs spare height. */

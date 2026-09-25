@@ -16,8 +16,16 @@ const base=new URL('../',location.href).href;
 const [html,bundle]=await Promise.all(['index.html','cold-deck.js'].map(path=>fetch(new URL(path,base),{cache:'no-store'}).then(r=>r.text())));
 const frame=document.querySelector('iframe'),screen=document.querySelector('#screen'),size=document.querySelector('#size');
 const params=new URLSearchParams(location.search);
+const finish=['metal','prism','ink'].includes(params.get('finish'))?params.get('finish'):'';
+let previewPaused=false;
+function syncPreviewMotion(){if(frame.contentDocument)frame.contentDocument.documentElement.dataset.previewPaused=String(previewPaused)}
+frame.addEventListener('load',syncPreviewMotion);
+window.addEventListener('message',event=>{if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='cold-deck-preview-motion')return;previewPaused=Boolean(event.data.paused);syncPreviewMotion()});
 screen.add(new Option('Choix de la mise','bet'));
 screen.add(new Option('Combo complété','combo-ready'));
+screen.add(new Option('Lisibilité des 10','tens'));
+screen.add(new Option('Échantillons de finitions','finish-sample'));
+screen.add(new Option('Victoire puis nouvelle mise','win-flow'));
 if([...screen.options].some(option=>option.value===params.get('screen')))screen.value=params.get('screen');
 if([...size.options].some(option=>option.value===params.get('size')))size.value=params.get('size');
 document.documentElement.classList.toggle('embed',params.get('embed')==='1');
@@ -26,17 +34,41 @@ async function render(){
  const fixture=`
  setLang('fr');
  const visualScreen=${JSON.stringify(screen.value)};
- if(visualScreen==='home')openMenu();
+ if(visualScreen==='finish-sample'){
+  document.querySelectorAll('.overlay.show').forEach(el=>el.classList.remove('show'));
+  window.ColdDeckFX?.clear();
+  const samples=document.createElement('main');samples.className='edition-samples';
+  for(const ed of ['foil','holo','poly']){
+   const figure=document.createElement('figure');figure.append(cardEl({r:'10',s:'♥',ed}));
+   const caption=document.createElement('figcaption');caption.textContent=ED_NAME[ed];figure.append(caption);samples.append(figure);
+  }
+  document.body.append(samples);
+ }
+ else if(visualScreen==='home')openMenu();
  else if(visualScreen==='circuit'||visualScreen==='free')chooseMode(visualScreen==='free'?'infini':'nuit');
  else {
   chooseMode('nuit');startGame(0);
-  const visualRanks=visualScreen.startsWith('flip-')?[5,6,7]:visualScreen==='combo-ready'?[5,6,4]:visualScreen==='double'?[5,6]:visualScreen==='no-special'?[3,4,5]:visualScreen==='editions'?[5,6,7]:visualScreen==='six'?[2,2,3,3,4,3]:visualScreen==='four'?[3,4,5,5]:[8,9];
+  const visualRanks=visualScreen.startsWith('flip-')?[5,6,7]:visualScreen==='tens'?[10,10]:visualScreen==='win-flow'?[10,9]:visualScreen==='combo-ready'?[5,6,4]:visualScreen==='double'?[5,6]:visualScreen==='no-special'?[3,4,5]:visualScreen==='editions'?[5,6,7]:visualScreen==='six'?[2,2,3,3,4,3]:visualScreen==='four'?[3,4,5,5]:[8,9];
   const visualSuits=['♣','♥','♠','♦','♣','♥'];
   const visualHand=visualRanks.map((r,i)=>({r:String(r),s:visualSuits[i],...(visualScreen==='editions'?{ed:['foil','holo','poly'][i]}:{})}));
   Object.assign(G,{phase:'play',bank:120,bet:10,betChosen:true,tokens:3,hand:2,pHand:visualHand,dHand:[{r:'K',s:'♣'},{r:'7',s:'♥',_fd:true}],_dealing:false,insisted:false,contract:{id:'csuite',reward:10,done:false},table:{...G.table,goal:200},shoe:Array.from({length:50},()=>({r:'2',s:'♣'}))});
   if(visualScreen==='bet'){G.phase='bet';G.pHand=[];G.dHand=[];}
   if(visualScreen==='split'){G.splitActive=true;G.hands=[[{r:'8',s:'♣'},{r:'3',s:'♦'}],[{r:'8',s:'♥'},{r:'4',s:'♣'}]];G.hi=0;G.pHand=G.hands[0];}
   renderAll();renderHands();
+  if(visualScreen==='win-flow'){
+   const anchors=['app','topbar','stage','center','bottombar'];
+   const measure=()=>anchors.map(id=>{const r=document.getElementById(id).getBoundingClientRect();return [r.x,r.y,r.width,r.height]});
+   requestAnimationFrame(()=>{
+    const initial=measure(),phases=new Set();let drift=0;
+    function checkLayout(){
+     const current=measure();phases.add(G.phase);
+     current.forEach((r,i)=>r.forEach((v,j)=>{drift=Math.max(drift,Math.abs(v-initial[i][j]))}));
+     parent.postMessage({type:'cold-deck-layout-check',drift:Math.round(drift*100)/100,phases:[...phases]},location.origin);
+     if(G.phase!=='bet')requestAnimationFrame(checkLayout);
+    }
+    checkLayout();
+   });
+  }
   if(visualScreen.startsWith('flip-')){
    G._dealing=true;G.pHand[2]._flip=true;renderActions();renderHands();
    const time={'flip-back':.2,'flip-edge':.45,'flip-front':.65,'flip-done':1}[visualScreen]*CARD_FLIP;
@@ -50,9 +82,11 @@ async function render(){
  `;
  const end=bundle.lastIndexOf('})();');
  const source=bundle.slice(0,end)+fixture+bundle.slice(end);
- frame.srcdoc=html.replace('<head>','<head><base href="'+base+'">').replace('<script src="cold-deck.js"><'+'/script>',()=>'<script>'+source.replace(/<\/script/gi,'<\\/script')+'<'+'/script>');
+ const sampleStyle=screen.value==='finish-sample'?'<style>body>*:not(.edition-samples):not(script){display:none!important}.edition-samples{display:flex!important;justify-content:center;gap:14px;padding:20px 12px;margin:0;--card-w:min(28vw,100px)}.edition-samples figure{margin:0;min-width:0}.edition-samples .card{height:calc(var(--card-w)*1.48)}.edition-samples figcaption{margin-top:13px;text-align:center;font:500 12px/1.2 var(--copy-font);letter-spacing:.12em;color:#c4cdd3}</style>':'';
+ frame.srcdoc=html.replace('<html lang="en">','<html lang="fr"'+(finish?' data-finish="'+finish+'"':'')+'>').replace('<head>','<head><base href="'+base+'">').replace('</head>',(finish?'<link rel="stylesheet" href="scripts/edition-effects.css">':'')+sampleStyle+'</head>').replace('<script src="cold-deck.js"><'+'/script>',()=>'<script>'+source.replace(/<\/script/gi,'<\\/script')+'<'+'/script>');
  document.querySelector('#status').textContent=width+' × '+height;
 }
+window.addEventListener('message',event=>{if(event.source!==frame.contentWindow||event.origin!==location.origin||event.data?.type!=='cold-deck-layout-check')return;document.querySelector('#status').textContent='Plateau fixe · écart max. '+event.data.drift+' px · '+event.data.phases.join(' → ')});
 screen.addEventListener('change',render);size.addEventListener('change',render);render();
 </script>
 </html>

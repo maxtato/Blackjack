@@ -1,0 +1,35 @@
+/* Optional art directions, loaded only by the comparison pages until approved. */
+[data-finish] .card:is(.foil,.holo,.poly){filter:drop-shadow(0 4px 4px #0005);--finish-light:#fff4c9;--finish-mid:#b88a37;--finish-ink:linear-gradient(110deg,#755327,#d7a34c 30%,#77512d 52%,#c59a4c 72%,#755327)}
+[data-finish] .card.holo{--finish-light:#dcfff7;--finish-mid:#659eae;--finish-ink:linear-gradient(110deg,#294f65,#749f91 30%,#465b89 52%,#977099 72%,#294f65)}
+[data-finish] .card.poly{--finish-light:#f2ddff;--finish-mid:#9563b1;--finish-ink:linear-gradient(110deg,#65366e,#408586 24%,#a56537 48%,#98586e 72%,#65366e)}
+[data-finish] .card:is(.foil,.holo,.poly) .raster-card-art::before,[data-finish] .card:is(.foil,.holo,.poly) .raster-card-art::after{display:none}
+[data-finish] .card:is(.foil,.holo,.poly)>.card-surface::after{box-shadow:none}
+[data-finish] .card:is(.foil,.holo,.poly) .edtag{border:0;background:#20333be8;color:#fff7e6;font-weight:500}
+
+/* A: continuous metallic stock, fine horizontal grain and a broad reflection. */
+[data-finish="metal"] .card.foil{--finish-stock:linear-gradient(120deg,#bc9552,#f1dbaa 26%,#cfaa6a 46%,#fff4d2 57%,#c7a165 77%,#f3ddad)}
+[data-finish="metal"] .card.holo{--finish-stock:linear-gradient(120deg,#88aaa8,#e1efdf 26%,#96b9bf 46%,#f4f5ed 57%,#aea6bf 77%,#dae7de)}
+[data-finish="metal"] .card.poly{--finish-stock:linear-gradient(120deg,#cda39c,#e4d3a1 23%,#a6c7b5 43%,#eff3e0 56%,#b7adce 75%,#d6afbf)}
+[data-finish="metal"] .card:is(.foil,.holo,.poly)>.card-surface::before{background-image:repeating-linear-gradient(0deg,#fff8 0 .35px,#4f40380c .35px 1px,transparent 1px 3px),var(--finish-stock);background-size:100% 100%;animation:none}
+[data-finish="metal"] .card:is(.foil,.holo,.poly)>.card-surface::after{background:linear-gradient(112deg,transparent 28%,#fffced38 40%,#fffceea6 49%,#ffffffbd 50%,#fffced22 61%,transparent 72%) 150% 50%/300% 100% no-repeat;animation:finish-sweep 5s ease-in-out infinite}
+
+/* B: broad crystalline facets, with a moving refracted band. */
+[data-finish="prism"] .card.foil{--finish-stock:linear-gradient(135deg,#e7c776,#fff0bd 35%,#c79747 65%,#e8ce8d)}
+[data-finish="prism"] .card.holo{--finish-stock:linear-gradient(135deg,#84c0be,#d7ebe2 30%,#b0a0c6 60%,#85b7ce)}
+[data-finish="prism"] .card.poly{--finish-stock:conic-gradient(from 25deg at 48% 52%,#d8b77c,#d28b97,#b09bc7,#83b9c5,#a5c6ae,#d8b77c)}
+[data-finish="prism"] .card:is(.foil,.holo,.poly)>.card-surface::before{background-image:conic-gradient(from 30deg at 35% 35%,#fffa 0deg 46deg,transparent 46deg 118deg,#2737482a 118deg 167deg,#ffffff50 167deg 219deg,transparent 219deg 292deg,#ffffff75 292deg 320deg,transparent 320deg),conic-gradient(from 210deg at 72% 75%,#fff7 0deg 44deg,transparent 44deg 155deg,#3143591e 155deg 224deg,transparent 224deg),var(--finish-stock);background-size:115% 115%;background-position:40% 50%;animation:finish-facets 7s ease-in-out infinite alternate}
+[data-finish="prism"] .card:is(.foil,.holo,.poly)>.card-surface::after{background:linear-gradient(126deg,transparent 35%,#fff8 36% 41%,transparent 42% 46%,#fff4 47% 51%,transparent 52%) 150% 50%/300% 100% no-repeat;animation:finish-sweep 4.8s ease-in-out infinite}
+
+/* C: cream stock with the metallic finish restricted to the printed ink. */
+[data-finish="ink"] .card:is(.foil,.holo,.poly)>.card-surface::before{background:none;animation:none}
+[data-finish="ink"] .card:is(.foil,.holo,.poly)>.card-surface::after{background:linear-gradient(112deg,transparent 38%,#ffffff52 49%,#ffffff88 50%,transparent 62%) 150% 50%/300% 100% no-repeat;animation:finish-sweep 6s ease-in-out infinite}
+[data-finish="ink"] .card:is(.foil,.holo,.poly) .card-pip,[data-finish="ink"] .card:is(.foil,.holo,.poly) .raster-glyph::after{background-image:var(--finish-ink);background-size:240% 100%;animation:finish-ink 5s ease-in-out infinite alternate}
+[data-finish="ink"] .card:is(.foil,.holo,.poly) .court-image{filter:saturate(.65) contrast(1.08) drop-shadow(1px 0 0 var(--finish-mid))}
+[data-finish="ink"] .card:is(.foil,.holo,.poly){filter:drop-shadow(0 0 2px var(--finish-mid)) drop-shadow(0 4px 4px #0005)}
+
+@keyframes finish-sweep{0%,12%{background-position:150% 50%}75%,100%{background-position:-70% 50%}}
+@keyframes finish-facets{to{background-position:65% 75%}}
+@keyframes finish-ink{to{background-position:100% 50%}}
+[data-preview-paused="true"] .card *,[data-preview-paused="true"] .card *::before,[data-preview-paused="true"] .card *::after{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){[data-finish] .card *::before,[data-finish] .card *::after,[data-finish] .card-pip{animation:none!important}}
+:root[data-motion="gentle"][data-finish] .card *::before,:root[data-motion="gentle"][data-finish] .card *::after,:root[data-motion="gentle"][data-finish] .card-pip{animation:none!important}

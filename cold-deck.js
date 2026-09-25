@@ -567,7 +567,7 @@ const ColdDeckArt = (() => {
     const courts={K:'king',Q:'queen',J:'jack'};
     const art=courts[rank]
       ?`<img class="court-image" data-court="${rank}" src="${image('court-'+courts[rank])}" width="1024" height="1536" alt="" decoding="async" draggable="false">`
-      :rank==='A'?pip(s,50,70,53):(layouts[Number(rank)]||[]).map(([x,y])=>pip(s,x,y,Number(rank)===10?18:Number(rank)>8?20:22,y>71?180:0)).join('');
+      :rank==='A'?pip(s,50,70,45):(layouts[Number(rank)]||[]).map(([x,y])=>pip(s,x,y,Number(rank)===10?15:Number(rank)>8?17:19,y>71?180:0)).join('');
     return `<div class="card-art raster-card-art" aria-hidden="true">${art}</div>`;
   }
   // HD raster illustrations shared by inventory, shops, effects and menus.
@@ -1173,7 +1173,7 @@ function cardEl(c,opts={}){
     d.setAttribute('aria-label',c.r+' '+c.s);
     if(c.s==='♥'||c.s==='♦')d.classList.add('red');
     if(!opts.dealer&&c.ed)d.classList.add(c.ed);
-    const corner='<span class="corner-r">'+ColdDeckArt.lettering(c.r)+'</span>'+suitSVG(c.s,12);
+    const corner='<span class="corner-r">'+ColdDeckArt.lettering(c.r)+'</span>';
     const tag=(!opts.dealer&&c.ed)?'<span class="edtag '+c.ed+'">'+ED_NAME[c.ed]+'</span>':'';
     d.innerHTML=ColdDeckArt.surface('<span class="corner tl">'+corner+'</span>'+ColdDeckArt.face(c.r,c.s)+'<span class="corner br">'+corner+'</span>'+tag);
   }
