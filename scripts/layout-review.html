@@ -63,7 +63,7 @@ async function render(){
     function checkLayout(){
      const current=measure();phases.add(G.phase);
      current.forEach((r,i)=>r.forEach((v,j)=>{drift=Math.max(drift,Math.abs(v-initial[i][j]))}));
-     parent.postMessage({type:'cold-deck-layout-check',drift:Math.round(drift*100)/100,phases:[...phases]},location.origin);
+     parent.postMessage({type:'cold-deck-layout-check',drift:Math.round(drift*100)/100,phases:[...phases]},${JSON.stringify(new URL(base).origin)});
      if(G.phase!=='bet')requestAnimationFrame(checkLayout);
     }
     checkLayout();
