@@ -21,8 +21,9 @@ const ColdDeckArt = (() => {
   const motionSample=()=>{motionSeed=(Math.imul(motionSeed,1664525)+1013904223)>>>0;return motionSeed/4294967296;};
   function glyph(character,index=0,previous=''){
     const c=character.toUpperCase().replace('-','−');
-    const direction={'←':'left','→':'right','↗':'forward','✕':'close'}[c];
-    if(direction)return `<i class="raster-nav" data-direction="${direction}" aria-hidden="true"></i>`;
+    const direction={'←':'left','◀':'left','→':'right','▶':'right','↗':'forward','✕':'close'}[c];
+    if(direction==='close')return '<i class="raster-nav" data-direction="close" aria-hidden="true"></i>';
+    if(direction)return `<img class="nav-triangle" data-direction="${direction}" src="icons/nav-triangle.svg" alt="" aria-hidden="true" width="24" height="24">`;
     const letter=letterCells.indexOf(c),number=numberCells.indexOf(c);
     if(letter<0&&number<0)return `<span class="raster-punctuation">${safe(character)}</span>`;
     const cols=letter>=0?6:4,cell=letter>=0?letter:number;

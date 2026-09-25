@@ -25,9 +25,9 @@ if(process.argv[2]){
   html=html.replace(/href="assets\/illustrations\/([^"/]+)\.webp"/g,(_,key)=>`href="${artData[key]}"`);
   html=html.replace('<script src="cold-deck.js"></script>',()=>'<script>\n'+portableBundle.replace(/<\/script/gi,'<\\/script')+'\n</script>');
   html=html.replace(/<link rel="manifest"[^>]+>\s*/,'');
-  html=html.replace(/href="(icons\/[^"]+)"/g,(_,file)=>{
+  html=html.replace(/(src|href)="(icons\/[^"]+)"/g,(_,attribute,file)=>{
     const mime=file.endsWith('.svg')?'image/svg+xml':'image/png';
-    return 'href="data:'+mime+';base64,'+fs.readFileSync(path.join(root,file)).toString('base64')+'"';
+    return attribute+'="data:'+mime+';base64,'+fs.readFileSync(path.join(root,file)).toString('base64')+'"';
   });
   const destination=path.resolve(process.argv[2]);fs.mkdirSync(path.dirname(destination),{recursive:true});fs.writeFileSync(destination,html);
 }

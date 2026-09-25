@@ -431,7 +431,7 @@
  #intro .bpCurrent{gap:4px}
  #intro .bpArrow{min-width:28px;min-height:32px;width:28px;height:32px}
  #intro #bpPreview{--card-w:min(70px,max(20px,calc((100cqh - 30px)/1.48)))}
- #intro #upgradesBtn{grid-column:2;grid-row:2;height:100%;margin:0;padding:8px;justify-content:center}
+ #intro #upgradesBtn{grid-column:2;grid-row:2;height:64px;max-height:100%;align-self:end;margin:0;padding:8px;justify-content:center}
  #intro #upgradesBtn .prep-art{display:none}
  #intro #upgradesBtn strong{font-size:20px}
  #intro #upgradesBtn small{font-size:11px}
@@ -462,3 +462,10 @@
  #pauseBtn .pause-mark{width:calc(5.2 * var(--ui-u));height:calc(5.2 * var(--ui-u))}
  #actions .actWide .btn{font-size:calc(8 * var(--ui-u))!important}
 }
+
+/* Image triangles stay identical across platforms, with no system arrow glyph. */
+.nav-triangle{display:inline-block;flex:none;width:1em;height:1em;object-fit:contain;vertical-align:middle}
+.nav-triangle[data-direction="right"]{transform:rotate(180deg)}
+.nav-triangle[data-direction="forward"]{transform:rotate(135deg)}
+#modeMenu .mode-arrow .nav-triangle{width:calc(4 * var(--home-u));height:calc(4 * var(--home-u));filter:brightness(.13)}
+#intro .bpArrow .nav-triangle{width:calc(5 * var(--prep-u));height:calc(5 * var(--prep-u))}
