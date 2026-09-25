@@ -614,6 +614,7 @@ function flipCard(c,opts){
   const front=cardEl(c,Object.assign({},opts,{back:false,flip:false,arrive:false,placed:false}));
   front.classList.add('front');
   wrap.appendChild(back);wrap.appendChild(front);
+  window.ColdDeckFX?.onFlip(wrap,c,CARD_FLIP);
   return wrap;
 }
 function renderHands(reveal=false){
@@ -726,11 +727,21 @@ function renderCombos(){
   const row=$('comboRow');if(!row)return;
   if(G.phase!=='play'||!G.pHand.length||G._dealing){row.innerHTML='';row.style.display='none';return;}
   const {on,soon}=comboHints();
-  const pills=on.map(t=>`<i class="cpill on">${t}</i>`).concat(soon.map(t=>`<i class="cpill">${t}</i>`)).slice(0,4);
-  if(G.endless&&G.event)pills.unshift(`<i class="cpill evt">${PXI(G.event.ic)} ${evtTitle(G.event)}</i>`);
-  if(!G.endless&&G.contract&&!G.contract.done)pills.push(`<i class="cpill ctr">${PXI('scroll')} ${contractText(G.contract)}</i>`);
+  const pill=(text,kind='',caption='')=>{
+    const [title,...detail]=text.split(' · ');
+    return `<div class="cpill ${kind}" role="listitem"><span class="combo-title">${ColdDeckArt.lettering(title)}</span><small class="combo-detail">${detail.join(' · ')||caption}</small></div>`;
+  };
+  const pills=on.map(text=>pill(text,'on',LANG==='fr'?'Si victoire':'On a win'))
+    .concat(soon.map(text=>pill(text,'',LANG==='fr'?'À tenter':'Within reach')));
+  if(G.endless&&G.event)pills.push(pill(evtTitle(G.event),'evt',LANG==='fr'?'Événement':'Event'));
+  if(!G.endless&&G.contract&&!G.contract.done)pills.push(pill(contractText(G.contract),'ctr',LANG==='fr'?'Contrat':'Contract'));
+  // One horizontal row keeps every complete label reachable without resizing the table.
+  const previous=row.scrollLeft;
   row.innerHTML=pills.join('');
+  row.setAttribute('role','list');row.tabIndex=0;
+  row.setAttribute('aria-label',LANG==='fr'?'Combinaisons et coups possibles, défilement horizontal':'Combinations and possible plays, scroll horizontally');
   row.style.display=pills.length?'flex':'none';
+  row.scrollLeft=previous;
 }
 function renderTop(){
   const tb=G.table;

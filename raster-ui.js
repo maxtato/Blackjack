@@ -39,7 +39,7 @@
     prepareAlphaMask('type-numbers','raster-numbers-ready'),
     prepareAlphaMask('brand-wordmark','raster-brand-ready')
   ]);
-  const labelSelector='button,h1:not(.menuTitle),.mode-card strong,.chip-value,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum,.zlbl>[data-i18n]';
+  const labelSelector='button,h1:not(.menuTitle),.mode-card strong,.chip-value,#gainVal,#chipsVal,#multVal,#pVal,#dVal,#tip,.tnum,.repNum,.zlbl>[data-i18n]';
   function label(el){
     const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),nodes=[];
     while(walker.nextNode()){
@@ -63,7 +63,7 @@
     if(pause&&!pause.querySelector('.pause-mark'))pause.innerHTML='<i class="raster-nav pause-mark" aria-hidden="true"></i>';
     for(const el of roots)observer.observe(el,{childList:true,subtree:true,characterData:true});
   }
-  const roots=[...document.querySelectorAll('.overlay,#adOverlay,#topbar,#bottombar,.zlbl,#peekBtn')];
+  const roots=[...document.querySelectorAll('.overlay,#adOverlay,#topbar,#bottombar,#center,.zlbl,#peekBtn')];
   const observer=new MutationObserver(decorate);
   decorate();
   // Deterministic entry point for renders and tests, without any game-state writes.

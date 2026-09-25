@@ -413,12 +413,18 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 
 /* A flat edge-on swap avoids transparent back emblems in composited 3D layers.
    Both faces change at the same midpoint; duration is supplied by the engine. */
-.flipwrap{transform-style:flat;animation:clean-card-turn var(--card-flip-duration,300ms) ease-in-out both}
+.flipwrap{transform-style:flat;animation:clean-card-turn var(--card-flip-duration,300ms) cubic-bezier(.3,.05,.3,1) both}
 .flipwrap>.card{transform:none;-webkit-backface-visibility:hidden;backface-visibility:hidden}
 .flipwrap>.back{animation:clean-card-back var(--card-flip-duration,300ms) steps(1,end) both}
 .flipwrap>.front{animation:clean-card-front var(--card-flip-duration,300ms) steps(1,end) both}
 .flipwrap>.back::before{content:none!important;display:none}
-@keyframes clean-card-turn{0%,100%{transform:scaleX(1)}50%{transform:scaleX(0)}}
+@keyframes clean-card-turn{
+  0%,100%{transform:scaleX(1) scaleY(1) rotate(0deg)}
+  38%{transform:scaleX(.16) scaleY(1.02) rotate(-1.6deg)}
+  50%{transform:scaleX(0) scaleY(1.025) rotate(0deg)}
+  72%{transform:scaleX(1.045) scaleY(.985) rotate(.8deg)}
+  88%{transform:scaleX(.99) scaleY(1.005) rotate(0deg)}
+}
 @keyframes clean-card-back{0%{visibility:visible}50%,100%{visibility:hidden}}
 @keyframes clean-card-front{0%{visibility:hidden}50%,100%{visibility:visible}}
 @media(prefers-reduced-motion:reduce){

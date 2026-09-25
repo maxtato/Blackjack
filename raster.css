@@ -69,8 +69,15 @@ button.b-blue,button[data-game-action="stand"],button[data-game-action="split"]{
 button.b-teal,button.mode-free{--button-art:var(--art-button-teal)!important;--button-ink:#183434!important}
 button.b-purple,button[data-game-action="force"]{--button-art:var(--art-button-purple)!important;--button-ink:#fff7e6!important}
 button.b-red{--button-art:var(--art-button-coral)!important;--button-ink:#291d26!important}
-button.quiet-btn,button.bpArrow,button.prBtn,button.prep-link,button#pauseBtn,button#adX,.setOpts button:not(.on){--button-art:var(--art-button-graphite)!important;--button-ink:#fff7e6!important}
-button:not(.chip):not(.bpCard):disabled{--button-art:var(--art-button-graphite)!important;--button-ink:#aeb6c1!important;opacity:.7;box-shadow:none!important}
+button.quiet-btn,button.bpArrow,button.prBtn,button.prep-link,button#pauseBtn,button#adX,.setOpts button:not(.on){--button-art:var(--art-button-blue)!important;--button-ink:#fff7e6!important}
+button.prep-link strong,button.prep-link small,button.prep-link>span:last-child{color:inherit}
+/* Unavailable controls stay identifiable against the dark panels. */
+button:not(.chip):not(.bpCard):disabled,button#adX:not(.on){--button-art:var(--art-button-blue)!important;--button-ink:#fff7e6!important;opacity:.85!important;box-shadow:none!important}
+.chip:not(.on)>.chip-art{filter:hue-rotate(155deg) saturate(1.2)}
+.chip>.chip-value{color:#282a2e}
+.chip.locked{opacity:.72}
+.chip:disabled>.chip-art{opacity:1}
+.chip:disabled>.chip-value{color:#282a2e}
 /* One type scale overrides the old per-button and inline font sizes. */
 :root{--button-label-size:22px;--menu-label-size:26px;--quiet-label-size:16px}
 button.btn{font-size:var(--button-label-size)!important;letter-spacing:0;line-height:1.15}
@@ -198,3 +205,35 @@ button .raster-glyph{--glyph-width:.62em}
  #feltInner{padding-block:2px}
  #feltInner .zone{row-gap:4px}
 }
+
+/* A fixed message track preserves both hands when hints or actions change. */
+#stage{--combo-room:88px;--hand-overhead:274px}
+#feltInner{grid-template-rows:minmax(0,1fr) var(--combo-room) minmax(0,1fr)}
+#center{width:100%;max-width:760px;height:var(--combo-room);max-height:var(--combo-room);min-width:0;gap:4px;overflow-x:visible;overflow-y:visible;justify-content:center}
+#tip:not(:empty){flex:none;max-width:100%;max-height:100%;overflow:auto;overscroll-behavior:contain;padding:4px 10px;background:#773bb9 var(--art-button-purple) center/100% 100% no-repeat;color:#fff7e6!important;border:0;border-radius:6px;font-size:12px;line-height:1.25}
+#comboRow{width:100%;min-width:0;min-height:50px;flex:none;flex-wrap:nowrap;justify-content:flex-start;align-items:stretch;gap:7px;padding:3px 2px 7px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:2px;scrollbar-width:thin;scrollbar-color:#67adf0 #17202a}
+#comboRow:focus-visible{outline:2px solid #ffce3a;outline-offset:1px;border-radius:7px}
+#comboRow .cpill{flex:0 0 auto;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:4px;min-width:116px;max-width:min(240px,100%);padding:7px 13px;border:0;border-radius:8px;background:#2064d3 var(--art-button-blue) center/100% 100% no-repeat;color:#fff7e6;box-shadow:none;font-size:13px;line-height:1.1;letter-spacing:0;font-weight:800;scroll-snap-align:start;white-space:normal;overflow-wrap:anywhere}
+#comboRow .cpill.on{background-image:var(--art-button-yellow);background-color:#ffce3a;color:#282a2e}
+#comboRow .cpill.evt{background-image:var(--art-button-purple);background-color:#773bb9;color:#fff7e6}
+#comboRow .cpill.ctr{background-image:var(--art-button-teal);background-color:#1fcfc9;color:#183434}
+.combo-title{display:block;max-width:100%;line-height:1.12}
+.combo-detail{display:block;font:650 10px/1.2 var(--font);color:inherit;letter-spacing:.01em;white-space:normal}
+.cpill .raster-glyph,#tip .raster-glyph{--glyph-width:.6em;animation:none!important}
+.flip-impact{position:absolute;pointer-events:none;transform-origin:center;will-change:transform,opacity}
+.flip-impact-art{display:block;width:100%;height:100%;object-fit:fill;filter:none}
+@media(max-width:720px){
+ #stage{--combo-room:80px;--hand-overhead:202px}
+ #comboRow .cpill{font-size:12px;min-width:108px;padding:6px 11px}
+}
+@media(max-height:600px) and (orientation:landscape){
+ #stage{--combo-room:64px;--hand-overhead:124px}
+ #feltInner{grid-template-rows:minmax(0,1fr) var(--combo-room)}
+ #center{gap:2px}
+ #comboRow{min-height:43px;padding-block:2px 5px}
+ #comboRow .cpill{padding:4px 10px;gap:2px;font-size:11px}
+ .combo-detail{font-size:9px}
+ #tip:not(:empty){padding:2px 8px;font-size:10px;line-height:1.2}
+}
+@media(prefers-reduced-motion:reduce){.flip-impact{display:none}}
+:root[data-motion=gentle] .flip-impact{display:none}

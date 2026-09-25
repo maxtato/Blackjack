@@ -14,7 +14,6 @@
   let popupTimer;
   let cameraAnimation, lastHaptic = -Infinity;
   const palette = ['#ffce3a', '#fff7e6', '#1fd1c8', '#ff5470', '#a64dff'];
-  const suitInk = {'♠':'#fff7e6', '♥':'#ff5470', '♦':'#ff9326', '♣':'#1fd1c8'};
   let preference;
   try{preference=localStorage.getItem('colddeck-motion');}catch(e){}
   const reduced = () => preference==='gentle'||motion.matches;
@@ -205,11 +204,28 @@
   }
   function onCard(card) {
     const el = cardNode(card); if (!el) return;
-    burst(el, {count:card.ed?11:5,reach:card.ed?58:33,color:suitInk[card.s]});
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
-    haptic();
-    if(!G.dHand.includes(card)){if(card.ed)lightning(el,145,5);kick(1.2);}
-    else if(card.ed)lightning(el,80,3);
+  }
+  function onFlip(wrap,card,duration=300){
+    if(reduced()||document.hidden)return;
+    // Anchor to the stable slot, not to the narrowing face. This covers the
+    // dealer's hidden card too and survives the final hand redraw.
+    later(()=>{
+      if(!wrap.isConnected||reduced()||document.hidden||document.querySelector('.overlay.show,#adOverlay.show'))return;
+      const p=rect(wrap.closest('.cardslot'));if(!p)return;
+      const target=lightningLayer||layer;
+      const origin=lightningLayer?lightningLayer.getBoundingClientRect():{left:0,top:0};
+      const shock=piece('flip-impact',p.x-origin.left,p.y-origin.top,null,target);if(!shock)return;
+      shock.style.width=(p.width*2.1)+'px';shock.style.height=(p.height*1.9)+'px';
+      shock.innerHTML=ColdDeckArt.illustration('ui-burst','flip-impact-art');
+      animate(shock,[
+        {transform:'translate(-50%,-50%) scale(.72)',opacity:0},
+        {transform:'translate(-50%,-50%) scale(.96)',opacity:card.ed?1:.86,offset:.18},
+        {transform:'translate(-50%,-50%) scale(1.04)',opacity:.62,offset:.45},
+        {transform:'translate(-50%,-50%) scale(1.18)',opacity:0}
+      ],{duration:260,easing:'cubic-bezier(.15,.8,.3,1)'},true);
+      haptic();
+    },Math.round(duration*.64));
   }
   // Reference rhythm: a local card accent, then an energy transfer to the HUD.
   function energyLink(from,to){
@@ -298,7 +314,7 @@
   }
   window.ColdDeckFX = {
     get reduced() { return reduced(); },
-    clear, onCard, onResult, onScoreCard, onRelic, onPressure, onAnnouncement, onCombo,
+    clear, onCard, onFlip, onResult, onScoreCard, onRelic, onPressure, onAnnouncement, onCombo,
     setMotion(value){
       preference=value==='gentle'?'gentle':'punchy';
       try{localStorage.setItem('colddeck-motion',preference);}catch(e){}
