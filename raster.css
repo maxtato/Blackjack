@@ -35,7 +35,8 @@
 .card:not(.back)::after{display:none}
 .raster-card-art{position:relative;width:100%;height:100%;transform:none;overflow:hidden;border-radius:inherit}
 .card-pip{position:absolute;display:block;pointer-events:none}
-.court-image{position:absolute;left:20%;top:11%;width:60%;height:78%;object-fit:contain;pointer-events:none}
+/* The three approved portraits share a quieter printed palette. */
+.court-image{position:absolute;left:20%;top:11%;width:60%;height:78%;object-fit:contain;pointer-events:none;filter:saturate(.72) brightness(.98)}
 .corner-r .raster-glyph{--glyph-width:.7em;margin-inline:0;height:1.08em;animation:none!important}
 .corner-r .raster-word{line-height:1}
 .corner .raster-suit{width:calc(var(--card-w)*.09)!important;height:calc(var(--card-w)*.09)!important}
