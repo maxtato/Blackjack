@@ -116,7 +116,7 @@
 /* Equal, quiet boxes: neutral while in reach, gold when the condition is met. */
 #comboRow{width:100%;min-height:0;max-height:100%;flex:0 1 auto;flex-flow:row wrap;justify-content:center;align-items:stretch;align-content:flex-start;gap:4px;padding:0;overflow-x:hidden;overflow-y:auto;scrollbar-width:none;scroll-snap-type:none}
 #comboRow::-webkit-scrollbar{display:none}
-#comboRow .combo-tile{box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 calc((100% - 12px)/4);min-width:0;max-width:82px;height:24px;gap:0;padding:1px 3px;border:1px solid #84949e45;border-radius:3px;background:#c5d4dd04;color:#a8b6bf;overflow:hidden;transition:border-color .24s ease,background-color .24s ease,color .24s ease}
+#comboRow .combo-tile{box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 80px;min-width:0;max-width:80px;height:24px;gap:0;padding:1px 3px;border:1px solid #84949e45;border-radius:3px;background:#c5d4dd04;color:#a8b6bf;overflow:hidden;transition:border-color .24s ease,background-color .24s ease,color .24s ease}
 #comboRow .combo-name{display:block;max-width:100%;font:500 9.5px/1.1 var(--copy-font);white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
 #comboRow .combo-tile.compact .combo-name{font-size:8.5px}
 #comboRow .combo-detail{display:block;max-width:100%;margin:0;color:#889aa6;font:500 8px/1.1 var(--copy-font);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;letter-spacing:0}
