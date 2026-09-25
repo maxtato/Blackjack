@@ -39,12 +39,21 @@
     prepareAlphaMask('type-numbers','raster-numbers-ready'),
     prepareAlphaMask('brand-wordmark','raster-brand-ready')
   ]);
-  const labelSelector='button,h1:not(.menuTitle),.mode-card strong,.chip-value,#gainVal,#chipsVal,#multVal,#pVal,#dVal,#tip,.tnum,.repNum,.zlbl>[data-i18n],.tstats,#tableName,#comboRow,#pBar .pmeta,#effects .joker,#effects .tarot';
+  // Reserve illustrated glyphs for display labels, not reading-sized copy.
+  const labelSelector='button,h1:not(.menuTitle),.mode-card strong,.chip-value,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum';
+  const copySelector='small,p,.ds,.mode-description,.mode-topline,.mode-bottom,.hero-copy,.hero-tags,.menu-record-note,.rules .rule-entry,.rules .rt,#tip,#comboRow,#tableName,#tableMeta,#ruleText,#pBar .pmeta,.zlbl>[data-i18n],.tstats .k,.tstats .lbl,.tstats .tt,.tstats .ts,.inventory-label,.objective-label,.section-label,.eyebrow,.setLbl,.back-name,.repLbl,.mrl,.mrv,#slotc,#consumeSlots';
+  function readableCopy(el){
+    el.classList.add('readable-copy');
+    for(const ink of el.querySelectorAll('.raster-copy,.live-word')){
+      const text=ink.querySelector('.sr-only')?.textContent;
+      if(text!=null)ink.replaceWith(document.createTextNode(text));
+    }
+  }
   function label(el){
     const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),nodes=[];
     while(walker.nextNode()){
       const node=walker.currentNode;
-      if(node.textContent.trim()&&!node.parentElement.closest('.raster-copy,.sr-only,small,svg,[aria-hidden="true"]'))nodes.push(node);
+      if(node.textContent.trim()&&!node.parentElement.closest('.raster-copy,.sr-only,.readable-copy,small,svg,[aria-hidden="true"]'))nodes.push(node);
     }
     for(const node of nodes){
       const fragment=document.createElement('span');fragment.innerHTML=ColdDeckArt.lettering(node.textContent);
@@ -57,6 +66,7 @@
   }
   function decorate(){
     observer.disconnect();
+    document.querySelectorAll(copySelector).forEach(readableCopy);
     document.querySelectorAll(labelSelector).forEach(label);
     document.querySelectorAll('.menuTitle,.table-brand,.wordmark').forEach(brand);
     const pause=$('pauseBtn');

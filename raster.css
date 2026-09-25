@@ -247,3 +247,16 @@ button .raster-glyph{--glyph-width:.62em}
 #shaker[inert] .card,#shaker[inert] .flipwrap>.card{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.hand .card{animation:none!important;top:0!important}}
 :root[data-motion=gentle] .hand .card{animation:none!important;top:0!important}
+
+/* Reading text uses a local lowercase-capable font; display artwork is unchanged. */
+@font-face{font-family:"Barlow";src:url("fonts/barlow-latin-500-normal.woff2") format("woff2");font-style:normal;font-weight:500;font-display:swap}
+:root{--copy-font:"Barlow","Avenir Next","Segoe UI",Arial,sans-serif;--font:var(--copy-font)}
+.readable-copy,.readable-copy :where(span,b,strong,em,small){font-family:var(--copy-font)!important;font-weight:500!important;letter-spacing:normal!important;text-transform:none!important}
+.readable-copy{line-height:1.4}
+.readable-copy .live-letter{animation:none!important;top:0!important;transform:none!important}
+#comboRow .cpill,#comboRow .cpill.on,#comboRow .cpill:not(.on){font-family:var(--copy-font);font-weight:500;font-size:13px;line-height:1.3}
+#comboRow .combo-title{font-size:13px;line-height:1.3}
+#comboRow .combo-detail{font-family:var(--copy-font);font-weight:500;font-size:12px;line-height:1.3}
+#tip:not(:empty){font-family:var(--copy-font);font-size:13px;line-height:1.35}
+.btn small,.mode-card .mode-description{font-family:var(--copy-font);font-weight:500;line-height:1.35}
+@media(max-height:600px) and (orientation:landscape){#comboRow .combo-title,#tip:not(:empty){font-size:12px}#comboRow .combo-detail{font-size:11px}}

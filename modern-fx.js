@@ -332,7 +332,7 @@
   // Animate the lettering, while preserving a whole-word accessible label.
   // Observe only the small regions the renderer replaces, never each frame.
   const liveRegions=[document.querySelector('.menuTitle'),$('tableName'),$('gainVal'),$('multVal'),$('actions'),$('planqueTitle'),...document.querySelectorAll('.zlbl,.mode-card strong')].filter(Boolean);
-  const letterTargets='.menuTitle,#tableName,#gainVal,#multVal,#pVal,#dVal,.zlbl>[data-i18n],#actions .blbl,#planqueTitle,.mode-card strong';
+  const letterTargets='.menuTitle,#gainVal,#multVal,#pVal,#dVal,#actions .blbl,#planqueTitle,.mode-card strong';
   function enlivenLetters(){
     document.querySelectorAll(letterTargets).forEach(el=>{
       if(el.matches('.menuTitle,#gainVal,#multVal,#pVal,#dVal,.zlbl>[data-i18n],#actions .blbl,.mode-card strong,#planqueTitle'))return;
