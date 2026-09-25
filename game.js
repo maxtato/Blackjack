@@ -23,6 +23,8 @@ function abbr(n){
 function abbrS(n){return abbr(n).replace(/ /g,'<span class="thouSep"></span>');}
 /* montant d'argent, abrégé ET placé selon la langue : « 1.5K $ » en FR, « $1.5K » en EN */
 function cash(n){const a=abbr(n);return LANG==='fr'?(a+' $'):(a.charAt(0)==='-'?('-$'+a.slice(1)):('$'+a));}
+// Compact currency used by the Équilibre scoreboard and home record.
+function boardCash(n){const a=abbr(n);return a.charAt(0)==='-'?('-$'+a.slice(1)):('$'+a);}
 function cashS(n){const a=abbrS(n);return LANG==='fr'?(a+' $'):(a.charAt(0)==='-'?('-$'+a.slice(1)):('$'+a));}
 
 /* ---------- audio ---------- */
@@ -675,7 +677,7 @@ function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les 
   const f=$('pFill');if(f)f.style.width=pct+'%';
   const pp=$('pPct');if(pp){pp.textContent=lvl?t('ui.lvl',lvl,BARAKA_MULT[lvl]):'';pp.style.display=lvl?'':'none';}
   const ps=$('pState');if(ps){ps.textContent=t('ui.streak');ps.style.color='';}
-  const bar=$('pBar');if(bar)bar.classList.toggle('tick',lvl>=3);
+  const bar=$('pBar');if(bar){bar.classList.toggle('tick',lvl>=3);bar.dataset.active=String(pct>0);}
   const tbl=document.getElementById('table');if(tbl)tbl.classList.toggle('boil',lvl>=3);
   window.ColdDeckFX?.onPressure();
 }
@@ -686,7 +688,7 @@ function renderMult(){
     const r=computeMult(mode);m=r.mult;bonus=r.bonusChips;
   }
   const stake=G.bet*(G.stakeMult||1);
-  $('chipsVal').textContent=bonus?(abbr(stake)+'+'+bonus):abbr(stake);
+  $('chipsVal').textContent=bonus?(boardCash(stake)+'+'+bonus):boardCash(stake);
   $('multVal').textContent=fmtMult(m);
   $('scorebox').classList.toggle('hot',m>1||bonus>0);
   renderCombos();
@@ -756,7 +758,7 @@ function renderTop(){
   const mx=$('mainMax');if(mx)mx.textContent=nMains;
   const tp=$('turnPips');if(tp){let h='';for(let i=0;i<nMains;i++)h+='<i class="'+(i<G.hand?'on':'')+'"></i>';tp.innerHTML=h;}
   applyFelt();   // tapis évolutif : design + couleur selon la table
-  const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=heartSVG(15)+'<span class="lvn">×'+n+'</span>';lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
+  const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=Array.from({length:Math.max(3,Math.min(5,n))},(_,i)=>'<span class="life'+(i>=n?' off':'')+'" aria-hidden="true">'+heartSVG(20)+'</span>').join('')+(n>5?'<span class="lvn">+'+(n-5)+'</span>':'');lv.setAttribute('aria-label',t('ui.lives')+' : '+n);lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
   $('tableName').textContent=tableName(tb);                         // nom seul, en gros
   const tableNumber=$('tableNumber');if(tableNumber)tableNumber.textContent=String(G.endless?(G.palier||0)+1:G.tableIdx+1).padStart(2,'0');
   const tm=$('tableMeta');if(tm)tm.textContent=G.endless
@@ -783,7 +785,7 @@ function renderTop(){
 }
 /* barre de progression GAIN → OBJECTIF (au-dessus du tapis) */
 function renderObjective(){
-  const gv=$('gainVal');if(gv)gv.textContent=cash(G.bank);
+  const gv=$('gainVal');if(gv)gv.textContent=boardCash(G.bank);
   const lbl=document.querySelector('#gainStat .lbl');if(lbl)lbl.textContent=G.endless?t('ui.potLbl'):t('ui.gain');
   // nouvelle table / palier : la barre repart de 0 SANS glisser depuis l'objectif précédent (on coupe la transition le temps de la remettre à zéro)
   const _of=$('objFill'),_snap=_of&&G._objBarIdx!==G.tableIdx;
@@ -792,7 +794,8 @@ function renderObjective(){
     const p=G.palier||0,target=palierTarget(p);
     const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,target)*100));
     const f=$('objFill');if(f)f.style.width=pct+'%';
-    const g=$('objGoal');if(g)g.textContent=abbr(G.bank)+' / '+abbr(target);
+    const g=$('objGoal');if(g)g.textContent=boardCash(target);
+    updateObjectiveReadout(pct);
     const bar=$('objBar');if(bar)bar.classList.remove('full');
     if(gv)gv.classList.remove('warn');
     return;
@@ -801,9 +804,25 @@ function renderObjective(){
   // barre = jetons ABSOLUS (depuis 0) vers l'objectif, exactement comme les paliers en Sans Fin (bank/target)
   const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,goal)*100));
   const f=$('objFill');if(f)f.style.width=pct+'%';
-  const g=$('objGoal');if(g)g.textContent=abbr(G.bank)+' / '+abbr(goal);
+  const g=$('objGoal');if(g)g.textContent=boardCash(goal);
+  updateObjectiveReadout(pct);
   if(gv)gv.classList.toggle('warn',!!(G.table&&G.bank<G.table.min*3));
   const bar=$('objBar');if(bar)bar.classList.toggle('full',G.bank>=goal);
+}
+function updateObjectiveReadout(pct){
+  const rounded=Math.round(pct),label=$('objPct'),bar=$('objBar');
+  if(label)label.textContent=rounded+'%';
+  if(bar){bar.setAttribute('aria-valuenow',rounded);bar.setAttribute('aria-label',t('modern.goal'));}
+}
+// A stable five-slot shelf, with horizontal scrolling when more items are owned.
+function renderInventorySlots(){
+  const shelf=$('effects');shelf.hidden=false;
+  shelf.setAttribute('aria-label',t('modern.loadout'));
+  shelf.querySelectorAll('.inventory-empty').forEach(el=>el.remove());
+  const count=shelf.querySelectorAll('.joker,.tarot').length;
+  for(let i=count;i<5;i++){
+    const slot=document.createElement('span');slot.className='inventory-empty';slot.setAttribute('aria-hidden','true');shelf.append(slot);
+  }
 }
 function fanEffects(){
   // étiquettes : simple rangée (plus d'éventail de jetons)
@@ -875,7 +894,7 @@ function renderRelics(){
   });
   $('slotc').textContent=`${G.relics.length}/5`;
   $('slotc').parentElement.setAttribute('aria-label',`${t('ui.relics')} : ${G.relics.length}/5`);
-  $('effects').hidden=!G.relics.length&&!G.consumables.length;
+  renderInventorySlots();
   fanEffects();
 }
 function consumableSlots(){return 2+(hasRelic('portebonheur')?1:0)+uLvl('tarot')+((G.boons&&G.boons.tarot)||0);}
@@ -891,7 +910,7 @@ function renderConsumables(){
   });
   $('consumeSlots').textContent=`${G.consumables.length}/${consumableSlots()}`;
   $('consumeSlots').parentElement.setAttribute('aria-label',`${t('ui.consumables')} : ${G.consumables.length}/${consumableSlots()}`);
-  $('effects').hidden=!G.relics.length&&!G.consumables.length;
+  renderInventorySlots();
   row.style.display=(G.consumables.length||hasRelic('portebonheur'))?'flex':'none';
   fanEffects();
 }
@@ -1034,7 +1053,8 @@ function renderActions(){
   const v=G.pHand.length?handValue(G.pHand).total:0;
   const flirt=v>=17&&v<=20;
   if(flirt){
-    add(main,t('act.risk'),'b-red',()=>{G.insisted=true;playerHit();},t('act.riskSub'),!live);
+    const hit=add(main,t('act.hit'),'b-gold',()=>{G.insisted=true;playerHit();},t('act.hitSub'),!live);
+    hit.title=t('act.hitSub')+' · '+t('act.riskSub');hit.setAttribute('aria-description',hit.title);
     add(main,t('act.stand'),'b-blue',playerStand,t('act.standSub'),!live);
   }else{
     add(main,t('act.hit'),'b-gold',()=>playerHit(),t('act.hitSub'),!live);
@@ -1044,12 +1064,10 @@ function renderActions(){
   const two=G.pHand.length===2, pair=two&&G.pHand[0].r===G.pHand[1].r;
   const canSplit=!G.splitActive&&two&&pair&&G.bank>=G.bet;
   const canDouble=!G.splitActive&&two&&!flirt&&G.bank>=G.bet;   // fenêtre de double : total bas (9/10/11…)
-  const specials=[];
-  if(canSplit)specials.push([t('act.split'),'b-blue',playerSplit,t('act.splitSub'),!live]);
-  if(canDouble)specials.push([t('act.double'),'b-gold',playerDouble,t('act.doubleSub'),!live]);
-  if(flirt)specials.push([t('act.force'),'b-purple',forcerChance,(G.forcedUsed?t('act.forceUsed'):t('act.forceSub')),!live||G.forcedUsed]);
-  if(!specials.length)specials.push([t('act.force'),'b-purple',forcerChance,t('act.forceOff'),true]);
-  specials.slice(0,2).forEach(s=>add(wide,s[0],s[1],s[2],s[3],s[4]));
+  // The two secondary positions stay stable; availability follows the same rules.
+  if(pair&&!G.splitActive)add(wide,t('act.split'),'b-blue',playerSplit,t('act.splitSub'),!live||!canSplit);
+  else add(wide,t('act.double'),'b-blue',playerDouble,t('act.doubleSub'),!live||!canDouble);
+  add(wide,t('act.force'),'b-purple',forcerChance,G.forcedUsed?t('act.forceUsed'):t('act.forceSub'),!live||!flirt||G.forcedUsed);
   a.appendChild(main);a.appendChild(wide);
 }
 function usePeek(){
@@ -2178,10 +2196,11 @@ function stepResume(d){ startPalierIdx=(startPalierIdx||0)+d; renderPlanque(); }
 /* ---------- LA PLANQUE (hub de méta-progression, propre au mode courant) ---------- */
 function renderPlanque(){
   const m=metaCur(),inf=MODE==='infini';
+  $('intro').dataset.mode=MODE;
   $('repBal').innerHTML=abbrS(m.rep);
-  const pt=$('planqueTitle');if(pt)pt.textContent=t('planque.title');
+  const pt=$('planqueTitle');if(pt)pt.textContent=t(inf?'menu.endless':'menu.circuit');
   const ps=$('planqueSub');if(ps)ps.innerHTML=t(inf?'planque.subInf':'planque.subCircuit');
-  const tag=$('planqueMode');if(tag){tag.innerHTML=inf?t('planque.modeInf'):PXI('flag')+' '+t('planque.modeCircuit');tag.className='planqueMode '+(inf?'inf':'nuit');}
+  const tag=$('planqueMode');if(tag){tag.textContent=LANG==='fr'?'La planque':'The hideout';tag.className='planqueMode '+(inf?'inf':'nuit');}
   const rb=$('recBox');if(rb)rb.innerHTML=t('planque.best')+'<br><span style="white-space:nowrap">'+(inf
     ?`<b>${t('planque.tierN',m.record.palier||0)}</b> · <b>${cashS(m.record.peak||0)}</b>`
     :`<b>${t('planque.tables',m.record.depth||0)}</b> · <b>${cashS(m.record.chips||0)}</b>`)+'</span>';

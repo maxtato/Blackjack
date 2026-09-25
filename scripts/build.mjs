@@ -12,7 +12,7 @@ fs.writeFileSync(path.join(root,'cold-deck.js'),bundle);
 // an HTML preview isolates script execution from the global window object.
 if(process.argv[2]){
   let html=fs.readFileSync(path.join(root,'index.html'),'utf8');
-  for(const css of ['modern.css','electric.css','illustrated.css','raster.css']){
+  for(const css of ['modern.css','electric.css','illustrated.css','raster.css','equilibre.css']){
     html=html.replace('<link rel="stylesheet" href="'+css+'">',()=>'<style>\n'+fs.readFileSync(path.join(root,css),'utf8')+'\n</style>');
   }
   // Keep the reading font available in standalone exports as well.

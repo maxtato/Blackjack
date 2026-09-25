@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="electric.css">
 <link rel="stylesheet" href="illustrated.css">
 <link rel="stylesheet" href="raster.css">
+<link rel="stylesheet" href="equilibre.css">
 <link rel="preload" as="image" type="image/webp" href="assets/illustrations/type-letters.webp">
 <link rel="preload" as="image" type="image/webp" href="assets/illustrations/type-numbers.webp">
 </head>
@@ -37,8 +38,13 @@
 <div id="shaker">
 <div id="app">
   <header id="topbar">
-    <div class="brand-block"><div class="table-brand" role="img" aria-label="Cold Deck"><span>C<svg class="logo-o" viewBox="0 0 44 48" aria-hidden="true"><ellipse cx="22" cy="24" rx="21" ry="23" fill="currentColor"/><path d="M27 2 10 27h11l-5 19 19-28H23Z" fill="var(--bg0)"/></svg>LD</span><span>DECK</span></div><div class="table-number">TABLE <b id="tableNumber">01</b></div></div>
-    <div class="thead-right"><button id="pauseBtn" data-action="openPause" data-i18n-title="ui.pause" aria-label="Pause"><span></span><span></span></button><div id="lives" class="lives" data-i18n-title="ui.lives"></div></div>
+    <div class="brand-block">
+      <details class="table-context">
+        <summary class="table-number"><span data-i18n="modern.table">Table</span> <b id="tableNumber">01</b></summary>
+        <div class="table-context-body"><strong id="tableName">Cold Deck</strong><span class="tmeta" id="tableMeta"></span><span class="rule" id="ruleText"></span></div>
+      </details>
+    </div>
+    <div class="thead-right"><div id="lives" class="lives" data-i18n-title="ui.lives"></div><button id="pauseBtn" data-action="openPause" data-i18n-title="ui.pause" aria-label="Pause"><span></span><span></span></button></div>
     <div class="tstats">
       <div class="stat turnstat" id="turnStat">
         <span class="tnum" id="turnNum">4</span>
@@ -54,22 +60,18 @@
       </div>
       <div class="stat gainstat" id="gainStat"><span class="lbl" data-i18n="ui.gain">CASH</span><span class="v" id="gainVal">$50</span></div>
     </div>
-    <div id="objWrap" aria-label="Progression"><span class="objective-label" data-i18n="modern.goal">OBJECTIF</span>
-      <div id="objBar"><div id="objFill"></div></div>
-      <div id="objTick"></div>
-      <span id="objGoal">$0</span>
+    <div id="objWrap" aria-label="Progression">
+      <span class="objective-caption"><span class="objective-label" data-i18n="modern.goal">Objectif</span> <span id="objGoal">$0</span></span>
+      <div id="objBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div id="objFill"></div></div>
+      <span id="objPct">0%</span><div id="objTick"></div>
     </div>
   </header>
 
   <div id="mid">
-  <div class="table-tools">
-    <details class="table-context"><summary id="tableName">Cold Deck</summary><div class="table-context-body"><span class="tmeta" id="tableMeta"></span><span class="rule" id="ruleText"></span></div></details>
-    <div class="inventory-count relic-count"><img class="inventory-art" src="assets/illustrations/relic2.webp" width="32" height="32" alt="" aria-hidden="true"><span id="slotc"></span></div>
-    <div class="inventory-count consume-count"><img class="inventory-art" src="assets/illustrations/tarot.webp" width="32" height="32" alt="" aria-hidden="true"><span id="consumeSlots"></span></div>
-  </div>
-  <div id="effects"><div class="inventory-label" data-i18n="modern.loadout">TES ATOUTS</div>
-    <div id="relicRow"><div id="relics"></div></div>
-    <div id="consumeRow"><div id="consumes"></div></div>
+  <div id="effects" role="group" data-i18n-label="modern.loadout">
+    <div class="inventory-label sr-only" data-i18n="modern.loadout">Tes atouts</div>
+    <div id="relicRow"><div id="relics"></div><span class="inventory-count sr-only"><span id="slotc"></span></span></div>
+    <div id="consumeRow"><div id="consumes"></div><span class="inventory-count sr-only"><span id="consumeSlots"></span></span></div>
   </div>
   <div id="pBar"><div id="pFill"></div><span class="pmeta"><span id="pState">STREAK</span><span id="pPct"></span></span></div>
 
@@ -83,13 +85,13 @@
           <div id="multPop"><div class="burst"></div><span class="m"></span><span class="t"></span></div>
           <div id="recPop"><span class="rm" data-i18n="rec.banner">★ NEW RECORD ★</span><span class="rt"></span></div>
           <div class="zone dealer-zone">
-            <div class="zlbl"><span data-i18n="ui.dealer">Dealer</span><span class="v" id="dVal">—</span></div>
-            <div class="hand" id="dHand"></div>
+            <div class="zlbl"><span data-i18n="ui.dealer">Croupier</span></div>
+            <div class="hand" id="dHand"></div><span class="hand-total" id="dVal" aria-live="polite">—</span>
           </div>
           <div id="center"><div class="table-divider" aria-hidden="true"><span></span>♠<span></span></div><div id="tip" role="status" aria-live="polite"></div><div id="comboRow"></div></div>
           <div class="zone player-zone">
-            <div class="zlbl"><span data-i18n="ui.you">You</span><span class="v" id="pVal">—</span></div>
-            <div class="hand" id="pHand"></div>
+            <div class="zlbl"><span data-i18n="ui.you">Ta main</span></div>
+            <div class="hand" id="pHand"></div><span class="hand-total" id="pVal" aria-live="polite">—</span>
           </div>
         </div>
       </div>
@@ -110,45 +112,44 @@
 <!-- MENU PRINCIPAL -->
 <div class="overlay show menu-page" id="modeMenu">
  <div class="ovpanel">
-  <header class="menu-top"><span class="wordmark">cold deck<span class="brand-dot">®</span></span><nav aria-label="Menu"><button id="rulesBtn0" class="quiet-btn" data-action="openRules" data-i18n="nav.rules">RÈGLES</button><button id="setBtn0" class="quiet-btn" data-action="openSettings" data-i18n="nav.settings">RÉGLAGES</button></nav></header>
   <main class="home-grid">
     <div class="brand-stage">
-      <div class="eyebrow"><span class="live-dot"></span> <span data-i18n="modern.club">CLUB PRIVÉ · BLACKJACK ROGUELITE</span></div>
-      <h1 class="menuTitle" aria-label="Cold Deck">COLD<span class="title-accent">DECK.</span></h1>
+      <h1 class="menuTitle" aria-label="Cold Deck">COLD<span class="title-accent">DECK</span></h1>
+      <div class="eyebrow" data-i18n="modern.club">Blackjack roguelite</div>
       <p class="hero-copy" data-i18n-html="modern.hero">Une carte de plus.<br>Et tout peut basculer.</p>
-      <div class="hero-tags"><span data-i18n="modern.tag1">DES COMBOS</span><span data-i18n="modern.tag2">DU CULOT</span><span>21.</span></div>
     </div>
-    <div class="hero-art" aria-hidden="true">
-      <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div>
-      <span class="hero-star star-one">✦</span><span class="hero-star star-two">✦</span>
-      <span class="hero-chip chip-one">21</span><span class="hero-chip chip-two">×3</span>
-      <div class="menu-hand" id="menuHand"></div>
-    </div>
+    <div class="hero-art" aria-hidden="true"><div class="menu-hand" id="menuHand"></div></div>
     <section class="mode-choice" aria-labelledby="chooseLabel">
-      <div class="section-label" id="chooseLabel"><span class="live-dot"></span><span data-i18n="menu.choose">CHOISIS TA TABLE</span></div>
+      <span class="sr-only" id="chooseLabel" data-i18n="menu.choose">Choisis ta table</span>
       <p id="bootNotice" class="boot-notice" role="status">Chargement du jeu. Si ce message reste affiché, ouvre la version web dans Safari ou Chrome.</p>
       <div class="mode-list">
-        <button class="mode-card mode-circuit" data-action="select-circuit" disabled><span class="mode-icon" aria-hidden="true"><img src="assets/illustrations/as.webp" width="52" height="52" alt=""></span><span class="mode-content"><span class="mode-topline" data-i18n="menu.circuitTag">L'AVENTURE</span><strong id="menuCircuit">CIRCUIT</strong><span class="mode-description" id="menuTourneeSub"></span></span><span class="mode-arrow" aria-hidden="true">↗</span></button>
-        <button class="mode-card mode-free" data-action="select-free" disabled><span class="mode-icon" aria-hidden="true"><img src="assets/illustrations/roue.webp" width="52" height="52" alt=""></span><span class="mode-content"><span class="mode-topline" data-i18n="menu.freeTag">À TON RYTHME</span><strong data-i18n="menu.endless">LIBRE</strong><span class="mode-description" data-i18n="menu.endlessSub">Du blackjack, sans missions.</span></span><span class="mode-arrow" aria-hidden="true">↗</span></button>
+        <button class="mode-card mode-circuit" data-action="select-circuit" disabled><span class="mode-content"><strong id="menuCircuit">CIRCUIT</strong><span class="mode-description" id="menuTourneeSub"></span></span><span class="mode-arrow" aria-hidden="true">▶</span></button>
+        <button class="mode-card mode-free" data-action="select-free" disabled><span class="mode-content"><strong data-i18n="menu.endless">LIBRE</strong><span class="mode-description" data-i18n="menu.endlessSub">Du blackjack à ton rythme.</span></span><span class="mode-arrow" aria-hidden="true">▶</span></button>
       </div>
     </section>
   </main>
-  <footer class="home-footer"><div class="menuRecs" id="menuRecords"></div><span class="menu-footnote" data-i18n="menu.recordNote">Ta progression est conservée sur cet appareil.</span></footer>
+  <footer class="home-footer">
+    <nav class="home-navigation" aria-label="Menu">
+      <button id="rulesBtn0" class="home-nav-button" data-reading-label data-action="openRules"><svg viewBox="0 0 32 28" aria-hidden="true"><path d="M16 5C12 1 6 1 2 3v21c5-2 9-2 14 1 5-3 9-3 14-1V3c-4-2-10-2-14 2ZM16 5v20M6 5v15M26 5v15"/></svg><span data-i18n="nav.rules">Règles</span></button>
+      <button id="setBtn0" class="home-nav-button" data-reading-label data-action="openSettings"><img src="assets/illustrations/ui-settings.webp" width="28" height="28" alt=""><span data-i18n="nav.settings">Réglages</span></button>
+    </nav>
+    <div class="menuRecs" id="menuRecords"></div>
+  </footer>
  </div>
 </div>
 
 <!-- LA PLANQUE -->
 <div class="overlay menu-page" id="intro">
  <div class="ovpanel">
-  <header class="menu-top"><button class="quiet-btn" data-action="openMenu" data-i18n="nav.back">← MODES DE JEU</button><span class="wordmark">COLD DECK</span><button id="rulesBtn" class="quiet-btn" data-action="openRules" data-i18n="nav.rules">RÈGLES</button></header>
+  <header class="menu-top"><button class="quiet-btn" data-reading-label data-action="openMenu" data-i18n="nav.back">← MODES DE JEU</button><span class="wordmark">COLD DECK</span><button id="rulesBtn" class="quiet-btn" data-reading-label data-action="openRules" data-i18n="nav.rules">RÈGLES</button></header>
   <div class="hideout-heading"><div class="planqueMode" id="planqueMode"></div><h1 id="planqueTitle">LA PLANQUE</h1><p id="planqueSub"></p></div>
   <main class="hideout-grid">
    <section class="ready-panel"><span class="section-label" data-i18n="menu.nextHand">LA PROCHAINE MAIN T'ATTEND</span><div id="readySuit" class="ready-suit" aria-hidden="true"></div><div id="palierResume" style="display:none"></div><button class="btn b-gold menu" id="planqueLaunch" data-action="launchMode"></button><button class="btn b-red menu" id="planqueZ2" data-action="start-zone-two" style="display:none"><span data-i18n="planque.zone2">ZONE 2</span><small data-i18n="planque.zone2Sub"></small></button></section>
    <section class="prep-panel"><div class="section-label" data-i18n="menu.preparation">TA PRÉPARATION</div><div class="repBar"><div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl" data-i18n="planque.rep">réputation</span></div><div class="recBox" id="recBox"></div></div><button class="prep-link" id="upgradesBtn" data-action="openUpgrades"><span><strong data-i18n="planque.upgrades">AMÉLIORATIONS</strong><small id="upgradesSub"></small></span><span aria-hidden="true">↗</span></button>
-    <div class="backPick"><div class="back-caption"><span class="section-label" data-i18n="planque.back">DOS DE CARTE</span><button class="quiet-btn bpAll" data-action="openBacks" data-i18n="planque.seeAll">LA COLLECTION →</button></div><div class="bpCurrent"><button class="bpArrow" id="bpPrev" data-action="back-previous" data-i18n-title="planque.prevBack" aria-label="Previous back">←</button><div class="bpPrevWrap"><div class="card back bpCard" id="bpPreview" aria-hidden="true"></div><div class="bpNum" id="bpSub" aria-live="polite"></div></div><button class="bpArrow" id="bpNext" data-action="back-next" data-i18n-title="planque.nextBack" aria-label="Next back">→</button></div></div>
+    <div class="backPick"><div class="back-caption"><span class="section-label" data-i18n="planque.back">DOS DE CARTE</span><button class="quiet-btn bpAll" data-reading-label data-action="openBacks" data-i18n="planque.seeAll">LA COLLECTION →</button></div><div class="bpCurrent"><button class="bpArrow" id="bpPrev" data-action="back-previous" data-i18n-title="planque.prevBack" aria-label="Previous back">←</button><div class="bpPrevWrap"><div class="card back bpCard" id="bpPreview" aria-hidden="true"></div><div class="bpNum" id="bpSub" aria-live="polite"></div></div><button class="bpArrow" id="bpNext" data-action="back-next" data-i18n-title="planque.nextBack" aria-label="Next back">→</button></div></div>
    </section>
   </main>
-  <footer class="hideout-footer"><button class="quiet-btn" data-action="openSettings" data-i18n="nav.settings">RÉGLAGES</button><button id="restartBtn" class="quiet-btn danger-link" data-action="restartAll" data-i18n="nav.reset">Réinitialiser ce mode</button></footer>
+  <footer class="hideout-footer"><button class="quiet-btn" data-reading-label data-action="openSettings" data-i18n="nav.settings">RÉGLAGES</button><button id="restartBtn" class="quiet-btn danger-link" data-reading-label data-action="restartAll" data-i18n="nav.reset">Réinitialiser ce mode</button></footer>
  </div>
 </div>
 

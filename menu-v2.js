@@ -1,12 +1,12 @@
 /* Presentation only: the blackjack engine and progression are unchanged. */
 Object.assign(STR.fr,{
- 'ui.gain':'BANQUE','ui.turnsLeft':'MAINS','act.double':'DOUBLE',
- 'modern.club':'BLACKJACK ROGUELITE','modern.private':'COLD DECK','modern.afterhours':'HAUTE TENSION',
- 'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','modern.goal':'OBJECTIF','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
- 'nav.rules':'RÈGLES','nav.settings':'RÉGLAGES','nav.back':'← MODES DE JEU','nav.reset':'Réinitialiser ce mode',
+ 'ui.bet':'Mise','ui.mult':'Multi','ui.gain':'Cagnotte','ui.potLbl':'Cagnotte','ui.turnsLeft':'mains<br>restantes','ui.you':'Ta main','ui.dealer':'Croupier','act.double':'DOUBLER','act.force':'FORCER','modern.table':'Table',
+ 'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HAUTE TENSION',
+ 'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','cb.to21':n=>'21 parfait ×3 · Possible avec la prochaine carte','modern.goal':'Objectif','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
+ 'nav.rules':'Règles','nav.settings':'Réglages','nav.back':'← MODES DE JEU','nav.reset':'Réinitialiser ce mode',
  'menu.choose':'CHOISIS TA TABLE','menu.freeTag':'À TON RYTHME','menu.circuitTag':"L'AVENTURE",
- 'menu.endless':'LIBRE','menu.endlessSub':'Du blackjack, sans missions.',
- 'menu.circuit':'CIRCUIT','menu.circuitSub':n=>n+' tables · boss, reliques & tarots',
+ 'menu.endless':'LIBRE','menu.endlessSub':'Du blackjack à ton rythme.',
+ 'menu.circuit':'CIRCUIT','menu.circuitSub':n=>"L'aventure, table après table.",
  'menu.freeAction':'PRENDRE PLACE','menu.circuitAction':'ENTRER DANS LE CIRCUIT',
  'menu.recordNote':'Ta progression est conservée sur cet appareil.',
  'menu.nextHand':"LA PROCHAINE MAIN T'ATTEND",'menu.preparation':'TA PRÉPARATION',
@@ -23,13 +23,13 @@ Object.assign(STR.fr,{
  'set.open':'RÉGLAGES'
 });
 Object.assign(STR.en,{
- 'ui.gain':'BANK','ui.turnsLeft':'HANDS',
- 'modern.club':'BLACKJACK ROGUELITE','modern.private':'COLD DECK','modern.afterhours':'HIGH VOLTAGE',
- 'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'TARGET','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'THE HOUSE IS WATCHING.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
- 'nav.rules':'HOW TO PLAY','nav.settings':'SETTINGS','nav.back':'← GAME MODES','nav.reset':'Reset this mode',
+ 'ui.bet':'Bet','ui.mult':'Multi','ui.gain':'Bank','ui.potLbl':'Bank','ui.turnsLeft':'hands<br>left','ui.you':'Your hand','ui.dealer':'Dealer','act.force':'PUSH LUCK','modern.table':'Table',
+ 'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HIGH VOLTAGE',
+ 'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'Target','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'THE HOUSE IS WATCHING.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
+ 'nav.rules':'Rules','nav.settings':'Settings','nav.back':'← GAME MODES','nav.reset':'Reset this mode',
  'menu.choose':'CHOOSE YOUR TABLE','menu.freeTag':'AT YOUR OWN PACE','menu.circuitTag':'THE ADVENTURE',
- 'menu.endless':'FREE PLAY','menu.endlessSub':'Blackjack. No missions.',
- 'menu.circuit':'CIRCUIT','menu.circuitSub':n=>n+' tables · bosses, relics & tarots',
+ 'menu.endless':'FREE PLAY','menu.endlessSub':'Blackjack at your own pace.',
+ 'menu.circuit':'CIRCUIT','menu.circuitSub':n=>'An adventure, table by table.',
  'menu.freeAction':'TAKE A SEAT','menu.circuitAction':'ENTER THE CIRCUIT',
  'menu.recordNote':'Your progress is saved on this device.',
  'menu.nextHand':'YOUR NEXT HAND AWAITS','menu.preparation':'YOUR PREPARATION',
@@ -76,16 +76,13 @@ STR.en['rules.table']='<span class="rt">CIRCUIT TABLES</span>Reach the cash goal
 const originalMenuRender=renderMenu;
 renderMenu=function(){
  originalMenuRender();
- const records=[['infini',META.infini.record,'menu.endless'],['nuit',META.nuit.record,'menu.circuit']];
- $('menuRecords').innerHTML=records.map(([mode,record,label])=>{
-  const played=mode==='infini'?record.palier:record.depth;
-  const detail=played?t(mode==='infini'?'menu.recTier':'menu.recTables',played):t('menu.first');
-  return `<div class="mrec"><span class="mrl">${t(label)}</span><span class="mrv">${detail}</span></div>`;
- }).join('');
- const menuBacks=[ColdDeckArt.backKey(cardBack),cardBack==='cb10'?'back-lightning':'back-luck'];
- if($('menuHand').dataset.backs!==menuBacks.join(',')){
-  $('menuHand').dataset.backs=menuBacks.join(',');
-  $('menuHand').innerHTML=menuBacks.map((name,index)=>`<div class="card menu-card-image" aria-hidden="true">${ColdDeckArt.surface(`<img class="card-back-image" src="${ColdDeckArt.image(name)}" width="1024" height="1536" alt="" decoding="async" ${index===0?'fetchpriority="high"':''} draggable="false">`)}</div>`).join('');
+ const best=Math.max(0,Number(RECS.infini?.gain)||0,Number(RECS.nuit?.gain)||0);
+ $('menuRecords').innerHTML=`<span class="menu-record-label">${LANG==='fr'?'Meilleur gain':'Best win'}</span><strong id="menuBestGain">${boardCash(best)}</strong>`;
+ if($('menuHand').dataset.back!==cardBack){
+  $('menuHand').dataset.back=cardBack;
+  const ace=cardEl({r:'A',s:'♠'}),king=cardEl({r:'K',s:'♠'}),back=cardEl({r:'A',s:'♠'},{back:true});
+  for(const card of [ace,king,back])card.setAttribute('aria-hidden','true');
+  $('menuHand').replaceChildren(ace,king,back);
  }
  $('readySuit').innerHTML=ColdDeckArt.effect('as');
 };

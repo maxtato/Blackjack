@@ -615,6 +615,8 @@ function abbr(n){
 function abbrS(n){return abbr(n).replace(/ /g,'<span class="thouSep"></span>');}
 /* montant d'argent, abrégé ET placé selon la langue : « 1.5K $ » en FR, « $1.5K » en EN */
 function cash(n){const a=abbr(n);return LANG==='fr'?(a+' $'):(a.charAt(0)==='-'?('-$'+a.slice(1)):('$'+a));}
+// Compact currency used by the Équilibre scoreboard and home record.
+function boardCash(n){const a=abbr(n);return a.charAt(0)==='-'?('-$'+a.slice(1)):('$'+a);}
 function cashS(n){const a=abbrS(n);return LANG==='fr'?(a+' $'):(a.charAt(0)==='-'?('-$'+a.slice(1)):('$'+a));}
 
 /* ---------- audio ---------- */
@@ -1267,7 +1269,7 @@ function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les 
   const f=$('pFill');if(f)f.style.width=pct+'%';
   const pp=$('pPct');if(pp){pp.textContent=lvl?t('ui.lvl',lvl,BARAKA_MULT[lvl]):'';pp.style.display=lvl?'':'none';}
   const ps=$('pState');if(ps){ps.textContent=t('ui.streak');ps.style.color='';}
-  const bar=$('pBar');if(bar)bar.classList.toggle('tick',lvl>=3);
+  const bar=$('pBar');if(bar){bar.classList.toggle('tick',lvl>=3);bar.dataset.active=String(pct>0);}
   const tbl=document.getElementById('table');if(tbl)tbl.classList.toggle('boil',lvl>=3);
   window.ColdDeckFX?.onPressure();
 }
@@ -1278,7 +1280,7 @@ function renderMult(){
     const r=computeMult(mode);m=r.mult;bonus=r.bonusChips;
   }
   const stake=G.bet*(G.stakeMult||1);
-  $('chipsVal').textContent=bonus?(abbr(stake)+'+'+bonus):abbr(stake);
+  $('chipsVal').textContent=bonus?(boardCash(stake)+'+'+bonus):boardCash(stake);
   $('multVal').textContent=fmtMult(m);
   $('scorebox').classList.toggle('hot',m>1||bonus>0);
   renderCombos();
@@ -1348,7 +1350,7 @@ function renderTop(){
   const mx=$('mainMax');if(mx)mx.textContent=nMains;
   const tp=$('turnPips');if(tp){let h='';for(let i=0;i<nMains;i++)h+='<i class="'+(i<G.hand?'on':'')+'"></i>';tp.innerHTML=h;}
   applyFelt();   // tapis évolutif : design + couleur selon la table
-  const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=heartSVG(15)+'<span class="lvn">×'+n+'</span>';lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
+  const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=Array.from({length:Math.max(3,Math.min(5,n))},(_,i)=>'<span class="life'+(i>=n?' off':'')+'" aria-hidden="true">'+heartSVG(20)+'</span>').join('')+(n>5?'<span class="lvn">+'+(n-5)+'</span>':'');lv.setAttribute('aria-label',t('ui.lives')+' : '+n);lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
   $('tableName').textContent=tableName(tb);                         // nom seul, en gros
   const tableNumber=$('tableNumber');if(tableNumber)tableNumber.textContent=String(G.endless?(G.palier||0)+1:G.tableIdx+1).padStart(2,'0');
   const tm=$('tableMeta');if(tm)tm.textContent=G.endless
@@ -1375,7 +1377,7 @@ function renderTop(){
 }
 /* barre de progression GAIN → OBJECTIF (au-dessus du tapis) */
 function renderObjective(){
-  const gv=$('gainVal');if(gv)gv.textContent=cash(G.bank);
+  const gv=$('gainVal');if(gv)gv.textContent=boardCash(G.bank);
   const lbl=document.querySelector('#gainStat .lbl');if(lbl)lbl.textContent=G.endless?t('ui.potLbl'):t('ui.gain');
   // nouvelle table / palier : la barre repart de 0 SANS glisser depuis l'objectif précédent (on coupe la transition le temps de la remettre à zéro)
   const _of=$('objFill'),_snap=_of&&G._objBarIdx!==G.tableIdx;
@@ -1384,7 +1386,8 @@ function renderObjective(){
     const p=G.palier||0,target=palierTarget(p);
     const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,target)*100));
     const f=$('objFill');if(f)f.style.width=pct+'%';
-    const g=$('objGoal');if(g)g.textContent=abbr(G.bank)+' / '+abbr(target);
+    const g=$('objGoal');if(g)g.textContent=boardCash(target);
+    updateObjectiveReadout(pct);
     const bar=$('objBar');if(bar)bar.classList.remove('full');
     if(gv)gv.classList.remove('warn');
     return;
@@ -1393,9 +1396,25 @@ function renderObjective(){
   // barre = jetons ABSOLUS (depuis 0) vers l'objectif, exactement comme les paliers en Sans Fin (bank/target)
   const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,goal)*100));
   const f=$('objFill');if(f)f.style.width=pct+'%';
-  const g=$('objGoal');if(g)g.textContent=abbr(G.bank)+' / '+abbr(goal);
+  const g=$('objGoal');if(g)g.textContent=boardCash(goal);
+  updateObjectiveReadout(pct);
   if(gv)gv.classList.toggle('warn',!!(G.table&&G.bank<G.table.min*3));
   const bar=$('objBar');if(bar)bar.classList.toggle('full',G.bank>=goal);
+}
+function updateObjectiveReadout(pct){
+  const rounded=Math.round(pct),label=$('objPct'),bar=$('objBar');
+  if(label)label.textContent=rounded+'%';
+  if(bar){bar.setAttribute('aria-valuenow',rounded);bar.setAttribute('aria-label',t('modern.goal'));}
+}
+// A stable five-slot shelf, with horizontal scrolling when more items are owned.
+function renderInventorySlots(){
+  const shelf=$('effects');shelf.hidden=false;
+  shelf.setAttribute('aria-label',t('modern.loadout'));
+  shelf.querySelectorAll('.inventory-empty').forEach(el=>el.remove());
+  const count=shelf.querySelectorAll('.joker,.tarot').length;
+  for(let i=count;i<5;i++){
+    const slot=document.createElement('span');slot.className='inventory-empty';slot.setAttribute('aria-hidden','true');shelf.append(slot);
+  }
 }
 function fanEffects(){
   // étiquettes : simple rangée (plus d'éventail de jetons)
@@ -1467,7 +1486,7 @@ function renderRelics(){
   });
   $('slotc').textContent=`${G.relics.length}/5`;
   $('slotc').parentElement.setAttribute('aria-label',`${t('ui.relics')} : ${G.relics.length}/5`);
-  $('effects').hidden=!G.relics.length&&!G.consumables.length;
+  renderInventorySlots();
   fanEffects();
 }
 function consumableSlots(){return 2+(hasRelic('portebonheur')?1:0)+uLvl('tarot')+((G.boons&&G.boons.tarot)||0);}
@@ -1483,7 +1502,7 @@ function renderConsumables(){
   });
   $('consumeSlots').textContent=`${G.consumables.length}/${consumableSlots()}`;
   $('consumeSlots').parentElement.setAttribute('aria-label',`${t('ui.consumables')} : ${G.consumables.length}/${consumableSlots()}`);
-  $('effects').hidden=!G.relics.length&&!G.consumables.length;
+  renderInventorySlots();
   row.style.display=(G.consumables.length||hasRelic('portebonheur'))?'flex':'none';
   fanEffects();
 }
@@ -1626,7 +1645,8 @@ function renderActions(){
   const v=G.pHand.length?handValue(G.pHand).total:0;
   const flirt=v>=17&&v<=20;
   if(flirt){
-    add(main,t('act.risk'),'b-red',()=>{G.insisted=true;playerHit();},t('act.riskSub'),!live);
+    const hit=add(main,t('act.hit'),'b-gold',()=>{G.insisted=true;playerHit();},t('act.hitSub'),!live);
+    hit.title=t('act.hitSub')+' · '+t('act.riskSub');hit.setAttribute('aria-description',hit.title);
     add(main,t('act.stand'),'b-blue',playerStand,t('act.standSub'),!live);
   }else{
     add(main,t('act.hit'),'b-gold',()=>playerHit(),t('act.hitSub'),!live);
@@ -1636,12 +1656,10 @@ function renderActions(){
   const two=G.pHand.length===2, pair=two&&G.pHand[0].r===G.pHand[1].r;
   const canSplit=!G.splitActive&&two&&pair&&G.bank>=G.bet;
   const canDouble=!G.splitActive&&two&&!flirt&&G.bank>=G.bet;   // fenêtre de double : total bas (9/10/11…)
-  const specials=[];
-  if(canSplit)specials.push([t('act.split'),'b-blue',playerSplit,t('act.splitSub'),!live]);
-  if(canDouble)specials.push([t('act.double'),'b-gold',playerDouble,t('act.doubleSub'),!live]);
-  if(flirt)specials.push([t('act.force'),'b-purple',forcerChance,(G.forcedUsed?t('act.forceUsed'):t('act.forceSub')),!live||G.forcedUsed]);
-  if(!specials.length)specials.push([t('act.force'),'b-purple',forcerChance,t('act.forceOff'),true]);
-  specials.slice(0,2).forEach(s=>add(wide,s[0],s[1],s[2],s[3],s[4]));
+  // The two secondary positions stay stable; availability follows the same rules.
+  if(pair&&!G.splitActive)add(wide,t('act.split'),'b-blue',playerSplit,t('act.splitSub'),!live||!canSplit);
+  else add(wide,t('act.double'),'b-blue',playerDouble,t('act.doubleSub'),!live||!canDouble);
+  add(wide,t('act.force'),'b-purple',forcerChance,G.forcedUsed?t('act.forceUsed'):t('act.forceSub'),!live||!flirt||G.forcedUsed);
   a.appendChild(main);a.appendChild(wide);
 }
 function usePeek(){
@@ -2770,10 +2788,11 @@ function stepResume(d){ startPalierIdx=(startPalierIdx||0)+d; renderPlanque(); }
 /* ---------- LA PLANQUE (hub de méta-progression, propre au mode courant) ---------- */
 function renderPlanque(){
   const m=metaCur(),inf=MODE==='infini';
+  $('intro').dataset.mode=MODE;
   $('repBal').innerHTML=abbrS(m.rep);
-  const pt=$('planqueTitle');if(pt)pt.textContent=t('planque.title');
+  const pt=$('planqueTitle');if(pt)pt.textContent=t(inf?'menu.endless':'menu.circuit');
   const ps=$('planqueSub');if(ps)ps.innerHTML=t(inf?'planque.subInf':'planque.subCircuit');
-  const tag=$('planqueMode');if(tag){tag.innerHTML=inf?t('planque.modeInf'):PXI('flag')+' '+t('planque.modeCircuit');tag.className='planqueMode '+(inf?'inf':'nuit');}
+  const tag=$('planqueMode');if(tag){tag.textContent=LANG==='fr'?'La planque':'The hideout';tag.className='planqueMode '+(inf?'inf':'nuit');}
   const rb=$('recBox');if(rb)rb.innerHTML=t('planque.best')+'<br><span style="white-space:nowrap">'+(inf
     ?`<b>${t('planque.tierN',m.record.palier||0)}</b> · <b>${cashS(m.record.peak||0)}</b>`
     :`<b>${t('planque.tables',m.record.depth||0)}</b> · <b>${cashS(m.record.chips||0)}</b>`)+'</span>';
@@ -2952,13 +2971,13 @@ freshGame();buildShoe();applyI18n();renderHands();tick();
 /* menu-v2.js */
 /* Presentation only: the blackjack engine and progression are unchanged. */
 Object.assign(STR.fr,{
- 'ui.gain':'BANQUE','ui.turnsLeft':'MAINS','act.double':'DOUBLE',
- 'modern.club':'BLACKJACK ROGUELITE','modern.private':'COLD DECK','modern.afterhours':'HAUTE TENSION',
- 'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','modern.goal':'OBJECTIF','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
- 'nav.rules':'RÈGLES','nav.settings':'RÉGLAGES','nav.back':'← MODES DE JEU','nav.reset':'Réinitialiser ce mode',
+ 'ui.bet':'Mise','ui.mult':'Multi','ui.gain':'Cagnotte','ui.potLbl':'Cagnotte','ui.turnsLeft':'mains<br>restantes','ui.you':'Ta main','ui.dealer':'Croupier','act.double':'DOUBLER','act.force':'FORCER','modern.table':'Table',
+ 'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HAUTE TENSION',
+ 'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','cb.to21':n=>'21 parfait ×3 · Possible avec la prochaine carte','modern.goal':'Objectif','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
+ 'nav.rules':'Règles','nav.settings':'Réglages','nav.back':'← MODES DE JEU','nav.reset':'Réinitialiser ce mode',
  'menu.choose':'CHOISIS TA TABLE','menu.freeTag':'À TON RYTHME','menu.circuitTag':"L'AVENTURE",
- 'menu.endless':'LIBRE','menu.endlessSub':'Du blackjack, sans missions.',
- 'menu.circuit':'CIRCUIT','menu.circuitSub':n=>n+' tables · boss, reliques & tarots',
+ 'menu.endless':'LIBRE','menu.endlessSub':'Du blackjack à ton rythme.',
+ 'menu.circuit':'CIRCUIT','menu.circuitSub':n=>"L'aventure, table après table.",
  'menu.freeAction':'PRENDRE PLACE','menu.circuitAction':'ENTRER DANS LE CIRCUIT',
  'menu.recordNote':'Ta progression est conservée sur cet appareil.',
  'menu.nextHand':"LA PROCHAINE MAIN T'ATTEND",'menu.preparation':'TA PRÉPARATION',
@@ -2975,13 +2994,13 @@ Object.assign(STR.fr,{
  'set.open':'RÉGLAGES'
 });
 Object.assign(STR.en,{
- 'ui.gain':'BANK','ui.turnsLeft':'HANDS',
- 'modern.club':'BLACKJACK ROGUELITE','modern.private':'COLD DECK','modern.afterhours':'HIGH VOLTAGE',
- 'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'TARGET','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'THE HOUSE IS WATCHING.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
- 'nav.rules':'HOW TO PLAY','nav.settings':'SETTINGS','nav.back':'← GAME MODES','nav.reset':'Reset this mode',
+ 'ui.bet':'Bet','ui.mult':'Multi','ui.gain':'Bank','ui.potLbl':'Bank','ui.turnsLeft':'hands<br>left','ui.you':'Your hand','ui.dealer':'Dealer','act.force':'PUSH LUCK','modern.table':'Table',
+ 'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HIGH VOLTAGE',
+ 'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'Target','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'THE HOUSE IS WATCHING.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
+ 'nav.rules':'Rules','nav.settings':'Settings','nav.back':'← GAME MODES','nav.reset':'Reset this mode',
  'menu.choose':'CHOOSE YOUR TABLE','menu.freeTag':'AT YOUR OWN PACE','menu.circuitTag':'THE ADVENTURE',
- 'menu.endless':'FREE PLAY','menu.endlessSub':'Blackjack. No missions.',
- 'menu.circuit':'CIRCUIT','menu.circuitSub':n=>n+' tables · bosses, relics & tarots',
+ 'menu.endless':'FREE PLAY','menu.endlessSub':'Blackjack at your own pace.',
+ 'menu.circuit':'CIRCUIT','menu.circuitSub':n=>'An adventure, table by table.',
  'menu.freeAction':'TAKE A SEAT','menu.circuitAction':'ENTER THE CIRCUIT',
  'menu.recordNote':'Your progress is saved on this device.',
  'menu.nextHand':'YOUR NEXT HAND AWAITS','menu.preparation':'YOUR PREPARATION',
@@ -3028,16 +3047,13 @@ STR.en['rules.table']='<span class="rt">CIRCUIT TABLES</span>Reach the cash goal
 const originalMenuRender=renderMenu;
 renderMenu=function(){
  originalMenuRender();
- const records=[['infini',META.infini.record,'menu.endless'],['nuit',META.nuit.record,'menu.circuit']];
- $('menuRecords').innerHTML=records.map(([mode,record,label])=>{
-  const played=mode==='infini'?record.palier:record.depth;
-  const detail=played?t(mode==='infini'?'menu.recTier':'menu.recTables',played):t('menu.first');
-  return `<div class="mrec"><span class="mrl">${t(label)}</span><span class="mrv">${detail}</span></div>`;
- }).join('');
- const menuBacks=[ColdDeckArt.backKey(cardBack),cardBack==='cb10'?'back-lightning':'back-luck'];
- if($('menuHand').dataset.backs!==menuBacks.join(',')){
-  $('menuHand').dataset.backs=menuBacks.join(',');
-  $('menuHand').innerHTML=menuBacks.map((name,index)=>`<div class="card menu-card-image" aria-hidden="true">${ColdDeckArt.surface(`<img class="card-back-image" src="${ColdDeckArt.image(name)}" width="1024" height="1536" alt="" decoding="async" ${index===0?'fetchpriority="high"':''} draggable="false">`)}</div>`).join('');
+ const best=Math.max(0,Number(RECS.infini?.gain)||0,Number(RECS.nuit?.gain)||0);
+ $('menuRecords').innerHTML=`<span class="menu-record-label">${LANG==='fr'?'Meilleur gain':'Best win'}</span><strong id="menuBestGain">${boardCash(best)}</strong>`;
+ if($('menuHand').dataset.back!==cardBack){
+  $('menuHand').dataset.back=cardBack;
+  const ace=cardEl({r:'A',s:'♠'}),king=cardEl({r:'K',s:'♠'}),back=cardEl({r:'A',s:'♠'},{back:true});
+  for(const card of [ace,king,back])card.setAttribute('aria-hidden','true');
+  $('menuHand').replaceChildren(ace,king,back);
  }
  $('readySuit').innerHTML=ColdDeckArt.effect('as');
 };
@@ -3167,8 +3183,8 @@ syncMenuFocus();
     prepareAlphaMask('brand-wordmark','raster-brand-ready')
   ]);
   // Reserve illustrated glyphs for display labels, not reading-sized copy.
-  const labelSelector='button,h1:not(.menuTitle),.mode-card strong,.chip-value,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum';
-  const copySelector='small,p,.ds,.mode-description,.mode-topline,.mode-bottom,.hero-copy,.hero-tags,.menu-record-note,.rules .rule-entry,.rules .rt,#tip,#comboRow,#tableName,#tableMeta,#ruleText,#pBar .pmeta,.zlbl>[data-i18n],.tstats .k,.tstats .lbl,.tstats .tt,.tstats .ts,.inventory-label,.objective-label,.section-label,.eyebrow,.setLbl,.back-name,.repLbl,.mrl,.mrv,#slotc,#consumeSlots';
+  const labelSelector='button,h1:not(.menuTitle),.mode-card strong,.chip-value,#menuBestGain,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum';
+  const copySelector='[data-reading-label],.menu-record-label,.planqueMode,#recBox,small,p,.ds,.mode-description,.mode-topline,.mode-bottom,.hero-copy,.hero-tags,.menu-record-note,.rules .rule-entry,.rules .rt,#tip,#comboRow,#tableName,#tableMeta,#ruleText,#pBar .pmeta,.zlbl>[data-i18n],.tstats .k,.tstats .lbl,.tstats .tt,.tstats .ts,.inventory-label,.objective-label,.section-label,.eyebrow,.setLbl,.back-name,.repLbl,.mrl,.mrv,#slotc,#consumeSlots';
   function readableCopy(el){
     el.classList.add('readable-copy');
     for(const ink of el.querySelectorAll('.raster-copy,.live-word')){
@@ -3200,7 +3216,7 @@ syncMenuFocus();
     if(pause&&!pause.querySelector('.pause-mark'))pause.innerHTML='<i class="raster-nav pause-mark" aria-hidden="true"></i>';
     for(const el of roots)observer.observe(el,{childList:true,subtree:true,characterData:true});
   }
-  const roots=[...document.querySelectorAll('.overlay,#adOverlay,#topbar,#bottombar,#center,.zlbl,#peekBtn,#pBar,#effects')];
+  const roots=[...document.querySelectorAll('.overlay,#adOverlay,#topbar,#bottombar,#center,.zlbl,#pVal,#dVal,#peekBtn,#pBar,#effects')];
   const observer=new MutationObserver(decorate);
   decorate();
   // Deterministic entry point for renders and tests, without any game-state writes.
