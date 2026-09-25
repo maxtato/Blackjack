@@ -84,7 +84,7 @@
 #objPct{font:500 14px/1 var(--copy-font);min-width:30px;text-align:right}
 /* Small portrait cards, with generous touch areas and a fixed-height shelf. */
 #mid{display:flex;flex-direction:column;gap:10px;grid-column:1;grid-row:2;min-height:0;min-width:0}
-#effects{--inventory-height:54px;--mini-card-h:calc(var(--inventory-height) - 4px);--mini-card-w:calc(var(--mini-card-h)/1.48);--slot-size:max(44px,calc(var(--mini-card-w) + 6px));display:flex;align-items:center;justify-content:safe center;gap:5px;min-height:0;flex:none;width:100%;height:var(--inventory-height);padding:0 2px;background:none;border-radius:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+#effects{--inventory-height:54px;--mini-card-h:calc(var(--inventory-height) - 4px);--mini-card-w:calc(var(--mini-card-h)/1.48);--slot-size:max(34px,calc(var(--mini-card-w) + 4px));display:flex;align-items:center;justify-content:safe center;gap:5px;min-height:0;flex:none;width:100%;height:var(--inventory-height);padding:0 2px;background:none;border-radius:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
 #effects::-webkit-scrollbar{display:none}
 #effects #relicRow,#effects #consumeRow,#effects #relics,#effects #consumes{display:contents!important}
 #effects .joker,#effects .tarot,#effects .inventory-empty{position:relative;isolation:isolate;display:grid;place-items:center;flex:0 0 var(--slot-size);width:var(--slot-size);height:var(--inventory-height);min-width:0;padding:0;border:0;border-radius:0;background:none;clip-path:none;box-shadow:none}
