@@ -3444,9 +3444,10 @@ syncMenuFocus();
   }
   function awardStar(box){
     const p=rect(box);if(!p)return;
-    const size=Math.max(p.width+35,p.height+40),star=paperStar(p.x,p.y,size,graphic.teal);if(!star)return;
+    const width=p.width+26,height=p.height+24,star=paperStar(p.x,p.y,width,graphic.teal);if(!star)return;
+    star.style.height=height+'px';
     // A transparent center keeps the real tile and its text above the star.
-    const x=(size-p.width-7)/size*50,y=(size-p.height-7)/size*50;
+    const x=(width-p.width-7)/width*50,y=(height-p.height-7)/height*50;
     star.style.clipPath=`polygon(evenodd,${starPoints},50% 0,${x}% ${y}%,${100-x}% ${y}%,${100-x}% ${100-y}%,${x}% ${100-y}%,${x}% ${y}%,50% 0)`;
     animate(star,[{transform:place(0,0,0,1),opacity:0},{transform:place(0,0,0,1.1),opacity:1,offset:.27},{transform:place(0,0,0,1.2),opacity:0}],{duration:540},true);
   }
@@ -3492,6 +3493,9 @@ syncMenuFocus();
     chainStar=null;chainCount=0;
   }
   function onAnnouncement() {
+    // Scoring uses the empty action dock, keeping cards and combo labels readable.
+    const p=rect($('bottombar')),pop=$('multPop'),origin=pop?.offsetParent?.getBoundingClientRect();
+    if(p&&origin){pop.style.left=(p.x-origin.left)+'px';pop.style.top=(p.y-origin.top)+'px';}
     clearTimeout(popupTimer);
     timers.delete(popupTimer);
     popupTimer = later(() => $('multPop')?.classList.remove('go','gain-in-flight'), 1450);
@@ -3581,7 +3585,7 @@ syncMenuFocus();
   }
   function onCombo(line){
     if(!boardActive())return;
-    const p=rect($('center'));if(!p)return;
+    const p=rect($('bottombar'));if(!p)return;
     layer.querySelectorAll('.combo-impact').forEach(el=>el.remove());
     if(!chainStar?.isConnected){chainStar=paperStar(p.x,p.y,Math.min(130,innerWidth*.34),graphic.yellow);chainCount=0;}
     if(chainStar){
