@@ -529,17 +529,17 @@
 }
 .card .court-image.faceted-court{
  --facet-atlas:var(--art-court-facets);--facet-grid:300% 100%;
- left:-4%;top:11%;width:108%;height:auto;aspect-ratio:1;filter:none;
+ left:50%;top:50%;width:102%;height:auto;aspect-ratio:1;transform:translate(-50%,-50%);filter:none;
 }
 .card .card-pip.faceted-pip{
  --facet-atlas:var(--art-suit-facets);--facet-grid:400% 100%;
- left:50%;top:50%;width:56%;height:auto;aspect-ratio:3 / 4;transform:translate(-50%,-50%);
+ left:50%;top:50%;width:50%;height:auto;aspect-ratio:3 / 4;transform:translate(-50%,-50%);
  background-color:transparent;-webkit-mask:none;mask:none;animation:none;
 }
-.card .ace-art .faceted-pip{width:64%}
+.card .ace-art .faceted-pip{width:58%}
 .card .court-art .faceted-pip{top:85.5%;width:20%}
 .card .ace-ornament{
- position:absolute;inset:14% 3%;background:var(--art-ace-ornament) center/contain no-repeat;pointer-events:none;
+ position:absolute;inset:17% 7%;background:var(--art-ace-ornament) center/contain no-repeat;pointer-events:none;
 }
 .card.poly .court-image.faceted-court{filter:none}
 /* Selective varnish follows the artwork's alpha and preserves its printed facets. */
