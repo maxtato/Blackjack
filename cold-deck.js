@@ -510,7 +510,7 @@ function hasStr(key){return (STR[LANG]&&key in STR[LANG])||(key in STR.en);}
 
 
 /* card-art.js */
-/* Approved bitmap artwork with game-controlled corner values and a single central suit. */
+/* Generated bitmap artwork with exact game-controlled ranks and pip counts. */
 const ColdDeckArt = (() => {
   const suitKeys={'♠':'spade','♥':'heart','♦':'diamond','♣':'club'};
   const letterCells=Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZÉÈÀÇÙÊÔÛÎÏ');
@@ -552,14 +552,24 @@ const ColdDeckArt = (() => {
     return `<span class="raster-copy"><span class="sr-only">${safe(text)}</span><span class="raster-ink" aria-hidden="true">${words}</span></span>`;
   }
   const suit=(s,size=24)=>`<i class="suit raster-suit" data-suit-art="${suitKeys[s]||'spade'}" style="width:${size}px;height:${size}px" aria-hidden="true"></i>`;
-  const suitCells={heart:0,diamond:1,club:2,spade:3};
-  const centralSuit=s=>`<i class="card-pip faceted-pip" data-suit-art="${suitKeys[s]}" style="--facet-x:${suitCells[suitKeys[s]]/3*100}%" aria-hidden="true"></i>`;
+  const pip=(s,x,y,size=15,angle=0)=>`<i class="card-pip raster-suit" data-suit-art="${suitKeys[s]}" style="left:${x}%;top:${y/142*100}%;width:${size}%;height:${size/142*100}%;transform:translate(-50%,-50%) rotate(${angle}deg)" aria-hidden="true"></i>`;
+  const layouts={
+    2:[[50,43],[50,99]],3:[[50,38],[50,71],[50,104]],
+    4:[[33,42],[67,42],[33,100],[67,100]],
+    5:[[33,40],[67,40],[50,71],[33,102],[67,102]],
+    6:[[33,37],[67,37],[33,71],[67,71],[33,105],[67,105]],
+    7:[[33,35],[67,35],[50,53],[33,71],[67,71],[33,107],[67,107]],
+    8:[[33,33],[67,33],[50,52],[33,71],[67,71],[50,90],[33,109],[67,109]],
+    9:[[33,32],[67,32],[33,58],[67,58],[50,71],[33,84],[67,84],[33,110],[67,110]],
+    10:[[33,39],[67,39],[33,55],[67,55],[33,71],[67,71],[33,87],[67,87],[33,103],[67,103]]
+  };
   function face(rank,s){
-    const courts={J:0,Q:50,K:100};
-    const art=Object.hasOwn(courts,rank)
-      ?`<span class="court-image faceted-court" data-court="${rank}" style="--facet-x:${courts[rank]}%"></span>`+centralSuit(s)
-      :(rank==='A'?'<span class="ace-ornament"></span>':'')+centralSuit(s);
-    return `<div class="card-art raster-card-art${Object.hasOwn(courts,rank)?' court-art':rank==='A'?' ace-art':''}" aria-hidden="true">${art}</div>`;
+    const courts={K:'king',Q:'queen',J:'jack'};
+    // Keep the traditional count inside a tighter central area, clear of both indices.
+    const art=courts[rank]
+      ?`<img class="court-image" data-court="${rank}" src="${image('court-'+courts[rank])}" width="1024" height="1536" alt="" decoding="async" draggable="false">`
+      :rank==='A'?pip(s,50,71,41):(layouts[Number(rank)]||[]).map(([x,y])=>pip(s,50+(x-50)*.88,71+(y-71)*.84,Number(rank)===10?13:Number(rank)>8?15:17,y>71?180:0)).join('');
+    return `<div class="card-art raster-card-art" aria-hidden="true">${art}</div>`;
   }
   // HD raster illustrations shared by inventory, shops, effects and menus.
   const illustrationKeys=new Set(["lunettes", "jeton", "clope", "as", "froid", "compteur", "mecene", "usurier", "collector", "maitresse", "bruleur", "portebonheur", "diplomate", "talisman", "aimant", "phare", "etoile", "jugement", "soleil", "diable", "lune", "etoileD", "pendu", "magicien", "roue", "soin", "assurance", "videur", "bank", "pourboire", "net", "tarot", "contact", "relic2", "plafond", "elan", "cashplus", "boon2", "mult", "baraplus", "evt3"]);
@@ -3162,7 +3172,7 @@ syncMenuFocus();
 /* raster-ui.js */
 /* Generated surfaces and bitmap lettering. Text remains available to assistive tools. */
 (() => {
-  const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','court-facets','suit-facets','ace-ornament','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','card-shape','background-table','background-menu','nav-arrow','nav-pause','brand-wordmark'];
+  const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','card-shape','background-table','background-menu','nav-arrow','nav-pause','brand-wordmark'];
   for(const key of assets)document.documentElement.style.setProperty('--art-'+key,`url("${ColdDeckArt.image(key)}")`);
   // WebKit can ignore luminance masks for large/animated artwork. Decode each
   // mask to alpha once; its text fallback stays visible until decoding succeeds.

@@ -28,8 +28,8 @@ screen.add(new Option('Échantillons de finitions','finish-sample'));
 screen.add(new Option('Victoire puis nouvelle mise','win-flow'));
 screen.add(new Option('Reliques et tarots','inventory'));
 screen.add(new Option('Inventaire rempli','inventory-full'));
-screen.add(new Option('Figures et as intégrés','new-art'));
-screen.add(new Option('Catalogue des nouvelles cartes','art-sample'));
+screen.add(new Option('Figures et cartes classiques','new-art'));
+screen.add(new Option('Portraits et symboles resserrés','art-sample'));
 if([...screen.options].some(option=>option.value===params.get('screen')))screen.value=params.get('screen');
 if([...size.options].some(option=>option.value===params.get('size')))size.value=params.get('size');
 document.documentElement.classList.toggle('embed',params.get('embed')==='1');
@@ -43,7 +43,7 @@ async function render(){
   window.ColdDeckFX?.clear();
   const samples=document.createElement('main');samples.className=visualScreen==='art-sample'?'edition-samples card-samples':'edition-samples';
   const cards=visualScreen==='art-sample'
-   ?[{r:'J',s:'♠'},{r:'Q',s:'♥'},{r:'K',s:'♣'},{r:'2',s:'♥'},{r:'7',s:'♣'},{r:'10',s:'♦'},{r:'A',s:'♥'},{r:'A',s:'♦'},{r:'A',s:'♣'},{r:'A',s:'♠'},{r:'Q',s:'♥',ed:'poly'},{r:'10',s:'♣',ed:'foil'}]
+   ?[{r:'J',s:'♠'},{r:'Q',s:'♥'},{r:'K',s:'♣'},{r:'2',s:'♥'},{r:'5',s:'♣'},{r:'7',s:'♦'},{r:'8',s:'♥'},{r:'9',s:'♦'},{r:'10',s:'♣'},{r:'A',s:'♠'},{r:'10',s:'♥',ed:'poly'},{r:'10',s:'♣',ed:'foil'}]
    :['foil','holo','poly'].map(ed=>({r:'10',s:'♥',ed}));
   for(const card of cards){
    const figure=document.createElement('figure');figure.append(cardEl(card));

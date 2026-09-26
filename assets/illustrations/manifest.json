@@ -642,29 +642,5 @@
     "height": 1254,
     "prompt": "Production high-definition raster illustration for Cold Deck, modern minimalist arcade videogame. STRICT FLAT 2D CUT-PAPER STYLE. Five to eight large geometric shapes maximum. Solid opaque colors only: charcoal #20252a, warm ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. Slightly wonky angular proportions, fun grown-up graphic design. a stylized angular nightclub bouncer bust, charcoal suit, turquoise shirt, square chin and folded arms, no facial detail except eyebrows Single centered isolated object fills 78% of square canvas, transparent background and ample empty margin. NO gradients, NO textures, NO 3D, NO realism, NO metallic gold, NO reflections, NO bevels, NO ornate details, NO thin outline icon, NO decorative borders or badges. No writing. Bold shapes readable at 32 pixels.",
     "generator": "built-in image_gen"
-  },
-  {
-    "id": "court-facets",
-    "file": "court-facets.webp",
-    "width": 2172,
-    "height": 724,
-    "prompt": "Transparent three-cell atlas extracted from the approved faceted jack, queen and king, preserving the relic palette and fine matte grain.",
-    "generator": "built-in image_gen"
-  },
-  {
-    "id": "suit-facets",
-    "file": "suit-facets.webp",
-    "width": 2172,
-    "height": 724,
-    "prompt": "Transparent four-cell atlas of the approved faceted heart, diamond, club and spade, for one central suit on each number card.",
-    "generator": "built-in image_gen"
-  },
-  {
-    "id": "ace-ornament",
-    "file": "ace-ornament.webp",
-    "width": 1145,
-    "height": 1374,
-    "prompt": "Transparent geometric ace ornament extracted from the approved ace design, with an empty center for the live suit.",
-    "generator": "built-in image_gen"
   }
 ]

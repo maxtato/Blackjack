@@ -1,6 +1,6 @@
 /* Generated surfaces and bitmap lettering. Text remains available to assistive tools. */
 (() => {
-  const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','court-facets','suit-facets','ace-ornament','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','card-shape','background-table','background-menu','nav-arrow','nav-pause','brand-wordmark'];
+  const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','card-shape','background-table','background-menu','nav-arrow','nav-pause','brand-wordmark'];
   for(const key of assets)document.documentElement.style.setProperty('--art-'+key,`url("${ColdDeckArt.image(key)}")`);
   // WebKit can ignore luminance masks for large/animated artwork. Decode each
   // mask to alpha once; its text fallback stays visible until decoding succeeds.
