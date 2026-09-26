@@ -45,9 +45,9 @@ const ColdDeckArt = (() => {
   function face(rank,s){
     const courts={J:0,Q:50,K:100};
     const art=Object.hasOwn(courts,rank)
-      ?`<span class="court-image faceted-court" data-court="${rank}" style="--facet-x:${courts[rank]}%"></span>`
+      ?`<span class="court-image faceted-court" data-court="${rank}" style="--facet-x:${courts[rank]}%"></span>`+centralSuit(s)
       :(rank==='A'?'<span class="ace-ornament"></span>':'')+centralSuit(s);
-    return `<div class="card-art raster-card-art${rank==='A'?' ace-art':''}" aria-hidden="true">${art}</div>`;
+    return `<div class="card-art raster-card-art${Object.hasOwn(courts,rank)?' court-art':rank==='A'?' ace-art':''}" aria-hidden="true">${art}</div>`;
   }
   // HD raster illustrations shared by inventory, shops, effects and menus.
   const illustrationKeys=new Set(["lunettes", "jeton", "clope", "as", "froid", "compteur", "mecene", "usurier", "collector", "maitresse", "bruleur", "portebonheur", "diplomate", "talisman", "aimant", "phare", "etoile", "jugement", "soleil", "diable", "lune", "etoileD", "pendu", "magicien", "roue", "soin", "assurance", "videur", "bank", "pourboire", "net", "tarot", "contact", "relic2", "plafond", "elan", "cashplus", "boon2", "mult", "baraplus", "evt3"]);

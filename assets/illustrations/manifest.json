@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 21024)
-Total output lines: 670
-
 [
   {
     "id": "aimant",
@@ -297,7 +294,25 @@ Total output lines: 670
     "file": "court-king.webp",
     "width": 1024,
     "height": 1536,
-    "prompt": "Use case: background-extraction. Asset type: production transparent court portrait for the Cold Deck card videogame. Input image is the APPROVED '04 ROIS DU BLUFF' trio; preserve its specific character design, expressions, proportions and palette faithfully. Isolate and redraw ONLY the reque…1024 tokens truncated…3D, NO realism, NO metallic gold, NO reflections, NO bevels, NO ornate details, NO thin outline icon, NO decorative borders or badges. No writing. Bold shapes readable at 32 pixels.",
+    "prompt": "Use case: background-extraction. Asset type: production transparent court portrait for the Cold Deck card videogame. Input image is the APPROVED '04 ROIS DU BLUFF' trio; preserve its specific character design, expressions, proportions and palette faithfully. Isolate and redraw ONLY the requested character as a single high-definition sprite, not a card and not a comparison board. Canvas portrait 1024x1536, genuine transparent alpha background. Show the complete crown or cap and hair, face, neck and upper torso ending at a clean flat chest crop. Entire silhouette including shoulders and crown within the canvas with about 6% empty margin each side and 5% at top and bottom. The figure fills about 88% of width and 90% of height. Preserve the reference's elongated three-quarter face, playful confident expression, thick expressive eyebrow, clean cut-paper curves and angular facial planes. Solid opaque flat matte ivory skin, charcoal hair, mustard yellow, coral red and petrol blue. Match exact headgear sitting correctly on the hair. A few crisp hard-edge flat facial shadow shapes only. No texture or grain, no photorealism, no glossy shading, no halo, no glow, no drop shadow, no outline, no scene. No card, no frame, no background color, no letters, no K/Q/J, no rank, no suit symbol, no title, no labels. This is a clean isolated character asset; the game draws the card and its corners separately. KING: extract the LEFT character. Keep his tall jaunty asymmetric yellow crown, black swept hair and curls, iconic curled black moustache, long angular pointed beard, raised eyebrows and sly half-lidded sideways glance, ivory angular nose with a small peach flat plane. Preserve his dark petrol blue tunic with wide yellow diagonal bands and coral collar. This must recognizably be the exact left king from the approved board. Final cleanup: Use case: background-extraction. EDIT the supplied character portrait only. Keep the drawing of the character exactly unchanged: same face, expression, hair, headgear, costume, proportions and colors. Completely REMOVE the colored blurry glow, halo, haze, shadow and dark background around the silhouette. Replace every background pixel with genuinely empty transparent alpha. Preserve crisp opaque flat matte shapes with a sharply cut contour. No gradient, no illumination, no glow, no blur or ambient light anywhere. This is printed colored paper, not a light source. Center this isolated bust on a 1024x1536 transparent canvas with 5% clear padding, complete headgear and shoulders inside frame, straight crop at chest bottom. No text or symbols.",
+    "generator": "built-in image_gen",
+    "direction": "04 · Rois du bluff"
+  },
+  {
+    "id": "court-queen",
+    "file": "court-queen.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Production game asset, isolated adult royal QUEEN portrait matching the middle figure in the reference board. Same simple flat cut-paper cartoon style, expressive sideways eyes and smile, wavy black hair and playful yellow crown resting on the hair. Her costume is a fully closed, high-neck coral royal tunic with broad yellow bands and petrol blue trim, fully clothed. Head and shoulders only, no hands. Minimal adult cartoon with clean large solid colored shapes, ivory face, charcoal hair. Keep all crown points and the complete hairstyle within a 1024x1536 upright frame, centered, 6 percent empty padding. Crisp opaque flat shapes on a genuinely transparent alpha background. No backdrop, no card, no labels, no suits, no text, no lighting, no shadows, no halo or glow, no gradient, no shiny effects, no texture.",
+    "generator": "built-in image_gen",
+    "direction": "04 · Rois du bluff"
+  },
+  {
+    "id": "diable",
+    "file": "diable.webp",
+    "width": 1254,
+    "height": 1254,
+    "prompt": "Production high-definition raster illustration for Cold Deck, modern minimalist arcade videogame. STRICT FLAT 2D CUT-PAPER STYLE. Five to eight large geometric shapes maximum. Solid opaque colors only: charcoal #20252a, warm ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. Slightly wonky angular proportions, fun grown-up graphic design. a cheeky coral devil mask, two triangular horns and simple black eyes Single centered isolated object fills 78% of square canvas, transparent background and ample empty margin. NO gradients, NO textures, NO 3D, NO realism, NO metallic gold, NO reflections, NO bevels, NO ornate details, NO thin outline icon, NO decorative borders or badges. No writing. Bold shapes readable at 32 pixels.",
     "generator": "built-in image_gen"
   },
   {

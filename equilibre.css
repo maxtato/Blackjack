@@ -529,7 +529,7 @@
 }
 .card .court-image.faceted-court{
  --facet-atlas:var(--art-court-facets);--facet-grid:300% 100%;
- left:-10%;top:10%;width:120%;height:auto;aspect-ratio:1;filter:none;
+ left:-4%;top:11%;width:108%;height:auto;aspect-ratio:1;filter:none;
 }
 .card .card-pip.faceted-pip{
  --facet-atlas:var(--art-suit-facets);--facet-grid:400% 100%;
@@ -537,6 +537,7 @@
  background-color:transparent;-webkit-mask:none;mask:none;animation:none;
 }
 .card .ace-art .faceted-pip{width:64%}
+.card .court-art .faceted-pip{top:85.5%;width:20%}
 .card .ace-ornament{
  position:absolute;inset:14% 3%;background:var(--art-ace-ornament) center/contain no-repeat;pointer-events:none;
 }
