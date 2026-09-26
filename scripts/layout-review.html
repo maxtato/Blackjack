@@ -28,6 +28,8 @@ screen.add(new Option('Échantillons de finitions','finish-sample'));
 screen.add(new Option('Victoire puis nouvelle mise','win-flow'));
 screen.add(new Option('Reliques et tarots','inventory'));
 screen.add(new Option('Inventaire rempli','inventory-full'));
+screen.add(new Option('Figures et as intégrés','new-art'));
+screen.add(new Option('Catalogue des nouvelles cartes','art-sample'));
 if([...screen.options].some(option=>option.value===params.get('screen')))screen.value=params.get('screen');
 if([...size.options].some(option=>option.value===params.get('size')))size.value=params.get('size');
 document.documentElement.classList.toggle('embed',params.get('embed')==='1');
@@ -36,13 +38,16 @@ async function render(){
  const fixture=`
  setLang('fr');
  const visualScreen=${JSON.stringify(screen.value)};
- if(visualScreen==='finish-sample'){
+ if(visualScreen==='finish-sample'||visualScreen==='art-sample'){
   document.querySelectorAll('.overlay.show').forEach(el=>el.classList.remove('show'));
   window.ColdDeckFX?.clear();
-  const samples=document.createElement('main');samples.className='edition-samples';
-  for(const ed of ['foil','holo','poly']){
-   const figure=document.createElement('figure');figure.append(cardEl({r:'10',s:'♥',ed}));
-   const caption=document.createElement('figcaption');caption.textContent=ED_NAME[ed];figure.append(caption);samples.append(figure);
+  const samples=document.createElement('main');samples.className=visualScreen==='art-sample'?'edition-samples card-samples':'edition-samples';
+  const cards=visualScreen==='art-sample'
+   ?[{r:'J',s:'♠'},{r:'Q',s:'♥'},{r:'K',s:'♣'},{r:'2',s:'♥'},{r:'7',s:'♣'},{r:'10',s:'♦'},{r:'A',s:'♥'},{r:'A',s:'♦'},{r:'A',s:'♣'},{r:'A',s:'♠'},{r:'Q',s:'♥',ed:'poly'},{r:'10',s:'♣',ed:'foil'}]
+   :['foil','holo','poly'].map(ed=>({r:'10',s:'♥',ed}));
+  for(const card of cards){
+   const figure=document.createElement('figure');figure.append(cardEl(card));
+   const caption=document.createElement('figcaption');caption.textContent=card.ed?ED_NAME[card.ed]:card.r+' '+card.s;figure.append(caption);samples.append(figure);
   }
   document.body.append(samples);
  }
@@ -54,6 +59,10 @@ async function render(){
   const visualSuits=['♣','♥','♠','♦','♣','♥'];
   const visualHand=visualRanks.map((r,i)=>({r:String(r),s:visualSuits[i],...((visualScreen==='editions'||visualScreen.startsWith('inventory'))?{ed:['foil','holo','poly'][i]}:{})}));
   Object.assign(G,{phase:'play',bank:120,bet:10,betChosen:true,tokens:3,hand:2,pHand:visualHand,dHand:[{r:'K',s:'♣'},{r:'7',s:'♥',_fd:true}],_dealing:false,insisted:false,contract:{id:'csuite',reward:10,done:false},table:{...G.table,goal:200},shoe:Array.from({length:50},()=>({r:'2',s:'♣'}))});
+  if(visualScreen==='new-art'){
+   G.pHand=[{r:'Q',s:'♥'},{r:'A',s:'♠'},{r:'5',s:'♦'}];
+   G.dHand=[{r:'J',s:'♣'},{r:'K',s:'♦'}];G.revealed=true;
+  }
   if(visualScreen.startsWith('inventory')){
    const relicIds=visualScreen==='inventory-full'?['lunettes','jeton','as','mecene','collector']:['lunettes','jeton','as'];
    G.relics=relicIds.map(id=>({...RELIC_POOL.find(item=>item.id===id)}));
@@ -89,7 +98,7 @@ async function render(){
  `;
  const end=bundle.lastIndexOf('})();');
  const source=bundle.slice(0,end)+fixture+bundle.slice(end);
- const sampleStyle=screen.value==='finish-sample'?'<style>body>*:not(.edition-samples):not(script){display:none!important}.edition-samples{display:flex!important;justify-content:center;gap:14px;padding:20px 12px;margin:0;--card-w:min(28vw,100px)}.edition-samples figure{margin:0;min-width:0}.edition-samples .card{height:calc(var(--card-w)*1.48)}.edition-samples figcaption{margin-top:13px;text-align:center;font:500 12px/1.2 var(--copy-font);letter-spacing:.12em;color:#c4cdd3}</style>':'';
+ const sampleStyle=['finish-sample','art-sample'].includes(screen.value)?'<style>body>*:not(.edition-samples):not(script){display:none!important}.edition-samples{display:flex!important;justify-content:center;gap:14px;padding:20px 12px;margin:0;--card-w:min(28vw,100px)}.edition-samples figure{margin:0;min-width:0}.edition-samples .card{height:calc(var(--card-w)*1.48)}.edition-samples figcaption{margin-top:9px;text-align:center;font:500 12px/1.2 var(--copy-font);letter-spacing:.12em;color:#c4cdd3}.card-samples{display:grid!important;grid-template-columns:repeat(3,var(--card-w));gap:18px 14px}body:has(.card-samples){overflow:auto!important}</style>':'';
  frame.srcdoc=html.replace('<html lang="en">','<html lang="fr"'+(finish?' data-finish="'+finish+'"':'')+'>').replace('<head>','<head><base href="'+base+'">').replace('</head>',(finish?'<link rel="stylesheet" href="scripts/edition-effects.css">':'')+sampleStyle+'</head>').replace('<script src="cold-deck.js"><'+'/script>',()=>'<script>'+source.replace(/<\/script/gi,'<\\/script')+'<'+'/script>');
  document.querySelector('#status').textContent=width+' × '+height;
 }

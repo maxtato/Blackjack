@@ -499,7 +499,7 @@
 .card:is(.foil,.holo,.poly)>.card-surface::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:none;background:linear-gradient(112deg,transparent 28%,#fffced38 40%,#fffceea6 49%,#ffffffbd 50%,#fffced22 61%,transparent 72%) 150% 50%/300% 100% no-repeat;animation:edition-sheen 2.6s ease-in-out infinite}
 .card.holo>.card-surface::after{background-image:linear-gradient(126deg,transparent 35%,#fff8 36% 41%,transparent 42% 46%,#fff4 47% 51%,transparent 52%);animation-duration:2.4s;animation-delay:-.65s}
 .card.poly>.card-surface::after{background-image:linear-gradient(112deg,transparent 38%,#ffffff52 49%,#ffffff88 50%,transparent 62%);animation-duration:2.9s;animation-delay:-1.4s}
-.card.poly .card-pip,.card.poly .raster-glyph::after{background-image:var(--edition-ink);background-size:240% 100%;animation:edition-ink 3.2s ease-in-out infinite alternate}
+.card.poly .card-pip:not(.faceted-pip),.card.poly .raster-glyph::after{background-image:var(--edition-ink);background-size:240% 100%;animation:edition-ink 3.2s ease-in-out infinite alternate}
 .card.poly .court-image{filter:saturate(.65) contrast(1.08) drop-shadow(1px 0 0 #9563b1)}
 .card:is(.foil,.holo,.poly) .edtag{z-index:4;background:#20333be8;color:#fff7e6;border:0;border-radius:2px;font:500 max(7px,calc(var(--card-w)*.075))/1.1 var(--copy-font);padding:2px 4px}
 @keyframes edition-facets{to{background-position:65% 75%}}
@@ -519,3 +519,38 @@
 @media(max-height:600px) and (orientation:landscape){
  #actions .actMain .btn{font-size:19px!important}
 }
+
+/* Approved faceted heads and a single suit per card, sampled from transparent atlases. */
+.card[data-suit="♥"],.card[data-suit="♦"]{color:#ee4d60}
+.card[data-suit="♠"],.card[data-suit="♣"]{color:#253540}
+.card .faceted-court,.card .faceted-pip{
+ background-image:var(--facet-atlas);background-size:var(--facet-grid);background-position:var(--facet-x) 50%;background-repeat:no-repeat;
+ isolation:isolate;pointer-events:none;
+}
+.card .court-image.faceted-court{
+ --facet-atlas:var(--art-court-facets);--facet-grid:300% 100%;
+ left:-10%;top:10%;width:120%;height:auto;aspect-ratio:1;filter:none;
+}
+.card .card-pip.faceted-pip{
+ --facet-atlas:var(--art-suit-facets);--facet-grid:400% 100%;
+ left:50%;top:50%;width:56%;height:auto;aspect-ratio:3 / 4;transform:translate(-50%,-50%);
+ background-color:transparent;-webkit-mask:none;mask:none;animation:none;
+}
+.card .ace-art .faceted-pip{width:64%}
+.card .ace-ornament{
+ position:absolute;inset:14% 3%;background:var(--art-ace-ornament) center/contain no-repeat;pointer-events:none;
+}
+.card.poly .court-image.faceted-court{filter:none}
+/* Selective varnish follows the artwork's alpha and preserves its printed facets. */
+.card.poly :is(.faceted-pip,.faceted-court)::after{
+ content:"";position:absolute;inset:0;pointer-events:none;opacity:.62;mix-blend-mode:color;
+ background:var(--edition-ink) 0 50%/240% 100%;animation:edition-ink 3.2s ease-in-out infinite alternate;
+ -webkit-mask-image:var(--facet-atlas);mask-image:var(--facet-atlas);
+ -webkit-mask-size:var(--facet-grid);mask-size:var(--facet-grid);
+ -webkit-mask-position:var(--facet-x) 50%;mask-position:var(--facet-x) 50%;
+ -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;mask-mode:alpha;
+}
+.card.poly .faceted-court::after{opacity:.3}
+#shaker[inert] .card.poly :is(.faceted-pip,.faceted-court)::after{animation-play-state:paused}
+:root[data-motion="gentle"] .card.poly :is(.faceted-pip,.faceted-court)::after{animation:none}
+@media(prefers-reduced-motion:reduce){.card.poly :is(.faceted-pip,.faceted-court)::after{animation:none}}
