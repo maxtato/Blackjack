@@ -202,13 +202,12 @@
     if(!boardActive())return;
     $('felt').dataset.arcadeResult = kind;
     later(() => $('felt')?.removeAttribute('data-arcade-result'), 800);
+    const big = natural || mult>=3;
+    // Split hands celebrate their own result, even when the combined payout is neutral.
+    const winningHands=G.splitActive?[...$('pHand').querySelectorAll('.splithand.win')]:kind==='win'?[$('pHand')]:[];
+    winningHands.forEach(hand=>celebrateHand(hand,big));
     if (kind === 'win') {
-      const big = natural || mult>=3;
       kick(big?8:5);
-      if(big){
-        lightning($('pHand'),84,4,graphic.yellow);
-        $('pHand').querySelectorAll('.card:not(.back)').forEach((card,i)=>later(()=>cardCharge(card,graphic.cream,true),i*65));
-      }
       transferGain(gain,mult);
     } else if (kind === 'lose') {
       kick(4);
@@ -217,6 +216,27 @@
     } else {
       graphicRays($('pVal'),2,graphic.cream,22);
     }
+  }
+  function celebrateHand(hand,big=false){
+    if(!boardActive()||!hand?.isConnected)return;
+    lightning(hand,big?84:58,big?4:2,graphic.yellow);
+    hand.querySelectorAll('.card:not(.back)').forEach((card,i)=>later(()=>{
+      if(!boardActive()||!card.isConnected)return;
+      const height=rect(card)?.height||100;
+      const lift=Math.min(big?19:14,height*.15),tilt=(i%2?1:-1)*(big?3:2);
+      animate(card,[
+        {translate:'0 0',rotate:'0deg',scale:'1',filter:'brightness(1)'},
+        {translate:'0 2px',rotate:'0deg',scale:'.97',filter:'brightness(1)',offset:.1},
+        {translate:`0 -${lift}px`,rotate:tilt+'deg',scale:big?'1.14':'1.1',filter:'brightness(1.12)',offset:.32},
+        {translate:'0 -3px',rotate:(-tilt*.35)+'deg',scale:'1.025',filter:'brightness(1.03)',offset:.65},
+        {translate:'0 0',rotate:'0deg',scale:'1',filter:'brightness(1)'}
+      ],{duration:big?680:580});
+      cardCharge(card,graphic.yellow,true);
+      const flash=piece('card-victory-flash',0,0,graphic.cream,card);
+      if(flash)animate(flash,[{opacity:0},{opacity:big?.4:.28,offset:.2},{opacity:0,offset:.7},{opacity:0}],{duration:380},true);
+      graphicRays(card,2,graphic.cream,16);
+      burst(card,{count:big?6:4,reach:big?38:27,color:graphic.yellow});
+    },i*65));
   }
   function cardNode(card) {
     const dealer = G.dHand.includes(card);
@@ -231,8 +251,10 @@
     el.querySelector('.card-charge')?.remove();
     const glow=piece('card-charge',0,0,color,el);if(!glow)return;
     glow.style.left=glow.style.top='-4px';
-    glow.innerHTML='<svg viewBox="0 0 100 148" preserveAspectRatio="none" aria-hidden="true"><path d="M9 2 H91 L98 10 V138 L91 146 H9 L2 138 V10 Z"/></svg>';
-    animate(glow,[{opacity:0,scale:'.98'},{opacity:strong?1:.65,scale:'1',offset:.15},{opacity:strong?1:.5,scale:'1',offset:.65},{opacity:0,scale:'1.02'}],{duration:strong?780:300},true);
+    const outline='M9 2 H91 L98 10 V138 L91 146 H9 L2 138 V10 Z';
+    if(strong)glow.classList.add('strong');
+    glow.innerHTML='<svg viewBox="0 0 100 148" preserveAspectRatio="none" aria-hidden="true">'+(strong?'<path class="charge-halo" d="'+outline+'"/>':'')+'<path d="'+outline+'"/>'+(strong?'<path class="charge-core" d="'+outline+'"/>':'')+'</svg>';
+    animate(glow,[{opacity:0,scale:'.98'},{opacity:strong?1:.65,scale:'1',offset:.15},{opacity:strong?.85:.5,scale:'1.015',offset:.65},{opacity:0,scale:'1.04'}],{duration:strong?850:300},true);
   }
   function onCardLand(card){
     if(!boardActive())return;
@@ -259,10 +281,10 @@
     // Tracked with all effects so pause and motion changes cancel the bounce.
     animate(el,[
       {translate:'0 0',rotate:'0deg',scale:'1'},
-      {translate:'0 -8px',rotate:'-2deg',scale:'1.06',offset:.25},
-      {translate:'0 -2px',rotate:'1deg',scale:'1.02',offset:.58},
+      {translate:'0 -15px',rotate:'-4deg',scale:'1.12',offset:.25},
+      {translate:'0 -4px',rotate:'1.5deg',scale:'1.03',offset:.58},
       {translate:'0 0',rotate:'0deg',scale:'1'}
-    ],{duration:340});
+    ],{duration:420});
     const p=rect(el);
     if(p&&el.dataset.rank){
       const value=piece('card-value-pop',p.x,p.y-p.height*.38);
@@ -270,8 +292,8 @@
         animate(value,[{transform:'translate(-50%,0) scale(.5)',opacity:0},{transform:'translate(-50%,-12px) scale(1.2)',opacity:1,offset:.2},{transform:'translate(-50%,-20px) scale(1)',opacity:1,offset:.6},{transform:'translate(-50%,-38px) scale(.9)',opacity:0}],{duration:620},true);
       }
     }
-    cardCharge(el,graphic.cream);
-    graphicRays(el,2,graphic.yellow,14);
+    cardCharge(el,graphic.yellow,true);
+    graphicRays(el,2,graphic.yellow,20);
     haptic();
   }
   function onCombo(line){
