@@ -97,10 +97,7 @@
 #effects .effect-illustration{width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;border-radius:0;filter:saturate(.85)}
 #effects .joker:hover,#effects .tarot:hover{background:none;translate:0 -1px}
 #effects .joker.hot::before{filter:brightness(1.12)}
-#pBar{--baraka-ink:#1fd1c8;position:relative;inset:auto;align-self:center;display:flex;flex-direction:column;gap:5px;width:94%;height:31px;min-height:31px;margin:0;transform:none;background:none;border:0;border-radius:0;flex:none;overflow:visible;box-shadow:none}
-#pBar[data-level="2"]{--baraka-ink:#ffce3a}
-#pBar[data-level="3"]{--baraka-ink:#e2a06b}
-#pBar[data-level="4"]{--baraka-ink:#b69bda}
+#pBar{--baraka-ink:#b69bda;position:relative;inset:auto;align-self:center;display:flex;flex-direction:column;gap:5px;width:94%;height:31px;min-height:31px;margin:0;transform:none;background:none;border:0;border-radius:0;flex:none;overflow:visible;box-shadow:none}
 #pBar::before{content:none}
 #pBar .pmeta{display:flex;justify-content:space-between;align-items:center;gap:8px;height:14px;min-height:14px;font:500 12px/14px var(--copy-font);letter-spacing:.03em;color:#d7e1e7}
 #pState{display:flex;align-items:center;gap:6px}
