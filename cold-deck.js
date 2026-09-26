@@ -1299,9 +1299,11 @@ function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les 
   const pct=barakaPct(),lvl=barakaLevel();
   document.documentElement.style.setProperty('--p',(pct/100).toFixed(3));
   const f=$('pFill');if(f)f.style.width=pct+'%';
-  const pp=$('pPct');if(pp){pp.textContent=lvl?t('ui.lvl',lvl,BARAKA_MULT[lvl]):'';pp.style.display=lvl?'':'none';}
+  const levelLabel=t('ui.lvl',lvl,BARAKA_MULT[lvl]).replace(/^·\s*/,'');
+  const pp=$('pPct');if(pp){pp.textContent=levelLabel;pp.style.display='';}
   const ps=$('pState');if(ps){ps.textContent=t('ui.streak');ps.style.color='';}
-  const bar=$('pBar');if(bar){bar.classList.toggle('tick',lvl>=3);bar.dataset.active=String(pct>0);}
+  const bar=$('pBar');if(bar){bar.classList.toggle('tick',lvl>=3);bar.dataset.active=String(pct>0);bar.dataset.level=String(lvl);}
+  const track=$('barakaTrack');if(track){track.setAttribute('aria-valuenow',String(Math.round(pct)));track.setAttribute('aria-valuetext',levelLabel);}
   const tbl=document.getElementById('table');if(tbl)tbl.classList.toggle('boil',lvl>=3);
   window.ColdDeckFX?.onPressure();
 }

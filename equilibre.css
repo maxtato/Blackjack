@@ -97,10 +97,21 @@
 #effects .effect-illustration{width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;border-radius:0;filter:saturate(.85)}
 #effects .joker:hover,#effects .tarot:hover{background:none;translate:0 -1px}
 #effects .joker.hot::before{filter:brightness(1.12)}
-#pBar{position:relative;inset:auto;align-self:center;width:78%;height:15px;min-height:15px;margin:-5px 0 0;transform:none;background:#27333c;border:0;border-radius:10px;flex:none}
-#pBar:not([data-active="true"]){display:none}
+#pBar{--baraka-ink:#1fd1c8;position:relative;inset:auto;align-self:center;display:flex;flex-direction:column;gap:5px;width:94%;height:31px;min-height:31px;margin:0;transform:none;background:none;border:0;border-radius:0;flex:none;overflow:visible;box-shadow:none}
+#pBar[data-level="2"]{--baraka-ink:#ffce3a}
+#pBar[data-level="3"]{--baraka-ink:#e2a06b}
+#pBar[data-level="4"]{--baraka-ink:#b69bda}
 #pBar::before{content:none}
-#pBar .pmeta{font:500 9px/15px var(--copy-font);letter-spacing:0;line-height:15px;color:#cbd7db}
+#pBar .pmeta{display:flex;justify-content:space-between;align-items:center;gap:8px;height:14px;min-height:14px;font:500 12px/14px var(--copy-font);letter-spacing:.03em;color:#d7e1e7}
+#pState{display:flex;align-items:center;gap:6px}
+#pState::before{content:"";display:block;width:8px;height:12px;background:var(--baraka-ink);clip-path:polygon(57% 0,4% 53%,39% 52%,24% 100%,97% 39%,60% 39%)}
+#pBar #pPct{font:600 12px/14px var(--copy-font);letter-spacing:0;color:var(--baraka-ink);white-space:nowrap}
+#pBar[data-active="false"] #pPct{color:#acbac4}
+#pBar .baraka-track{position:relative;width:100%;height:12px;min-height:12px;overflow:hidden;background:#35424b var(--art-button-graphite) center/100% 100%;clip-path:polygon(1% 0,99% 0,100% 30%,100% 70%,99% 100%,1% 100%,0 70%,0 30%)}
+#pBar #pFill{height:100%;background:var(--baraka-ink) var(--art-card-stock) center/180px 100%;background-blend-mode:multiply;transition:width .28s ease-out,background-color .22s ease;box-shadow:inset 0 2px 0 #fff3}
+#pBar .baraka-track::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(25% - 2px),#20252a calc(25% - 2px),#20252a 25%)}
+@media(prefers-reduced-motion:reduce){#pBar #pFill{transition:none}}
+:root[data-motion="gentle"] #pBar #pFill{transition:none}
 /* Hand label centered over the cards, score badge at right, matching the board. */
 #stage{container-type:size;min-height:0;flex:1;--combo-room:60px;--message-room:0px;--hand-overhead:80px}
 #felt,#table{height:100%;background:transparent;border:0;box-shadow:none!important;overflow:visible;border-radius:0}
@@ -213,10 +224,11 @@
  #topbar .seg .v,#topbar .tnum{font-size:24px}
  #topbar .gainstat .lbl,#topbar .seg .k,#topbar .tt{font-size:10px}
  #objWrap{grid-column:2;grid-row:2}
- #mid{display:flex;flex-direction:column;gap:6px}
+ #mid{display:grid;grid-template-columns:minmax(0,1fr) minmax(160px,.9fr);grid-template-rows:48px minmax(0,1fr);gap:6px 18px}
  #effects{--inventory-height:48px;flex-wrap:nowrap;gap:4px;padding:0 2px;overflow-x:auto;overflow-y:hidden}
- #pBar{display:none}
- #stage{grid-column:2;grid-row:1;--combo-room:30px}
+ #effects{grid-column:1;grid-row:1}
+ #pBar{grid-column:2;grid-row:1;display:flex;width:100%;height:31px;min-height:31px;align-self:center}
+ #stage{grid-column:1 / 3;grid-row:2;--combo-room:30px}
  #feltInner{grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr) 30px;gap:0 12px}
  #feltInner .dealer-zone{grid-column:1;grid-row:1}
  #feltInner .player-zone{grid-column:2;grid-row:1}
@@ -313,7 +325,7 @@
  #shaker{display:grid;place-items:center;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);overflow:hidden}
  #bg{background-size:calc(100 * var(--game-u)) calc(211.111 * var(--game-u))}
  #bg::after{display:none}
- #app{--ui-u:calc(.95 * var(--game-u));--base-card-w:calc(22 * var(--ui-u));--dock-main:var(--dock-secondary);--dock-secondary:max(44px,calc(12.4 * var(--ui-u)));width:calc(100 * var(--game-u));max-width:none;height:calc(211.111 * var(--game-u));min-height:0;margin:0;padding:calc(4.5 * var(--game-u)) calc(6.5 * var(--game-u)) calc(11 * var(--game-u));grid-template-rows:calc(31.5 * var(--ui-u)) minmax(0,1fr) calc(var(--dock-main) + var(--dock-secondary) + 2.8 * var(--ui-u));gap:calc(3.4 * var(--game-u))}
+ #app{--ui-u:calc(.95 * var(--game-u));--base-card-w:calc(22 * var(--ui-u));--dock-main:var(--dock-secondary);--dock-secondary:max(40px,calc(10.8 * var(--ui-u)));width:calc(100 * var(--game-u));max-width:none;height:calc(211.111 * var(--game-u));min-height:0;margin:0;padding:calc(4.5 * var(--game-u)) calc(6.5 * var(--game-u)) calc(9.5 * var(--game-u));grid-template-rows:calc(31.5 * var(--ui-u)) minmax(0,1fr) calc(var(--dock-main) + var(--dock-secondary) + 2.2 * var(--ui-u));gap:calc(3.4 * var(--game-u))}
  /* Reserve the same action space during betting, play and settlement. */
  #topbar{grid-template-rows:calc(8.7 * var(--ui-u)) calc(16.5 * var(--ui-u)) calc(3.6 * var(--ui-u));row-gap:calc(1.35 * var(--ui-u))}
  #topbar .table-number{font-size:calc(5.2 * var(--ui-u));padding:0}
@@ -332,10 +344,10 @@
  #objWrap{gap:calc(1.3 * var(--ui-u))}
  #objPct{min-width:calc(7.2 * var(--ui-u))}
  #objWrap #objBar{height:calc(2.5 * var(--ui-u))}
- #mid{position:relative;gap:calc(3 * var(--ui-u))}
+ #mid{position:relative;gap:calc(1.5 * var(--ui-u))}
  #effects{--inventory-height:max(48px,calc(14.5 * var(--ui-u)));flex-wrap:nowrap;gap:max(4px,calc(1.3 * var(--ui-u)))}
- #pBar{position:absolute;top:calc(max(48px,14.5 * var(--ui-u)) + 2px);left:15%;width:70%;height:calc(1.4 * var(--ui-u));min-height:0;margin:0;z-index:3}
- #pBar .pmeta{font-size:calc(1.3 * var(--ui-u));line-height:calc(1.4 * var(--ui-u))}
+ #pBar{position:relative;inset:auto;width:94%;height:31px;min-height:31px;margin:0;z-index:3}
+ #pBar .pmeta,#pBar #pPct{font-size:max(11px,calc(3.15 * var(--ui-u)));line-height:14px}
  #stage{--combo-room:max(52px,calc(14 * var(--ui-u)))}
  #feltInner .zone{grid-template-rows:calc(3.6 * var(--ui-u)) calc(9 * var(--ui-u)) minmax(0,1fr);gap:calc(.7 * var(--ui-u))}
  #feltInner .zone .zlbl{font-size:calc(3.7 * var(--ui-u));line-height:1}
@@ -349,14 +361,14 @@
  #comboRow .combo-name{font-size:clamp(8.5px,calc(2.6 * var(--ui-u)),10px)}
  #comboRow .combo-tile.compact .combo-name{font-size:clamp(8px,calc(2.3 * var(--ui-u)),9px)}
  #tip:not(:empty){font-size:calc(2.9 * var(--ui-u));line-height:1.2;max-height:calc(5 * var(--ui-u))}
- #bottombar,#actions{gap:calc(2.8 * var(--ui-u))}
- #actions .actMain,#actions .actWide{gap:calc(2 * var(--ui-u))}
+ #bottombar,#actions{gap:calc(2.2 * var(--ui-u))}
+ #actions .actMain,#actions .actWide{width:94%;justify-self:center;gap:calc(2 * var(--ui-u))}
  #actions .actWide .btn:only-child{width:calc((100% - 2 * var(--ui-u))/2)}
- #actions .btn{font-size:calc(8 * var(--ui-u))!important;padding:calc(.5 * var(--ui-u)) calc(1.3 * var(--ui-u))!important}
- #actions .actWide .btn{font-size:calc(8 * var(--ui-u))!important}
- #app #actions .actMain .btn small{font-size:max(11px,calc(3.3 * var(--ui-u)));line-height:1.15}
+ #actions .btn{font-size:calc(7.2 * var(--ui-u))!important;padding:calc(.5 * var(--ui-u)) calc(1.3 * var(--ui-u))!important}
+ #actions .actWide .btn{font-size:calc(7.2 * var(--ui-u))!important}
+ #app #actions .actMain .btn small{font-size:max(11px,calc(3.1 * var(--ui-u)));line-height:1.1}
  #actions .action-copy{gap:calc(.5 * var(--ui-u))}
- #app[data-phase="bet"] #actions .btn{font-size:calc(8 * var(--ui-u))!important}
+ #app[data-phase="bet"] #actions .btn{font-size:calc(7.2 * var(--ui-u))!important}
  #bottombar #betRow{height:var(--dock-secondary);gap:calc(2 * var(--ui-u))}
  #chips{gap:calc(2.5 * var(--ui-u))}
  #chips .chip{width:max(44px,calc(12 * var(--ui-u)));height:max(44px,calc(12 * var(--ui-u)));font-size:max(18px,calc(5.2 * var(--ui-u)))}
