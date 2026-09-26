@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>Cold Deck · contrôle des proportions</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#10161b;color:#fff7e6;font:14px system-ui}header{display:flex;align-items:center;gap:16px;padding:12px;background:#10161b}label{display:flex;gap:8px;align-items:center}select{font:inherit;padding:6px}main{padding:16px;display:flex;justify-content:center}iframe{border:0;background:#20252a;flex:none;box-shadow:0 0 0 1px #58616a}
+.embed header{display:none}.embed main{padding:0;width:100%;height:100dvh}.embed iframe{width:100%;height:100%;box-shadow:none}
+</style>
+<header><strong>Contrôle des proportions</strong><label>Écran<select id="screen"><option value="home">Accueil</option><option value="circuit">Circuit</option><option value="free">Libre</option><option value="two">Deux cartes</option><option value="double">Doubler disponible</option><option value="no-special">Aucune action spéciale</option><option value="four">Quatre cartes</option><option value="six">Six cartes</option><option value="split">Main séparée</option><option value="editions">Éditions brillantes</option><option value="flip-back">Retournement · dos</option><option value="flip-edge">Retournement · tranche</option><option value="flip-front">Retournement · face</option><option value="flip-done">Retournement · posé</option></select></label><label>Format<select id="size"><option value="390,844">390 × 844</option><option value="430,932">430 × 932</option><option value="375,667">375 × 667</option><option value="844,390">844 × 390</option><option value="478,1624">Maquette préparation</option></select></label><span id="status"></span></header>
+<main><iframe id="review" title="Rendu réel Cold Deck"></iframe></main>
+<script type="module">
+// Internal visual fixture: loads the deployed app's exact HTML, styles and bundle.
+// Test hands stay inside this frame. No fixture is added to the playable app.
+const base=new URL('../',location.href).href;
+const [html,bundle]=await Promise.all(['index.html','cold-deck.js'].map(path=>fetch(new URL(path,base),{cache:'no-store'}).then(r=>r.text())));
+const frame=document.querySelector('iframe'),screen=document.querySelector('#screen'),size=document.querySelector('#size');
+const params=new URLSearchParams(location.search);
+const finish=['metal','prism','ink'].includes(params.get('finish'))?params.get('finish'):'';
+let previewPaused=false;
+function syncPreviewMotion(){if(frame.contentDocument)frame.contentDocument.documentElement.dataset.previewPaused=String(previewPaused)}
+frame.addEventListener('load',syncPreviewMotion);
+window.addEventListener('message',event=>{if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='cold-deck-preview-motion')return;previewPaused=Boolean(event.data.paused);syncPreviewMotion()});
+screen.add(new Option('Choix de la mise','bet'));
+screen.add(new Option('Combo complété','combo-ready'));
+screen.add(new Option('Lisibilité des 10','tens'));
+screen.add(new Option('Échantillons de finitions','finish-sample'));
+screen.add(new Option('Victoire puis nouvelle mise','win-flow'));
+screen.add(new Option('Éclairs et validation des combos','fx-flow'));
+screen.add(new Option('Effets C : relique et objectif','fx-goal'));
+screen.add(new Option('Reliques et tarots','inventory'));
+screen.add(new Option('Inventaire rempli','inventory-full'));
+screen.add(new Option('Figures et cartes classiques','new-art'));
+screen.add(new Option('Portraits et symboles resserrés','art-sample'));
+if([...screen.options].some(option=>option.value===params.get('screen')))screen.value=params.get('screen');
+if([...size.options].some(option=>option.value===params.get('size')))size.value=params.get('size');
+document.documentElement.classList.toggle('embed',params.get('embed')==='1');
+async function render(){
+ const [width,height]=size.value.split(',');frame.width=width;frame.height=height;
+ const fixture=`
+ setLang('fr');
+ const visualScreen=${JSON.stringify(screen.value)};
+ if(visualScreen==='finish-sample'||visualScreen==='art-sample'){
+  document.querySelectorAll('.overlay.show').forEach(el=>el.classList.remove('show'));
+  window.ColdDeckFX?.clear();
+  const samples=document.createElement('main');samples.className=visualScreen==='art-sample'?'edition-samples card-samples':'edition-samples';
+  const cards=visualScreen==='art-sample'
+   ?[{r:'J',s:'♠'},{r:'Q',s:'♥'},{r:'K',s:'♣'},{r:'2',s:'♥'},{r:'5',s:'♣'},{r:'7',s:'♦'},{r:'8',s:'♥'},{r:'9',s:'♦'},{r:'10',s:'♣'},{r:'A',s:'♠'},{r:'10',s:'♥',ed:'poly'},{r:'10',s:'♣',ed:'foil'}]
+   :['foil','holo','poly'].map(ed=>({r:'10',s:'♥',ed}));
+  for(const card of cards){
+   const figure=document.createElement('figure');figure.append(cardEl(card));
+   const caption=document.createElement('figcaption');caption.textContent=card.ed?ED_NAME[card.ed]:card.r+' '+card.s;figure.append(caption);samples.append(figure);
+  }
+  document.body.append(samples);
+ }
+ else if(visualScreen==='home')openMenu();
+ else if(visualScreen==='circuit'||visualScreen==='free')chooseMode(visualScreen==='free'?'infini':'nuit');
+ else {
+  chooseMode('nuit');startGame(0);
+  const visualRanks=visualScreen.startsWith('flip-')?[5,6,7]:visualScreen==='tens'?[10,10]:visualScreen==='win-flow'?[10,9]:visualScreen==='combo-ready'?[5,6,4]:visualScreen==='double'?[5,6]:visualScreen==='no-special'?[3,4,5]:(visualScreen==='editions'||visualScreen.startsWith('inventory'))?[5,6,7]:visualScreen==='six'?[2,2,3,3,4,3]:visualScreen==='four'?[3,4,5,5]:[8,9];
+  const visualSuits=['♣','♥','♠','♦','♣','♥'];
+  const visualHand=visualRanks.map((r,i)=>({r:String(r),s:visualSuits[i],...((visualScreen==='editions'||visualScreen.startsWith('inventory'))?{ed:['foil','holo','poly'][i]}:{})}));
+  Object.assign(G,{phase:'play',bank:120,bet:10,betChosen:true,tokens:3,hand:2,pHand:visualHand,dHand:[{r:'K',s:'♣'},{r:'7',s:'♥'}],_dealing:false,insisted:false,contract:{id:'csuite',reward:10,done:false},table:{...G.table,goal:200},shoe:Array.from({length:50},()=>({r:'2',s:'♣'}))});
+  if(visualScreen==='fx-flow'){
+   G.pHand=[{r:'5',s:'♣'},{r:'6',s:'♥'}];G.shoe[G.shoe.length-1]={r:'7',s:'♠'};
+   G.relics=['lunettes','jeton','as'].map(id=>({...RELIC_POOL.find(item=>item.id===id)}));
+   G.consumables=['soleil','lune'].map(id=>({...TAROT_POOL.find(item=>item.id===id)}));
+  }
+  if(visualScreen==='fx-goal'){
+   G.pHand=[{r:'A',s:'♣'},{r:'6',s:'♥'},{r:'A',s:'♠'}];G.bank=180;
+   G.relics=['lunettes','jeton','as'].map(id=>({...RELIC_POOL.find(item=>item.id===id)}));
+   G.consumables=['soleil','lune'].map(id=>({...TAROT_POOL.find(item=>item.id===id)}));
+  }
+  if(visualScreen==='new-art'){
+   G.pHand=[{r:'Q',s:'♥'},{r:'A',s:'♠'},{r:'5',s:'♦'}];
+   G.dHand=[{r:'J',s:'♣'},{r:'K',s:'♦'}];G.revealed=true;
+  }
+  if(visualScreen.startsWith('inventory')){
+   const relicIds=visualScreen==='inventory-full'?['lunettes','jeton','as','mecene','collector']:['lunettes','jeton','as'];
+   G.relics=relicIds.map(id=>({...RELIC_POOL.find(item=>item.id===id)}));
+   G.consumables=['soleil','lune'].map(id=>({...TAROT_POOL.find(item=>item.id===id)}));
+  }
+  if(visualScreen==='bet'){G.phase='bet';G.pHand=[];G.dHand=[];}
+  if(visualScreen==='split'){G.splitActive=true;G.hands=[[{r:'8',s:'♣'},{r:'3',s:'♦'}],[{r:'8',s:'♥'},{r:'4',s:'♣'}]];G.hi=0;G.pHand=G.hands[0];}
+  renderAll();renderHands();
+  if(visualScreen==='win-flow'||visualScreen==='fx-flow'){
+   const anchors=['app','topbar','stage','center','bottombar'];
+   const measure=()=>anchors.map(id=>{const r=document.getElementById(id).getBoundingClientRect();return [r.x,r.y,r.width,r.height]});
+   requestAnimationFrame(()=>{
+    const initial=measure(),phases=new Set();let drift=0;
+    function checkLayout(){
+     const current=measure();phases.add(G.phase);
+     current.forEach((r,i)=>r.forEach((v,j)=>{drift=Math.max(drift,Math.abs(v-initial[i][j]))}));
+     parent.postMessage({type:'cold-deck-layout-check',drift:Math.round(drift*100)/100,phases:[...phases]},${JSON.stringify(new URL(base).origin)});
+     if(G.phase!=='bet')requestAnimationFrame(checkLayout);
+    }
+    checkLayout();
+   });
+  }
+  if(visualScreen.startsWith('flip-')){
+   G._dealing=true;G.pHand[2]._flip=true;renderActions();renderHands();
+   const time={'flip-back':.2,'flip-edge':.45,'flip-front':.65,'flip-done':1}[visualScreen]*CARD_FLIP;
+   requestAnimationFrame(()=>{
+    const turning=document.querySelector('#pHand .flipwrap');
+    for(const animation of turning.getAnimations()){animation.pause();animation.currentTime=time;}
+   });
+  }
+ }
+ requestAnimationFrame(()=>window.ColdDeckRaster.refresh());
+ `;
+ const end=bundle.lastIndexOf('})();');
+ const source=bundle.slice(0,end)+fixture+bundle.slice(end);
+ const sampleStyle=['finish-sample','art-sample'].includes(screen.value)?'<style>body>*:not(.edition-samples):not(script){display:none!important}.edition-samples{display:flex!important;justify-content:center;gap:14px;padding:20px 12px;margin:0;--card-w:min(28vw,100px)}.edition-samples figure{margin:0;min-width:0}.edition-samples .card{height:calc(var(--card-w)*1.48)}.edition-samples figcaption{margin-top:9px;text-align:center;font:500 12px/1.2 var(--copy-font);letter-spacing:.12em;color:#c4cdd3}.card-samples{display:grid!important;grid-template-columns:repeat(3,var(--card-w));gap:18px 14px}body:has(.card-samples){overflow:auto!important}</style>':'';
+ frame.srcdoc=html.replace('<html lang="en">','<html lang="fr"'+(finish?' data-finish="'+finish+'"':'')+'>').replace('<head>','<head><base href="'+base+'">').replace('</head>',(finish?'<link rel="stylesheet" href="scripts/edition-effects.css">':'')+sampleStyle+'</head>').replace('<script src="cold-deck.js"><'+'/script>',()=>'<script>'+source.replace(/<\/script/gi,'<\\/script')+'<'+'/script>');
+ document.querySelector('#status').textContent=width+' × '+height;
+}
+window.addEventListener('message',event=>{if(event.source!==frame.contentWindow||event.origin!==location.origin||event.data?.type!=='cold-deck-layout-check')return;document.querySelector('#status').textContent='Plateau fixe · écart max. '+event.data.drift+' px · '+event.data.phases.join(' → ')});
+screen.addEventListener('change',render);size.addEventListener('change',render);render();
+</script>
+</html>

@@ -1,41 +1,75 @@
 /* Presentation only: the blackjack engine and progression are unchanged. */
 Object.assign(STR.fr,{
- 'nav.rules':'RÈGLES','nav.settings':'RÉGLAGES','nav.back':'← MODES DE JEU','nav.reset':'Réinitialiser ce mode',
- 'menu.choose':'CHOISIS TA TABLE','menu.freeTag':'À TON RYTHME','menu.circuitTag':'LE DÉFI',
- 'menu.endless':'LIBRE','menu.endlessSub':'Du blackjack, sans missions.',
- 'menu.circuit':'CIRCUIT','menu.circuitSub':n=>n+' tables · boss, reliques & tarots',
+ 'ui.bet':'Mise','ui.mult':'Multi','ui.gain':'Cagnotte','ui.potLbl':'Cagnotte','ui.turnsLeft':'mains<br>restantes','ui.you':'Ta main','ui.dealer':'Croupier','act.double':'DOUBLER','act.force':'FORCER','modern.table':'Table',
+ 'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HAUTE TENSION',
+ 'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','cb.to21':n=>'21 parfait ×3 · +'+n,'modern.goal':'Objectif','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
+ 'nav.rules':'Règles','nav.settings':'Réglages','nav.back':'‹ Modes de jeu','nav.reset':'Réinitialiser ce mode',
+ 'planque.best':'Meilleur parcours','planque.noRecord':'Aucune partie','planque.back':'Dos de carte','planque.backSub':(i,n)=>i+'/'+n,
+ 'menu.choose':'CHOISIS TA TABLE','menu.freeTag':'À TON RYTHME','menu.circuitTag':"L'AVENTURE",
+ 'menu.endless':'LIBRE','menu.endlessSub':'Du blackjack à ton rythme.',
+ 'menu.circuit':'CIRCUIT','menu.circuitSub':n=>"L'aventure, table après table.",
  'menu.freeAction':'PRENDRE PLACE','menu.circuitAction':'ENTRER DANS LE CIRCUIT',
  'menu.recordNote':'Ta progression est conservée sur cet appareil.',
  'menu.nextHand':"LA PROCHAINE MAIN T'ATTEND",'menu.preparation':'TA PRÉPARATION',
  'menu.first':'Aucune partie jouée','planque.subInf':'Enchaîne les mains à ton rythme. Tu décides quand encaisser.',
  'planque.subCircuit':'Prépare tes atouts, puis tente la traversée du casino.',
  'planque.modeInf':'MODE LIBRE','planque.modeCircuit':'MODE CIRCUIT',
- 'planque.seeAll':'LA COLLECTION →','planque.start':'JOUER',
- 'planque.startInf':'sans mission · sans limite de mains',
- 'planque.startCircuit':n=>'circuit · '+n+' tables',
+ 'planque.seeAll':'Collection ›','planque.start':'JOUER',
+ 'planque.startInf':'Sans limite de mains',
+ 'planque.startCircuit':n=>'Commencer le circuit',
  'set.title':'RÉGLAGES','set.close':'TERMINÉ','set.dev':'OUTILS DE DÉMONSTRATION',
  'rules.close':'RETOUR','rules.basic':'Les bases du blackjack','rules.bonuses':'Baraka & combinaisons','rules.modes':'Les modes de jeu',
- 'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>'
+ 'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>',
+ 'back.cb9':'Éclair','back.cb10':'Chance','back.cb11':'Cœur','back.cb12':'Lune','back.cb13':'Dés','back.cb14':'Couronne','back.cb15':'Œil','back.cb16':'Cerises','back.cb18':'Flamme','back.cb19':'Diamant','back.cb22':'Serpent','back.cb26':'Soleil',
+ 'set.open':'RÉGLAGES'
 });
 Object.assign(STR.en,{
- 'nav.rules':'HOW TO PLAY','nav.settings':'SETTINGS','nav.back':'← GAME MODES','nav.reset':'Reset this mode',
- 'menu.choose':'CHOOSE YOUR TABLE','menu.freeTag':'AT YOUR OWN PACE','menu.circuitTag':'THE CHALLENGE',
- 'menu.endless':'FREE PLAY','menu.endlessSub':'Blackjack. No missions.',
- 'menu.circuit':'CIRCUIT','menu.circuitSub':n=>n+' tables · bosses, relics & tarots',
+ 'ui.bet':'Bet','ui.mult':'Multi','ui.gain':'Bank','ui.potLbl':'Bank','ui.turnsLeft':'hands<br>left','ui.you':'Your hand','ui.dealer':'Dealer','act.force':'PUSH LUCK','modern.table':'Table',
+ 'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HIGH VOLTAGE',
+ 'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'Target','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'THE HOUSE IS WATCHING.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
+ 'nav.rules':'Rules','nav.settings':'Settings','nav.back':'‹ Game modes','nav.reset':'Reset this mode',
+ 'planque.best':'Best run','planque.noRecord':'No games played','planque.back':'Card back','planque.backSub':(i,n)=>i+'/'+n,
+ 'menu.choose':'CHOOSE YOUR TABLE','menu.freeTag':'AT YOUR OWN PACE','menu.circuitTag':'THE ADVENTURE',
+ 'menu.endless':'FREE PLAY','menu.endlessSub':'Blackjack at your own pace.',
+ 'menu.circuit':'CIRCUIT','menu.circuitSub':n=>'An adventure, table by table.',
  'menu.freeAction':'TAKE A SEAT','menu.circuitAction':'ENTER THE CIRCUIT',
  'menu.recordNote':'Your progress is saved on this device.',
  'menu.nextHand':'YOUR NEXT HAND AWAITS','menu.preparation':'YOUR PREPARATION',
  'menu.first':'No games played yet','planque.subInf':'Play hand after hand at your own pace. Cash out when you choose.',
  'planque.subCircuit':'Prepare your perks, then take on the casino.',
  'planque.modeInf':'FREE PLAY','planque.modeCircuit':'CIRCUIT MODE',
- 'planque.seeAll':'THE COLLECTION →','planque.start':'PLAY',
- 'planque.startInf':'no missions · unlimited hands','planque.startCircuit':n=>'circuit · '+n+' tables',
+ 'planque.seeAll':'Collection ›','planque.start':'PLAY',
+ 'planque.startInf':'Unlimited hands','planque.startCircuit':n=>'Start the circuit',
  'set.close':'DONE','set.dev':'DEMO TOOLS','rules.close':'BACK',
  'rules.basic':'Blackjack basics','rules.bonuses':'Streaks & combinations','rules.modes':'Game modes',
- 'tok.bankI':'+$','tok.pourboireI':'+$<small>/hand</small>'
+ 'tok.bankI':'+$','tok.pourboireI':'+$<small>/hand</small>',
+ 'back.cb9':'Lightning','back.cb10':'Luck','back.cb11':'Heart','back.cb12':'Moon','back.cb13':'Dice','back.cb14':'Crown','back.cb15':'Eye','back.cb16':'Cherries','back.cb18':'Flame','back.cb19':'Diamond','back.cb22':'Snake','back.cb26':'Sun',
+ 'set.open':'SETTINGS'
 });
 for(const key of Object.keys(STR.fr))if(typeof STR.fr[key]==='string')STR.fr[key]=STR.fr[key].replaceAll('SANS FIN','LIBRE').replaceAll('LA TOURNÉE','CIRCUIT');
 for(const key of Object.keys(STR.en))if(typeof STR.en[key]==='string')STR.en[key]=STR.en[key].replaceAll('ENDLESS','FREE PLAY');
+// One illustrated language throughout the dialogs and celebration effects.
+for(const [name,key] of [['chip','ui-chip'],['burst','ui-burst'],['star','etoile']]){
+ document.documentElement.style.setProperty('--art-'+name,`url("${ColdDeckArt.image(key)}")`);
+}
+for(const [id,key] of Object.entries({rulesScreen:'boon2',upgradesScreen:'relic2',backPickScreen:'as',confirmRestart:'roue',pauseScreen:'ui-pause',palierScreen:'elan',shop:'ui-trophy',loseScreen:'net',endScreen:'ui-trophy',settingsScreen:'ui-settings'})){
+ const heading=$(id)?.querySelector('h1');if(!heading)continue;
+ const header=document.createElement('div');header.className='illustrated-heading';
+ heading.before(header);header.innerHTML=ColdDeckArt.illustration(key,'dialog-art',true);header.append(heading);
+}
+document.querySelectorAll('.hero-chip').forEach(el=>{
+ const value=el.textContent;el.innerHTML=ColdDeckArt.illustration('ui-chip','chip-art')+'<b>'+value+'</b>';
+});
+document.querySelectorAll('.hero-star').forEach(el=>el.innerHTML=ColdDeckArt.illustration('etoile','scene-art'));
+document.querySelector('.hero-art')?.insertAdjacentHTML('afterbegin',ColdDeckArt.illustration('ui-burst','hero-burst'));
+document.querySelector('#upgradesBtn')?.insertAdjacentHTML('afterbegin',ColdDeckArt.illustration('relic2','prep-art',true));
+const demoArt=document.querySelector('.adCube');if(demoArt)demoArt.innerHTML=ColdDeckArt.illustration('as','scene-art',true);
+const originalEndRender=renderEndScreen;
+renderEndScreen=function(){
+ originalEndRender();
+ const art=$('endScreen').querySelector('.dialog-art');
+ if(art&&G.endInfo)art.src=ColdDeckArt.image(G.endInfo.cashout?'ui-trophy':'jeton');
+};
 STR.fr['top.metaInf']=(p,a,b)=>'∞ LIBRE · palier '+p+' · mise '+a+'–'+b;
 STR.en['top.metaInf']=(p,a,b)=>'∞ FREE PLAY · tier '+p+' · bet '+a+'–'+b;
 STR.fr['rules.table']='<span class="rt">LES TABLES DU CIRCUIT</span>Atteins l’objectif de jetons avant d’épuiser tes mains. La table se termine dès que l’objectif est atteint. Les mises ont un minimum et un maximum propres à la table.';
@@ -44,16 +78,15 @@ STR.en['rules.table']='<span class="rt">CIRCUIT TABLES</span>Reach the cash goal
 const originalMenuRender=renderMenu;
 renderMenu=function(){
  originalMenuRender();
- const records=[['infini',META.infini.record,'menu.endless'],['nuit',META.nuit.record,'menu.circuit']];
- $('menuRecords').innerHTML=records.map(([mode,record,label])=>{
-  const played=mode==='infini'?record.palier:record.depth;
-  const detail=played?t(mode==='infini'?'menu.recTier':'menu.recTables',played):t('menu.first');
-  return `<div class="mrec"><span class="mrl">${t(label)}</span><span class="mrv">${detail}</span></div>`;
- }).join('');
- if(!$('menuHand').children.length){
-  $('menuHand').append(cardEl({r:'A',s:'♠'}),cardEl({r:'K',s:'♥'}));
- }
- $('readySuit').innerHTML=suitSVG('♠',85);
+ const best=Math.max(0,Number(RECS.infini?.gain)||0,Number(RECS.nuit?.gain)||0);
+ $('menuRecords').innerHTML=`<span class="menu-record-label">${LANG==='fr'?'Meilleur gain':'Best win'}</span><strong id="menuBestGain">${boardCash(best)}</strong>`;
+ // Rebuild with the exact in-game renderer, including the selected back and stock mask.
+ const ace=cardEl({r:'A',s:'♠'}),king=cardEl({r:'K',s:'♠'}),back=cardEl({r:'A',s:'♠'},{back:true});
+ for(const card of [ace,king,back])card.setAttribute('aria-hidden','true');
+ $('menuHand').replaceChildren(ace,king,back);
+ $('menuHand').dataset.back=cardBack;
+ window.ColdDeckFX?.onHome();
+ $('readySuit').innerHTML=ColdDeckArt.effect('as');
 };
 
 renderRules=function(){
@@ -67,7 +100,7 @@ renderBackPicker=function(){
  originalBackRender();
  document.querySelectorAll('#bpRow .bpCard').forEach((card,i)=>{
   card.setAttribute('role','button');card.tabIndex=0;
-  card.setAttribute('aria-label',t('planque.backSub',i+1,CARD_BACKS.length));
+  card.setAttribute('aria-label',t('back.'+CARD_BACKS[i])+' · '+t('planque.backSub',i+1,CARD_BACKS.length));
   card.setAttribute('aria-pressed',String(card.classList.contains('sel')));
   card.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();card.click();}};
  });

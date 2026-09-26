@@ -1,0 +1,79 @@
+/* Generated bitmap artwork with exact game-controlled ranks and pip counts. */
+const ColdDeckArt = (() => {
+  const suitKeys={'♠':'spade','♥':'heart','♦':'diamond','♣':'club'};
+  const letterCells=Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZÉÈÀÇÙÊÔÛÎÏ');
+  // Visible ink bounds in the generated 6 × 6 atlas, excluding its empty side margins.
+  const letterBounds=[
+    [.268,.766],[.292,.761],[.244,.746],[.254,.751],[.282,.699],[.268,.699],
+    [.244,.770],[.268,.756],[.388,.603],[.244,.718],[.249,.751],[.278,.722],
+    [.225,.789],[.249,.761],[.239,.746],[.263,.732],[.220,.751],[.249,.756],
+    [.263,.742],[.263,.746],[.234,.751],[.211,.761],[.139,.837],[.201,.751],
+    [.234,.794],[.263,.742],[.287,.703],[.278,.694],[.211,.742],[.234,.732],
+    [.258,.746],[.297,.713],[.244,.751],[.230,.737],[.344,.608],[.316,.636]
+  ];
+  const numberCells=Array.from('0123456789+×$−∞?');
+  // Ink bounds of 0–9 in the generated atlas; pair kerning removes only the
+  // empty space between adjacent digits, leaving symbols and word gaps alone.
+  const digitBounds=[[.245,.769],[.271,.721],[.232,.766],[.248,.750],[.204,.788],[.248,.760],[.232,.766],[.226,.769],[.229,.776],[.216,.779]];
+  const safe=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  // Independent presentation RNG: original per-glyph cadence without changing draws.
+  let motionSeed=0x43d3c901;
+  const motionSample=()=>{motionSeed=(Math.imul(motionSeed,1664525)+1013904223)>>>0;return motionSeed/4294967296;};
+  function glyph(character,index=0,previous=''){
+    const c=character.toUpperCase().replace('-','−');
+    const direction={'←':'left','◀':'left','→':'right','▶':'right','↗':'forward','✕':'close'}[c];
+    if(direction==='close')return '<i class="raster-nav" data-direction="close" aria-hidden="true"></i>';
+    if(direction)return `<img class="nav-triangle" data-direction="${direction}" src="icons/nav-triangle.svg" alt="" aria-hidden="true" width="24" height="24">`;
+    const letter=letterCells.indexOf(c),number=numberCells.indexOf(c);
+    if(letter<0&&number<0)return `<span class="raster-punctuation">${safe(character)}</span>`;
+    const cols=letter>=0?6:4,cell=letter>=0?letter:number;
+    const rows=letter>=0?6:4;
+    const trim=letter>=0?`--glyph-start:${letterBounds[letter][0]};--glyph-end:${(1-letterBounds[letter][1]).toFixed(3)};`:'';
+    const digit=/^[0-9]$/.test(c),joined=digit&&/^[0-9]$/.test(previous);
+    const kern=joined?`--digit-kern:${(1-digitBounds[Number(previous)][1]+digitBounds[number][0]).toFixed(3)};`:'';
+    const duration=.95+motionSample()*.3,delay=-motionSample()*duration;
+    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}"${digit?' data-digit=""':''} style="${trim}${kern}--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${duration.toFixed(3)}s;--letter-delay:${delay.toFixed(3)}s"></i>`;
+  }
+  function lettering(value){
+    const text=String(value);let index=0;
+    const words=text.split(/(\s+)/u).map(word=>word.trim()?`<span class="raster-word">${Array.from(word).map((c,i,chars)=>glyph(c,index++,chars[i-1])).join('')}</span>`:safe(word)).join('');
+    return `<span class="raster-copy"><span class="sr-only">${safe(text)}</span><span class="raster-ink" aria-hidden="true">${words}</span></span>`;
+  }
+  const suit=(s,size=24)=>`<i class="suit raster-suit" data-suit-art="${suitKeys[s]||'spade'}" style="width:${size}px;height:${size}px" aria-hidden="true"></i>`;
+  const pip=(s,x,y,size=15,angle=0)=>`<i class="card-pip raster-suit" data-suit-art="${suitKeys[s]}" style="left:${x}%;top:${y/142*100}%;width:${size}%;height:${size/142*100}%;transform:translate(-50%,-50%) rotate(${angle}deg)" aria-hidden="true"></i>`;
+  const layouts={
+    2:[[50,43],[50,99]],3:[[50,38],[50,71],[50,104]],
+    4:[[33,42],[67,42],[33,100],[67,100]],
+    5:[[33,40],[67,40],[50,71],[33,102],[67,102]],
+    6:[[33,37],[67,37],[33,71],[67,71],[33,105],[67,105]],
+    7:[[33,35],[67,35],[50,53],[33,71],[67,71],[33,107],[67,107]],
+    8:[[33,33],[67,33],[50,52],[33,71],[67,71],[50,90],[33,109],[67,109]],
+    9:[[33,32],[67,32],[33,58],[67,58],[50,71],[33,84],[67,84],[33,110],[67,110]],
+    10:[[33,39],[67,39],[33,55],[67,55],[33,71],[67,71],[33,87],[67,87],[33,103],[67,103]]
+  };
+  function face(rank,s){
+    const courts={K:'king',Q:'queen',J:'jack'};
+    // Keep the traditional count inside a tighter central area, clear of both indices.
+    const art=courts[rank]
+      ?`<img class="court-image" data-court="${rank}" src="${image('court-'+courts[rank])}" width="1024" height="1536" alt="" decoding="async" draggable="false">`
+      :rank==='A'?pip(s,50,71,41):(layouts[Number(rank)]||[]).map(([x,y])=>pip(s,50+(x-50)*.88,71+(y-71)*.84,Number(rank)===10?13:Number(rank)>8?15:17,y>71?180:0)).join('');
+    return `<div class="card-art raster-card-art" aria-hidden="true">${art}</div>`;
+  }
+  // HD raster illustrations shared by inventory, shops, effects and menus.
+  const illustrationKeys=new Set(["lunettes", "jeton", "clope", "as", "froid", "compteur", "mecene", "usurier", "collector", "maitresse", "bruleur", "portebonheur", "diplomate", "talisman", "aimant", "phare", "etoile", "jugement", "soleil", "diable", "lune", "etoileD", "pendu", "magicien", "roue", "soin", "assurance", "videur", "bank", "pourboire", "net", "tarot", "contact", "relic2", "plafond", "elan", "cashplus", "boon2", "mult", "baraplus", "evt3"]);
+  const effectAliases={bankI:'bank',pourboireI:'pourboire',income:'pourboire',betmax:'plafond',filet:'net',cash:'soin'};
+  const interfaceArt={flag:'phare',trophy:'ui-trophy',scroll:'boon2',forcee:'baraplus',glass:'baraplus',arc:'lune',suite:'elan',couleur:'tarot',doree:'etoile',diamond:'relic2'};
+  const image=key=>`assets/illustrations/${key}.webp`;
+  const backKeys={cb9:'back-lightning',cb10:'back-luck',cb11:'back-heart',cb12:'back-moon',cb13:'back-dice',cb14:'back-crown',cb15:'back-eye',cb16:'back-cherry',cb18:'back-flame',cb19:'back-diamond',cb22:'back-snake',cb26:'back-sun'};
+  const backKey=id=>backKeys[id]||backKeys.cb9;
+  const surface=content=>`<div class="card-surface">${content}</div>`;
+  const illustration=(key,className='scene-art',lazy=false)=>`<img class="${className}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`;
+  const back=(id,lazy=false)=>surface(`<img class="card-back-image" src="${image(backKey(id))}" width="1024" height="1536" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`);
+  function effect(id){
+    const requested=effectAliases[id]||id;
+    const key=illustrationKeys.has(requested)?requested:'etoile';
+    return `<img class="effect-symbol effect-illustration" data-effect-symbol="${key}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">`;
+  }
+  const icon=n=>`<img class="pxi raster-icon" src="${image(interfaceArt[n]||'etoile')}" width="1024" height="1024" alt="" aria-hidden="true" decoding="async" draggable="false">`;
+  return {suit,face,icon,effect,image,illustration,back,backKey,surface,lettering};
+})();
