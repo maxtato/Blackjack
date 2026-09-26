@@ -27,6 +27,7 @@ screen.add(new Option('Lisibilité des 10','tens'));
 screen.add(new Option('Échantillons de finitions','finish-sample'));
 screen.add(new Option('Victoire puis nouvelle mise','win-flow'));
 screen.add(new Option('Éclairs et validation des combos','fx-flow'));
+screen.add(new Option('Effets C : relique et objectif','fx-goal'));
 screen.add(new Option('Reliques et tarots','inventory'));
 screen.add(new Option('Inventaire rempli','inventory-full'));
 screen.add(new Option('Figures et cartes classiques','new-art'));
@@ -62,6 +63,11 @@ async function render(){
   Object.assign(G,{phase:'play',bank:120,bet:10,betChosen:true,tokens:3,hand:2,pHand:visualHand,dHand:[{r:'K',s:'♣'},{r:'7',s:'♥'}],_dealing:false,insisted:false,contract:{id:'csuite',reward:10,done:false},table:{...G.table,goal:200},shoe:Array.from({length:50},()=>({r:'2',s:'♣'}))});
   if(visualScreen==='fx-flow'){
    G.pHand=[{r:'5',s:'♣'},{r:'6',s:'♥'}];G.shoe[G.shoe.length-1]={r:'7',s:'♠'};
+   G.relics=['lunettes','jeton','as'].map(id=>({...RELIC_POOL.find(item=>item.id===id)}));
+   G.consumables=['soleil','lune'].map(id=>({...TAROT_POOL.find(item=>item.id===id)}));
+  }
+  if(visualScreen==='fx-goal'){
+   G.pHand=[{r:'A',s:'♣'},{r:'6',s:'♥'},{r:'A',s:'♠'}];G.bank=180;
    G.relics=['lunettes','jeton','as'].map(id=>({...RELIC_POOL.find(item=>item.id===id)}));
    G.consumables=['soleil','lune'].map(id=>({...TAROT_POOL.find(item=>item.id===id)}));
   }

@@ -1965,8 +1965,7 @@ function animateScoreTally(mode,lines,cb){
       const relEl=ln[2]?document.querySelector('#relics .joker[data-relic="'+ln[2]+'"]'):null;
       if(relEl){
         fireRelic(relEl);
-        const r=relEl.getBoundingClientRect();
-        flyTag(r.left+r.width/2,r.top+r.height*0.15,ln[0]+' <b>'+ln[1]+'</b>','mult');
+        if(!window.ColdDeckFX){const r=relEl.getBoundingClientRect();flyTag(r.left+r.width/2,r.top+r.height*0.15,ln[0]+' <b>'+ln[1]+'</b>','mult');}
       }else{
         // The center impact now presents this bonus; avoid overlapping floating labels.
         if(!window.ColdDeckFX){const ph=$('pHand').getBoundingClientRect();flyTag(ph.left+ph.width/2,ph.top-2,ln[0]+' <b>'+ln[1]+'</b>','mult');}
@@ -1982,12 +1981,12 @@ function animateScoreTally(mode,lines,cb){
 }
 /* animation quand on franchit l'objectif de gain de la table */
 function objectiveReached(){
-  window.ColdDeckFX?.onGoal();
   const p=$('multPop');
   if(p){p.className='win';p.querySelector('.m').textContent=t('obj.reached');p.querySelector('.t').innerHTML=STAR+' '+t('obj.validated');
     p.classList.remove('go');void p.offsetWidth;p.classList.add('go');}
+  window.ColdDeckFX?.onGoal();
   // animation sur la barre d'objectif (à la place des confettis)
-  const ow=$('objWrap');if(ow){ow.classList.remove('goalpop');void ow.offsetWidth;ow.classList.add('goalpop');setTimeout(()=>ow.classList.remove('goalpop'),900);}
+  const ow=$('objWrap');if(ow&&!window.ColdDeckFX){ow.classList.remove('goalpop');void ow.offsetWidth;ow.classList.add('goalpop');setTimeout(()=>ow.classList.remove('goalpop'),900);}
   flashScreen('win');shake(12);
   try{sfx.win&&sfx.win();sfx.combo&&sfx.combo();}catch(e){}
   const sb=$('scorebox');if(sb){sb.classList.add('hot');setTimeout(()=>sb.classList.remove('hot'),1500);}
@@ -2012,9 +2011,9 @@ function perfectFanfare(){
 /* bannière NOUVEAU RECORD ! (la bannière s'affiche toujours ; les confettis sont mutualisés) */
 function showRecord(gain){
   const p=$('recPop');if(!p)return;
-  window.ColdDeckFX?.onRecord();
   p.querySelector('.rt').textContent='+'+cash(gain);
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
+  window.ColdDeckFX?.onRecord();
   bigConfetti(18);
 }
 
