@@ -3495,8 +3495,12 @@ syncMenuFocus();
     popupTimer = later(() => $('multPop')?.classList.remove('go'), 1450);
   }
   function onResult(kind, gain, mult, natural) {
+    layer.querySelectorAll('.combo-impact').forEach(el=>el.remove());
     onAnnouncement();
-    if(kind==='win'&&!G.splitActive)$('comboRow').querySelectorAll('.combo-tile.on:not([data-combo-key="contract"])').forEach(markComboPaid);
+    const activeTotal=G.splitActive?handValue(G.hands[G.hi]).total:0;
+    const dealerTotal=G.splitActive?handValue(G.dHand).total:0;
+    const comboWon=G.splitActive?activeTotal<=21&&(dealerTotal>21||activeTotal>dealerTotal):kind==='win';
+    if(comboWon)$('comboRow').querySelectorAll('.combo-tile.on:not([data-combo-key="contract"])').forEach(markComboPaid);
     if(!boardActive())return;
     $('felt').dataset.arcadeResult = kind;
     later(() => $('felt')?.removeAttribute('data-arcade-result'), 800);
@@ -3614,9 +3618,7 @@ syncMenuFocus();
   function onCombo(line){
     if(!boardActive())return;
     const p=rect($('center'));if(!p)return;
-    const previous=[...layer.querySelectorAll('.combo-impact')];
-    while(previous.length>1)previous.shift().remove();
-    previous.reverse().forEach((label,i)=>{label.style.top=(p.y-(i+1)*27)+'px';});
+    layer.querySelectorAll('.combo-impact').forEach(el=>el.remove());
     const el=piece('combo-impact',p.x,p.y);
     if(!el)return;
     // These labels come directly from the engine's real scoring calculation.
