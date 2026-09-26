@@ -80,12 +80,12 @@ renderMenu=function(){
  originalMenuRender();
  const best=Math.max(0,Number(RECS.infini?.gain)||0,Number(RECS.nuit?.gain)||0);
  $('menuRecords').innerHTML=`<span class="menu-record-label">${LANG==='fr'?'Meilleur gain':'Best win'}</span><strong id="menuBestGain">${boardCash(best)}</strong>`;
- if($('menuHand').dataset.back!==cardBack){
-  $('menuHand').dataset.back=cardBack;
-  const ace=cardEl({r:'A',s:'♠'}),king=cardEl({r:'K',s:'♠'}),back=cardEl({r:'A',s:'♠'},{back:true});
-  for(const card of [ace,king,back])card.setAttribute('aria-hidden','true');
-  $('menuHand').replaceChildren(ace,king,back);
- }
+ // Rebuild with the exact in-game renderer, including the selected back and stock mask.
+ const ace=cardEl({r:'A',s:'♠'}),king=cardEl({r:'K',s:'♠'}),back=cardEl({r:'A',s:'♠'},{back:true});
+ for(const card of [ace,king,back])card.setAttribute('aria-hidden','true');
+ $('menuHand').replaceChildren(ace,king,back);
+ $('menuHand').dataset.back=cardBack;
+ window.ColdDeckFX?.onHome();
  $('readySuit').innerHTML=ColdDeckArt.effect('as');
 };
 

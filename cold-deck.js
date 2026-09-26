@@ -1185,8 +1185,19 @@ function cardEl(c,opts={}){
   return d;
 }
 function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0)/4294967296;}
+const renderedCardSlots=new WeakMap();
+const dealerFaceTurns=new WeakMap();
+function syncChildren(parent,children){
+  children.forEach((child,i)=>{if(parent.children[i]!==child)parent.insertBefore(child,parent.children[i]||null);});
+  while(parent.children.length>children.length)parent.lastElementChild.remove();
+}
+function setReadout(el,value){
+  const text=String(value);
+  if((el.querySelector('.sr-only')?.textContent??el.textContent)!==text)el.textContent=text;
+}
 function fannedCard(c,idx,total,opts){
-  const slot=document.createElement('div');slot.className='cardslot';
+  let slot=renderedCardSlots.get(c);
+  if(!slot){slot=document.createElement('div');slot.className='cardslot';renderedCardSlots.set(c,slot);}
   const density=window.devicePixelRatio||1;
   const snapPixel=value=>Math.round(value*density)/density;
   const mid=(total-1)/2;
@@ -1198,11 +1209,19 @@ function fannedCard(c,idx,total,opts){
   const jY=(hashStr(seed+'y')-0.5)*3;           // ±1.5px
   // espace horizontal aléatoire entre les cartes : elles ne se chevauchent plus en se retournant
   // (la carte de droite, arrivée après, peut encore se superposer un tout petit peu)
-  if(idx>0)slot.style.marginLeft=snapPixel(hashStr(seed+'x')*5-3)+'px';   // espacement aligné sur les pixels physiques
+  slot.style.marginLeft=idx>0?snapPixel(hashStr(seed+'x')*5-3)+'px':'';
   slot.style.transform=`translateY(${snapPixel(arc+jY)}px) rotate(${(baseRot+jRot).toFixed(2)}deg)`;
   const motionSeed=c.r+c.s+'#'+idx+(opts.dealer?'d':'p');
   slot.style.setProperty('--card-delay','-'+(idx*.5+hashStr(motionSeed+'~')*3).toFixed(3)+'s');
-  slot.appendChild(opts.flip?flipCard(c,Object.assign({idx:idx},opts)):cardEl(c,Object.assign({idx:idx},opts)));
+  const contentKey=[c.r,c.s,c.ed||'',!!opts.dealer,LANG,cardBack].join('|');
+  const viewKey=[contentKey,!!opts.back,!!opts.flip,!!opts.arrive,!!opts.placed,barakaLevel()>=3&&G.phase==='play'].join('|');
+  if(slot._viewKey!==viewKey){
+    const front=!opts.flip&&!opts.back&&!opts.arrive&&slot._contentKey===contentKey?slot.querySelector('.flipwrap>.front'):null;
+    let view;
+    if(front){view=front;front.classList.remove('front');front.classList.toggle('placed',!!opts.placed);front.classList.toggle('jit',!!opts.placed&&barakaLevel()>=3&&G.phase==='play');}
+    else view=opts.flip?flipCard(c,Object.assign({idx:idx},opts)):cardEl(c,Object.assign({idx:idx},opts));
+    slot.replaceChildren(view);slot._viewKey=viewKey;slot._contentKey=contentKey;
+  }
   return slot;
 }
 // carte à deux faces pour un vrai retournement (dos visible -> pivote -> face)
@@ -1215,56 +1234,66 @@ function flipCard(c,opts){
   return wrap;
 }
 function renderHands(reveal=false){
-  const dh=$('dHand'),ph=$('pHand');dh.innerHTML='';ph.innerHTML='';
+  const dh=$('dHand'),ph=$('pHand'),dealerSlots=[],playerSlots=[];
   const dShown=G.dHand.filter(c=>!c._pending),pShown=G.pHand.filter(c=>!c._pending);
   dh.style.setProperty('--hand-count',Math.max(2,dShown.length));ph.style.setProperty('--hand-count',Math.max(2,pShown.length));
   ph.style.setProperty('--split-count',G.splitActive?Math.max(4,G.hands.reduce((n,h)=>n+h.length,0)):4);
   G.dHand.forEach((c,i)=>{
     if(c._pending)return;                                         // pas encore distribuée
+    if(G.doFlip&&reveal&&(G.table.rule==='mute'||i===1)&&!dealerFaceTurns.has(c)){
+      const turnState=G;dealerFaceTurns.set(c,false);
+      setTimeout(()=>{if(G===turnState&&dealerFaceTurns.has(c)){dealerFaceTurns.set(c,true);renderHandTotals(true);window.ColdDeckFX?.onCard(c);}},window.ColdDeckFX?.reduced?0:CARD_FACE_AT);
+      setTimeout(()=>{dealerFaceTurns.delete(c);if(G===turnState)renderHands(true);},CARD_FLIP);
+    }
     const hideMute=(G.table.rule==='mute'&&!reveal);
     const hideHole=(i===1&&!reveal&&G.phase!=='done');
     const back=(c._fd!=null)?c._fd:(hideMute||hideHole);          // _fd : pilotage par la distribution
     const arrive=!!c._arr;
-    const flip=c._flip||(G.doFlip&&reveal&&(G.table.rule==='mute'||i===1));
-    dh.appendChild(fannedCard(c,i,dShown.length,{back,dealer:true,arrive,flip,placed:!arrive&&!flip}));
+    const flip=c._flip||dealerFaceTurns.has(c);
+    dealerSlots.push(fannedCard(c,i,dShown.length,{back,dealer:true,arrive,flip,placed:!arrive&&!flip}));
   });
+  syncChildren(dh,dealerSlots);
   if(G.splitActive){
-    const wrap=document.createElement('div');wrap.className='splitwrap';
+    const wrap=ph.querySelector('.splitwrap')||document.createElement('div');wrap.className='splitwrap';
+    const groups=[];
     G.hands.forEach((h,hi)=>{
-      const g=document.createElement('div');g.className='splithand';
+      const g=wrap.children[hi]||document.createElement('div');g.className='splithand';
       if(G.phase==='play'&&hi!==G.hi)g.classList.add('dim');
       if(G.phase==='play'&&hi===G.hi)g.classList.add('active');
       const shown=h.filter(c=>!c._pending);
-      shown.forEach((c,i)=>{
+      const slots=shown.map((c,i)=>{
         const arrive=!!c._arr,flip=!!c._flip;
-        g.appendChild(fannedCard(c,i,shown.length,{back:c._fd,arrive,flip,placed:!arrive&&!flip}));
+        return fannedCard(c,i,shown.length,{back:c._fd,arrive,flip,placed:!arrive&&!flip});
       });
-      const up=shown.filter(c=>!c._fd&&!c._flip);
+      const up=shown.filter(cardFaceVisible);
       const val=up.length?handValue(up).total:0;
-      const badge=document.createElement('div');badge.className='shval';badge.textContent=up.length?val:'—';
+      const badge=g.querySelector('.shval')||document.createElement('div');badge.className='shval';setReadout(badge,up.length?val:'—');
       if(G.phase==='done'){g.classList.remove('dim','active');const dv=handValue(G.dHand).total;
         const w=val<=21&&(dv>21||val>dv);const l=val>21||(dv<=21&&val<dv);
         if(w)g.classList.add('win');else if(l)g.classList.add('lose');}
-      g.appendChild(badge);
-      wrap.appendChild(g);
+      syncChildren(g,[...slots,badge]);groups.push(g);
     });
-    ph.appendChild(wrap);
-    const act=G.hands[G.hi].filter(c=>!c._pending&&!c._fd&&!c._flip);
-    $('pVal').textContent=act.length?handValue(act).total:'—';
+    syncChildren(wrap,groups);syncChildren(ph,[wrap]);
   }else{
   G.pHand.forEach((c,i)=>{
     if(c._pending)return;
     const arrive=!!c._arr,flip=!!c._flip;
-    ph.appendChild(fannedCard(c,i,pShown.length,{back:c._fd,arrive,flip,placed:!arrive&&!flip}));
+    playerSlots.push(fannedCard(c,i,pShown.length,{back:c._fd,arrive,flip,placed:!arrive&&!flip}));
   });
-  // valeur : on ne compte la carte qu'une fois RETOURNÉE (ni dos _fd, ni en cours de retournement _flip)
-  const pUp=pShown.filter(c=>!c._fd&&!c._flip);
-  $('pVal').textContent=pUp.length?handValue(pUp).total:'—';
+  syncChildren(ph,playerSlots);
   }
-  const dUp=dShown.filter(c=>!c._fd&&!c._flip);
-  if(reveal){$('dVal').textContent=dUp.length?handValue(dUp).total:'—';}
-  else if(G.table.rule==='mute'){$('dVal').textContent='?';}
-  else{$('dVal').textContent=dUp.length?handValue([dUp[0]]).total:'—';}
+  renderHandTotals(reveal);
+}
+function cardFaceVisible(c){return !c._pending&&!c._fd&&(!c._flip||c._faceVisible)&&(!dealerFaceTurns.has(c)||dealerFaceTurns.get(c));}
+function renderHandTotals(reveal=false){
+  const player=(G.splitActive?G.hands[G.hi]:G.pHand).filter(cardFaceVisible);
+  setReadout($('pVal'),player.length?handValue(player).total:'—');
+  if(G.splitActive)G.hands.forEach((hand,i)=>{
+    const up=hand.filter(cardFaceVisible),badge=$('pHand').querySelectorAll('.shval')[i];
+    if(badge)setReadout(badge,up.length?handValue(up).total:'—');
+  });
+  const dealer=G.dHand.filter(cardFaceVisible);
+  setReadout($('dVal'),reveal?(dealer.length?handValue(dealer).total:'—'):G.table.rule==='mute'?'?':dealer.length?handValue([dealer[0]]).total:'—');
 }
 function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les appels)
   const pct=barakaPct(),lvl=barakaLevel();
@@ -1277,6 +1306,7 @@ function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les 
   window.ColdDeckFX?.onPressure();
 }
 function renderMult(){
+  if(G.phase==='play'&&G._dealing&&G.pHand.some(c=>!cardFaceVisible(c))){renderCombos();return;}
   let m=1,bonus=0;
   if(G.phase==='play'&&G.pHand.length){
     const mode=(G.pHand.length===2&&handValue(G.pHand).total===21)?'natural':'stand';
@@ -1324,9 +1354,19 @@ function comboHints(){
 }
 function renderCombos(){
   const row=$('comboRow');if(!row)return;
+  // Keep the qualifying bonuses visible through the dealer turn and payout.
+  if((G.phase==='dealer'||G.phase==='done')&&G.pHand.length&&row.childElementCount){
+    const contract=row.querySelector('[data-combo-key="contract"]');
+    if(contract&&G.contract?.done&&!contract.classList.contains('on')){
+      contract.classList.add('on');contract.querySelector('.combo-detail').textContent=LANG==='fr'?'Validé':'Complete';
+      contract.title=contractText(G.contract)+' · '+contract.querySelector('.combo-detail').textContent;
+      contract.setAttribute('aria-label',contract.title);window.ColdDeckFX?.onComboReady(contract);
+    }
+    row.setAttribute('aria-busy','false');return;
+  }
   if(G.phase!=='play'||!G.pHand.length){row.replaceChildren();row.style.display='none';row.removeAttribute('aria-busy');return;}
   // Keep each visible box in place while the next card lands and turns.
-  if(G._dealing){row.setAttribute('aria-busy','true');return;}
+  if(G._dealing&&G.pHand.some(c=>!cardFaceVisible(c))){row.setAttribute('aria-busy','true');return;}
   if(handValue(G.pHand).total>21){row.replaceChildren();row.style.display='none';row.removeAttribute('aria-busy');return;}
   const {on,soon}=comboHints();
   const win=LANG==='fr'?'Si victoire':'On a win';
@@ -1344,8 +1384,10 @@ function renderCombos(){
   }
   const order=['blackjack','perfect','charlie','pair7','flush','straight','rainbow','lowball','court','comeback','pushing','clutch','streak1','streak2','streak3','streak4','event','contract'];
   const boxes=new Map([...row.children].map(box=>[box.dataset.comboKey,box]));
+  const activated=[];
   [...entries.values()].sort((a,b)=>order.indexOf(a.key)-order.indexOf(b.key)).forEach((entry,index)=>{
     let box=boxes.get(entry.key);
+    const becameReady=entry.ready&&!box?.classList.contains('on');
     if(!box){box=document.createElement('div');box.className='combo-tile';box.dataset.comboKey=entry.key;box.setAttribute('role','listitem');
       const title=document.createElement('span');title.className='combo-name';
       const detail=document.createElement('span');detail.className='combo-detail';box.append(title,detail);}
@@ -1355,11 +1397,13 @@ function renderCombos(){
     box.title=entry.title+' · '+(entry.full||entry.detail)+(entry.full&&entry.ready?' · '+entry.detail:'');
     box.setAttribute('aria-label',box.title);
     if(row.children[index]!==box)row.insertBefore(box,row.children[index]||null);
+    if(becameReady)activated.push(box);
   });
   for(const box of [...row.children])if(!entries.has(box.dataset.comboKey))box.remove();
   row.setAttribute('aria-busy','false');row.tabIndex=0;row.setAttribute('role','list');
-  row.setAttribute('aria-label',LANG==='fr'?'Combos : gris à compléter, jaune condition remplie, bonus si victoire':'Combos: grey in reach, yellow condition met, bonuses on a win');
+  row.setAttribute('aria-label',LANG==='fr'?'Combos : gris à compléter, jaune condition remplie, turquoise bonus gagné':'Combos: grey in reach, yellow condition met, turquoise bonus won');
   row.style.display=row.childElementCount?'flex':'none';
+  activated.forEach(box=>window.ColdDeckFX?.onComboReady(box));
 }
 function renderTop(){
   const tb=G.table;
@@ -1434,11 +1478,10 @@ function updateObjectiveReadout(pct){
 function renderInventorySlots(){
   const shelf=$('effects');shelf.hidden=false;
   shelf.setAttribute('aria-label',t('modern.loadout'));
-  shelf.querySelectorAll('.inventory-empty').forEach(el=>el.remove());
   const count=shelf.querySelectorAll('.joker,.tarot').length;
-  for(let i=count;i<5;i++){
-    const slot=document.createElement('span');slot.className='inventory-empty';slot.setAttribute('aria-hidden','true');shelf.append(slot);
-  }
+  const empty=[...shelf.querySelectorAll('.inventory-empty')],needed=Math.max(0,5-count);
+  while(empty.length>needed)empty.pop().remove();
+  while(empty.length<needed){const slot=document.createElement('span');slot.className='inventory-empty';slot.setAttribute('aria-hidden','true');shelf.append(slot);empty.push(slot);}
 }
 function fanEffects(){
   // étiquettes : simple rangée (plus d'éventail de jetons)
@@ -1498,16 +1541,18 @@ function scheduleFitChipText(){
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitChipText);
 }
 function renderRelics(){
-  const wrap=$('relics');wrap.innerHTML='';
-  G.relics.forEach((r,idx)=>{
-    const d=document.createElement('div');d.className='joker';d.dataset.relic=r.id;
-    if((r.id==='froid'||r.id==='clope')&&barakaLevel()>=3)d.classList.add('hot');
-    const tk=tokFor(r.id);
-    d.innerHTML=effectMark(r.id,tk.c);
+  const wrap=$('relics'),existing=new Map([...wrap.children].map(d=>[d.dataset.inventoryKey,d])),seen=new Map();
+  const nodes=G.relics.map((r,idx)=>{
+    const occurrence=seen.get(r.id)||0;seen.set(r.id,occurrence+1);
+    const key=r.id+':'+occurrence;
+    let d=existing.get(key);
+    if(!d){d=document.createElement('div');d.className='joker';d.dataset.relic=r.id;d.dataset.inventoryKey=key;d.innerHTML=effectMark(r.id,tokFor(r.id).c);}
+    d.classList.toggle('hot',(r.id==='froid'||r.id==='clope')&&barakaLevel()>=3);
     d.title=`${iName(r)} — ${iDesc(r)}`;
     d.setAttribute('role','button');d.tabIndex=0;d.setAttribute('aria-label',d.title);d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();d.click();}};d.onclick=()=>openInspect('relic',idx);
-    wrap.appendChild(d);
+    return d;
   });
+  syncChildren(wrap,nodes);
   $('slotc').textContent=`${G.relics.length}/5`;
   $('slotc').parentElement.setAttribute('aria-label',`${t('ui.relics')} : ${G.relics.length}/5`);
   renderInventorySlots();
@@ -1515,15 +1560,17 @@ function renderRelics(){
 }
 function consumableSlots(){return 2+(hasRelic('portebonheur')?1:0)+uLvl('tarot')+((G.boons&&G.boons.tarot)||0);}
 function renderConsumables(){
-  const row=$('consumeRow'),wrap=$('consumes');wrap.innerHTML='';
-  G.consumables.forEach((card,i)=>{
-    const d=document.createElement('div');d.className='tarot';
-    const tk=tokFor(card.id);
-    d.innerHTML=effectMark(card.id,tk.c);
+  const row=$('consumeRow'),wrap=$('consumes'),existing=new Map([...wrap.children].map(d=>[d.dataset.inventoryKey,d])),seen=new Map();
+  const nodes=G.consumables.map((card,i)=>{
+    const occurrence=seen.get(card.id)||0;seen.set(card.id,occurrence+1);
+    const key=card.id+':'+occurrence;
+    let d=existing.get(key);
+    if(!d){d=document.createElement('div');d.className='tarot';d.dataset.inventoryKey=key;d.innerHTML=effectMark(card.id,tokFor(card.id).c);}
     d.title=`${iName(card)} — ${iDesc(card)}`;
     d.setAttribute('role','button');d.tabIndex=0;d.setAttribute('aria-label',d.title);d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();d.click();}};d.onclick=()=>openInspect('tarot',i);
-    wrap.appendChild(d);
+    return d;
   });
+  syncChildren(wrap,nodes);
   $('consumeSlots').textContent=`${G.consumables.length}/${consumableSlots()}`;
   $('consumeSlots').parentElement.setAttribute('aria-label',`${t('ui.consumables')} : ${G.consumables.length}/${consumableSlots()}`);
   renderInventorySlots();
@@ -1724,20 +1771,27 @@ function deal(){
   renderAll();renderHands();                                     // tapis vide, actions masquées
   dealSequence([p1,d1,p2,d2]);
 }
-// Land face down, lift into the turn, then settle before revealing the new total.
+// The total updates as soon as the front is visible; input unlocks after settling.
 const CARD_HOLD=180,CARD_FLIP=520;
+const CARD_FACE_AT=Math.round(CARD_FLIP*.48);
 document.documentElement.style.setProperty('--card-hold-duration',CARD_HOLD+'ms');
 document.documentElement.style.setProperty('--card-flip-duration',CARD_FLIP+'ms');
 // stayDown : reste dos (trou du croupier). reveal : main du croupier dévoilée.
 function dealCardIn(c,opts,done){
   const reveal=!!(opts&&opts.reveal);
-  c._pending=false;c._fd=true;c._flip=false;c._arr=true;
+  c._pending=false;c._fd=true;c._flip=false;c._arr=true;delete c._faceVisible;
   renderHands(reveal);sfx.card();
   setTimeout(()=>{
+    window.ColdDeckFX?.onCardLand(c);
     c._arr=false;
     if(opts&&opts.stayDown){c._fd=true;renderHands(reveal);done&&done();return;}
     c._fd=false;c._flip=true;renderHands(reveal);sfx.flip();    // on la retourne
-    setTimeout(()=>{c._flip=false;renderHands(reveal);window.ColdDeckFX?.onCard(c);done&&done();},CARD_FLIP);
+    const drawState=G;
+    setTimeout(()=>{
+      if(G!==drawState||!c._flip)return;
+      c._faceVisible=true;renderHandTotals(reveal);renderMult();window.ColdDeckFX?.onCard(c);
+    },window.ColdDeckFX?.reduced?0:CARD_FACE_AT);
+    setTimeout(()=>{c._flip=false;delete c._faceVisible;renderHands(reveal);done&&done();},CARD_FLIP);
   },CARD_HOLD);
 }
 // distribution initiale : mes 2 cartes + 2 du croupier, une par une. La 2e du croupier reste dos.
@@ -1748,7 +1802,7 @@ function dealSequence(order){
 function finishDeal(){
   G._dealing=false;
   // on retire les drapeaux transitoires : le jeu reprend son rendu normal
-  [...G.pHand,...G.dHand].forEach(c=>{delete c._pending;delete c._fd;delete c._flip;delete c._arr;});
+  [...G.pHand,...G.dHand].forEach(c=>{delete c._pending;delete c._fd;delete c._flip;delete c._arr;delete c._faceVisible;});
   renderActions();renderMult();
   const ec=G.pHand.find(c=>c.ed);if(ec)announceEd(ec);
   if(handValue(G.pHand).total===21)setTimeout(()=>playerStand(true),420);
@@ -2477,7 +2531,7 @@ function bounceEl(el){
 /* une relique « se déclenche » : le jeton tressaute et brille (comme un joker de Balatro) */
 function fireRelic(el){
   if(!el||window.ColdDeckFX?.reduced)return;
-  window.ColdDeckFX?.onRelic(el);
+  if(window.ColdDeckFX?.onRelic){window.ColdDeckFX.onRelic(el);return;}
   el.animate([
     {transform:'translateY(0) scale(1) rotate(0deg)',filter:'brightness(1)'},
     {transform:'translateY(-11px) scale(1.2) rotate(-5deg)',filter:'brightness(1.55) drop-shadow(0 0 7px #ffe08a)',offset:.32},
@@ -3078,12 +3132,12 @@ renderMenu=function(){
  originalMenuRender();
  const best=Math.max(0,Number(RECS.infini?.gain)||0,Number(RECS.nuit?.gain)||0);
  $('menuRecords').innerHTML=`<span class="menu-record-label">${LANG==='fr'?'Meilleur gain':'Best win'}</span><strong id="menuBestGain">${boardCash(best)}</strong>`;
- if($('menuHand').dataset.back!==cardBack){
-  $('menuHand').dataset.back=cardBack;
-  const ace=cardEl({r:'A',s:'♠'}),king=cardEl({r:'K',s:'♠'}),back=cardEl({r:'A',s:'♠'},{back:true});
-  for(const card of [ace,king,back])card.setAttribute('aria-hidden','true');
-  $('menuHand').replaceChildren(ace,king,back);
- }
+ // Rebuild with the exact in-game renderer, including the selected back and stock mask.
+ const ace=cardEl({r:'A',s:'♠'}),king=cardEl({r:'K',s:'♠'}),back=cardEl({r:'A',s:'♠'},{back:true});
+ for(const card of [ace,king,back])card.setAttribute('aria-hidden','true');
+ $('menuHand').replaceChildren(ace,king,back);
+ $('menuHand').dataset.back=cardBack;
+ window.ColdDeckFX?.onHome();
  $('readySuit').innerHTML=ColdDeckArt.effect('as');
 };
 
@@ -3268,11 +3322,12 @@ syncMenuFocus();
   let seed = (performance.now() * 1000) >>> 0;
   let lastLevel = barakaLevel();
   let popupTimer;
-  let cameraAnimation, lastHaptic = -Infinity;
+  let lastHaptic = -Infinity;
   const palette = ['#ffce3a', '#fff7e6', '#1fd1c8', '#ff5470', '#a64dff'];
   let preference;
   try{preference=localStorage.getItem('colddeck-motion');}catch(e){}
   const reduced = () => preference==='gentle'||motion.matches;
+  const boardActive = () => !reduced()&&!document.hidden&&!document.querySelector('.overlay.show,#adOverlay.show');
   // Original motion moves by one physical pixel at every display density.
   let densityQuery;
   function syncPixelDensity(){
@@ -3302,7 +3357,6 @@ syncMenuFocus();
     animations.clear();
     layer.replaceChildren();
     lightningLayer?.replaceChildren();
-    cameraAnimation = null;
     shakeAmt = 0;
     $('shaker').style.transform = '';
     try { navigator.vibrate?.(0); } catch(e) {}
@@ -3339,23 +3393,29 @@ syncMenuFocus();
     lastHaptic = now;
     try { navigator.vibrate?.(strong ? [16,24,28] : 8); } catch(e) {}
   }
-  // Individual translate/rotate compose with the engine's separate #shaker.
+  // Feedback stays local: the table, totals and inventory keep their positions.
   function kick(strength=3) {
     if (reduced() || document.hidden || document.querySelector('.overlay.show,#adOverlay.show')) return;
-    cameraAnimation?.cancel();
-    const x = Math.min(strength,8), direction = random()>.5 ? 1 : -1;
-    cameraAnimation = animate($('app'), [
-      {translate:'0px 0px',rotate:'0deg'},
-      {translate:`${-x*direction}px ${x*.55}px`,rotate:`${-.025*x*direction}deg`,offset:.12},
-      {translate:`${x*.7*direction}px ${-x*.35}px`,rotate:`${.016*x*direction}deg`,offset:.3},
-      {translate:`${-x*.4*direction}px ${x*.15}px`,rotate:'0deg',offset:.52},
-      {translate:`${x*.16*direction}px 0px`,rotate:'0deg',offset:.72},
-      {translate:'0px 0px',rotate:'0deg'}
-    ], {duration:strength>=6?360:245,easing:'ease-out'});
     haptic(strength>=6);
   }
-  function lightning(el, reach=110, arms=5) {
-    if (reduced() || document.hidden) return;
+  function electricPath(ax,ay,bx,by,jitter=10,branch=true){
+    const dx=bx-ax,dy=by-ay,length=Math.hypot(dx,dy)||1,nx=-dy/length,ny=dx/length;
+    const points=[[ax,ay]];
+    for(let i=1;i<7;i++){
+      const t=i/7,offset=(random()-.5)*jitter*2*Math.sin(t*Math.PI);
+      points.push([ax+dx*t+nx*offset,ay+dy*t+ny*offset]);
+    }
+    points.push([bx,by]);
+    let d=points.map(([x,y],i)=>`${i?'L':'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
+    if(branch)for(const i of [2,5]){
+      const [x,y]=points[i],side=random()>.5?1:-1;
+      d+=` M${x.toFixed(1)} ${y.toFixed(1)} l${(dx*.07+nx*jitter*side).toFixed(1)} ${(dy*.07+ny*jitter*side).toFixed(1)} l${(dx*.12-nx*jitter*side*.4).toFixed(1)} ${(dy*.12-ny*jitter*side*.4).toFixed(1)}`;
+    }
+    return d;
+  }
+  const electricInk=d=>`<path class="electric-glow" d="${d}"/><path class="electric-color" d="${d}"/><path class="electric-core" d="${d}"/>`;
+  function lightning(el, reach=110, arms=5, color='#7eece4') {
+    if (!boardActive()) return;
     let p=rect(el);if(!p)return;
     // The hand element spans the table. Anchor the impact to the actual cards.
     const cards=[...el.querySelectorAll('.card')].map(card=>card.getBoundingClientRect()).filter(r=>r.width>0);
@@ -3366,20 +3426,26 @@ syncMenuFocus();
     }
     const inside=lightningLayer&&$('felt').contains(el);
     const origin=inside?lightningLayer.getBoundingClientRect():{left:0,top:0};
-    const bolt=piece('arcade-lightning',p.x-origin.left,p.y-origin.top,null,inside?lightningLayer:layer);if(!bolt)return;
-    const radius=Math.min(reach,innerWidth*.56),size=radius*2+70;
+    const bolt=piece('arcade-lightning electric-burst',p.x-origin.left,p.y-origin.top,color,inside?lightningLayer:layer);if(!bolt)return;
+    const radius=Math.min(reach,innerWidth*.4),size=radius*2+32,center=size/2;
     bolt.style.width=bolt.style.height=size+'px';
-    bolt.innerHTML=ColdDeckArt.illustration('ui-burst','lightning-art');
-    bolt.firstElementChild.style.transform=`rotate(${(arms%2?1:-1)*(3+random()*7)}deg)`;
+    const paths=()=>Array.from({length:Math.min(arms,8)},(_,i)=>{
+      const angle=Math.PI*2*i/arms+(random()-.5)*.3,dx=Math.cos(angle),dy=Math.sin(angle);
+      const inner=Math.min(radius*.4,Math.max(p.width,p.height)*.28),outer=radius*(.7+random()*.3);
+      return electricPath(center+dx*inner,center+dy*inner,center+dx*outer,center+dy*outer,Math.max(5,radius*.1));
+    }).join(' ');
+    bolt.innerHTML=`<svg viewBox="0 0 ${size} ${size}" aria-hidden="true">${electricInk(paths())}</svg>`;
+    later(()=>{if(bolt.isConnected){const d=paths();bolt.querySelectorAll('path').forEach(path=>path.setAttribute('d',d));}},100);
     animate(bolt,[
-      {transform:'translate(-50%,-50%) scale(.38)',opacity:0},
-      {transform:'translate(-50%,-50%) scale(.96)',opacity:1,offset:.1},
-      {transform:'translate(-50%,-50%) scale(1.03)',opacity:.9,offset:.34},
-      {transform:'translate(-50%,-50%) scale(1.09)',opacity:0}
-    ],{duration:430,easing:'ease-out'},true);
+      {transform:'translate(-50%,-50%) scale(.72)',opacity:0},
+      {transform:'translate(-50%,-50%) scale(.97)',opacity:1,offset:.12},
+      {transform:'translate(-50%,-50%) scale(1)',opacity:.4,offset:.3},
+      {transform:'translate(-50%,-50%) scale(1.025)',opacity:.95,offset:.43},
+      {transform:'translate(-50%,-50%) scale(1.1)',opacity:0}
+    ],{duration:420,easing:'linear'},true);
   }
   function burst(el, {count=10, reach=58, color, ring=false} = {}) {
-    if (reduced() || document.hidden) return;
+    if (!boardActive()) return;
     const p = rect(el); if (!p) return;
     if (ring) {
       const halo = piece('arcade-ring', p.x, p.y, color);
@@ -3430,12 +3496,15 @@ syncMenuFocus();
   }
   function onResult(kind, gain, mult, natural) {
     onAnnouncement();
+    if(kind==='win'&&!G.splitActive)$('comboRow').querySelectorAll('.combo-tile.on:not([data-combo-key="contract"])').forEach(markComboPaid);
+    if(!boardActive())return;
     $('felt').dataset.arcadeResult = kind;
     later(() => $('felt')?.removeAttribute('data-arcade-result'), 800);
     if (kind === 'win') {
       const big = natural || mult>=3;
       kick(big?8:5);
       lightning($('pHand'),big?310:230,big?8:6);
+      $('pHand').querySelectorAll('.card:not(.back)').forEach(card=>cardCharge(card,'#ffce3a',true));
       impact($('pHand'));
       burst($('pHand'), {count:big?28:18,reach:big?205:135,ring:true});
       if(big)later(()=>{
@@ -3455,29 +3524,53 @@ syncMenuFocus();
   function cardNode(card) {
     const dealer = G.dHand.includes(card);
     const container = $(dealer?'dHand':'pHand');
-    const nodes = [...container.querySelectorAll('.card:not(.back)')];
-    return nodes.find(el => el.dataset.suit === card.s && el.dataset.rank === card.r);
+    const hands=dealer?[G.dHand]:G.splitActive?G.hands:[G.pHand];
+    const index=hands.flat().filter(c=>!c._pending).indexOf(card);
+    const slot=container.querySelectorAll('.cardslot')[index];
+    return slot?.querySelector('.card:not(.back)')||slot?.querySelector('.card');
+  }
+  function cardCharge(el,color='#ffce3a',strong=false){
+    if(!boardActive()||!el)return;
+    el.querySelector('.card-charge')?.remove();
+    const glow=piece('card-charge',0,0,color,el);if(!glow)return;
+    glow.style.left=glow.style.top='-4px';
+    glow.innerHTML=`<svg viewBox="0 0 100 148" preserveAspectRatio="none" aria-hidden="true">${electricInk('M9 2 H91 L98 10 V138 L91 146 H9 L2 138 V10 Z')}</svg>`;
+    animate(glow,[{opacity:0,scale:'.96'},{opacity:strong?1:.7,scale:'1',offset:.15},{opacity:.65,scale:'1.015',offset:.5},{opacity:0,scale:'1.05'}],{duration:strong?560:350},true);
+  }
+  function onCardLand(card){
+    if(!boardActive())return;
+    const el=cardNode(card),p=rect(el);if(!p)return;
+    const ring=piece('landing-ring',p.x,p.y+p.height*.4,'#ffce3a');
+    if(ring){ring.style.width=p.width*.9+'px';animate(ring,[{transform:'translate(-50%,-50%) scale(.6)',opacity:.8},{transform:'translate(-50%,-50%) scale(1.7)',opacity:0}],{duration:240},true);}
+    burst(el,{count:3,reach:Math.min(30,p.width*.42),color:'#fff7e6'});haptic();
   }
   function onCard(card) {
+    if(!boardActive())return;
     const el = cardNode(card); if (!el) return;
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
+    cardCharge(el,card.ed==='poly'?'#b49aff':card.ed==='holo'?'#7eece4':'#ffce3a');
+    if(card.ed)lightning(el,78,4,card.ed==='poly'?'#b49aff':'#7eece4');
   }
   // Reference rhythm: a local card accent, then an energy transfer to the HUD.
-  function energyLink(from,to){
-    if(reduced()||document.hidden)return;
+  function energyLink(from,to,color='#7eece4'){
+    if(!boardActive())return;
     const a=rect(from),b=rect(to);if(!a||!b)return;
     const left=Math.min(a.x,b.x)-18,top=Math.min(a.y,b.y)-18;
     const width=Math.abs(b.x-a.x)+36,height=Math.abs(b.y-a.y)+36;
-    const beam=piece('score-link',left,top);if(!beam)return;
+    const beam=piece('score-link electric-link',left,top,color);if(!beam)return;
     beam.style.width=width+'px';beam.style.height=height+'px';
     const x=a.x-left,y=a.y-top,dx=b.x-a.x,dy=b.y-a.y;
-    const bend=(random()-.5)*22;
-    const d=`M${x} ${y} L${x+dx*.32+bend} ${y+dy*.32} L${x+dx*.49-bend} ${y+dy*.49} L${x+dx*.7+bend} ${y+dy*.7} L${b.x-left} ${b.y-top}`;
-    beam.innerHTML=`<svg viewBox="0 0 ${width} ${height}" aria-hidden="true"><path class="score-link-halo" d="${d}"/><path class="score-link-core" d="${d}"/></svg>`;
-    animate(beam,[{opacity:0},{opacity:.9,offset:.15},{opacity:.65,offset:.5},{opacity:0}],{duration:260},true);
+    const d=electricPath(x,y,x+dx,y+dy,12);
+    beam.innerHTML=`<svg viewBox="0 0 ${width} ${height}" aria-hidden="true">${electricInk(d)}</svg>`;
+    for(const path of beam.querySelectorAll('path')){
+      path.setAttribute('pathLength','1');
+      animate(path,[{strokeDasharray:'1',strokeDashoffset:'1'},{strokeDasharray:'1',strokeDashoffset:'0',offset:.48},{strokeDasharray:'1',strokeDashoffset:'-1'}],{duration:430,easing:'ease-in-out'});
+    }
+    animate(beam,[{opacity:0},{opacity:.85,offset:.15},{opacity:.8,offset:.7},{opacity:0}],{duration:460},true);
+    later(()=>{if(boardActive())pulse(to);},240);
   }
   function onScoreCard(el) {
-    if(reduced()||document.hidden||!el)return;
+    if(!boardActive()||!el)return;
     // Tracked with all effects so pause and motion changes cancel the bounce.
     animate(el,[
       {translate:'0 0',rotate:'0deg',scale:'1',filter:'brightness(1)',boxShadow:'0 7px 12px #06137f30'},
@@ -3492,12 +3585,14 @@ syncMenuFocus();
         animate(value,[{transform:'translate(-50%,0) scale(.5)',opacity:0},{transform:'translate(-50%,-12px) scale(1.2)',opacity:1,offset:.2},{transform:'translate(-50%,-20px) scale(1)',opacity:1,offset:.6},{transform:'translate(-50%,-38px) scale(.9)',opacity:0}],{duration:620},true);
       }
     }
-    energyLink(el,$('multVal'));
-    burst(el,{count:7,reach:65,color:'#f4ff28'});
+    cardCharge(el,'#7eece4',true);
+    lightning(el,Math.min(110,rect(el)?.height||90),4);
+    energyLink(el,$('pVal'));
+    burst(el,{count:6,reach:48,color:'#7eece4'});
     haptic();
   }
   function impact(el){
-    if(reduced()||document.hidden)return;
+    if(!boardActive())return;
     const p=rect(el);if(!p)return;
     const wash=piece('impact-wash',p.x,p.y);
     animate(wash,[
@@ -3517,6 +3612,7 @@ syncMenuFocus();
     }
   }
   function onCombo(line){
+    if(!boardActive())return;
     const p=rect($('center'));if(!p)return;
     const previous=[...layer.querySelectorAll('.combo-impact')];
     while(previous.length>1)previous.shift().remove();
@@ -3526,6 +3622,10 @@ syncMenuFocus();
     // These labels come directly from the engine's real scoring calculation.
     const plain=document.createElement('span');plain.innerHTML=line[0]+' '+line[1];
     el.textContent=plain.textContent;
+    const name=document.createElement('span');name.innerHTML=line[0];
+    const key=name.textContent.trim().toLocaleLowerCase();
+    const box=[...$('comboRow').querySelectorAll('.combo-tile.on')].find(box=>box.querySelector('.combo-name').textContent.split(' ×')[0].trim().toLocaleLowerCase()===key);
+    if(box)markComboPaid(box);
     if(reduced()){el.style.transform='translate(-50%,-50%)';later(()=>el.remove(),600);return;}
     animate(el,[
       {transform:'translate(-50%,-50%) rotate(-7deg) scale(1.5)',opacity:0},
@@ -3533,11 +3633,14 @@ syncMenuFocus();
       {transform:'translate(-50%,-50%) rotate(-4deg) scale(1)',opacity:1,offset:.36},
       {transform:'translate(-50%,-70%) rotate(-2deg) scale(.96)',opacity:0}
     ],{duration:680},true);
-    kick(2.5);lightning($('center'),125,4);
+    kick(2.5);lightning($('center'),115,5,'#b49aff');
     energyLink($('pHand'),$('multVal'));pulse($('multVal'),true);
   }
   function onRelic(el) {
-    kick(3);lightning(el,90,4);
+    if(!boardActive())return;
+    animate(el.querySelector('.effect-mark')||el,[{filter:'brightness(1)'},{filter:'brightness(1.45)',offset:.28},{filter:'brightness(1)'}],{duration:440});
+    kick(3);lightning(el,80,5,'#b49aff');
+    energyLink(el,$('multVal'),'#b49aff');
     burst(el, {count:14,reach:90,color:'#ff9238',ring:true});
     pulse($('multVal'),true);
   }
@@ -3547,9 +3650,33 @@ syncMenuFocus();
     if (level > lastLevel) {burst($('pBar'),{count:12,reach:75});pulse($('pBar'));}
     lastLevel = level;
   }
+  function onComboReady(box){
+    if(!boardActive())return;
+    animate(box,[{scale:'.95',filter:'brightness(1)'},{scale:'1.08',filter:'brightness(1.3)',offset:.35},{scale:'1',filter:'brightness(1)'}],{duration:360});
+    burst(box,{count:4,reach:22,color:'#ffce3a'});
+  }
+  function markComboPaid(box){
+    if(box.classList.contains('paid'))return;
+    box.classList.add('paid');
+    const label=LANG==='fr'?'Bonus gagné':'Bonus won';
+    box.querySelector('.combo-detail').textContent=label;
+    box.setAttribute('aria-label',box.querySelector('.combo-name').textContent+' · '+label);
+    box.title=box.getAttribute('aria-label');
+    if(boardActive()){pulse(box,true);burst(box,{count:5,reach:28,color:'#7eece4'});}
+  }
+  function onHome(){
+    if(reduced()||document.hidden||!$('modeMenu').classList.contains('show')||document.querySelector('.overlay.show:not(#modeMenu),#adOverlay.show'))return;
+    [...$('menuHand').children].forEach((card,i)=>{
+      animate(card,[{translate:'0 30px',rotate:`${(i-1)*8}deg`,scale:'.9',opacity:0},{translate:'0 -4px',rotate:'0deg',scale:'1.025',opacity:1,offset:.68},{translate:'0 0',rotate:'0deg',scale:'1',opacity:1}],{duration:640,delay:i*65});
+      later(()=>{
+        if(!card.isConnected||!$('modeMenu').classList.contains('show'))return;
+        animate(card,[{translate:'0 0',rotate:'0deg'},{translate:`0 ${i===1?-4:-2}px`,rotate:i===0?'-.5deg':'.5deg',offset:.5},{translate:'0 0',rotate:'0deg'}],{duration:4200+i*470,iterations:Infinity,easing:'ease-in-out'});
+      },860+i*65);
+    });
+  }
   window.ColdDeckFX = {
     get reduced() { return reduced(); },
-    clear, onCard, onResult, onScoreCard, onRelic, onPressure, onAnnouncement, onCombo,
+    clear, onHome, onCardLand, onCard, onResult, onScoreCard, onRelic, onPressure, onAnnouncement, onCombo, onComboReady,
     setMotion(value){
       preference=value==='gentle'?'gentle':'punchy';
       try{localStorage.setItem('colddeck-motion',preference);}catch(e){}
@@ -3560,13 +3687,13 @@ syncMenuFocus();
   };
   document.addEventListener('visibilitychange', () => {
     document.documentElement.dataset.pageHidden=String(document.hidden);
-    if (document.hidden) clear();
+    if (document.hidden) clear();else onHome();
   });
   motion.addEventListener('change', () => {clear();syncMotion();renderMotionOptions();});
   window.addEventListener('pagehide', clear);
   // Existing navigation owns game state; this observer cleans up presentation only.
   const menuCleanup = new MutationObserver(() => {
-    if (document.querySelector('.overlay.show,#adOverlay.show')) clear();
+    clear();onHome();
   });
   document.querySelectorAll('.overlay,#adOverlay').forEach(el => menuCleanup.observe(el,{attributes:true,attributeFilter:['class']}));
   function renderMotionOptions(){
@@ -3628,6 +3755,7 @@ syncMenuFocus();
     if(button.closest('#actions,#chips'))haptic();
   });
   onPressure();
+  onHome();
 })();
 
 

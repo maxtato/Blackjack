@@ -519,3 +519,45 @@
 @media(max-height:600px) and (orientation:landscape){
  #actions .actMain .btn{font-size:19px!important}
 }
+
+/* Home and table share the same stock, artwork renderer and card proportions. */
+:root{--playing-card-ratio:1.42}
+@media (min-height:601px), (orientation:portrait){:root{--playing-card-ratio:1.48}}
+#modeMenu .menu-hand .card,#feltInner .card,#feltInner .flipwrap{height:calc(var(--card-w)*var(--playing-card-ratio))}
+#modeMenu .menu-hand,#modeMenu .menu-hand .card:nth-child(3){--card-w:calc(29 * var(--home-u))}
+#modeMenu .menu-hand .card:nth-child(1){transform:translate(-140%,-48%) rotate(-10deg)}
+#modeMenu .menu-hand .card:nth-child(2){transform:translate(-50%,-53%);z-index:3}
+#modeMenu .menu-hand .card:nth-child(3){transform:translate(40%,-48%) rotate(10deg)}
+
+/* Brief, branched electrical accents follow real reveals and scoring events. */
+.electric-burst,.electric-link,.card-charge{color:var(--spark,#7eece4);filter:drop-shadow(0 0 5px var(--spark,#7eece4));pointer-events:none}
+.electric-burst svg,.electric-link svg,.card-charge svg{display:block;width:100%;height:100%;overflow:visible}
+:is(.electric-burst,.electric-link,.card-charge) path{fill:none;stroke-linecap:round;stroke-linejoin:bevel;vector-effect:non-scaling-stroke}
+.electric-glow{stroke:var(--spark,#7eece4);stroke-width:9;opacity:.16}
+.electric-color{stroke:var(--spark,#7eece4);stroke-width:3.2;opacity:.8}
+.electric-core{stroke:#fffdf1;stroke-width:1.25;opacity:.97}
+.card-charge{position:absolute;width:calc(100% + 8px);height:calc(100% + 8px);z-index:5;transform-origin:center}
+.card-charge .electric-glow{stroke-width:7;opacity:.18}
+.card-charge .electric-color{stroke-width:2;opacity:.8}
+.card-charge .electric-core{stroke-width:.8}
+.landing-ring{position:absolute;height:15px;border:1.5px solid #fff2ad;border-radius:50%;box-shadow:0 0 10px #ffce3a65;pointer-events:none}
+.impact-wash{width:150px;height:180px;background:radial-gradient(ellipse,#fff9c466,#7eece433 34%,#b49aff18 56%,transparent 72%);mix-blend-mode:screen}
+.impact-ray{height:2px;background:linear-gradient(90deg,#fffbe6,#7eece4bb,transparent);filter:drop-shadow(0 0 3px #7eece4)}
+.arcade-ring{border-color:#fff0a8;box-shadow:0 0 14px #ffce3a65,inset 0 0 10px #7eece433}
+.arcade-spark:not(.star){width:5px;height:9px;filter:drop-shadow(0 0 2px var(--spark))}
+.card-value-pop{font-size:clamp(19px,5vw,28px);-webkit-text-stroke:2px #fff7e6;text-shadow:0 3px 0 #20252a}
+.combo-impact{max-width:90vw;font-size:clamp(18px,5.6vw,32px);color:#fff0a8;-webkit-text-stroke-width:3px;-webkit-text-stroke-color:#20252a;text-shadow:0 3px 0 #20252a,0 0 14px #b49aff55}
+#tableLightning{overflow:visible}
+@media(prefers-reduced-motion:reduce){.card-charge,.landing-ring{display:none}}
+:root[data-motion="gentle"] .card-charge,:root[data-motion="gentle"] .landing-ring{display:none}
+
+/* Inventory nodes stay mounted; only a real activation adds a local light accent. */
+#effects .joker,#effects .tarot,#effects .joker:hover,#effects .tarot:hover{animation:none!important;translate:none!important;rotate:none!important;transform:none!important;transition:filter .15s}
+#comboRow .combo-tile{transition:opacity .2s ease,background-color .2s ease,color .2s ease}
+#comboRow .combo-tile:not(.on){opacity:.4}
+#comboRow .combo-tile.on{opacity:1}
+#comboRow .combo-tile.on .combo-name::before{content:'✓ ';font-size:.9em}
+#comboRow .combo-tile.paid{background-image:var(--art-button-teal);background-color:#1fd1c8;color:#163535}
+#comboRow .combo-tile.paid .combo-detail{color:#204a47}
+@media(prefers-reduced-motion:reduce){#comboRow .combo-tile{transition:none}}
+:root[data-motion="gentle"] #comboRow .combo-tile{transition:none}
