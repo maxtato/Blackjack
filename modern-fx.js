@@ -587,13 +587,12 @@
   const originalLanguage=setLang;
   setLang=function(id){originalLanguage(id);renderMotionOptions();};
 
-  // Animate the lettering, while preserving a whole-word accessible label.
-  // Observe only the small regions the renderer replaces, never each frame.
-  const liveRegions=[document.querySelector('.menuTitle'),$('tableName'),$('gainVal'),$('multVal'),$('actions'),$('planqueTitle'),...document.querySelectorAll('.zlbl,.mode-card strong')].filter(Boolean);
-  const letterTargets='.menuTitle,#gainVal,#multVal,#pVal,#dVal,#actions .blbl,#planqueTitle,.mode-card strong';
+  // Plain header counters use the same independent ticks as the menu lettering.
+  // Bitmap totals are handled by raster-ui; preserve the smaller counters' font.
+  const liveRegions=[$('tableNumber'),$('objGoal'),$('objPct'),$('lives')].filter(Boolean);
+  const letterTargets='#tableNumber,#objGoal,#objPct,#lives .lvn';
   function enlivenLetters(){
     document.querySelectorAll(letterTargets).forEach(el=>{
-      if(el.matches('.menuTitle,#gainVal,#multVal,#pVal,#dVal,.zlbl>[data-i18n],#actions .blbl,.mode-card strong,#planqueTitle'))return;
       if(el.querySelector('.live-letter'))return;
       const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
       const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
