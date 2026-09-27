@@ -32,7 +32,7 @@ const ColdDeckArt = (() => {
     const digit=/^[0-9]$/.test(c),joined=digit&&/^[0-9]$/.test(previous);
     const kern=joined?`--digit-kern:${(1-digitBounds[Number(previous)][1]+digitBounds[number][0]).toFixed(3)};`:'';
     const duration=.95+motionSample()*.3,delay=-motionSample()*duration;
-    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}"${digit?' data-digit=""':''} style="${trim}${kern}--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${duration.toFixed(3)}s;--letter-delay:${delay.toFixed(3)}s"></i>`;
+    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}"${digit?' data-digit=""':''} style="${trim}${kern}--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${duration.toFixed(3)}s;--letter-delay:${delay.toFixed(3)}s;--glyph-beat:${(index*.085).toFixed(3)}s"></i>`;
   }
   function lettering(value){
     const text=String(value);let index=0;

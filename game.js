@@ -621,7 +621,9 @@ function fannedCard(c,idx,total,opts){
   slot.style.marginLeft=idx>0?snapPixel(hashStr(seed+'x')*5-3)+'px':'';
   slot.style.transform=`translateY(${snapPixel(arc+jY)}px) rotate(${(baseRot+jRot).toFixed(2)}deg)`;
   const motionSeed=c.r+c.s+'#'+idx+(opts.dealer?'d':'p');
-  slot.style.setProperty('--card-delay','-'+(idx*.5+hashStr(motionSeed+'~')*3).toFixed(3)+'s');
+  const breathDuration=4.8+hashStr(motionSeed+'life')*1.6;
+  slot.style.setProperty('--card-duration',breathDuration.toFixed(3)+'s');
+  slot.style.setProperty('--card-delay','-'+(hashStr(motionSeed+'~')*breathDuration).toFixed(3)+'s');
   const contentKey=[c.r,c.s,c.ed||'',!!opts.dealer,LANG,cardBack].join('|');
   const viewKey=[contentKey,!!opts.back,!!opts.flip,!!opts.arrive,!!opts.placed,barakaLevel()>=3&&G.phase==='play'].join('|');
   if(slot._viewKey!==viewKey){

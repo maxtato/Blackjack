@@ -544,7 +544,7 @@ const ColdDeckArt = (() => {
     const digit=/^[0-9]$/.test(c),joined=digit&&/^[0-9]$/.test(previous);
     const kern=joined?`--digit-kern:${(1-digitBounds[Number(previous)][1]+digitBounds[number][0]).toFixed(3)};`:'';
     const duration=.95+motionSample()*.3,delay=-motionSample()*duration;
-    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}"${digit?' data-digit=""':''} style="${trim}${kern}--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${duration.toFixed(3)}s;--letter-delay:${delay.toFixed(3)}s"></i>`;
+    return `<i class="raster-glyph live-letter" data-glyph="${safe(c)}" data-font="${letter>=0?'letters':'numbers'}"${digit?' data-digit=""':''} style="${trim}${kern}--glyph-x:${cell%cols/(cols-1)*100}%;--glyph-y:${Math.floor(cell/cols)/(rows-1)*100}%;--letter-duration:${duration.toFixed(3)}s;--letter-delay:${delay.toFixed(3)}s;--glyph-beat:${(index*.085).toFixed(3)}s"></i>`;
   }
   function lettering(value){
     const text=String(value);let index=0;
@@ -1215,7 +1215,9 @@ function fannedCard(c,idx,total,opts){
   slot.style.marginLeft=idx>0?snapPixel(hashStr(seed+'x')*5-3)+'px':'';
   slot.style.transform=`translateY(${snapPixel(arc+jY)}px) rotate(${(baseRot+jRot).toFixed(2)}deg)`;
   const motionSeed=c.r+c.s+'#'+idx+(opts.dealer?'d':'p');
-  slot.style.setProperty('--card-delay','-'+(idx*.5+hashStr(motionSeed+'~')*3).toFixed(3)+'s');
+  const breathDuration=4.8+hashStr(motionSeed+'life')*1.6;
+  slot.style.setProperty('--card-duration',breathDuration.toFixed(3)+'s');
+  slot.style.setProperty('--card-delay','-'+(hashStr(motionSeed+'~')*breathDuration).toFixed(3)+'s');
   const contentKey=[c.r,c.s,c.ed||'',!!opts.dealer,LANG,cardBack].join('|');
   const viewKey=[contentKey,!!opts.back,!!opts.flip,!!opts.arrive,!!opts.placed,barakaLevel()>=3&&G.phase==='play'].join('|');
   if(slot._viewKey!==viewKey){
@@ -3883,6 +3885,15 @@ syncMenuFocus();
     const button=event.target instanceof Element?event.target.closest('button'):null;
     if(!button||button.disabled||button.closest('[inert]'))return;
     animate(button,[{scale:'1'},{scale:'.96',offset:.3},{scale:'1'}],{duration:170});
+    if(button.matches('#actions .btn,#peekBtn')){
+      const letters=button.querySelectorAll(button.id==='peekBtn'?'.raster-glyph':'.blbl .raster-glyph');
+      letters.forEach((letter,i)=>animate(letter,[
+        {translate:'0 0',rotate:'0deg'},
+        {translate:'0 1px',rotate:'1deg',offset:.18},
+        {translate:'0 -2px',rotate:'-1.5deg',offset:.48},
+        {translate:'0 0',rotate:'0deg'}
+      ],{duration:260,delay:i*16}));
+    }
     if(button.closest('#actions,#chips'))haptic();
   });
   onPressure();

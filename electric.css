@@ -324,19 +324,26 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
   #actions .btn{min-height:44px;font-size:17px;padding:8px 12px;border-radius:18px}#actions .action-glyph{width:22px;height:24px}
 }
 
-/* Motion copied from the pixel release on main (a041d2d).
-   Idle motion is one physical pixel, with independent phases. */
+/* Each printed card breathes inside its fixed fan slot. Transform-only motion
+   leaves hand spacing, totals and inventory anchored throughout the turn. */
 .hand .cardslot{animation:none;translate:none;rotate:none;top:0;perspective:none}
-.hand .card.placed:not(.jit){animation:pixel-card-life 3.6s steps(1,end) var(--card-delay,0s) infinite}
-@keyframes pixel-card-life{
-  0%,33%,66%,100%{top:0}
-  16%,50%,83%{top:calc(-1 * var(--device-pixel,1px))}
+.hand .card.placed{top:0;transform-origin:50% 82%;animation:paper-card-life var(--card-duration,5.4s) ease-in-out var(--card-delay,0s) infinite}
+.dealer-zone{--card-rise:1px;--card-lean:.3deg}
+.player-zone{--card-rise:1.8px;--card-lean:.6deg}
+.hand .card.back{--card-rise:.65px;--card-lean:.2deg}
+@keyframes paper-card-life{
+  0%,14%,100%{transform:translate3d(0,0,0) rotate(0)}
+  39%{transform:translate3d(0,calc(-1 * var(--card-rise,1.8px)),0) rotate(var(--card-lean,.6deg))}
+  67%{transform:translate3d(0,calc(-.35 * var(--card-rise,1.8px)),0) rotate(calc(-.45 * var(--card-lean,.6deg)))}
+  87%{transform:translate3d(0,0,0) rotate(0)}
 }
-.hand .card.jit{animation:pixel-card-jit .12s steps(1,end) infinite}
-@keyframes pixel-card-jit{
-  0%,50%{transform:translate(0,0)}
-  25%{transform:translate(var(--device-pixel,1px),calc(-1 * var(--device-pixel,1px)))}
-  75%{transform:translate(calc(-1 * var(--device-pixel,1px)),var(--device-pixel,1px))}
+.hand .card.placed.jit{animation-name:paper-card-tension;animation-duration:calc(var(--card-duration,5.4s)*.58)}
+@keyframes paper-card-tension{
+  0%,18%,100%{transform:translate3d(0,0,0) rotate(0)}
+  42%{transform:translate3d(0,-2px,0) rotate(.7deg)}
+  53%{transform:translate3d(0,-1.1px,0) rotate(-.65deg)}
+  64%{transform:translate3d(0,-.6px,0) rotate(.3deg)}
+  82%{transform:translate3d(0,0,0) rotate(0)}
 }
 .live-letter{position:relative;top:0;translate:none;rotate:none;animation:pixel-letter-shake var(--letter-duration,1.1s) steps(1,end) var(--letter-delay,0s) infinite}
 @keyframes pixel-letter-shake{
@@ -348,9 +355,34 @@ button:focus-visible,[role=button]:focus-visible,summary:focus-visible{outline-c
 #bottombar #actions .btn.b-blue:not(:disabled),.btn.b-blue{background:#2468ce;color:#fff}
 #bottombar #actions .btn:disabled{color:#d1cfd7}
 #actions .btn:disabled .live-letter{animation-play-state:paused}
+/* A short, staggered wave travels through the display lettering, followed by
+   a quiet hold. Small print and card indices remain part of the printed art. */
+#app .raster-glyph{animation:none;top:0;translate:none;rotate:none}
+#app :is(#actions .blbl,#peekBtn) .raster-glyph{
+  --ink-rise:1.25px;--ink-lean:1deg;
+  transform-origin:50% 78%;animation:paper-letter-life 5.4s ease-in-out calc(-4.8s + var(--glyph-beat,0s) + var(--ink-offset,0s)) infinite;
+}
+#actions [data-game-action="stand"]{--ink-offset:.8s}
+#actions [data-game-action="force"]{--ink-offset:1.6s}
+#actions [data-game-action="double"],#actions [data-game-action="split"]{--ink-offset:1.2s}
+#peekBtn{--ink-offset:2.1s}
+#app :is(#pVal,#dVal,#multVal) .raster-glyph{
+  --ink-rise:.55px;--ink-lean:.45deg;
+  transform-origin:50% 78%;animation:paper-letter-life 6.4s ease-in-out calc(-5.4s + var(--glyph-beat,0s)) infinite;
+}
+@keyframes paper-letter-life{
+  0%,13%,43%,100%{transform:translate3d(0,0,0) rotate(0)}
+  23%{transform:translate3d(0,calc(-1 * var(--ink-rise,1px)),0) rotate(calc(-1 * var(--ink-lean,1deg)))}
+  33%{transform:translate3d(0,calc(.2 * var(--ink-rise,1px)),0) rotate(calc(.35 * var(--ink-lean,1deg)))}
+}
+#shaker[inert] :is(.hand .card.placed,.raster-glyph){animation-play-state:paused!important}
+#app:not([data-phase="play"]) .hand .card.placed,
+#app:has(.hand .flipwrap,.hand .arrive) .hand .card.placed,
+#app .splithand.dim .card.placed,
+#app #actions .btn:disabled .raster-glyph{animation-play-state:paused}
 /* Keep both the OS motion preference and the in-game gentle setting authoritative. */
-@media(prefers-reduced-motion:reduce){.hand .cardslot,.live-letter{animation:none!important;top:0;translate:none!important;rotate:none!important}}
-:root[data-motion=gentle] .hand .cardslot,:root[data-motion=gentle] .live-letter{animation:none!important;top:0;translate:none!important;rotate:none!important}
+@media(prefers-reduced-motion:reduce){.hand .cardslot,.hand .card.placed,.live-letter{animation:none!important;top:0;translate:none!important;rotate:none!important}}
+:root[data-motion=gentle] .hand .cardslot,:root[data-motion=gentle] .hand .card.placed,:root[data-motion=gentle] .live-letter{animation:none!important;top:0;translate:none!important;rotate:none!important}
 
 /* Card size follows the space left by inventory and messages, keeping both hands clear. */
 #stage{container-type:size;--hand-overhead:270px;--message-room:0px}

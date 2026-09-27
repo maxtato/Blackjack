@@ -568,6 +568,15 @@
     const button=event.target instanceof Element?event.target.closest('button'):null;
     if(!button||button.disabled||button.closest('[inert]'))return;
     animate(button,[{scale:'1'},{scale:'.96',offset:.3},{scale:'1'}],{duration:170});
+    if(button.matches('#actions .btn,#peekBtn')){
+      const letters=button.querySelectorAll(button.id==='peekBtn'?'.raster-glyph':'.blbl .raster-glyph');
+      letters.forEach((letter,i)=>animate(letter,[
+        {translate:'0 0',rotate:'0deg'},
+        {translate:'0 1px',rotate:'1deg',offset:.18},
+        {translate:'0 -2px',rotate:'-1.5deg',offset:.48},
+        {translate:'0 0',rotate:'0deg'}
+      ],{duration:260,delay:i*16}));
+    }
     if(button.closest('#actions,#chips'))haptic();
   });
   onPressure();
