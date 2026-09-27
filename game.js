@@ -1984,9 +1984,9 @@ function animateScoreTally(mode,lines,cb){
 /* animation quand on franchit l'objectif de gain de la table */
 function objectiveReached(){
   const p=$('multPop');
-  if(p){p.className='win';p.querySelector('.m').textContent=t('obj.reached');p.querySelector('.t').innerHTML=STAR+' '+t('obj.validated');
+  if(window.ColdDeckFX)window.ColdDeckFX.onGoal();
+  else if(p){p.className='win';p.querySelector('.m').textContent=t('obj.reached');p.querySelector('.t').innerHTML=STAR+' '+t('obj.validated');
     p.classList.remove('go');void p.offsetWidth;p.classList.add('go');}
-  window.ColdDeckFX?.onGoal();
   // animation sur la barre d'objectif (à la place des confettis)
   const ow=$('objWrap');if(ow&&!window.ColdDeckFX){ow.classList.remove('goalpop');void ow.offsetWidth;ow.classList.add('goalpop');setTimeout(()=>ow.classList.remove('goalpop'),900);}
   flashScreen('win');shake(12);

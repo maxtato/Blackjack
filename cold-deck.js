@@ -2578,9 +2578,9 @@ function animateScoreTally(mode,lines,cb){
 /* animation quand on franchit l'objectif de gain de la table */
 function objectiveReached(){
   const p=$('multPop');
-  if(p){p.className='win';p.querySelector('.m').textContent=t('obj.reached');p.querySelector('.t').innerHTML=STAR+' '+t('obj.validated');
+  if(window.ColdDeckFX)window.ColdDeckFX.onGoal();
+  else if(p){p.className='win';p.querySelector('.m').textContent=t('obj.reached');p.querySelector('.t').innerHTML=STAR+' '+t('obj.validated');
     p.classList.remove('go');void p.offsetWidth;p.classList.add('go');}
-  window.ColdDeckFX?.onGoal();
   // animation sur la barre d'objectif (à la place des confettis)
   const ow=$('objWrap');if(ow&&!window.ColdDeckFX){ow.classList.remove('goalpop');void ow.offsetWidth;ow.classList.add('goalpop');setTimeout(()=>ow.classList.remove('goalpop'),900);}
   flashScreen('win');shake(12);
@@ -3317,6 +3317,12 @@ syncMenuFocus();
   layer.id = 'arcadeFX';
   layer.setAttribute('aria-hidden', 'true');
   document.body.appendChild(layer);
+  // Keep result notices in viewport space, outside the table's size container.
+  const notice=$('multPop');
+  document.body.appendChild(notice);
+  notice.setAttribute('role','status');
+  notice.setAttribute('aria-live','polite');
+  notice.setAttribute('aria-atomic','true');
   const lightningLayer = $('tableLightning');
   const animations = new Set();
   const timers = new Set();
@@ -3366,6 +3372,7 @@ syncMenuFocus();
     try { navigator.vibrate?.(0); } catch(e) {}
     $('felt')?.removeAttribute('data-arcade-result');
     $('multPop')?.classList.remove('go','gain-in-flight');
+    notice.querySelector('.victory-goal')?.remove();
   }
   function animate(el, frames, options, remove = false) {
     if (!el || reduced() || document.hidden) { if (remove) el?.remove(); return; }
@@ -3486,26 +3493,59 @@ syncMenuFocus();
       announcement.classList.add('gain-in-flight');
       graphicRays(label,3,graphic.yellow,28);
       const dx=end.x-start.x,dy=end.y-start.y;
-      animate(label,[{transform:place(0,0,-3,.9),opacity:0},{transform:place(0,-3,-3,1.08),opacity:1,offset:.17},{transform:place(0,0,-3,1),opacity:1,offset:.45},{transform:place(dx*.5,dy*.5-15,-7,.75),opacity:1,offset:.72},{transform:place(dx,dy,0,.35),opacity:0}],{duration:840},true);
+      animate(label,[{transform:place(0,0,-3,1),opacity:1},{transform:place(0,-3,-3,1.12),opacity:1,offset:.17},{transform:place(0,0,-3,1),opacity:1,offset:.32},{transform:place(dx*.5,dy*.5-15,-7,.75),opacity:1,offset:.7},{transform:place(dx,dy,0,.35),opacity:0}],{duration:780},true);
       later(()=>{if(boardActive())pulse($('gainVal'),true);},710);
-    },250);
+    },820);
   }
   function finishChain(){
     if(chainStar?.isConnected){burst(chainStar,{count:10,reach:65,color:graphic.yellow});chainStar.remove();}
     chainStar=null;chainCount=0;
   }
-  function onAnnouncement() {
-    // Scoring uses the empty action dock, keeping cards and combo labels readable.
-    const p=rect($('bottombar')),pop=$('multPop'),origin=pop?.offsetParent?.getBoundingClientRect();
-    if(p&&origin){pop.style.left=(p.x-origin.left)+'px';pop.style.top=(p.y-origin.top)+'px';}
+  function onAnnouncement(central=false,big=false) {
+    const p=rect($(central?'app':'bottombar')),pop=$('multPop');
+    pop.classList.toggle('central-result',central);
+    pop.classList.toggle('big-result',central&&big);
+    pop.classList.remove('goal-result','goal-earned','gain-in-flight');
+    pop.querySelector('.victory-goal')?.remove();
+    if(p){pop.style.left=p.x+'px';pop.style.top=(central?innerHeight*.5:p.y)+'px';}
+    if(central){
+      const width=Math.min(innerWidth*.9,p?.width*.94||innerWidth*.9,510);
+      const title=pop.querySelector('.m'),sub=pop.querySelector('.t');
+      pop.style.setProperty('--victory-width',width+'px');
+      pop.style.setProperty('--victory-type',Math.min(big?82:74,(width-28)/(Math.max(4,title.textContent.length)*.8))+'px');
+      title.innerHTML=ColdDeckArt.lettering(title.textContent);
+      sub.innerHTML=ColdDeckArt.lettering(sub.textContent);
+    }
     clearTimeout(popupTimer);
     timers.delete(popupTimer);
-    popupTimer = later(() => $('multPop')?.classList.remove('go','gain-in-flight'), 1450);
+    popupTimer = later(() => $('multPop')?.classList.remove('go','gain-in-flight'), central?1700:1450);
+  }
+  function victoryImpact(big=false){
+    if(!boardActive())return;
+    const p=rect($('app'));if(!p)return;
+    const x=p.x,y=innerHeight*.5,width=Math.min(p.width,510);
+    const wash=piece('victory-wash',x,y,graphic.yellow);
+    if(wash){
+      wash.style.width=p.width+'px';wash.style.height=innerHeight+'px';
+      animate(wash,[{opacity:0},{opacity:big?.8:.62,offset:.12},{opacity:.38,offset:.5},{opacity:0}],{duration:1250},true);
+    }
+    const wave=piece('victory-wave',x,y,graphic.yellow);
+    if(wave){
+      wave.style.width=width*.8+'px';
+      animate(wave,[{transform:place(0,0,-5,.65),opacity:0},{transform:place(0,0,-5,1),opacity:.9,offset:.16},{transform:place(0,0,-5,1.35),opacity:0}],{duration:650},true);
+    }
+    for(let i=0;i<(big?6:4);i++){
+      const side=i%2?1:-1,row=Math.floor(i/2)-.5;
+      paperBolt(x+side*width*.38,y+row*150,big?112:84,side*24,i>3?graphic.purple:graphic.yellow);
+    }
+    const origin=piece('victory-origin',x,y);
+    if(origin){burst(origin,{count:big?22:14,reach:big?185:145});origin.remove();}
   }
   function onResult(kind, gain, mult, natural) {
     layer.querySelectorAll('.combo-impact').forEach(el=>el.remove());
     finishChain();
-    onAnnouncement();
+    const big = natural || mult>=3;
+    onAnnouncement(kind==='win',big);
     const activeTotal=G.splitActive?handValue(G.hands[G.hi]).total:0;
     const dealerTotal=G.splitActive?handValue(G.dHand).total:0;
     const comboWon=G.splitActive?activeTotal<=21&&(dealerTotal>21||activeTotal>dealerTotal):kind==='win';
@@ -3513,12 +3553,12 @@ syncMenuFocus();
     if(!boardActive())return;
     $('felt').dataset.arcadeResult = kind;
     later(() => $('felt')?.removeAttribute('data-arcade-result'), 800);
-    const big = natural || mult>=3;
     // Split hands celebrate their own result, even when the combined payout is neutral.
     const winningHands=G.splitActive?[...$('pHand').querySelectorAll('.splithand.win')]:kind==='win'?[$('pHand')]:[];
     winningHands.forEach(hand=>celebrateHand(hand,big));
     if (kind === 'win') {
       kick(big?8:5);
+      victoryImpact(big);
       transferGain(gain,mult);
     } else if (kind === 'lose') {
       kick(4);
@@ -3530,21 +3570,21 @@ syncMenuFocus();
   }
   function celebrateHand(hand,big=false){
     if(!boardActive()||!hand?.isConnected)return;
-    lightning(hand,big?84:58,big?4:2,graphic.yellow);
+    lightning(hand,big?108:82,big?6:4,graphic.yellow);
     hand.querySelectorAll('.card:not(.back)').forEach((card,i)=>later(()=>{
       if(!boardActive()||!card.isConnected)return;
       const height=rect(card)?.height||100;
-      const lift=Math.min(big?19:14,height*.15),tilt=(i%2?1:-1)*(big?3:2);
+      const lift=Math.min(big?26:20,height*.22),tilt=(i%2?1:-1)*(big?4:3);
       animate(card,[
         {translate:'0 0',rotate:'0deg',scale:'1',filter:'brightness(1)'},
         {translate:'0 2px',rotate:'0deg',scale:'.97',filter:'brightness(1)',offset:.1},
-        {translate:`0 -${lift}px`,rotate:tilt+'deg',scale:big?'1.14':'1.1',filter:'brightness(1.12)',offset:.32},
+        {translate:`0 -${lift}px`,rotate:tilt+'deg',scale:big?'1.18':'1.13',filter:'brightness(1.2)',offset:.32},
         {translate:'0 -3px',rotate:(-tilt*.35)+'deg',scale:'1.025',filter:'brightness(1.03)',offset:.65},
         {translate:'0 0',rotate:'0deg',scale:'1',filter:'brightness(1)'}
-      ],{duration:big?680:580});
+      ],{duration:big?780:660});
       cardCharge(card,graphic.yellow,true);
       const flash=piece('card-victory-flash',0,0,graphic.cream,card);
-      if(flash)animate(flash,[{opacity:0},{opacity:big?.4:.28,offset:.2},{opacity:0,offset:.7},{opacity:0}],{duration:380},true);
+      if(flash)animate(flash,[{opacity:0},{opacity:big?.5:.36,offset:.2},{opacity:0,offset:.7},{opacity:0}],{duration:430},true);
       graphicRays(card,2,graphic.cream,16);
       burst(card,{count:big?6:4,reach:big?38:27,color:graphic.yellow});
     },i*65));
@@ -3661,7 +3701,20 @@ syncMenuFocus();
     if(boardActive()){awardStar(box);pulse(box,true);}
   }
   function onGoal(){
-    onAnnouncement();$('multPop').classList.remove('gain-in-flight');$('multPop').classList.add('goal-result');
+    const pop=$('multPop');
+    if(pop.matches('.win.central-result.go')){
+      // The objective must not replace the winning word or its payout after 360 ms.
+      if(!pop.querySelector('.victory-goal')){
+        const label=document.createElement('span');label.className='victory-goal';
+        label.textContent=t('obj.reached')+' · '+t('obj.validated');pop.append(label);
+      }
+      pop.classList.add('goal-earned');
+    }else{
+      pop.className='win';pop.querySelector('.m').textContent=t('obj.reached');
+      pop.querySelector('.t').textContent=t('obj.validated');
+      onAnnouncement(true,true);pop.classList.add('goal-result');
+      void pop.offsetWidth;pop.classList.add('go');victoryImpact(true);
+    }
     if(!boardActive())return;
     const p=rect($('objBar'));if(!p)return;
     const wave=piece('objective-wave',p.x,p.y,graphic.teal);

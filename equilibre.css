@@ -566,7 +566,7 @@
 #multPop.win .m{color:#ffce3a}#multPop.win .t{color:#fff7e6}
 #multPop.goal-result .m{color:#1fd1c8}
 #multPop.gain-in-flight .t{visibility:hidden}
-#feltInner:has(#multPop.go) #tip{visibility:hidden}
+body:has(#multPop.go) #tip{visibility:hidden}
 #recPop{border-radius:0;clip-path:var(--frame-cut);background:#a986ca var(--art-button-purple) center/100% 100%;box-shadow:none;color:#fff7e6;gap:8px}
 #recPop .rm{font:500 12px/1.2 var(--copy-font)}
 #recPop .rt{font:600 15px/1.2 var(--copy-font)}
@@ -587,3 +587,23 @@
 #comboRow .combo-tile.paid .combo-detail{color:#204a47}
 @media(prefers-reduced-motion:reduce){#comboRow .combo-tile{transition:none}}
 :root[data-motion="gentle"] #comboRow .combo-tile{transition:none}
+
+/* Winning words slam into the middle of the viewport, above the fixed table. */
+#multPop{position:fixed;z-index:61}
+#multPop.central-result{width:var(--victory-width);max-width:92vw;padding:22px 12px 20px;gap:9px;isolation:isolate}
+#multPop.central-result .m{font-size:var(--victory-type);font-style:normal;line-height:1;letter-spacing:0;-webkit-text-stroke:0;text-shadow:none;filter:drop-shadow(0 4px 0 #111820)}
+#multPop.central-result .t{margin:0;font-size:clamp(25px,7.7vw,38px);line-height:1;letter-spacing:0;-webkit-text-stroke:0;text-shadow:none;filter:drop-shadow(0 3px 0 #111820)}
+#multPop.central-result .raster-glyph{--glyph-width:.8em;animation:none!important}
+#multPop.central-result .burst{display:block;position:absolute;inset:-4px -3px;z-index:-1;background:#20252a var(--art-card-stock) center/240px 200px;background-blend-mode:multiply;clip-path:polygon(3% 9%,94% 0,100% 17%,97% 90%,7% 100%,0 76%);opacity:.96}
+#multPop.central-result::before,#multPop.central-result::after{content:"";position:absolute;z-index:-2;left:1%;right:1%;height:23px;background:#ffce3a var(--art-card-stock) center/180px;background-blend-mode:multiply;clip-path:polygon(4% 0,100% 7%,96% 100%,0 90%);transform:rotate(-7deg)}
+#multPop.central-result::before{top:-7px}
+#multPop.central-result::after{bottom:-6px;background-color:#b69bda;transform:rotate(-4deg);left:9%;right:5%;height:15px}
+#multPop.central-result.go{animation:victory-slam 1700ms cubic-bezier(.16,.78,.24,1) both}
+#multPop.central-result.big-result.go{animation-name:victory-slam-big}
+.victory-goal{position:absolute;top:calc(100% + 19px);left:50%;transform:translateX(-50%);width:max-content;max-width:100%;padding:5px 10px;background:#1c302df2;color:#7ce0c7;font:600 14px/1.2 var(--copy-font);text-transform:uppercase;letter-spacing:.025em;clip-path:var(--frame-cut)}
+.victory-wash,.victory-wave,.victory-origin{position:absolute;pointer-events:none;transform:translate(-50%,-50%)}
+.victory-wash{z-index:0;background:radial-gradient(ellipse at center,#ffce3a20 0,transparent 43%,#0e121cd9 100%)}
+.victory-wave{height:190px;border:4px solid #ffce3a;clip-path:polygon(4% 0,96% 0,100% 12%,100% 88%,96% 100%,4% 100%,0 88%,0 12%);z-index:1}
+@keyframes victory-slam{0%{opacity:0;transform:translate(-50%,-50%) scale(1.75) rotate(-11deg)}10%{opacity:1;transform:translate(-50%,-50%) scale(.94) rotate(-4deg)}17%{transform:translate(calc(-50% - 4px),calc(-50% + 2px)) scale(1.06) rotate(-5deg)}24%{transform:translate(calc(-50% + 2px),-50%) scale(.99) rotate(-3deg)}32%,81%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-4deg)}100%{opacity:0;transform:translate(-50%,-64%) scale(1.08) rotate(-2deg)}}
+@keyframes victory-slam-big{0%{opacity:0;transform:translate(-50%,-50%) scale(2.1) rotate(-14deg)}10%{opacity:1;transform:translate(-50%,-50%) scale(.9) rotate(-3deg)}17%{transform:translate(calc(-50% - 6px),calc(-50% + 3px)) scale(1.08) rotate(-6deg)}24%{transform:translate(calc(-50% + 3px),-50%) scale(.98) rotate(-3deg)}32%,81%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-4deg)}100%{opacity:0;transform:translate(-50%,-66%) scale(1.12) rotate(-2deg)}}
+@media(max-height:500px) and (orientation:landscape){#multPop.central-result{padding:12px;gap:5px}#multPop.central-result .m{font-size:min(var(--victory-type),54px)}#multPop.central-result .t{font-size:28px}.victory-wave{height:145px}}
