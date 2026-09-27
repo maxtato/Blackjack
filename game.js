@@ -769,7 +769,7 @@ function fannedCard(c,idx,total,opts){
   slot.style.marginLeft=idx>0?snapPixel(hashStr(seed+'x')*5-3)+'px':'';
   slot.style.transform=`translateY(${snapPixel(arc+jY)}px) rotate(${(baseRot+jRot).toFixed(2)}deg)`;
   const motionSeed=c.r+c.s+'#'+idx+(opts.dealer?'d':'p');
-  const breathDuration=4.8+hashStr(motionSeed+'life')*1.6;
+  const breathDuration=2.8+hashStr(motionSeed+'life')*1.1;
   slot.style.setProperty('--card-duration',breathDuration.toFixed(3)+'s');
   slot.style.setProperty('--card-delay','-'+(hashStr(motionSeed+'~')*breathDuration).toFixed(3)+'s');
   const contentKey=[c.r,c.s,c.ed||'',!!opts.dealer,LANG,cardBack].join('|');
@@ -1552,7 +1552,7 @@ function resolveSplit(){
   const kind=net>0?'win':net<0?'lose':'push';
   const isRecord=checkGainRecord(maxG);
   sfx[kind](kind==='win'?(window.ColdDeckFX?.victoryTier(net,1,false,isRecord)||1):undefined);if(kind==='lose'){shake(8);}
-  showWord(kind,Math.abs(net),1,false,false,isRecord);
+  showWord(kind,net,1,false,false,isRecord);
   if(isRecord)gameDelay(()=>showRecord(maxG),320);
   $('tip').innerHTML=summary.join('  ·  ');$('tip').style.color='var(--gold)';
   if(net>0&&!G.objHit&&G.bank>=G.table.goal&&bossReady()){G.objHit=true;gameDelay(objectiveReached,360);}

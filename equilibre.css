@@ -594,7 +594,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 @media(prefers-reduced-motion:reduce){#comboRow .combo-tile{transition:none}}
 :root[data-motion="gentle"] #comboRow .combo-tile{transition:none}
 
-/* Winning words slam into the middle of the viewport, above the fixed table. */
+/* Every hand result lands in the same central space above the fixed table. */
 #multPop{position:fixed;z-index:61}
 #payoutFX{position:fixed;inset:0;z-index:62;pointer-events:none;overflow:hidden}
 @media(prefers-reduced-motion:reduce){#payoutFX{display:none}}
@@ -611,13 +611,30 @@ body:has(#multPop.go) #tip{visibility:hidden}
 #multPop.central-result[data-victory="win"].go{animation-name:victory-slam-small}
 #multPop.central-result[data-victory="jackpot"].go{animation-name:victory-slam-big}
 #multPop.central-result[data-victory="jackpot"]::before{height:20px;top:-5px}
+#multPop.central-result.lose .m{color:#f19089}
+#multPop.central-result.lose .t,#multPop.central-result.push .t{color:#fff7e6;font-size:clamp(20px,6.2vw,30px)}
+#multPop.central-result.lose::before{background-color:#e77872;height:18px;transform:rotate(5deg)}
+#multPop.central-result.lose::after{background-color:#a986ca;transform:rotate(-7deg)}
+#multPop.central-result.lose .burst{clip-path:polygon(0 9%,91% 0,100% 22%,96% 82%,100% 95%,52% 91%,43% 100%,5% 94%,8% 72%)}
+#multPop.central-result.push .m{color:#81d6c7}
+#multPop.central-result.push::before{background-color:#81d6c7;transform:rotate(-2deg)}
+#multPop.central-result.push::after{background-color:#fff7e6;transform:rotate(2deg)}
+#multPop.central-result.lose.go{animation-name:result-drop}
+#multPop.central-result.push.go{animation-name:result-balance}
 .victory-goal{position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%);width:max-content;max-width:100%;padding:4px 9px;background:#1c302df2;color:#7ce0c7;font:600 13px/1.2 var(--copy-font);text-transform:uppercase;letter-spacing:.025em;clip-path:var(--frame-cut)}
 .victory-wash,.victory-wave,.victory-origin{position:absolute;pointer-events:none;transform:translate(-50%,-50%)}
 .victory-wash{z-index:0;background:radial-gradient(ellipse at center,#ffce3a20 0,transparent 43%,#0e121cd9 100%)}
 .victory-wave{height:145px;border:3px solid #ffce3a;clip-path:polygon(4% 0,96% 0,100% 12%,100% 88%,96% 100%,4% 100%,0 88%,0 12%);z-index:1}
-@keyframes victory-slam-small{0%{opacity:0;transform:translate(-50%,-50%) scale(1.45) rotate(-8deg)}12%{opacity:1;transform:translate(-50%,-50%) scale(.95) rotate(-3deg)}24%{transform:translate(-50%,-50%) scale(1.03) rotate(-4deg)}34%,79%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-4deg)}100%{opacity:0;transform:translate(-50%,-60%) scale(1.05) rotate(-2deg)}}
+.result-wash,.result-stroke{position:absolute;pointer-events:none;transform:translate(-50%,-50%)}
+.result-wash.lose{background:radial-gradient(ellipse at center,#e7787226 0,transparent 45%,#391b2ccc 100%)}
+.result-wash.push{background:radial-gradient(ellipse at center,#81d6c71f 0,transparent 60%,#0e121caa 100%)}
+.result-stroke{height:19px;clip-path:polygon(2% 21%,34% 0,42% 35%,72% 13%,100% 35%,97% 80%,68% 100%,57% 70%,25% 92%,0 71%)}
+.result-stroke.push{height:11px;clip-path:polygon(4% 0,98% 12%,100% 88%,0 100%)}
+@keyframes victory-slam-small{0%{opacity:0;transform:translate(-50%,-50%) scale(1.7) rotate(-10deg)}10%{opacity:1;transform:translate(-50%,-50%) scale(.92) rotate(-3deg)}19%{transform:translate(calc(-50% - 3px),calc(-50% - 2px)) scale(1.06) rotate(-5deg)}29%,81%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-4deg)}100%{opacity:0;transform:translate(-50%,-60%) scale(1.05) rotate(-2deg)}}
 @keyframes victory-slam{0%{opacity:0;transform:translate(-50%,-50%) scale(1.75) rotate(-11deg)}10%{opacity:1;transform:translate(-50%,-50%) scale(.94) rotate(-4deg)}17%{transform:translate(calc(-50% - 4px),calc(-50% + 2px)) scale(1.06) rotate(-5deg)}24%{transform:translate(calc(-50% + 2px),-50%) scale(.99) rotate(-3deg)}32%,81%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-4deg)}100%{opacity:0;transform:translate(-50%,-64%) scale(1.08) rotate(-2deg)}}
 @keyframes victory-slam-big{0%{opacity:0;transform:translate(-50%,-50%) scale(2.1) rotate(-14deg)}10%{opacity:1;transform:translate(-50%,-50%) scale(.9) rotate(-3deg)}17%{transform:translate(calc(-50% - 6px),calc(-50% + 3px)) scale(1.08) rotate(-6deg)}24%{transform:translate(calc(-50% + 3px),-50%) scale(.98) rotate(-3deg)}32%,81%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-4deg)}100%{opacity:0;transform:translate(-50%,-66%) scale(1.12) rotate(-2deg)}}
+@keyframes result-drop{0%{opacity:0;transform:translate(-50%,-85%) scale(1.6) rotate(9deg)}12%{opacity:1;transform:translate(-50%,-43%) scale(.94) rotate(3deg)}20%{transform:translate(calc(-50% - 7px),-54%) scale(1.04) rotate(-3deg)}29%{transform:translate(calc(-50% + 4px),-48%) scale(.99) rotate(2deg)}40%,82%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(2deg)}100%{opacity:0;transform:translate(-50%,-35%) scale(.96) rotate(5deg)}}
+@keyframes result-balance{0%{opacity:0;transform:translate(-58%,-50%) scale(.8) rotate(-10deg)}15%{opacity:1;transform:translate(-46%,-50%) scale(1.06) rotate(4deg)}29%{transform:translate(-52%,-50%) scale(.99) rotate(-3deg)}44%,82%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}100%{opacity:0;transform:translate(-50%,-54%) scale(.95) rotate(0)}}
 @media(max-height:500px) and (orientation:landscape){#multPop.central-result{padding:12px;gap:5px}#multPop.central-result .m{font-size:min(var(--victory-type),54px)}#multPop.central-result .t{font-size:28px}.victory-wave{height:145px}}
 
 /* Circuit guidance occupies fixed space and uses the existing paper palette. */

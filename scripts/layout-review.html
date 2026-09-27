@@ -33,6 +33,9 @@ screen.add(new Option('Victoire puis nouvelle mise','win-flow'));
 screen.add(new Option('Éclairs et validation des combos','fx-flow'));
 screen.add(new Option('Effets C : relique et objectif','fx-goal'));
 screen.add(new Option('Victoire simple','fx-simple'));
+screen.add(new Option('Défaite','fx-loss'));
+screen.add(new Option('Égalité','fx-push'));
+screen.add(new Option('Dépassement de 21','fx-bust'));
 screen.add(new Option('Victoire avec combo','fx-combo'));
 screen.add(new Option('Jackpot','fx-jackpot'));
 screen.add(new Option('Nouveau record','fx-record'));
@@ -94,10 +97,13 @@ async function render(){
    G.relics=['lunettes','jeton','as'].map(id=>({...RELIC_POOL.find(item=>item.id===id)}));
    G.consumables=['soleil','lune'].map(id=>({...TAROT_POOL.find(item=>item.id===id)}));
   }
-  if(['fx-simple','fx-combo','fx-jackpot','fx-record','fx-blackjack','fx-baraka-rise'].includes(visualScreen)){
+  if(['fx-simple','fx-loss','fx-push','fx-bust','fx-combo','fx-jackpot','fx-record','fx-blackjack','fx-baraka-rise'].includes(visualScreen)){
    RECS.nuit={gain:visualScreen==='fx-record'?5:10000};
    G.table={...G.table,goal:1000};G.contract=null;
    G.pHand=[{r:'10',s:'♣'},{r:'9',s:'♥'}];
+   if(visualScreen==='fx-loss'||visualScreen==='fx-bust')G.pHand=[{r:'10',s:'♣'},{r:'6',s:'♥'}];
+   if(visualScreen==='fx-push')G.pHand=[{r:'10',s:'♣'},{r:'7',s:'♥'}];
+   if(visualScreen==='fx-bust')G.shoe[G.shoe.length-1]={r:'K',s:'♠'};
    if(visualScreen==='fx-combo')G.pHand=[{r:'10',s:'♣'},{r:'5',s:'♥'},{r:'6',s:'♠'}];
    if(visualScreen==='fx-jackpot'){G.pHand=[{r:'5',s:'♣'},{r:'6',s:'♣'},{r:'7',s:'♣'}];G.baraka=6;G.boons={...G.boons,mult:4};}
    if(visualScreen==='fx-baraka-rise')G.baraka=2;
