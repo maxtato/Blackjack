@@ -22,7 +22,7 @@ Assurance persiste entre les tables. Talisman protège aussi une main séparée.
 
 L’arrivée des cartes utilise un zoom, un contact bref avec le tapis et des particules de poussière dans la palette papier du jeu, puis le retournement. Le contour de révélation est supprimé. Les annonces de victoire durent 1,65 à 2,05 secondes selon leur intensité ; les éclairs et la charge de victoire restent visibles plus longtemps. Les effets conservent leur générateur aléatoire distinct de celui du jeu et respectent les animations réduites.
 
-Les fonds des reliques utilisent un papier ocre, ceux des tarots un mauve sourd, et les services/améliorations un vert grisé. Les cartes de jeu gardent leur ivoire. Le même traitement apparaît dans l’inventaire, les achats et les détails.
+La palette D validée utilise un rose poudré très clair pour les reliques et un vert amande très clair pour les tarots, avec le grain du papier. Les services/améliorations utilisent un vert grisé et les cartes de jeu leur ivoire. Le même traitement apparaît dans l’inventaire, les achats et les détails.
 
 ## Vérification
 
