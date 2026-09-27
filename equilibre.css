@@ -645,3 +645,21 @@ body:has(#multPop.go) #tip{visibility:hidden}
 @media(max-height:700px){#mid{gap:6px}.circuit-status{height:14px;font-size:10px;line-height:14px}.draw-readout{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.card-dust,.card-impact-shadow{display:none}}
 :root[data-motion=gentle] :is(.card-dust,.card-impact-shadow){display:none}
+
+/* Colored paper makes the equipment families distinct from playing cards. */
+.effect-card{--effect-paper:#adbeb3;position:relative;isolation:isolate;display:grid;place-items:center;width:100%;height:100%;padding:10% 7%;background:none!important;border:0;border-radius:0;box-shadow:none}
+.effect-card[data-effect-kind="relic"]{--effect-paper:#ccb47e}
+.effect-card[data-effect-kind="tarot"]{--effect-paper:#b6a9c9}
+.effect-card[data-effect-kind="service"]{--effect-paper:#9bbdb3}
+.effect-card::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:var(--effect-paper) var(--art-card-stock,none) center/100% 100% no-repeat;background-blend-mode:multiply;-webkit-mask:var(--art-card-shape) center/108% 106% no-repeat;mask:var(--art-card-shape) center/108% 106% no-repeat;mask-mode:luminance}
+.effect-card>.effect-illustration{position:relative;z-index:1;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;filter:saturate(.92) drop-shadow(0 1px 1px #2223)}
+#effects .joker::before,#effects .tarot::before{content:none}
+#effects .effect-card{padding:4px 2px 6px}
+#effects .effect-card>.effect-illustration{filter:saturate(.95) drop-shadow(0 1px 0 #2222)}
+#effects .joker::after{background:#795a31}
+#effects .tarot::after{background:#695283}
+.shopTok:has(>.effect-card){width:58px;height:86px;padding:0;aspect-ratio:1/1.48}
+.inspCard:has(>.effect-card){width:115px;height:170px;padding:0;margin:0 auto 16px}
+.boon-choice>.effect-card{width:44px;height:64px;flex:none}
+.draft-choice>.effect-card{width:48px;height:71px;padding:6px 3px}
+@media(max-width:430px){.shopTok:has(>.effect-card){width:47px;height:70px}}

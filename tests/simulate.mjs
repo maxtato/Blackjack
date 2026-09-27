@@ -78,7 +78,7 @@ function shop(profile,history){
   for(const {it,i,priority:p} of ranked){
     if(!p||it.bought)continue;
     const id=it.data.id,cost=a.itemCost(it.data);
-    
+
     if(g.bank-cost<reserve)continue;
     const size=it.type==='relic'?g.relics.length:g.consumables.length,max=it.type==='relic'?a.relicMax():a.consumableSlots();
     if(size>=max)continue;

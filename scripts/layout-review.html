@@ -22,6 +22,7 @@ function syncPreviewMotion(){if(frame.contentDocument)frame.contentDocument.docu
 frame.addEventListener('load',syncPreviewMotion);
 window.addEventListener('message',event=>{if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='cold-deck-preview-motion')return;previewPaused=Boolean(event.data.paused);syncPreviewMotion()});
 screen.add(new Option('Choix de la mise','bet'));
+for(const [name,id] of [['Choix initial','draft'],['Briefing de table','brief'],['Boutique du circuit','circuit-shop'],['Défi du Parrain','boss-brief']])screen.add(new Option(name,id));
 screen.add(new Option('Combo complété','combo-ready'));
 screen.add(new Option('Lisibilité des 10','tens'));
 screen.add(new Option('Échantillons de finitions','finish-sample'));
@@ -46,6 +47,7 @@ document.documentElement.classList.toggle('embed',params.get('embed')==='1');
 async function render(){
  const [width,height]=size.value.split(',');frame.width=width;frame.height=height;
  const fixture=`
+ saveMeta=()=>{};saveRecs=()=>{};
  setLang('fr');
  const visualScreen=${JSON.stringify(screen.value)};
  if(visualScreen==='finish-sample'||visualScreen==='art-sample'){
@@ -60,6 +62,13 @@ async function render(){
    const caption=document.createElement('figcaption');caption.textContent=card.ed?ED_NAME[card.ed]:card.r+' '+card.s;figure.append(caption);samples.append(figure);
   }
   document.body.append(samples);
+ }
+ else if(['draft','brief','circuit-shop','boss-brief'].includes(visualScreen)){
+  chooseMode('nuit');startGame(visualScreen==='boss-brief'?23:0);
+  if(visualScreen!=='draft')while(G.phase==='draft')chooseStarter(0);
+  if(visualScreen==='circuit-shop'){
+   chooseContract(0);GameClock.clear();G.bank=350;G.phase='done';finishTable();
+  }
  }
  else if(visualScreen==='home')openMenu();
  else if(visualScreen==='circuit'||visualScreen==='free')chooseMode(visualScreen==='free'?'infini':'nuit');

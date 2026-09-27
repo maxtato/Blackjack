@@ -22,6 +22,8 @@ Assurance persiste entre les tables. Talisman protège aussi une main séparée.
 
 L’arrivée des cartes utilise un zoom, un contact bref avec le tapis et des particules de poussière dans la palette papier du jeu, puis le retournement. Le contour de révélation est supprimé. Les annonces de victoire durent 1,65 à 2,05 secondes selon leur intensité ; les éclairs et la charge de victoire restent visibles plus longtemps. Les effets conservent leur générateur aléatoire distinct de celui du jeu et respectent les animations réduites.
 
+Les fonds des reliques utilisent un papier ocre, ceux des tarots un mauve sourd, et les services/améliorations un vert grisé. Les cartes de jeu gardent leur ivoire. Le même traitement apparaît dans l’inventaire, les achats et les détails.
+
 ## Vérification
 
 Quinze contrôles reproductibles couvrent notamment les As souples, Assurance, Talisman en séparation, FORCER, Pendu, la pause, les mises engagées, Soleil, les éditions, la boutique, les records et le boss final. Les commandes sont dans `tests/README.md`.

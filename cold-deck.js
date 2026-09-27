@@ -2372,7 +2372,8 @@ function tokFor(id){
   return {t:hasStr(k)?t(k):tk.t,c:tk.c};
 }
 function effectMark(id,color){
-  return `<span class="effect-mark" style="color:${color}" aria-hidden="true">${ColdDeckArt.effect(id)}</span>`;
+  const kind=RELIC_POOL.some(r=>r.id===id)?'relic':TAROT_POOL.some(r=>r.id===id)?'tarot':SERVICE_POOL.some(r=>r.id===id)?'service':'upgrade';
+  return `<span class="effect-mark effect-card" data-effect-kind="${kind}" style="color:${color}" aria-hidden="true">${ColdDeckArt.effect(id)}</span>`;
 }
 function serviceCost(s){return priceRound(shopTable().max*({soin:.3,assurance:.6,videur:1.8}[s.id]||1));}
 let shopOffer=[],rerollCost=5;
@@ -3282,7 +3283,7 @@ function applyBoon(id){
   sfx.buy&&sfx.buy();coinBurst(8);
   $('palierScreen').classList.remove('show');
   G.table=endlessTier(G.tableIdx);                        // reflète le bonus (ex. mise max)
-  G.event=null;                                           // pas d'événement sur la main de palier
+  G.event=null;G.forcedUsed=false;                         // fresh power charge at each Free Play tier
   G.hand++;G.phase='bet';G._settling=false;G.dHand=[];G.pHand=[];
   clampBet();applyHandIncome();renderAll();renderHands();announceTurn();
 }
