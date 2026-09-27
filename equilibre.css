@@ -555,7 +555,9 @@
 .card-charge.strong path{stroke-width:4}
 .card-charge.strong .charge-halo{stroke-width:10;opacity:.24}
 .card-charge.strong .charge-core{stroke:#fff7e6;stroke-width:1.6}
-.card-victory-flash{position:absolute;width:100%;height:100%;z-index:4;pointer-events:none;background:var(--spark,#fff7e6);clip-path:polygon(9% 1%,92% 0,99% 7%,100% 92%,92% 100%,7% 99%,0 91%,0 8%)}
+.card-victory-flash,.card-reveal-flash{position:absolute;width:100%;height:100%;z-index:4;pointer-events:none;background:var(--spark,#fff7e6);clip-path:polygon(9% 1%,92% 0,99% 7%,100% 92%,92% 100%,7% 99%,0 91%,0 8%)}
+.card-reveal-wave{position:absolute;pointer-events:none;border:3px solid var(--spark,#fff7e6);clip-path:polygon(7% 0,93% 0,100% 7%,100% 93%,93% 100%,7% 100%,0 93%,0 7%);filter:drop-shadow(0 0 3px var(--spark,#fff7e6))}
+.card-reveal-ray{position:absolute;pointer-events:none;width:5px;height:21px;clip-path:polygon(18% 0,100% 9%,65% 100%,0 86%)}
 .combo-impact,.card-value-pop,.payout-value{color:#fff7e6;max-width:90vw;line-height:1;white-space:nowrap;font-style:normal;letter-spacing:0;-webkit-text-stroke:0;text-shadow:none;filter:drop-shadow(0 2px 0 #20252a);z-index:3}
 .combo-impact{font-size:clamp(18px,5.4vw,29px)}
 .combo-impact.long{font-size:clamp(15px,4.5vw,24px)}

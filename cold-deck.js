@@ -3612,11 +3612,31 @@ syncMenuFocus();
     const el=cardNode(card),p=rect(el);if(!p)return;
     graphicRays(el,2,graphic.cream,12);haptic();
   }
+  function revealImpact(el,color){
+    // Use the stable card slot: the turning face is almost edge-on at this instant.
+    const p=rect(el.closest('.cardslot')||el);if(!p)return;
+    const width=el.offsetWidth||p.width,height=el.offsetHeight||p.height;
+    const wave=piece('card-reveal-wave',p.x,p.y,color);
+    if(wave){
+      wave.style.width=width+6+'px';wave.style.height=height+6+'px';
+      animate(wave,[{transform:place(0,0,0,.9),opacity:0},{transform:place(0,0,0,1.02),opacity:1,offset:.16},{transform:place(0,0,0,1.1),opacity:.75,offset:.4},{transform:place(0,0,0,1.3),opacity:0}],{duration:420},true);
+    }
+    for(let i=0;i<8;i++){
+      const angle=i*Math.PI/4,dx=Math.cos(angle)*(width*.55+8),dy=Math.sin(angle)*(height*.5+6);
+      const ray=piece('card-reveal-ray paper-ink',p.x,p.y,i%3===0?graphic.yellow:color);if(!ray)break;
+      const rotation=angle*180/Math.PI+90;
+      animate(ray,[{transform:place(dx*.85,dy*.85,rotation,.3),opacity:0},{transform:place(dx,dy,rotation,1),opacity:1,offset:.18},{transform:place(dx+Math.cos(angle)*23,dy+Math.sin(angle)*23,rotation,.45),opacity:0}],{duration:i%2?360:320},true);
+    }
+    const flash=piece('card-reveal-flash',0,0,graphic.cream,el);
+    if(flash)animate(flash,[{opacity:0},{opacity:.28,offset:.2},{opacity:0}],{duration:240},true);
+    haptic();
+  }
   function onCard(card) {
     if(!boardActive())return;
     const el = cardNode(card); if (!el) return;
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
-    cardCharge(el,card.ed==='poly'?graphic.purple:card.ed==='holo'?graphic.teal:graphic.cream);
+    const color=card.ed==='poly'?graphic.purple:card.ed==='holo'?graphic.teal:graphic.cream;
+    cardCharge(el,color);revealImpact(el,color);
   }
   // Reference rhythm: a local card accent, then an energy transfer to the HUD.
   function energyLink(from,to,color=graphic.purple){
