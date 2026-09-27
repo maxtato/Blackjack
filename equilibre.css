@@ -628,7 +628,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .circuit-choices{display:flex;flex-direction:column;gap:12px;margin-top:18px}
 .circuit-panel h1{font-size:25px;line-height:1.15}
 .circuit-panel p{font:500 14px/1.45 var(--copy-font)}
-.draft-choice{display:flex;align-items:center;gap:14px;width:100%;text-align:left;white-space:normal;padding:14px!important}
+.circuit-choices .draft-choice{display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:14px;width:100%;text-align:left;white-space:normal;padding:14px!important}
 .draft-choice>.effect-mark{flex:none;width:48px;height:68px}
 .draft-choice>span:last-child{flex:1;min-width:0;font:600 18px/1.2 var(--copy-font)}
 .draft-choice small,.contract-choice small{display:block;margin-top:7px;font:500 13px/1.4 var(--copy-font);letter-spacing:0;text-transform:none}
