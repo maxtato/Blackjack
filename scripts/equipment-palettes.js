@@ -1,9 +1,9 @@
 // Color proposals, used only by the review pages until a palette is approved.
 export const equipmentPalettes = Object.freeze({
-  a: {letter:'A',name:'Pétrole et brique',relic:'#83aaa5',tarot:'#ca9183',relicName:'Pétrole',tarotName:'Brique',note:'Un contraste chaud et froid, avec du caractère.'},
-  b: {letter:'B',name:'Sauge et ardoise',relic:'#b0b897',tarot:'#8ea6bd',relicName:'Sauge',tarotName:'Ardoise',note:'Une palette sobre et douce, facile à lire.'},
-  c: {letter:'C',name:'Sable et cobalt',relic:'#d0c3a5',tarot:'#7797bd',relicName:'Sable',tarotName:'Cobalt',note:'Des reliques chaleureuses, des tarots plus affirmés.'},
-  d: {letter:'D',name:'Rose et sauge',relic:'#c4a2ac',tarot:'#9dac92',relicName:'Rose ancien',tarotName:'Sauge grisée',note:'Un duo plus singulier, aux tons patinés.'}
+  a: {letter:'A',name:'Menthe et pêche',relic:'#b5d4ca',tarot:'#ecc0ae',relicName:'Menthe claire',tarotName:'Pêche',note:'Des tons clairs, avec une séparation nette des familles.'},
+  b: {letter:'B',name:'Sauge et bleu brume',relic:'#d2dcbd',tarot:'#b9cfdf',relicName:'Sauge claire',tarotName:'Bleu brume',note:'Une palette douce et lumineuse sur le fond sombre.'},
+  c: {letter:'C',name:'Crème et bleu ciel',relic:'#eddfbc',tarot:'#aecae7',relicName:'Crème',tarotName:'Bleu ciel',note:'Des reliques très claires et des tarots bleutés.'},
+  d: {letter:'D',name:'Rose et amande',relic:'#e6c6d3',tarot:'#c4d8b6',relicName:'Rose poudré',tarotName:'Amande',note:'Des couleurs pastel, légèrement patinées.'}
 });
 
 export function equipmentPaletteStyle(palette){
