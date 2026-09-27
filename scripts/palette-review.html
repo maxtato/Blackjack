@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#20252a">
+<title>Cold Deck · Quatre palettes</title>
+<style>
+@font-face{font-family:Barlow;src:url('../fonts/barlow-latin-500-normal.woff2') format('woff2');font-weight:500;font-display:swap}
+*{box-sizing:border-box}body{margin:0;background:#20252a;color:#fff7e6;font:500 16px/1.4 Barlow,system-ui,sans-serif}
+main{width:min(1100px,100%);margin:0 auto;padding:32px 26px 26px}header{display:flex;justify-content:space-between;align-items:flex-end;gap:22px;margin-bottom:22px}.eyebrow{margin:0 0 4px;color:#ffce3a;font-size:13px;letter-spacing:.14em;text-transform:uppercase}h1{font-size:34px;line-height:1.1;letter-spacing:.02em;margin:0;text-transform:uppercase;font-weight:500}.intro{max-width:295px;margin:0;color:#bcc6cb;font-size:15px}
+.palettes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.proposal{padding:20px 22px 17px;background:#2b333b;clip-path:polygon(0 9px,9px 0,calc(100% - 9px) 0,100% 9px,100% 100%,0 100%)}.proposal-head{display:flex;align-items:center;gap:12px;margin-bottom:15px}.letter{display:grid;place-items:center;flex:none;width:35px;height:35px;color:#20252a;background:#ffce3a;font-size:23px;clip-path:polygon(8% 0,100% 5%,92% 100%,0 94%)}h2{margin:0;font-size:21px;font-weight:500}.groups{display:grid;grid-template-columns:1fr 1fr;gap:22px}.family-label{margin:0 0 9px;color:#d4dce0;font-size:12px;letter-spacing:.12em;text-transform:uppercase}.pair{display:flex;gap:10px;justify-content:center}.sample{margin:0;flex:1;min-width:0}.sample figcaption{margin:7px 0 0;text-align:center;color:#c3cdd2;font-size:11px;white-space:nowrap}
+.effect-card{position:relative;isolation:isolate;display:grid;place-items:center;width:100%;aspect-ratio:1/1.48;padding:10% 7%}.effect-card::before{content:'';position:absolute;inset:0;z-index:0;background:var(--paper) url('../assets/illustrations/card-stock.webp') center/100% 100% no-repeat;background-blend-mode:multiply;-webkit-mask:url('../assets/illustrations/card-shape.webp') center/108% 106% no-repeat;mask:url('../assets/illustrations/card-shape.webp') center/108% 106% no-repeat;mask-mode:luminance}.effect-card img{position:relative;z-index:1;width:100%;height:100%;min-height:0;object-fit:contain;filter:saturate(.92) drop-shadow(0 1px 1px #2223)}.family.relic{--paper:var(--relic)}.family.tarot{--paper:var(--tarot)}.color-name{margin:9px 0 0;text-align:center;color:#e7e1d4;font-size:14px}.note{margin:14px 0 10px;color:#b9c4ca;font-size:13px}.preview-link{display:inline-block;color:#ffce3a;font-size:13px;text-decoration:underline;text-underline-offset:4px;padding:3px 0}.preview-link:focus-visible{outline:2px solid #fff7e6;outline-offset:4px}footer{margin-top:19px;color:#98a7af;font-size:12px;text-align:center}
+@media(min-width:760px){.sample{max-width:82px}}
+@media(max-width:759px){main{padding:25px 17px}header{display:block;margin-bottom:22px}h1{font-size:29px}.intro{margin-top:12px;max-width:100%}.palettes{grid-template-columns:1fr;gap:18px}.proposal{padding:18px}.groups{gap:18px}.pair{gap:8px}.effect-card{max-height:145px}.sample{max-width:90px}h2{font-size:20px}}
+</style>
+</head>
+<body>
+<main>
+<header><div><p class="eyebrow">Cold Deck · Couleurs des cartes</p><h1>Quatre propositions</h1></div><p class="intro">Reliques et tarots, les mêmes dessins et le même grain pour comparer les fonds.</p></header>
+<section class="palettes" aria-label="Quatre palettes de couleurs"></section>
+<footer>Chaque aperçu reprend les illustrations, la texture et la forme des cartes du jeu.</footer>
+</main>
+<script type="module">
+import {equipmentPalettes} from './equipment-palettes.js';
+const samples={relic:[['lunettes','Lunettes'],['jeton','Jeton fendu']],tarot:[['lune','La Lune'],['soleil','Le Soleil']]};
+const family=(kind,p)=>`<div class="family ${kind}"><p class="family-label">${kind==='relic'?'Reliques':'Tarots'}</p><div class="pair">${samples[kind].map(([id,name])=>`<figure class="sample"><div class="effect-card" data-effect-kind="${kind}"><img src="../assets/illustrations/${id}.webp" width="1024" height="1024" alt="${name}"></div><figcaption>${name}</figcaption></figure>`).join('')}</div><p class="color-name">${p[kind+'Name']}</p></div>`;
+document.querySelector('.palettes').innerHTML=Object.entries(equipmentPalettes).map(([id,p])=>`<article class="proposal" aria-labelledby="palette-${id}" style="--relic:${p.relic};--tarot:${p.tarot}"><div class="proposal-head"><span class="letter">${p.letter}</span><h2 id="palette-${id}">${p.name}</h2></div><div class="groups">${family('relic',p)}${family('tarot',p)}</div><p class="note">${p.note}</p><a class="preview-link" href="layout-review.html?screen=fx-flow&size=390,844&embed=1&palette=${id}">Voir ${p.letter} dans le jeu</a></article>`).join('');
+</script>
+</body>
+</html>
