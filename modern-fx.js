@@ -6,6 +6,9 @@
   layer.id = 'arcadeFX';
   layer.setAttribute('aria-hidden', 'true');
   document.body.appendChild(layer);
+  const foreground=document.createElement('div');
+  foreground.id='payoutFX';foreground.setAttribute('aria-hidden','true');
+  document.body.appendChild(foreground);
   // Keep result notices in viewport space, outside the table's size container.
   const notice=$('multPop');
   document.body.appendChild(notice);
@@ -22,6 +25,14 @@
   document.documentElement.dataset.effectsStyle='graphic';
   let lastHaptic = -Infinity;
   const palette = [graphic.yellow,graphic.cream,graphic.teal,graphic.purple];
+  const victoryStyles=[null,
+    {name:'win',duration:1300,hold:560,flight:560,bolts:2,fragments:8,reach:110,lift:16,scale:1.11,wash:.32},
+    {name:'combo',duration:1500,hold:710,flight:600,bolts:4,fragments:14,reach:145,lift:22,scale:1.15,wash:.56},
+    {name:'jackpot',duration:1700,hold:840,flight:650,bolts:6,fragments:24,reach:190,lift:28,scale:1.2,wash:.8}
+  ];
+  function victoryTier(gain,mult,natural,record=false){
+    return record||mult>=6||gain>=Math.max(1,G.bet*(G.stakeMult||1))*8?3:natural||mult>=3?2:1;
+  }
   let preference;
   try{preference=localStorage.getItem('colddeck-motion');}catch(e){}
   const reduced = () => preference==='gentle'||motion.matches;
@@ -54,6 +65,7 @@
     for (const animation of [...animations]) animation.cancel();
     animations.clear();
     layer.replaceChildren();
+    foreground.replaceChildren();
     lightningLayer?.replaceChildren();
     chainStar=null;chainCount=0;
     shakeAmt = 0;
@@ -78,7 +90,7 @@
     return {x:r.left + r.width / 2, y:r.top + r.height / 2, width:r.width, height:r.height};
   }
   function piece(cls, x, y, color, target=layer) {
-    if (layer.childElementCount + (lightningLayer?.childElementCount||0) >= 84) return null;
+    if (layer.childElementCount + foreground.childElementCount + (lightningLayer?.childElementCount||0) >= 84) return null;
     const el = document.createElement('i');
     el.className = cls;
     el.style.left = x + 'px'; el.style.top = y + 'px';
@@ -122,7 +134,7 @@
     for(let i=0;i<Math.min(arms,6);i++){
       const angle=(i/arms*Math.PI*2)-Math.PI/2;
       const x=p.x+Math.cos(angle)*(p.width*.47+12),y=p.y+Math.sin(angle)*(p.height*.36+12);
-      paperBolt(Math.max(18,Math.min(innerWidth-18,x)),y,Math.min(84,reach),angle*180/Math.PI+90,color);
+      paperBolt(Math.max(18,Math.min(innerWidth-18,x)),y,Math.min(110,reach),angle*180/Math.PI+90,color);
     }
   }
   function graphicRays(el,count=3,color=graphic.yellow,reach=34){
@@ -172,69 +184,76 @@
       {scale:'1'}
     ], {duration:big?480:320});
   }
-  function transferGain(gain,mult){
+  function transferGain(gain,mult,tier){
     const announcement=$('multPop');
+    const style=victoryStyles[tier];
     later(()=>{
       if(!boardActive()||!announcement.classList.contains('go')||announcement.classList.contains('goal-result'))return;
       const start=rect(announcement.querySelector('.t')),end=rect($('gainVal'));if(!start||!end)return;
-      const label=piece('payout-value',start.x,start.y,graphic.yellow);if(!label)return;
+      const label=piece('payout-value',start.x,start.y,graphic.yellow,foreground);if(!label)return;
       label.innerHTML=ColdDeckArt.lettering((mult>1?fmtMult(mult)+'  ':'')+'+'+cash(gain));
+      label.style.fontSize=getComputedStyle(announcement.querySelector('.t')).fontSize;
       announcement.classList.add('gain-in-flight');
-      graphicRays(label,3,graphic.yellow,28);
       const dx=end.x-start.x,dy=end.y-start.y;
-      animate(label,[{transform:place(0,0,-3,1),opacity:1},{transform:place(0,-3,-3,1.12),opacity:1,offset:.17},{transform:place(0,0,-3,1),opacity:1,offset:.32},{transform:place(dx*.5,dy*.5-15,-7,.75),opacity:1,offset:.7},{transform:place(dx,dy,0,.35),opacity:0}],{duration:780},true);
-      later(()=>{if(boardActive())pulse($('gainVal'),true);},710);
-    },820);
+      const flight=animate(label,[{transform:place(0,0,-4,1),opacity:1},{transform:place(dx*.08,dy*.08-8,-4,1.06),opacity:1,offset:.18},{transform:place(dx*.5,dy*.5-20,-2,.8),opacity:1,offset:.6},{transform:place(dx,dy,0,.35),opacity:0}],{duration:style.flight,easing:'cubic-bezier(.4,0,.7,1)'},true);
+      if(flight){const finish=flight.onfinish;flight.onfinish=()=>{
+        finish();if(!boardActive())return;
+        animate($('gainVal'),[{scale:'1'},{scale:'1.1',offset:.23},{scale:'1'}],{duration:280});
+        graphicRays($('gainVal'),2,graphic.yellow,13);
+      };}
+    },style.hold);
   }
   function finishChain(){
     if(chainStar?.isConnected){burst(chainStar,{count:10,reach:65,color:graphic.yellow});chainStar.remove();}
     chainStar=null;chainCount=0;
   }
-  function onAnnouncement(central=false,big=false) {
+  function onAnnouncement(central=false,tier=1) {
     const p=rect($(central?'app':'bottombar')),pop=$('multPop');
+    const style=victoryStyles[tier]||victoryStyles[1];
     pop.classList.toggle('central-result',central);
-    pop.classList.toggle('big-result',central&&big);
+    pop.classList.toggle('big-result',central&&tier>=2);
+    if(central)pop.dataset.victory=style.name;else delete pop.dataset.victory;
     pop.classList.remove('goal-result','goal-earned','gain-in-flight');
     pop.querySelector('.victory-goal')?.remove();
     if(p){pop.style.left=p.x+'px';pop.style.top=(central?innerHeight*.5:p.y)+'px';}
     if(central){
-      const width=Math.min(innerWidth*.9,p?.width*.94||innerWidth*.9,510);
+      const width=Math.min(innerWidth*.86,p?.width*.9||innerWidth*.86,440);
       const title=pop.querySelector('.m'),sub=pop.querySelector('.t');
       pop.style.setProperty('--victory-width',width+'px');
-      pop.style.setProperty('--victory-type',Math.min(big?82:74,(width-28)/(Math.max(4,title.textContent.length)*.8))+'px');
+      pop.style.setProperty('--victory-type',Math.min(60+tier*5,(width-24)/(Math.max(4,title.textContent.length)*.8))+'px');
+      pop.style.setProperty('--victory-duration',style.duration+'ms');
       title.innerHTML=ColdDeckArt.lettering(title.textContent);
       sub.innerHTML=ColdDeckArt.lettering(sub.textContent);
     }
     clearTimeout(popupTimer);
     timers.delete(popupTimer);
-    popupTimer = later(() => $('multPop')?.classList.remove('go','gain-in-flight'), central?1700:1450);
+    popupTimer = later(() => $('multPop')?.classList.remove('go','gain-in-flight'), central?style.duration:1450);
   }
-  function victoryImpact(big=false){
+  function victoryImpact(tier=1){
     if(!boardActive())return;
     const p=rect($('app'));if(!p)return;
-    const x=p.x,y=innerHeight*.5,width=Math.min(p.width,510);
+    const style=victoryStyles[tier],x=p.x,y=innerHeight*.5,width=Math.min(p.width,470);
     const wash=piece('victory-wash',x,y,graphic.yellow);
     if(wash){
       wash.style.width=p.width+'px';wash.style.height=innerHeight+'px';
-      animate(wash,[{opacity:0},{opacity:big?.8:.62,offset:.12},{opacity:.38,offset:.5},{opacity:0}],{duration:1250},true);
+      animate(wash,[{opacity:0},{opacity:style.wash,offset:.12},{opacity:style.wash*.45,offset:.5},{opacity:0}],{duration:750+tier*130},true);
     }
-    const wave=piece('victory-wave',x,y,graphic.yellow);
+    const wave=tier>=2?piece('victory-wave',x,y,graphic.yellow):null;
     if(wave){
       wave.style.width=width*.8+'px';
       animate(wave,[{transform:place(0,0,-5,.65),opacity:0},{transform:place(0,0,-5,1),opacity:.9,offset:.16},{transform:place(0,0,-5,1.35),opacity:0}],{duration:650},true);
     }
-    for(let i=0;i<(big?6:4);i++){
+    for(let i=0;i<style.bolts;i++){
       const side=i%2?1:-1,row=Math.floor(i/2)-.5;
-      paperBolt(x+side*width*.38,y+row*150,big?112:84,side*24,i>3?graphic.purple:graphic.yellow);
+      paperBolt(x+side*width*.38,y+row*115,60+tier*18,side*24,i>3?graphic.purple:graphic.yellow);
     }
     const origin=piece('victory-origin',x,y);
-    if(origin){burst(origin,{count:big?22:14,reach:big?185:145});origin.remove();}
+    if(origin){burst(origin,{count:style.fragments,reach:style.reach});origin.remove();}
   }
-  function onResult(kind, gain, mult, natural) {
-    layer.querySelectorAll('.combo-impact').forEach(el=>el.remove());
+  function onResult(kind, gain, mult, natural, bust, record=false) {
     finishChain();
-    const big = natural || mult>=3;
-    onAnnouncement(kind==='win',big);
+    const tier=victoryTier(gain,mult,natural,record);
+    onAnnouncement(kind==='win',tier);
     const activeTotal=G.splitActive?handValue(G.hands[G.hi]).total:0;
     const dealerTotal=G.splitActive?handValue(G.dHand).total:0;
     const comboWon=G.splitActive?activeTotal<=21&&(dealerTotal>21||activeTotal>dealerTotal):kind==='win';
@@ -244,11 +263,11 @@
     later(() => $('felt')?.removeAttribute('data-arcade-result'), 800);
     // Split hands celebrate their own result, even when the combined payout is neutral.
     const winningHands=G.splitActive?[...$('pHand').querySelectorAll('.splithand.win')]:kind==='win'?[$('pHand')]:[];
-    winningHands.forEach(hand=>celebrateHand(hand,big));
+    winningHands.forEach(hand=>celebrateHand(hand,tier));
     if (kind === 'win') {
-      kick(big?8:5);
-      victoryImpact(big);
-      transferGain(gain,mult);
+      kick(tier>=2?8:5);
+      victoryImpact(tier);
+      transferGain(gain,mult,tier);
     } else if (kind === 'lose') {
       kick(4);
       burst($('pVal'),{count:6,reach:35,color:'#d4645f'});
@@ -257,25 +276,26 @@
       graphicRays($('pVal'),2,graphic.cream,22);
     }
   }
-  function celebrateHand(hand,big=false){
+  function celebrateHand(hand,tier=1){
     if(!boardActive()||!hand?.isConnected)return;
-    lightning(hand,big?108:82,big?6:4,graphic.yellow);
+    const style=victoryStyles[tier];
+    lightning(hand,64+tier*15,tier===3?6:tier===2?4:2,graphic.yellow);
     hand.querySelectorAll('.card:not(.back)').forEach((card,i)=>later(()=>{
       if(!boardActive()||!card.isConnected)return;
       const height=rect(card)?.height||100;
-      const lift=Math.min(big?26:20,height*.22),tilt=(i%2?1:-1)*(big?4:3);
+      const lift=Math.min(style.lift,height*.24),tilt=(i%2?1:-1)*(tier+1);
       animate(card,[
         {translate:'0 0',rotate:'0deg',scale:'1',filter:'brightness(1)'},
         {translate:'0 2px',rotate:'0deg',scale:'.97',filter:'brightness(1)',offset:.1},
-        {translate:`0 -${lift}px`,rotate:tilt+'deg',scale:big?'1.18':'1.13',filter:'brightness(1.2)',offset:.32},
+        {translate:`0 -${lift}px`,rotate:tilt+'deg',scale:String(style.scale),filter:'brightness(1.2)',offset:.32},
         {translate:'0 -3px',rotate:(-tilt*.35)+'deg',scale:'1.025',filter:'brightness(1.03)',offset:.65},
         {translate:'0 0',rotate:'0deg',scale:'1',filter:'brightness(1)'}
-      ],{duration:big?780:660});
+      ],{duration:540+tier*75});
       cardCharge(card,graphic.yellow,true);
       const flash=piece('card-victory-flash',0,0,graphic.cream,card);
-      if(flash)animate(flash,[{opacity:0},{opacity:big?.5:.36,offset:.2},{opacity:0,offset:.7},{opacity:0}],{duration:430},true);
+      if(flash)animate(flash,[{opacity:0},{opacity:.26+tier*.08,offset:.2},{opacity:0,offset:.7},{opacity:0}],{duration:330},true);
       graphicRays(card,2,graphic.cream,16);
-      burst(card,{count:big?6:4,reach:big?38:27,color:graphic.yellow});
+      burst(card,{count:tier+2,reach:20+tier*7,color:graphic.yellow});
     },i*65));
   }
   function cardNode(card) {
@@ -298,8 +318,7 @@
   }
   function onCardLand(card){
     if(!boardActive())return;
-    const el=cardNode(card),p=rect(el);if(!p)return;
-    graphicRays(el,2,graphic.cream,12);haptic();
+    try{sfx.land();}catch(e){}haptic();
   }
   function revealImpact(el,color){
     // Use the stable card slot: the turning face is almost edge-on at this instant.
@@ -307,34 +326,40 @@
     const width=el.offsetWidth||p.width,height=el.offsetHeight||p.height;
     const wave=piece('card-reveal-wave',p.x,p.y,color);
     if(wave){
-      wave.style.width=width+6+'px';wave.style.height=height+6+'px';
-      animate(wave,[{transform:place(0,0,0,.9),opacity:0},{transform:place(0,0,0,1.02),opacity:1,offset:.16},{transform:place(0,0,0,1.1),opacity:.75,offset:.4},{transform:place(0,0,0,1.3),opacity:0}],{duration:420},true);
+      wave.style.width=width+10+'px';wave.style.height=height+10+'px';
+      wave.innerHTML='<svg viewBox="0 0 100 148" preserveAspectRatio="none" aria-hidden="true"><path d="M1 44 L0 12 L11 2 L37 0 M70 0 L94 3 L100 14 L98 38 M100 102 L99 139 L88 148 L67 146 M29 148 L5 145 L0 134 L2 109"/></svg>';
+      animate(wave,[{transform:place(0,0,-2,.96),opacity:0},{transform:place(0,0,-1,1.06),opacity:1,offset:.12},{transform:place(0,0,0,1.24),opacity:0}],{duration:310,easing:'cubic-bezier(.12,.7,.25,1)'},true);
     }
-    for(let i=0;i<8;i++){
-      const angle=i*Math.PI/4,dx=Math.cos(angle)*(width*.55+8),dy=Math.sin(angle)*(height*.5+6);
+    const angles=[-160,-112,-24,38,83,151],lengths=[19,29,17,26,21,32];
+    for(let i=0;i<angles.length;i++){
+      const angle=(angles[i]+random()*8-4)*Math.PI/180,dx=Math.cos(angle)*(width*.53+7),dy=Math.sin(angle)*(height*.48+8);
       const ray=piece('card-reveal-ray paper-ink',p.x,p.y,i%3===0?graphic.yellow:color);if(!ray)break;
+      ray.style.height=lengths[i]+'px';ray.style.width=(i%2?7:5)+'px';
       const rotation=angle*180/Math.PI+90;
-      animate(ray,[{transform:place(dx*.85,dy*.85,rotation,.3),opacity:0},{transform:place(dx,dy,rotation,1),opacity:1,offset:.18},{transform:place(dx+Math.cos(angle)*23,dy+Math.sin(angle)*23,rotation,.45),opacity:0}],{duration:i%2?360:320},true);
+      animate(ray,[{transform:place(dx*.9,dy*.9,rotation,.4),opacity:0},{transform:place(dx,dy,rotation,1),opacity:1,offset:.12},{transform:place(dx+Math.cos(angle)*25,dy+Math.sin(angle)*25,rotation,.3),opacity:0}],{duration:i%2?280:235},true);
     }
     const flash=piece('card-reveal-flash',0,0,graphic.cream,el);
-    if(flash)animate(flash,[{opacity:0},{opacity:.28,offset:.2},{opacity:0}],{duration:240},true);
+    if(flash)animate(flash,[{opacity:0},{opacity:.36,offset:.18},{opacity:0}],{duration:130},true);
     haptic();
   }
   function onCard(card) {
+    if(document.hidden||document.querySelector('.overlay.show,#adOverlay.show'))return;
+    try{sfx.reveal();}catch(e){}
     if(!boardActive())return;
     const el = cardNode(card); if (!el) return;
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
     const color=card.ed==='poly'?graphic.purple:card.ed==='holo'?graphic.teal:graphic.cream;
-    cardCharge(el,color);revealImpact(el,color);
+    revealImpact(el,color);
   }
   // Reference rhythm: a local card accent, then an energy transfer to the HUD.
   function energyLink(from,to,color=graphic.purple){
     if(!boardActive())return;
     const a=rect(from),b=rect(to);if(!a||!b)return;
-    const dx=b.x-a.x,dy=b.y-a.y,distance=Math.hypot(dx,dy),angle=Math.atan2(dy,dx)*180/Math.PI-90;
-    const beam=paperBolt((a.x+b.x)/2,(a.y+b.y)/2,Math.min(distance*.8,150),angle,color);
-    beam?.classList.add('relic-link');
-    later(()=>{if(boardActive())pulse(to);},240);
+    const dx=b.x-a.x,dy=b.y-a.y,angle=Math.atan2(dy,dx)*180/Math.PI+90;
+    const beam=piece('score-link paper-ink',a.x,a.y,color);if(!beam)return;
+    if(from.matches('.joker'))beam.classList.add('relic-link');
+    animate(beam,[{transform:place(0,0,angle,.4),opacity:0},{transform:place(dx*.15,dy*.15,angle,1.2),opacity:1,offset:.2},{transform:place(dx,dy,angle,.6),opacity:0}],{duration:320,easing:'cubic-bezier(.3,0,.65,1)'},true);
+    later(()=>{if(boardActive())pulse(to);},320);
   }
   function onScoreCard(el) {
     if(!boardActive()||!el)return;
@@ -359,16 +384,19 @@
   function onCombo(line){
     if(!boardActive())return;
     const p=rect($('bottombar'));if(!p)return;
-    layer.querySelectorAll('.combo-impact').forEach(el=>el.remove());
-    if(!chainStar?.isConnected){chainStar=paperStar(p.x,p.y,Math.min(130,innerWidth*.34),graphic.yellow);chainCount=0;}
+    if(!chainStar?.isConnected){chainStar=paperStar(p.x-Math.min(p.width*.42,170),p.y,40,graphic.yellow);chainCount=0;}
+    const rows=p.height<70?2:3,lane=chainCount%rows,spacing=rows===2?25:26;
+    // Each label survives until its own lane is reused, including during the result.
+    layer.querySelector('.combo-impact[data-lane="'+lane+'"]')?.remove();
     if(chainStar){
       const before=.48+Math.min(chainCount,4)*.13;chainCount++;
       const after=.48+Math.min(chainCount,4)*.13;
       chainStar.style.transform=place(0,0,chainCount*13,after);
       animate(chainStar,[{transform:place(0,0,(chainCount-1)*13,before),opacity:.9},{transform:place(0,0,chainCount*13,after),opacity:1}],{duration:190});
     }
-    const el=piece('combo-impact',p.x,p.y);
+    const el=piece('combo-impact',p.x+7,p.y+(lane-(rows-1)/2)*spacing);
     if(!el)return;
+    el.dataset.lane=String(lane);
     // These labels come directly from the engine's real scoring calculation.
     const plain=document.createElement('span');plain.innerHTML=line[0]+' '+line[1];
     el.innerHTML=ColdDeckArt.lettering(plain.textContent);
@@ -376,14 +404,15 @@
     const name=document.createElement('span');name.innerHTML=line[0];
     const key=name.textContent.trim().toLocaleLowerCase();
     const box=[...$('comboRow').querySelectorAll('.combo-tile.on')].find(box=>box.querySelector('.combo-name').textContent.split(' ×')[0].trim().toLocaleLowerCase()===key);
-    if(box)markComboPaid(box);
+    if(box){markComboPaid(box);energyLink(box,$('multVal'),graphic.teal);}
+    else if(!line[2])energyLink($('pVal'),$('multVal'),graphic.yellow);
     animate(el,[
-      {transform:'translate(-50%,-50%) rotate(-7deg) scale(1.5)',opacity:0},
-      {transform:'translate(-50%,-50%) rotate(-4deg) scale(.94)',opacity:1,offset:.16},
-      {transform:'translate(-50%,-50%) rotate(-4deg) scale(1)',opacity:1,offset:.36},
-      {transform:'translate(-50%,-70%) rotate(-2deg) scale(.96)',opacity:0}
-    ],{duration:450},true);
-    kick(2.5);pulse($('multVal'),true);
+      {transform:'translate(-50%,-50%) rotate(-4deg) scale(1.12)',opacity:0},
+      {transform:'translate(-50%,-50%) rotate(-2deg) scale(1)',opacity:1,offset:.12},
+      {transform:'translate(-50%,-50%) rotate(-2deg) scale(1)',opacity:1,offset:.82},
+      {transform:'translate(-50%,-65%) rotate(-1deg) scale(.98)',opacity:0}
+    ],{duration:rows*210-12},true);
+    kick(2.5);
   }
   function onRelic(el) {
     if(!boardActive())return;
@@ -393,7 +422,17 @@
   function onPressure() {
     const level = barakaLevel();
     $('felt').dataset.arcadeHeat = String(level);
-    if (level > lastLevel) {burst($('pBar'),{count:12,reach:75});pulse($('pBar'));}
+    if (level > lastLevel&&boardActive()) {
+      const track=$('barakaTrack'),p=rect(track),fill=$('pFill');
+      track.querySelector('.baraka-discharge')?.remove();
+      if(p){
+        const spark=piece('baraka-discharge paper-ink',0,0,'#e1c6ff',track);
+        const end=p.width*Math.min(100,Math.max(0,parseFloat(fill.style.width)||0))/100;
+        if(spark)animate(spark,[{transform:'translateX(-24px)',opacity:0},{transform:'translateX(0)',opacity:1,offset:.12},{transform:'translateX('+end+'px)',opacity:0}],{duration:470,easing:'ease-out'},true);
+      }
+      animate(fill,[{filter:'brightness(1)'},{filter:'brightness(1.65)',offset:.22},{filter:'brightness(1)'}],{duration:470});
+      animate($('pPct'),[{color:'#b69bda'},{color:'#f0dbff',offset:.22},{color:'#b69bda'}],{duration:470});
+    }
     lastLevel = level;
   }
   function onComboReady(box){
@@ -421,8 +460,8 @@
     }else{
       pop.className='win';pop.querySelector('.m').textContent=t('obj.reached');
       pop.querySelector('.t').textContent=t('obj.validated');
-      onAnnouncement(true,true);pop.classList.add('goal-result');
-      void pop.offsetWidth;pop.classList.add('go');victoryImpact(true);
+      onAnnouncement(true,2);pop.classList.add('goal-result');
+      void pop.offsetWidth;pop.classList.add('go');victoryImpact(2);
     }
     if(!boardActive())return;
     const p=rect($('objBar'));if(!p)return;
@@ -454,7 +493,7 @@
   }
   window.ColdDeckFX = {
     get reduced() { return reduced(); },
-    clear, onHome, onCardLand, onCard, onResult, onScoreCard, onRelic, onPressure, onAnnouncement, onCombo, onComboReady,
+    clear, onHome, onCardLand, onCard, onResult, onScoreCard, onRelic, onPressure, onAnnouncement, onCombo, onComboReady, victoryTier,
     setMotion(value){
       preference=value==='gentle'?'gentle':'punchy';
       try{localStorage.setItem('colddeck-motion',preference);}catch(e){}

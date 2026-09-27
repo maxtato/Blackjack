@@ -57,8 +57,11 @@ function arp(freqs,step,d,v,type){freqs.forEach((f,i)=>setTimeout(()=>blip(f,d,t
 const sfx={
   card(){blip(160+rndInt(40),.035,'square',.045);},
   flip(){blip(660,.04,'square',.05);setTimeout(()=>blip(880,.05,'square',.045),42);},
-  win(){arp([523,659,784],46,.09,.08);},                              // do-mi-sol montant
-  combo(){arp([784,1047,1319],38,.06,.07);},                          // étincelle aiguë
+  land(){blip(170,.035,'triangle',.045,80);},
+  reveal(){blip(1250,.035,'triangle',.065,520);blip(210,.045,'triangle',.045,90);},
+  win(tier=1){arp(tier>=3?[523,659,784,1047,1319,1568]:tier===2?[523,659,784,1047]:[523,659,784],tier>=3?58:46,.09,.075);if(tier>=3)blip(90,.13,'triangle',.07,55);},
+  combo(step=0){const root=784*Math.pow(2,Math.min(step,6)/12);arp([root,root*1.25,root*1.5],25,.055,.055);},
+  goal(){arp([1047,1568],65,.08,.045,'triangle');},
   push(){blip(392,.09,'square',.05);setTimeout(()=>blip(392,.09,'square',.04),95);},
   lose(){blip(330,.18,'square',.085,130);setTimeout(()=>blip(150,.24,'square',.07,80),110);}, // glissando descendant
   danger(){blip(130,.3,'square',.11,60);},                            // grondement grave qui plonge
@@ -1193,7 +1196,7 @@ function dealCardIn(c,opts,done){
     window.ColdDeckFX?.onCardLand(c);
     c._arr=false;
     if(opts&&opts.stayDown){c._fd=true;renderHands(reveal);done&&done();return;}
-    c._fd=false;c._flip=true;renderHands(reveal);sfx.flip();    // on la retourne
+    c._fd=false;c._flip=true;renderHands(reveal);if(!window.ColdDeckFX)sfx.flip();
     const drawState=G;
     setTimeout(()=>{
       if(G!==drawState||!c._flip)return;
@@ -1316,7 +1319,7 @@ function playerStand(natural){
   G.phase='dealer';renderActions();dealerPlay(natural);
 }
 function dealerPlay(natural){
-  if(!G.revealed){G.revealed=true;G.doFlip=true;sfx.flip();}
+  if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
   renderHands(true);G.doFlip=false;
   const step=()=>{
     const v=handValue(G.dHand);
@@ -1335,7 +1338,7 @@ function dealerPlay(natural){
 function resolve(mode){
   if(G.splitActive)return resolveSplit();
   G.phase='done';
-  if(!G.revealed){G.revealed=true;G.doFlip=true;sfx.flip();}
+  if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
   renderHands(true);G.doFlip=false;
   const pv=handValue(G.pHand).total,dv=handValue(G.dHand).total;
   const pBust=pv>21,dBust=dv>21;
@@ -1361,8 +1364,8 @@ function resolve(mode){
     // décompte animé (carte par carte + multiplicateurs), PUIS l'annonce du gain
     const isPerfect=(pv===21&&!isNat);            // 21 PARFAIT (×3), hors blackjack naturel
     const isRecord=checkGainRecord(gain);         // plus gros gain sur une main (record perso battu)
-    const finishWin=()=>{sfx.win();if(mult>1||r.bonusChips>0)sfx.combo();
-      flashScore();showWord('win',gain,mult,isNat);
+    const finishWin=()=>{sfx.win(window.ColdDeckFX?.victoryTier(gain,mult,isNat,isRecord)||1);if(!window.ColdDeckFX&&(mult>1||r.bonusChips>0))sfx.combo();
+      flashScore();showWord('win',gain,mult,isNat,false,isRecord);
       if(isPerfect)perfectFanfare();
       if(isRecord)setTimeout(()=>showRecord(gain),isPerfect?560:280);
       if(!G.objHit&&G.bank>=G.table.goal){G.objHit=true;setTimeout(objectiveReached,360);}};   // 1re fois qu'on franchit l'objectif
@@ -1390,7 +1393,7 @@ function resolve(mode){
 /* résolution en mode SÉPARÉ : chaque main est comparée au croupier, gains cumulés */
 function resolveSplit(){
   G.phase='done';
-  if(!G.revealed){G.revealed=true;G.doFlip=true;sfx.flip();}
+  if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
   renderHands(true);G.doFlip=false;
   const dv=handValue(G.dHand).total,dBust=dv>21;
   let net=0,maxG=0;const summary=[];
@@ -1420,9 +1423,10 @@ function resolveSplit(){
   });
   if(G.insurance&&net<0){G.insurance=false;G.bank+=Math.abs(net);net=0;popText(t('msg.insurance'),t('msg.insuranceSub'));}
   const kind=net>0?'win':net<0?'lose':'push';
-  sfx[kind]();if(kind==='lose'){shake(8);}
-  showWord(kind,Math.abs(net),1);
-  if(checkGainRecord(maxG))setTimeout(()=>showRecord(maxG),320);
+  const isRecord=checkGainRecord(maxG);
+  sfx[kind](kind==='win'?(window.ColdDeckFX?.victoryTier(net,1,false,isRecord)||1):undefined);if(kind==='lose'){shake(8);}
+  showWord(kind,Math.abs(net),1,false,false,isRecord);
+  if(isRecord)setTimeout(()=>showRecord(maxG),320);
   $('tip').innerHTML=summary.join('  ·  ');$('tip').style.color='var(--gold)';
   if(net>0&&!G.objHit&&G.bank>=G.table.goal){G.objHit=true;setTimeout(objectiveReached,360);}
   if(net>0)addBaraka(1); else if(net<0)resetBaraka();     // BARAKA (mode séparé)
@@ -1807,7 +1811,7 @@ function popMult(m,label){
 }
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
 function pickWord(kind){return pick(t('w.'+kind));}
-function showWord(kind,gain,mult,natural,bust){
+function showWord(kind,gain,mult,natural,bust,record=false){
   let word,sub='';
   if(kind==='win'){
     word=natural?pickWord('bj'):(mult>=3?pickWord('jackpot'):pickWord('win'));
@@ -1818,7 +1822,7 @@ function showWord(kind,gain,mult,natural,bust){
   p.className=kind+(word.length>7?' long':'');
   p.querySelector('.m').textContent=word;p.querySelector('.t').textContent=sub;
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
-  window.ColdDeckFX?.onResult(kind,gain,mult,natural,bust);
+  window.ColdDeckFX?.onResult(kind,gain,mult,natural,bust,record);
 }
 const RULE_KEYS=['rules.goal','rules.table','rules.moves','rules.stars','rules.streak','rules.combos','rules.bonus','rules.contracts','rules.circuit','rules.hideout','rules.endless'];
 function renderRules(){const b=$('rulesBody');if(b)b.innerHTML=RULE_KEYS.map(k=>'<div>'+t(k)+'</div>').join('');}
@@ -1961,7 +1965,7 @@ function animateScoreTally(mode,lines,cb){
     t+=STEP;
   });
   t+=140;
-  (lines||[]).forEach((ln)=>{
+  (lines||[]).forEach((ln,index)=>{
     setTimeout(()=>{
       // ligne issue d'une relique → le jeton correspondant se déclenche et l'effet jaillit de lui
       const relEl=ln[2]?document.querySelector('#relics .joker[data-relic="'+ln[2]+'"]'):null;
@@ -1973,7 +1977,7 @@ function animateScoreTally(mode,lines,cb){
         if(!window.ColdDeckFX){const ph=$('pHand').getBoundingClientRect();flyTag(ph.left+ph.width/2,ph.top-2,ln[0]+' <b>'+ln[1]+'</b>','mult');}
       }
       window.ColdDeckFX?.onCombo(ln);
-      try{sfx.combo();}catch(e){}
+      try{sfx.combo(index);}catch(e){}
     },t);
     t+=210;
   });
@@ -1990,7 +1994,7 @@ function objectiveReached(){
   // animation sur la barre d'objectif (à la place des confettis)
   const ow=$('objWrap');if(ow&&!window.ColdDeckFX){ow.classList.remove('goalpop');void ow.offsetWidth;ow.classList.add('goalpop');setTimeout(()=>ow.classList.remove('goalpop'),900);}
   flashScreen('win');shake(12);
-  try{sfx.win&&sfx.win();sfx.combo&&sfx.combo();}catch(e){}
+  try{if(window.ColdDeckFX)sfx.goal();else{sfx.win&&sfx.win();sfx.combo&&sfx.combo();}}catch(e){}
   const sb=$('scorebox');if(sb){sb.classList.add('hot');setTimeout(()=>sb.classList.remove('hot'),1500);}
 }
 
@@ -2002,7 +2006,7 @@ function bigConfetti(n){
   if(now-_confettiT<1300)return false;
   _confettiT=now;
   pixelConfetti(n);flashScreen('win');
-  try{sfx.jackpot&&sfx.jackpot();}catch(e){}
+  try{if(!window.ColdDeckFX)sfx.jackpot&&sfx.jackpot();}catch(e){}
   return true;
 }
 /* fanfare 21 PARFAIT : gros feedback quand on décroche le ×3 */

@@ -28,6 +28,12 @@ screen.add(new Option('Échantillons de finitions','finish-sample'));
 screen.add(new Option('Victoire puis nouvelle mise','win-flow'));
 screen.add(new Option('Éclairs et validation des combos','fx-flow'));
 screen.add(new Option('Effets C : relique et objectif','fx-goal'));
+screen.add(new Option('Victoire simple','fx-simple'));
+screen.add(new Option('Victoire avec combo','fx-combo'));
+screen.add(new Option('Jackpot','fx-jackpot'));
+screen.add(new Option('Nouveau record','fx-record'));
+screen.add(new Option('Distribution et blackjack','fx-blackjack'));
+screen.add(new Option('Passage de niveau Baraka','fx-baraka-rise'));
 screen.add(new Option('Baraka : niveau 2','baraka'));
 screen.add(new Option('Baraka : niveau maximal','baraka-max'));
 screen.add(new Option('Reliques et tarots','inventory'));
@@ -73,6 +79,18 @@ async function render(){
    G.relics=['lunettes','jeton','as'].map(id=>({...RELIC_POOL.find(item=>item.id===id)}));
    G.consumables=['soleil','lune'].map(id=>({...TAROT_POOL.find(item=>item.id===id)}));
   }
+  if(['fx-simple','fx-combo','fx-jackpot','fx-record','fx-blackjack','fx-baraka-rise'].includes(visualScreen)){
+   RECS.nuit={gain:visualScreen==='fx-record'?5:10000};
+   G.table={...G.table,goal:1000};G.contract=null;
+   G.pHand=[{r:'10',s:'♣'},{r:'9',s:'♥'}];
+   if(visualScreen==='fx-combo')G.pHand=[{r:'10',s:'♣'},{r:'5',s:'♥'},{r:'6',s:'♠'}];
+   if(visualScreen==='fx-jackpot'){G.pHand=[{r:'5',s:'♣'},{r:'6',s:'♣'},{r:'7',s:'♣'}];G.baraka=6;}
+   if(visualScreen==='fx-baraka-rise')G.baraka=2;
+   if(visualScreen==='fx-blackjack'){
+    G.phase='bet';G.pHand=[];G.dHand=[];
+    G.shoe.splice(-4,4,{r:'7',s:'♥'},{r:'K',s:'♥'},{r:'K',s:'♣'},{r:'A',s:'♠'});
+   }
+  }
   if(visualScreen==='new-art'){
    G.pHand=[{r:'Q',s:'♥'},{r:'A',s:'♠'},{r:'5',s:'♦'}];
    G.dHand=[{r:'J',s:'♣'},{r:'K',s:'♦'}];G.revealed=true;
@@ -91,7 +109,7 @@ async function render(){
   if(visualScreen==='bet'){G.phase='bet';G.pHand=[];G.dHand=[];}
   if(visualScreen==='split'){G.splitActive=true;G.hands=[[{r:'8',s:'♣'},{r:'3',s:'♦'}],[{r:'8',s:'♥'},{r:'4',s:'♣'}]];G.hi=0;G.pHand=G.hands[0];}
   renderAll();renderHands();
-  if(visualScreen==='win-flow'||visualScreen==='fx-flow'||visualScreen.startsWith('baraka')){
+  if(visualScreen==='win-flow'||visualScreen.startsWith('fx-')||visualScreen.startsWith('baraka')){
    const anchors=['app','topbar','stage','center','bottombar'];
    const measure=()=>anchors.map(id=>{const r=document.getElementById(id).getBoundingClientRect();return [r.x,r.y,r.width,r.height]});
    requestAnimationFrame(()=>{
