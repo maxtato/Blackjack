@@ -84,7 +84,7 @@ async function render(){
    G.table={...G.table,goal:1000};G.contract=null;
    G.pHand=[{r:'10',s:'♣'},{r:'9',s:'♥'}];
    if(visualScreen==='fx-combo')G.pHand=[{r:'10',s:'♣'},{r:'5',s:'♥'},{r:'6',s:'♠'}];
-   if(visualScreen==='fx-jackpot'){G.pHand=[{r:'5',s:'♣'},{r:'6',s:'♣'},{r:'7',s:'♣'}];G.baraka=6;}
+   if(visualScreen==='fx-jackpot'){G.pHand=[{r:'5',s:'♣'},{r:'6',s:'♣'},{r:'7',s:'♣'}];G.baraka=6;G.boons={...G.boons,mult:4};}
    if(visualScreen==='fx-baraka-rise')G.baraka=2;
    if(visualScreen==='fx-blackjack'){
     G.phase='bet';G.pHand=[];G.dHand=[];
