@@ -64,7 +64,7 @@ async function render(){
  else if(visualScreen==='home')openMenu();
  else if(visualScreen==='circuit'||visualScreen==='free')chooseMode(visualScreen==='free'?'infini':'nuit');
  else {
-  chooseMode('nuit');startGame(0);
+  chooseMode('nuit');startGame(0);while(G.phase==='draft')chooseStarter(0);chooseContract(0);GameClock.clear();
   const visualRanks=visualScreen.startsWith('flip-')?[5,6,7]:visualScreen==='tens'?[10,10]:visualScreen==='win-flow'?[10,9]:visualScreen==='combo-ready'?[5,6,4]:visualScreen==='double'?[5,6]:visualScreen==='no-special'?[3,4,5]:(visualScreen==='editions'||visualScreen.startsWith('inventory'))?[5,6,7]:visualScreen==='six'?[2,2,3,3,4,3]:visualScreen==='four'?[3,4,5,5]:[8,9];
   const visualSuits=['♣','♥','♠','♦','♣','♥'];
   const visualHand=visualRanks.map((r,i)=>({r:String(r),s:visualSuits[i],...((visualScreen==='editions'||visualScreen.startsWith('inventory'))?{ed:['foil','holo','poly'][i]}:{})}));

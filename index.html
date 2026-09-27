@@ -68,6 +68,7 @@
   </header>
 
   <div id="mid">
+  <p id="circuitStatus" class="circuit-status" aria-live="polite"></p>
   <div id="effects" role="group" data-i18n-label="modern.loadout">
     <div class="inventory-label sr-only" data-i18n="modern.loadout">Tes atouts</div>
     <div id="relicRow"><div id="relics"></div><span class="inventory-count sr-only"><span id="slotc"></span></span></div>
@@ -88,7 +89,7 @@
             <div class="zlbl"><span data-i18n="ui.dealer">Croupier</span></div>
             <div class="hand" id="dHand"></div><span class="hand-total" id="dVal" aria-live="polite">—</span>
           </div>
-          <div id="center"><div class="table-divider" aria-hidden="true"><span></span>♠<span></span></div><div id="tip" role="status" aria-live="polite"></div><div id="comboRow"></div></div>
+          <div id="center"><p id="drawReadout" class="draw-readout" hidden></p><div class="table-divider" aria-hidden="true"><span></span>♠<span></span></div><div id="tip" role="status" aria-live="polite"></div><div id="comboRow"></div></div>
           <div class="zone player-zone">
             <div class="zlbl"><span data-i18n="ui.you">Ta main</span></div>
             <div class="hand" id="pHand"></div><span class="hand-total" id="pVal" aria-live="polite">—</span>
@@ -144,7 +145,7 @@
   <header class="menu-top"><button class="quiet-btn" data-reading-label data-action="openMenu" data-i18n="nav.back">← MODES DE JEU</button><span class="wordmark">COLD DECK</span><button id="rulesBtn" class="quiet-btn" data-reading-label data-action="openRules" data-i18n="nav.rules">RÈGLES</button></header>
   <div class="hideout-heading"><div class="planqueMode" id="planqueMode"></div><h1 id="planqueTitle">LA PLANQUE</h1><p id="planqueSub"></p></div>
   <main class="hideout-grid">
-   <section class="ready-panel"><span class="section-label" data-i18n="menu.nextHand">LA PROCHAINE MAIN T'ATTEND</span><div id="readySuit" class="ready-suit" aria-hidden="true"></div><div id="palierResume" style="display:none"></div><button class="btn b-gold menu" id="planqueLaunch" data-action="launchMode"></button><button class="btn b-red menu" id="planqueZ2" data-action="start-zone-two" style="display:none"><span data-i18n="planque.zone2">ZONE 2</span><small data-i18n="planque.zone2Sub"></small></button></section>
+   <section class="ready-panel"><span class="section-label" data-i18n="menu.nextHand">LA PROCHAINE MAIN T'ATTEND</span><div id="readySuit" class="ready-suit" aria-hidden="true"></div><div id="palierResume" style="display:none"></div><button class="btn b-gold menu" id="planqueLaunch" data-action="launchMode"></button></section>
    <section class="prep-panel"><div class="section-label" data-i18n="menu.preparation">TA PRÉPARATION</div><div class="repBar"><div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl" data-i18n="planque.rep">réputation</span></div><div class="recBox" id="recBox"></div></div><button class="prep-link" id="upgradesBtn" data-action="openUpgrades"><span><strong data-i18n="planque.upgrades">AMÉLIORATIONS</strong><small id="upgradesSub"></small></span><span aria-hidden="true">↗</span></button>
     <div class="backPick"><div class="back-caption"><span class="section-label" data-i18n="planque.back">DOS DE CARTE</span><button class="quiet-btn bpAll" data-reading-label data-action="openBacks" data-i18n="planque.seeAll">LA COLLECTION →</button></div><div class="bpCurrent"><button class="bpArrow" id="bpPrev" data-action="back-previous" data-i18n-title="planque.prevBack" aria-label="Previous back"><img class="nav-triangle" data-direction="left" src="icons/nav-triangle.svg" alt="" aria-hidden="true" width="24" height="24"></button><div class="bpPrevWrap"><div class="card back bpCard" id="bpPreview" aria-hidden="true"></div><div class="bpNum" id="bpSub" aria-live="polite"></div></div><button class="bpArrow" id="bpNext" data-action="back-next" data-i18n-title="planque.nextBack" aria-label="Next back"><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" alt="" aria-hidden="true" width="24" height="24"></button></div></div>
    </section>
@@ -230,6 +231,8 @@
 </div>
 
 <!-- SHOP -->
+<div class="overlay" id="draftScreen"><div class="ovpanel circuit-panel"><h1 id="draftTitle"></h1><p id="draftCopy"></p><div id="draftChoices" class="circuit-choices"></div></div></div>
+<div class="overlay" id="tableBrief"><div class="ovpanel circuit-panel"><h1 id="briefTitle"></h1><p id="briefRule"></p><p id="briefGoal"></p><div id="briefContracts" class="circuit-choices"></div></div></div>
 <div class="overlay" id="shop">
   <div class="ovpanel">
     <h1 class="win" id="shopTitle" style="font-size:23px">TABLE CLEARED</h1>
@@ -238,6 +241,7 @@
     <p id="shopGate" style="font-size:12px;color:var(--muted);margin-top:-4px"></p>
     <div id="shopNextObj" style="font-size:13px;color:var(--cream);background:var(--panelDk2);clip-path:var(--pc);padding:8px 12px;margin:2px 0 9px;text-align:center"></div>
     <div class="shopItems" id="shopItems"></div>
+    <div id="shopInventory" class="shop-inventory"></div>
     <div class="shopBtns" style="margin-bottom:9px">
       <button class="btn b-teal" id="rerollBtn" data-action="rerollShop" style="flex:0 0 auto;font-size:13px;padding:11px 14px">REROLL</button>
       <button class="btn b-purple" id="adRerollBtn" data-action="adFreeReroll" style="flex:0 0 auto;font-size:13px;padding:11px 12px;display:none"></button>
@@ -252,6 +256,7 @@
   <div class="ovpanel">
     <h1 id="loseTitle" class="dead"></h1>
     <p id="loseText"></p>
+    <button class="btn b-teal menu" id="extraLifeBtn" data-action="extraLife" style="display:none"></button>
     <button class="btn b-gold menu" id="retryBtn" data-action="adRetryTable" style="width:100%;margin-bottom:9px">SECOND CHANCE</button>
     <button class="btn b-blue" id="giveupBtn" data-action="giveUp" style="width:100%">GIVE UP</button>
   </div>

@@ -619,3 +619,29 @@ body:has(#multPop.go) #tip{visibility:hidden}
 @keyframes victory-slam{0%{opacity:0;transform:translate(-50%,-50%) scale(1.75) rotate(-11deg)}10%{opacity:1;transform:translate(-50%,-50%) scale(.94) rotate(-4deg)}17%{transform:translate(calc(-50% - 4px),calc(-50% + 2px)) scale(1.06) rotate(-5deg)}24%{transform:translate(calc(-50% + 2px),-50%) scale(.99) rotate(-3deg)}32%,81%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-4deg)}100%{opacity:0;transform:translate(-50%,-64%) scale(1.08) rotate(-2deg)}}
 @keyframes victory-slam-big{0%{opacity:0;transform:translate(-50%,-50%) scale(2.1) rotate(-14deg)}10%{opacity:1;transform:translate(-50%,-50%) scale(.9) rotate(-3deg)}17%{transform:translate(calc(-50% - 6px),calc(-50% + 3px)) scale(1.08) rotate(-6deg)}24%{transform:translate(calc(-50% + 3px),-50%) scale(.98) rotate(-3deg)}32%,81%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-4deg)}100%{opacity:0;transform:translate(-50%,-66%) scale(1.12) rotate(-2deg)}}
 @media(max-height:500px) and (orientation:landscape){#multPop.central-result{padding:12px;gap:5px}#multPop.central-result .m{font-size:min(var(--victory-type),54px)}#multPop.central-result .t{font-size:28px}.victory-wave{height:145px}}
+
+/* Circuit guidance occupies fixed space and uses the existing paper palette. */
+.circuit-status{flex:none;height:16px;margin:0;text-align:center;font:500 11px/16px var(--copy-font);color:#b9c5ca;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.circuit-status.complete{color:#c7d9a9}
+.draw-readout{flex:none;margin:0;min-height:14px;max-width:100%;font:500 11px/14px var(--copy-font);text-align:center;color:#c7d3cf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.draw-readout[hidden]{display:block!important;visibility:hidden}
+.circuit-choices{display:flex;flex-direction:column;gap:12px;margin-top:18px}
+.circuit-panel h1{font-size:25px;line-height:1.15}
+.circuit-panel p{font:500 14px/1.45 var(--copy-font)}
+.draft-choice{display:flex;align-items:center;gap:14px;width:100%;text-align:left;white-space:normal;padding:14px!important}
+.draft-choice>.effect-mark{flex:none;width:48px;height:68px}
+.draft-choice>span:last-child{flex:1;min-width:0;font:600 18px/1.2 var(--copy-font)}
+.draft-choice small,.contract-choice small{display:block;margin-top:7px;font:500 13px/1.4 var(--copy-font);letter-spacing:0;text-transform:none}
+.contract-choice{white-space:normal;padding:14px!important;font:600 17px/1.3 var(--copy-font)}
+.shop-reserve{display:block;margin-top:6px;font:500 11px/1.3 var(--copy-font);opacity:.75}
+.shop-inventory{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.shop-inventory p{flex-basis:100%;margin:0 0 3px;font:500 12px/1.3 var(--copy-font)}
+.shop-inventory .shop-sell{padding:8px!important;min-height:36px;font:500 11px/1.2 var(--copy-font);text-transform:none;white-space:normal}
+#inspectActions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+#inspectActions .btn{font:500 13px/1.3 var(--copy-font);padding:12px;white-space:normal}
+.joker.spent{opacity:.58}
+.card-dust{position:absolute;pointer-events:none;clip-path:polygon(12% 0,79% 7%,100% 63%,60% 100%,0 74%)}
+.card-impact-shadow{position:absolute;height:12px;background:#17252b;border-radius:50%;pointer-events:none}
+@media(max-height:700px){#mid{gap:6px}.circuit-status{height:14px;font-size:10px;line-height:14px}.draw-readout{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.card-dust,.card-impact-shadow{display:none}}
+:root[data-motion=gentle] :is(.card-dust,.card-impact-shadow){display:none}

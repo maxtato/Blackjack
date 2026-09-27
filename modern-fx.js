@@ -26,9 +26,9 @@
   let lastHaptic = -Infinity;
   const palette = [graphic.yellow,graphic.cream,graphic.teal,graphic.purple];
   const victoryStyles=[null,
-    {name:'win',duration:1300,hold:560,flight:560,bolts:2,fragments:8,reach:110,lift:16,scale:1.11,wash:.32},
-    {name:'combo',duration:1500,hold:710,flight:600,bolts:4,fragments:14,reach:145,lift:22,scale:1.15,wash:.56},
-    {name:'jackpot',duration:1700,hold:840,flight:650,bolts:6,fragments:24,reach:190,lift:28,scale:1.2,wash:.8}
+    {name:'win',duration:1650,hold:780,flight:560,bolts:2,fragments:8,reach:110,lift:16,scale:1.11,wash:.32},
+    {name:'combo',duration:1850,hold:960,flight:600,bolts:4,fragments:14,reach:145,lift:22,scale:1.15,wash:.56},
+    {name:'jackpot',duration:2050,hold:1160,flight:650,bolts:6,fragments:24,reach:190,lift:28,scale:1.2,wash:.8}
   ];
   function victoryTier(gain,mult,natural,record=false){
     return record||mult>=6||gain>=Math.max(1,G.bet*(G.stakeMult||1))*8?3:natural||mult>=3?2:1;
@@ -121,11 +121,11 @@
     return p;
   }
   const place=(dx=0,dy=0,angle=0,scale=1)=>`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) rotate(${angle}deg) scale(${scale})`;
-  function paperBolt(x,y,height,angle,color=graphic.yellow){
+  function paperBolt(x,y,height,angle,color=graphic.yellow,duration=880){
     if(!boardActive())return;
     const bolt=piece('paper-bolt paper-ink',x,y,color);if(!bolt)return;
     bolt.style.height=height+'px';bolt.style.width=Math.max(15,height*.28)+'px';
-    animate(bolt,[{transform:place(0,0,angle,.2),opacity:0},{transform:place(0,0,angle,1),opacity:1,offset:.18},{transform:place(0,0,angle,.92),opacity:.9,offset:.43},{transform:place(0,0,angle,1.04),opacity:1,offset:.57},{transform:place(0,0,angle,.8),opacity:0}],{duration:540},true);
+    animate(bolt,[{transform:place(0,0,angle,.2),opacity:0},{transform:place(0,0,angle,1),opacity:1,offset:.18},{transform:place(0,0,angle,.92),opacity:.9,offset:.43},{transform:place(0,0,angle,1.04),opacity:1,offset:.72},{transform:place(0,0,angle,.8),opacity:0}],{duration},true);
     return bolt;
   }
   function lightning(el,reach=100,arms=4,color=graphic.yellow){
@@ -236,7 +236,7 @@
     const wash=piece('victory-wash',x,y,graphic.yellow);
     if(wash){
       wash.style.width=p.width+'px';wash.style.height=innerHeight+'px';
-      animate(wash,[{opacity:0},{opacity:style.wash,offset:.12},{opacity:style.wash*.45,offset:.5},{opacity:0}],{duration:750+tier*130},true);
+      animate(wash,[{opacity:0},{opacity:style.wash,offset:.12},{opacity:style.wash*.45,offset:.5},{opacity:0}],{duration:980+tier*140},true);
     }
     const wave=tier>=2?piece('victory-wave',x,y,graphic.yellow):null;
     if(wave){
@@ -290,7 +290,7 @@
         {translate:`0 -${lift}px`,rotate:tilt+'deg',scale:String(style.scale),filter:'brightness(1.2)',offset:.32},
         {translate:'0 -3px',rotate:(-tilt*.35)+'deg',scale:'1.025',filter:'brightness(1.03)',offset:.65},
         {translate:'0 0',rotate:'0deg',scale:'1',filter:'brightness(1)'}
-      ],{duration:540+tier*75});
+      ],{duration:720+tier*90});
       cardCharge(card,graphic.yellow,true);
       const flash=piece('card-victory-flash',0,0,graphic.cream,card);
       if(flash)animate(flash,[{opacity:0},{opacity:.26+tier*.08,offset:.2},{opacity:0,offset:.7},{opacity:0}],{duration:330},true);
@@ -314,33 +314,33 @@
     const outline='M9 2 H91 L98 10 V138 L91 146 H9 L2 138 V10 Z';
     if(strong)glow.classList.add('strong');
     glow.innerHTML='<svg viewBox="0 0 100 148" preserveAspectRatio="none" aria-hidden="true">'+(strong?'<path class="charge-halo" d="'+outline+'"/>':'')+'<path d="'+outline+'"/>'+(strong?'<path class="charge-core" d="'+outline+'"/>':'')+'</svg>';
-    animate(glow,[{opacity:0,scale:'.98'},{opacity:strong?1:.65,scale:'1',offset:.15},{opacity:strong?.85:.5,scale:'1.015',offset:.65},{opacity:0,scale:'1.04'}],{duration:strong?850:300},true);
+    animate(glow,[{opacity:0,scale:'.98'},{opacity:strong?1:.65,scale:'1',offset:.15},{opacity:strong?.85:.5,scale:'1.015',offset:.65},{opacity:0,scale:'1.04'}],{duration:strong?1150:300},true);
   }
   function onCardLand(card){
     if(!boardActive())return;
     try{sfx.land();}catch(e){}haptic();
+    const el=cardNode(card),p=rect(el?.closest('.cardslot')||el);if(!p)return;
+    const colors=['#c9bda2','#ece0c7','#a6ab91'];
+    // Dry paper dust travels across the felt, with no border around the card.
+    for(let i=0;i<12;i++){
+      const side=i%2?1:-1,angle=(random()-.5)*1.3;
+      const x=side*p.width*.3,y=p.height*.25;
+      const dust=piece('card-dust paper-ink',p.x+x,p.y+y,colors[i%3]);if(!dust)break;
+      const size=3+random()*7;dust.style.width=size+'px';dust.style.height=(size*.6)+'px';
+      const dx=side*(16+random()*p.width*.6),dy=Math.sin(angle)*(10+random()*14);
+      animate(dust,[
+        {transform:place(0,0,i*37,.2),opacity:0},
+        {transform:place(dx*.2,dy*.2,i*37,1),opacity:.7,offset:.12},
+        {transform:place(dx*.8,dy-7,i*37+25,1.1),opacity:.4,offset:.55},
+        {transform:place(dx,dy-11,i*37+50,.5),opacity:0}
+      ],{duration:450+random()*170,easing:'cubic-bezier(.15,.7,.3,1)'},true);
+    }
+    const shadow=piece('card-impact-shadow',p.x,p.y+p.height*.34,'#111c23');
+    if(shadow){shadow.style.width=p.width*1.04+'px';animate(shadow,[{transform:place(0,0,0,.65),opacity:.1},{transform:place(0,0,0,1.12),opacity:.23,offset:.18},{transform:place(0,0,0,1.22),opacity:0}],{duration:330},true);}
   }
-  function revealImpact(el,color){
-    // Use the stable card slot: the turning face is almost edge-on at this instant.
-    const p=rect(el.closest('.cardslot')||el);if(!p)return;
-    const width=el.offsetWidth||p.width,height=el.offsetHeight||p.height;
-    const wave=piece('card-reveal-wave',p.x,p.y,color);
-    if(wave){
-      wave.style.width=width+10+'px';wave.style.height=height+10+'px';
-      wave.innerHTML='<svg viewBox="0 0 100 148" preserveAspectRatio="none" aria-hidden="true"><path d="M1 44 L0 12 L11 2 L37 0 M70 0 L94 3 L100 14 L98 38 M100 102 L99 139 L88 148 L67 146 M29 148 L5 145 L0 134 L2 109"/></svg>';
-      animate(wave,[{transform:place(0,0,-2,.96),opacity:0},{transform:place(0,0,-1,1.06),opacity:1,offset:.12},{transform:place(0,0,0,1.24),opacity:0}],{duration:310,easing:'cubic-bezier(.12,.7,.25,1)'},true);
-    }
-    const angles=[-160,-112,-24,38,83,151],lengths=[19,29,17,26,21,32];
-    for(let i=0;i<angles.length;i++){
-      const angle=(angles[i]+random()*8-4)*Math.PI/180,dx=Math.cos(angle)*(width*.53+7),dy=Math.sin(angle)*(height*.48+8);
-      const ray=piece('card-reveal-ray paper-ink',p.x,p.y,i%3===0?graphic.yellow:color);if(!ray)break;
-      ray.style.height=lengths[i]+'px';ray.style.width=(i%2?7:5)+'px';
-      const rotation=angle*180/Math.PI+90;
-      animate(ray,[{transform:place(dx*.9,dy*.9,rotation,.4),opacity:0},{transform:place(dx,dy,rotation,1),opacity:1,offset:.12},{transform:place(dx+Math.cos(angle)*25,dy+Math.sin(angle)*25,rotation,.3),opacity:0}],{duration:i%2?280:235},true);
-    }
+  function revealImpact(el){
     const flash=piece('card-reveal-flash',0,0,graphic.cream,el);
-    if(flash)animate(flash,[{opacity:0},{opacity:.36,offset:.18},{opacity:0}],{duration:130},true);
-    haptic();
+    if(flash)animate(flash,[{opacity:0},{opacity:.16,offset:.2},{opacity:0}],{duration:120},true);
   }
   function onCard(card) {
     if(document.hidden||document.querySelector('.overlay.show,#adOverlay.show'))return;

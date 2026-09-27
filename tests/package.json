@@ -1,0 +1,7 @@
+{
+  "name": "cold-deck-rule-checks",
+  "private": true,
+  "type": "module",
+  "scripts": {"test": "node circuit.test.mjs", "simulate": "node simulate.mjs", "campaign": "node campaign.mjs"},
+  "devDependencies": {"happy-dom": "20.14.5", "@sinonjs/fake-timers": "15.4.0"}
+}

@@ -72,8 +72,6 @@ renderEndScreen=function(){
 };
 STR.fr['top.metaInf']=(p,a,b)=>'∞ LIBRE · palier '+p+' · mise '+a+'–'+b;
 STR.en['top.metaInf']=(p,a,b)=>'∞ FREE PLAY · tier '+p+' · bet '+a+'–'+b;
-STR.fr['rules.table']='<span class="rt">LES TABLES DU CIRCUIT</span>Atteins l’objectif de jetons avant d’épuiser tes mains. La table se termine dès que l’objectif est atteint. Les mises ont un minimum et un maximum propres à la table.';
-STR.en['rules.table']='<span class="rt">CIRCUIT TABLES</span>Reach the cash goal before you run out of hands. The table ends as soon as you reach the goal. Each table has its own minimum and maximum bet.';
 
 const originalMenuRender=renderMenu;
 renderMenu=function(){
@@ -136,6 +134,8 @@ function syncMenuFocus(){
   if(heading){if(!heading.id)heading.id=el.id+'Title';el.setAttribute('aria-labelledby',heading.id);}
  }
  $('shaker').inert=!!top;
+ GameClock.pause('overlay',!!top);
+ document.getAnimations?.().filter(a=>a.effect?.target?.closest?.('#shaker')).forEach(a=>{if(top)a.pause();else if(a.playState==='paused')a.play();});
  if(top!==currentMenu){
   const previous=currentMenu;
   if(top&&!top.contains(document.activeElement)){

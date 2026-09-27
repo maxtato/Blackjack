@@ -508,6 +508,135 @@ function t(key,...args){
 }
 function hasStr(key){return (STR[LANG]&&key in STR[LANG])||(key in STR.en);}
 
+/* Circuit balance: the same terms are used in rules, offers and decisions. */
+Object.assign(STR.fr,{
+ 'circuit.draft':'TON PREMIER ATOUT','circuit.contact':'LE CONTACT','circuit.draftCopy':'Choisis une relique. Elle reste avec toi pendant cette expédition.',
+ 'circuit.briefGoal':(goal,hands,bet)=>'Objectif '+goal+' · '+hands+' mains · mise conseillée '+bet,
+ 'circuit.chooseContract':'Choisir ce contrat','circuit.stars':'Étoiles : objectif · sans reprise · contrat',
+ 'circuit.seals':(n,total)=>'Sceaux '+n+'/'+total,'circuit.ready':'Défi rempli','circuit.bossUnfinished':'La banque suffit, mais les sceaux du boss ne sont pas tous brisés.',
+ 'circuit.saved':'Dépassement annulé. La carte est écartée.','circuit.penduReady':'Pendu armé',
+ 'circuit.noBlank':'Toutes tes cartes ont déjà une édition.','circuit.editionPreview':gain=>'si victoire : +'+gain,
+ 'circuit.available':'Pouvoir disponible · 1 fois par table','circuit.used':'Pouvoir utilisé sur cette tentative',
+ 'circuit.extraLife':'Une reprise supplémentaire · vidéo facultative',
+ 'power.compteur':'Écarter la prochaine carte','power.phare':'Préparer une petite carte',
+ 'shop.reserve':n=>'Réserve après entrée : '+n,'shop.after':n=>'Après achat et entrée : '+n,
+ 'shop.manage':'Tes atouts · vendre pour libérer une place','shop.sellItem':(name,value)=>name+' · vendre '+value,
+ 'rule.depart':'La Baraka commence au niveau 1','rule.atelier':'La première carte est FOIL aux mains 1, 4, 7 et 10','rule.serein':'Une perte conserve 75 % de la Baraka',
+ 'boss.bouncer':'Gagne 2 manches contre le Videur',
+ 'boss.banker':'Gagne 2 manches, dont une avec au moins 60 % de la mise maximale de base',
+ 'boss.reaper':'Gagne 2 manches ; les égalités sont perdues',
+ 'boss.concierge':'Gagne 2 manches, dont une avec 3 cartes ou un tarot joué',
+ 'boss.accountant':'Gagne 2 manches avec des totaux différents',
+ 'boss.gravedigger':'Gagne 2 manches dont une à 4 cartes, ou gagne 3 manches',
+ 'boss.croupier':'Gagne 2 manches, dont une à Baraka niveau 1 ou plus',
+ 'boss.godfather':'Gagne 3 manches, dont une à 3 cartes ou plus et ×2 minimum',
+ 'relic.jeton.d':'Sur une défaite à 19 ou 20, récupère la moitié de la mise.',
+ 'relic.froid.d':'Après une défaite, conserve 75 % de ta Baraka au lieu de 50 %.',
+ 'relic.compteur.d':'Le risque de dépassement est affiché pour tous. Une fois par table, écarte la prochaine carte du sabot et révèle celle qui la suit.',
+ 'relic.mecene.d':'Si ta banque est sous le capital conseillé, reçois 12 % de la mise maximale de base au début de chaque main.',
+ 'relic.usurier.d':'Reçois 1 % de ta réserve au début de chaque main, jusqu’à 12 % de la mise maximale de base.',
+ 'relic.maitresse.d':'La première carte de chaque main est FOIL si elle n’a pas déjà une édition : +15 % de la mise avant multiplication.',
+ 'relic.bruleur.d':'À Baraka niveau 2 ou plus, multiplie les gains par 1,3, dans la limite du plafond de zone.',
+ 'relic.portebonheur.d':'Un emplacement de tarot supplémentaire et 20 % de réduction sur les tarots en boutique.',
+ 'relic.diplomate.d':'Sur une égalité, récupère ta mise et gagne 25 % en plus. Face à « égalité = défaite », récupère seulement ta mise.',
+ 'relic.talisman.d':'Rembourse entièrement la première main perdue de chaque tentative. En séparation, protège une seule des deux mains.',
+ 'relic.aimant.d':'Chaque tirage sûr depuis un total de 16 ou plus rapporte 10 % de la mise engagée. Fonctionne avec Tirer, Doubler et Forcer.',
+ 'relic.phare.d':'À 4 cartes : ×1,5. Charlie à 5 cartes : ×3. Une fois par table, prépare le plus petit rang du sabot pour ton prochain tirage.',
+ 'tarot.etoile.d':'Ajoute exactement 2 points de Baraka. Sans amplification par Cigarette ou table nerveuse.',
+ 'tarot.jugement.d':'Atteins exactement le prochain niveau de Baraka. Inutilisable au niveau maximal.',
+ 'tarot.soleil.d':'Échange 2 points de Baraka contre 75 % de la mise maximale de base en banque.',
+ 'tarot.soleil.u':amount=>'+'+amount+' · −2 Baraka',
+ 'tarot.diable.d':'Choisis une carte sans édition : POLY multiplie le multiplicateur par 1,5, avant le plafond de zone.',
+ 'tarot.lune.d':'Choisis une carte sans édition : HOLO ajoute 1 au multiplicateur, avant le plafond de zone.',
+ 'tarot.etoileD.d':'Choisis une carte sans édition : FOIL ajoute 15 % de la mise engagée avant multiplication.',
+ 'tarot.pendu.d':'Arme-le avant de tirer. Le prochain dépassement de cette main annule automatiquement la carte reçue. Expire à la fin de la main.',
+ 'tarot.pendu.u':'Prochain dépassement protégé',
+ 'tarot.magicien.d':'Le prochain tirage reçoit la meilleure carte sûre du sabot restant. Si aucune carte sûre n’existe, le tirage reste normal.',
+ 'tarot.roue.d':'Ajoute une édition garantie, choisie au hasard parmi FOIL, HOLO et POLY, sur une carte sans édition. Ne remplace jamais une édition.',
+ 'svc.soin.d':'Renfloue la réserve vers 70 % du capital de la prochaine table, entrée comprise, jusqu’à 2 mises maximales. Proposé uniquement si l’apport dépasse le prix.',
+ 'svc.soin.u':amount=>'Réserve renflouée : +'+amount,
+ 'svc.assurance.d':'Rembourse intégralement la prochaine main perdue. La protection reste active en changeant de table. En séparation, protège une main.',
+ 'svc.videur.d':'Une seconde chance supplémentaire, utilisable sans vidéo. Maximum : 6 en réserve.',
+ 'unlock.bank.d':n=>'Capital de départ du circuit : +'+(5*Math.min(5,n+1))+' %, y compris en reprise',
+ 'unlock.pourboire.d':n=>'Au début de chaque main : '+(2*Math.min(3,n+1))+' % de la mise maximale de base',
+ 'unlock.contact.d':()=> 'Choisis une deuxième relique parmi 3 offres au départ de chaque expédition',
+ 'ed.foil':'+15 % de la mise avant multiplication','ed.holo':'+1 au multiplicateur, avant plafond','ed.poly':'Multiplicateur ×1,5, avant plafond',
+ 'ctr.cpress':'Gagner à Baraka niveau 2 ou plus',
+ 'rules.streak':'<span class="rt">BARAKA</span>Niveaux à <span class="k">2 / 4 / 7 / 10 points</span> : ×1,15 / ×1,3 / ×1,45 / ×1,6. Victoire +1, coup culotté +2. En circuit, une perte conserve la moitié ; jusqu’à 2 points passent à la table suivante. En libre, une perte remet à zéro, sauf bonus Filet.',
+ 'rules.stars':'<span class="rt">ÉTOILES</span>Une étoile pour l’objectif et le défi du boss. Une de plus sans reprise de la table. Une de plus pour le contrat choisi. Le montant du dernier gain ne change pas ces critères.',
+ 'rules.contracts':'<span class="rt">CONTRATS</span>Choisis parmi deux défis en arrivant à une table. Les plus rares rapportent davantage de réputation. Le contrat accompli reste acquis en cas de reprise.',
+ 'rules.bonus':'<span class="rt">BONUS</span>FOIL ajoute 15 % de la mise avant multiplication ; HOLO ajoute 1 au multiplicateur ; POLY le multiplie par 1,5. Les bonus respectent le plafond de zone affiché dans le décompte. Le risque de dépassement tient compte des As souples et du sabot restant.',
+ 'ui.peekTitle':'Voir la prochaine carte · 1 fois par main','cb.charlie':'Charlie · 5 cartes',
+ 'ad.retrySub':n=>n+' reprises disponibles, sans vidéo',
+ 'msg.talismanSub':'Une main remboursée','msg.insuranceSub':'Une main remboursée',
+ 'planque.tables':n=>n+' tables remportées','menu.recTables':n=>n+' tables remportées'
+});
+Object.assign(STR.en,{
+ 'circuit.draft':'YOUR FIRST RELIC','circuit.contact':'THE CONTACT','circuit.draftCopy':'Choose one relic to keep for this expedition.',
+ 'circuit.briefGoal':(goal,hands,bet)=>'Goal '+goal+' · '+hands+' hands · suggested bet '+bet,
+ 'circuit.chooseContract':'Choose this contract','circuit.stars':'Stars: goal · no retry · contract',
+ 'circuit.seals':(n,total)=>'Seals '+n+'/'+total,'circuit.ready':'Challenge complete','circuit.bossUnfinished':'Your bankroll is sufficient, but the boss still has unbroken seals.',
+ 'circuit.saved':'Bust cancelled. The drawn card is discarded.','circuit.penduReady':'Hanged Man armed',
+ 'circuit.noBlank':'All your cards already have an edition.','circuit.editionPreview':gain=>'on a win: +'+gain,
+ 'circuit.available':'Power ready · once per table','circuit.used':'Power used this attempt',
+ 'circuit.extraLife':'One extra retry · optional video',
+ 'power.compteur':'Discard the next card','power.phare':'Prepare a small card',
+ 'shop.reserve':n=>'Reserve after entry: '+n,'shop.after':n=>'After purchase and entry: '+n,
+ 'shop.manage':'Your perks · sell to make room','shop.sellItem':(name,value)=>name+' · sell '+value,
+ 'rule.depart':'Start at streak level 1','rule.atelier':'Your first card is FOIL on hands 1, 4, 7 and 10','rule.serein':'Keep 75% of your streak after a loss',
+ 'boss.bouncer':'Win 2 rounds against the Bouncer',
+ 'boss.banker':'Win 2 rounds, including one betting at least 60% of the base maximum',
+ 'boss.reaper':'Win 2 rounds; ties are losses',
+ 'boss.concierge':'Win 2 rounds, including one with 3 cards or a played Tarot',
+ 'boss.accountant':'Win 2 rounds with different hand totals',
+ 'boss.gravedigger':'Win 2 rounds including one with 4 cards, or win 3 rounds',
+ 'boss.croupier':'Win 2 rounds, including one at streak level 1 or higher',
+ 'boss.godfather':'Win 3 rounds, including one with at least 3 cards and a ×2 payout',
+ 'relic.jeton.d':'On a loss with 19 or 20, get half your stake back.',
+ 'relic.froid.d':'Keep 75% of your streak after a loss instead of 50%.',
+ 'relic.compteur.d':'Bust odds are shown to everyone. Once per table, discard the next card in the shoe and reveal the card after it.',
+ 'relic.mecene.d':'While your bank is below the recommended capital, earn 12% of the base maximum bet at the start of each hand.',
+ 'relic.usurier.d':'Earn 1% of your reserve at the start of each hand, capped at 12% of the base maximum bet.',
+ 'relic.maitresse.d':'The first card of every hand is FOIL unless it already has an edition: +15% of your stake before multiplication.',
+ 'relic.bruleur.d':'At streak level 2 or higher, multiply winnings by 1.3, up to the zone cap.',
+ 'relic.portebonheur.d':'One extra Tarot slot and 20% off Tarot purchases.',
+ 'relic.diplomate.d':'On a tie, recover your stake and earn 25% extra. Against the ties-lose rule, recover only your stake.',
+ 'relic.talisman.d':'Refund the first lost hand of each attempt. When splitting, protects one of the two hands.',
+ 'relic.aimant.d':'Every safe draw from a total of at least 16 earns 10% of your committed stake. Works with Hit, Double and Push Luck.',
+ 'relic.phare.d':'4 cards pay ×1.5. A 5-card Charlie pays ×3. Once per table, prepare the lowest remaining rank for your next draw.',
+ 'tarot.etoile.d':'Add exactly 2 streak points. Cigarette and Nervous tables do not amplify this.',
+ 'tarot.jugement.d':'Reach exactly the next streak level. Cannot be used at the maximum level.',
+ 'tarot.soleil.d':'Exchange 2 streak points for 75% of the base maximum bet in cash.',
+ 'tarot.soleil.u':amount=>'+'+amount+' · −2 streak',
+ 'tarot.diable.d':'Choose an unedited card: POLY multiplies your multiplier by 1.5 before the zone cap.',
+ 'tarot.lune.d':'Choose an unedited card: HOLO adds 1 to your multiplier before the zone cap.',
+ 'tarot.etoileD.d':'Choose an unedited card: FOIL adds 15% of your committed stake before multiplication.',
+ 'tarot.pendu.d':'Arm before drawing. Automatically discard the next card that would bust this hand. Expires when the hand ends.',
+ 'tarot.pendu.u':'Next bust protected',
+ 'tarot.magicien.d':'Your next draw gets the best safe card in the remaining shoe. If none is safe, you draw normally.',
+ 'tarot.roue.d':'Add a guaranteed random FOIL, HOLO or POLY edition to an unedited card. Never overwrites an edition.',
+ 'svc.soin.d':'Top up towards 70% of the next table’s capital including entry, up to 2 maximum bets. Offered only when the benefit exceeds its cost.',
+ 'svc.soin.u':amount=>'Reserve topped up: +'+amount,
+ 'svc.assurance.d':'Refund the next lost hand in full. Protection carries to the next table. When splitting, protects one hand.',
+ 'svc.videur.d':'One extra retry, usable without a video. Up to 6 in reserve.',
+ 'unlock.bank.d':n=>'Circuit starting capital: +'+(5*Math.min(5,n+1))+'%, including resumed runs',
+ 'unlock.pourboire.d':n=>'Each hand: '+(2*Math.min(3,n+1))+'% of the base maximum bet',
+ 'unlock.contact.d':()=> 'Choose a second relic from 3 offers at the start of each expedition',
+ 'ed.foil':'+15% of stake before multiplication','ed.holo':'+1 multiplier before the cap','ed.poly':'Multiplier ×1.5 before the cap',
+ 'ctr.cpress':'Win at streak level 2 or higher',
+ 'rules.streak':'<span class="rt">STREAK</span>Levels at <span class="k">2 / 4 / 7 / 10 points</span>: ×1.15 / ×1.3 / ×1.45 / ×1.6. Win +1, gutsy win +2. Circuit losses keep half your streak; up to 2 points carry to the next table. Free Play losses reset it unless you have Safety Net.',
+ 'rules.stars':'<span class="rt">STARS</span>One star for reaching the goal and completing the boss challenge. One extra without retrying the table. One extra for your chosen contract.',
+ 'rules.contracts':'<span class="rt">CONTRACTS</span>Choose one of two challenges when entering a table. Rarer ones award more reputation. A completed contract stays complete when you retry.',
+ 'rules.bonus':'<span class="rt">BONUSES</span>FOIL adds 15% of the stake before multiplication; HOLO adds 1 multiplier; POLY multiplies it by 1.5. Bonuses respect the zone cap shown in the tally. Bust odds account for soft Aces and the remaining shoe.',
+ 'ui.peekTitle':'Reveal the next card · once per hand','cb.charlie':'Charlie · 5 cards',
+ 'ad.retrySub':n=>n+' retries available, no video required',
+ 'msg.talismanSub':'One hand refunded','msg.insuranceSub':'One hand refunded',
+ 'planque.tables':n=>n+' tables won','menu.recTables':n=>n+' tables won'
+});
+
+STR.fr['rules.table']='<span class="rt">TABLES DU CIRCUIT</span>Chaque table demande un bénéfice propre. Une réserve supérieure au capital conseillé augmente aussi l’objectif du même montant : elle protège tes mises sans supprimer le défi. Les boss ont des sceaux à briser. Dix mains maximum.';
+STR.en['rules.table']='<span class="rt">CIRCUIT TABLES</span>Each table requires its own profit. Cash above the recommended capital raises the target by the same amount: the extra reserve protects your bets without removing the challenge. Bosses also have seals. Up to ten hands.';
+
 
 /* card-art.js */
 /* Generated bitmap artwork with exact game-controlled ranks and pip counts. */
@@ -596,6 +725,24 @@ const ColdDeckArt = (() => {
    COLD DECK — moteur + présentation Balatro
    ============================================================ */
 const $=id=>document.getElementById(id);
+const GameClock={
+  jobs:new Map(),reasons:new Set(),serial:0,
+  arm(job){job.at=performance.now();job.timer=setTimeout(()=>{this.jobs.delete(job.id);job.fn();},job.left);},
+  delay(fn,ms=0){const job={id:++this.serial,fn,left:Math.max(0,ms),timer:null,at:0};this.jobs.set(job.id,job);if(!this.reasons.size)this.arm(job);return job.id;},
+  cancel(id){const job=this.jobs.get(id);if(job){clearTimeout(job.timer);this.jobs.delete(id);}},
+  pause(reason,on){
+    const was=this.reasons.size>0;if(on)this.reasons.add(reason);else this.reasons.delete(reason);
+    const now=this.reasons.size>0;if(now===was)return;
+    for(const job of this.jobs.values()){
+      if(now){clearTimeout(job.timer);job.left=Math.max(0,job.left-(performance.now()-job.at));job.timer=null;}
+      else this.arm(job);
+    }
+  },
+  clear(){for(const job of this.jobs.values())clearTimeout(job.timer);this.jobs.clear();this.reasons.clear();}
+};
+function gameDelay(fn,ms){return GameClock.delay(fn,ms);}
+function clearGameDelay(id){GameClock.cancel(id);}
+document.addEventListener('visibilitychange',()=>GameClock.pause('hidden',document.hidden));
 const STAR=ColdDeckArt.icon('doree'),STARE='<span class="empty-star">'+ColdDeckArt.icon('doree')+'</span>';
 const PXI=n=>ColdDeckArt.icon(n);
 const rndInt=n=>Math.floor(Math.random()*n);
@@ -647,20 +794,20 @@ function blip(f,d,type,v,slideTo){
   o.start(t);o.stop(t+d);
 }
 /* Rising notes accompany the chain reaction. */
-function arp(freqs,step,d,v,type){freqs.forEach((f,i)=>setTimeout(()=>blip(f,d,type||'square',v),i*step));}
+function arp(freqs,step,d,v,type){freqs.forEach((f,i)=>gameDelay(()=>blip(f,d,type||'square',v),i*step));}
 const sfx={
   card(){blip(160+rndInt(40),.035,'square',.045);},
-  flip(){blip(660,.04,'square',.05);setTimeout(()=>blip(880,.05,'square',.045),42);},
+  flip(){blip(660,.04,'square',.05);gameDelay(()=>blip(880,.05,'square',.045),42);},
   land(){blip(170,.035,'triangle',.045,80);},
   reveal(){blip(1250,.035,'triangle',.065,520);blip(210,.045,'triangle',.045,90);},
   win(tier=1){arp(tier>=3?[523,659,784,1047,1319,1568]:tier===2?[523,659,784,1047]:[523,659,784],tier>=3?58:46,.09,.075);if(tier>=3)blip(90,.13,'triangle',.07,55);},
   combo(step=0){const root=784*Math.pow(2,Math.min(step,6)/12);arp([root,root*1.25,root*1.5],25,.055,.055);},
   goal(){arp([1047,1568],65,.08,.045,'triangle');},
-  push(){blip(392,.09,'square',.05);setTimeout(()=>blip(392,.09,'square',.04),95);},
-  lose(){blip(330,.18,'square',.085,130);setTimeout(()=>blip(150,.24,'square',.07,80),110);}, // glissando descendant
+  push(){blip(392,.09,'square',.05);gameDelay(()=>blip(392,.09,'square',.04),95);},
+  lose(){blip(330,.18,'square',.085,130);gameDelay(()=>blip(150,.24,'square',.07,80),110);}, // glissando descendant
   danger(){blip(130,.3,'square',.11,60);},                            // grondement grave qui plonge
-  buy(){blip(880,.05,'square',.07);setTimeout(()=>blip(1245,.08,'square',.06),52);},           // a brief coin chime
-  thump(){blip(70,.14,'triangle',.13);setTimeout(()=>blip(55,.18,'triangle',.1),120);},        // low heartbeat
+  buy(){blip(880,.05,'square',.07);gameDelay(()=>blip(1245,.08,'square',.06),52);},           // a brief coin chime
+  thump(){blip(70,.14,'triangle',.13);gameDelay(()=>blip(55,.18,'triangle',.1),120);},        // low heartbeat
   jackpot(){arp([523,659,784,1047,1319,1568],58,.12,.08);}
 };
 
@@ -691,22 +838,25 @@ function renderBackPicker(){
    Chaque mode a SA réputation, SES déblocages et SON record. La Planque n'affiche
    donc que les objets utiles au mode qu'on vient jouer. */
 function blankMeta(){return {
-  nuit:  {rep:0,unlocks:{},record:{depth:0,chips:0},zone2Runs:0},
+  nuit:  {rep:0,unlocks:{},record:{depth:0,reached:0,chips:0,version:2}},
   infini:{rep:0,unlocks:{},record:{peak:0,palier:0}}
 };}
+function migrateCircuitRecord(r={}){
+  return {depth:Math.min(24,Math.max(0,(r.depth|0)-(r.version===2?0:1))),reached:Math.min(24,Math.max(r.reached|0,r.depth|0)),chips:Math.max(0,r.chips|0),version:2};
+}
 function loadMeta(){
   try{const v=JSON.parse(localStorage.getItem('t21meta'));
     if(v&&typeof v==='object'){
       if(v.nuit&&v.infini){                                   // nouveau format à deux modes
         return {
-          nuit:  {rep:v.nuit.rep|0,  unlocks:v.nuit.unlocks||{},  record:{depth:(v.nuit.record&&v.nuit.record.depth)|0,chips:(v.nuit.record&&v.nuit.record.chips)|0},zone2Runs:v.nuit.zone2Runs|0},
+          nuit:  {rep:v.nuit.rep|0,  unlocks:v.nuit.unlocks||{},  record:migrateCircuitRecord(v.nuit.record)},
           infini:{rep:v.infini.rep|0,unlocks:v.infini.unlocks||{},record:{peak:(v.infini.record&&v.infini.record.peak)|0,palier:(v.infini.record&&v.infini.record.palier)|0}}
         };
       }
       // ancien format {rep,unlocks,record} : tout va dans « la nuit », l'infini repart vierge
       const m=blankMeta();
       m.nuit.rep=v.rep|0;m.nuit.unlocks=v.unlocks||{};
-      m.nuit.record={depth:(v.record&&v.record.depth)|0,chips:(v.record&&v.record.chips)|0};
+      m.nuit.record=migrateCircuitRecord(v.record);
       return m;
     }
   }catch(e){}
@@ -751,9 +901,9 @@ function unlocksFor(mode){return (mode||MODE)==='infini'?UNLOCKS_INFINI:UNLOCKS_
 function findUnlock(id){return unlocksFor(MODE).find(x=>x.id===id);}
 function unlockCost(u){const n=uLvl(u.id);return n>=u.max?null:u.cost(n);}
 /* valeurs de départ d'une descente, dérivées des déblocages */
-function startBank(){return 50+uLvl('bank')*15;}
+function startBank(){return MODE==='infini'?50+uLvl('bank')*15:80+uLvl('bank')*4;}
 function startTokens(){return 3+uLvl('net');}   // secondes chances de départ : plus de marge pour la Tournée
-function startRelics(){if(uLvl('contact')){const pool=RELIC_POOL.filter(r=>!r.lock||uLvl(r.lock));const r=pool[rndInt(pool.length)];return [Object.assign({},r)];}return [];}
+function startRelics(){return [];}
 /* ---------- données ---------- */
 const SUITS=['♠','♥','♦','♣'];
 const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
@@ -761,61 +911,35 @@ const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 /* ============================================================
    RUN STRUCTURÉE — 24 tables, 8 zones, boss tous les 3 niveaux (3 zones
    écrites à la main + 5 zones profondes générées, cf. TOURNÉE ÉTENDUE).
-   Chaque table est une épreuve fermée : on joue TOUTES les mains
-   obligatoires, puis on valide en étoiles. Mise plafonnée FIXE.
+   Chaque table demande un bénéfice propre en dix mains maximum.
+   Les boss ajoutent un défi visible ; les étoiles récompensent les décisions.
    ============================================================ */
 /* nom et texte de règle : traduits au rendu (voir tableName / tableRuleText) */
+// Each zone has a deliberate respite, a preparation table and a distinct boss.
 const RUN=[
-  /* ZONE 1 — Initiation */
-  {zone:1, mains:10, min:5,  max:20,  cap:50,   goal:150, master:210,      rule:null,     entry:0,   need:0,           rt:{k:'rtx.0'}},
-  {zone:1, mains:10, min:5,  max:25,  cap:130,  goal:220, master:320,      rule:'nervous',entry:0,   need:0,           rt:{rule:'nervous'}},
-  {zone:1, mains:10, min:10, max:30,  cap:200,  goal:340, master:460,      rule:'gros',   entry:0,   need:2, boss:true, rt:{boss:true,rule:'gros'}},
-  /* ZONE 2 — La Pression */
-  {zone:2, mains:10, min:10, max:48,  cap:280,  goal:500, master:700,      rule:'mute',   entry:70,  need:3,           rt:{rule:'mute',entry:70}},
-  {zone:2, mains:10, min:15, max:52,  cap:430,  goal:760, master:1010,     rule:null,     entry:0,   need:0,           rt:{k:'rtx.4'}},
-  {zone:2, mains:10, min:20, max:62,  cap:640,  goal:1080, master:1420,     rule:'depart', entry:0,   need:6, boss:true, rt:{boss:true,rule:'depart'}},
-  /* ZONE 3 — Casino profond */
-  {zone:3, mains:10, min:25, max:80,  cap:900,  goal:1580, master:2080,     rule:null,     entry:240, need:8,          rt:{zone:3,entry:240}},
-  {zone:3, mains:10, min:30, max:100, cap:1300, goal:2350, master:3000,     rule:'gros',   entry:0,   need:0,           rt:{k:'rtx.7'}},
-  {zone:3, mains:10, min:40, max:120, cap:1800, goal:3200, master:4100,     rule:'sec',    entry:0,   need:0,           boss:true, rt:{boss:true,rule:'sec'}},
-];
+  [80,115,5,25,null], [105,180,5,30,'nervous'], [150,255,10,40,'gros','bouncer'],
+  [215,355,10,50,'atelier',null,20], [290,490,15,65,'mute'], [395,655,15,85,null,'banker'],
+  [535,865,20,85,'nervous',null,45], [725,1230,25,110,'gros'], [975,1660,30,150,'sec','reaper'],
+  [1320,2270,40,185,'atelier'], [1780,3205,50,250,'mute'], [2400,4320,60,335,'mute','concierge'],
+  [3240,5830,80,420,'serein',null,200], [4375,8225,100,570,'atelier'], [5905,11100,150,770,'sec','accountant'],
+  [7970,14825,200,995,'atelier'], [10760,20875,250,1345,'nervous'], [14525,28180,350,1815,'gros','gravedigger'],
+  [19610,37650,450,2355,'serein',null,1300], [26475,52950,600,3175,'mute'], [35740,71480,800,4290,'depart','croupier'],
+  [48250,96500,1000,5550,'atelier'], [65140,135490,1500,7490,'mute'], [87940,182915,2000,10115,'sec','godfather']
+].map(([cap,goal,min,max,rule,challenge,entry=0],i)=>({i,zone:1+Math.floor(i/3),mains:10,min,max,cap,goal,master:goal,rule,challenge,entry,need:0,boss:!!challenge,rt:{rule,entry,boss:!!challenge,last:i===23}}));
 function zoneName(z){return t('zone.'+z);}
-const ZONE_MULTCAP={1:4,2:6,3:9,4:11,5:13,6:16,7:19,8:24};        // plafond de multiplicateur par zone
-const ZONE_FELT={1:'#138f86',2:'#7c3a9e',3:'#a52f55'};           // héritage
-/* TOURNÉE ÉTENDUE : après les 3 zones écrites à la main, on génère 5 zones plus profondes
-   (3 tables + boss chacune) → tournée beaucoup plus longue, dans l'esprit des paliers de l'infini. */
-(function(){
-  const bossR=['gros','depart','sec'],midR=[null,'nervous','mute'];
-  let cap=1800;
-  for(let zi=0;zi<5;zi++){
-    const z=4+zi;
-    for(let ti=0;ti<3;ti++){
-      const boss=(ti===2),last=(z===8&&ti===2);
-      cap=Math.round(cap*1.42/10)*10;
-      const goal=Math.round(cap*1.78/10)*10,master=Math.round(cap*2.35/10)*10;
-      const min=Math.max(40,Math.round(cap*0.03/5)*5),max=Math.round(cap*0.07/5)*5;
-      const rule=last?'sec':(boss?bossR[z%bossR.length]:midR[(ti+z)%midR.length]);
-      const entry=(ti===0&&z%2===1)?Math.round(goal*0.1/10)*10:0;
-      RUN.push({zone:z,mains:10,min,max,cap,goal,master,rule,entry,need:0,boss,rt:{boss,last,rule,entry}});
-    }
-  }
-})();
-RUN.forEach((r,i)=>{r.i=i;});
+const ZONE_MULTCAP={1:4,2:5,3:6,4:7,5:8,6:9,7:10,8:12};
+const ZONE_FELT={1:'#138f86',2:'#7c3a9e',3:'#a52f55'};
 const RUN_LEN=RUN.length;
 /* nom de table : clé tbl.<index> pour la tournée, « Palier N » en sans fin */
 function tableName(tb){return (tb&&tb.pal!=null)?t('endless.tier',tb.pal+1):t('tbl.'+((tb&&tb.i)|0));}
 /* texte de règle : recomposé à partir du descripteur rt (traduit à chaque rendu) */
 function tableRuleText(tb){
-  const r=(tb&&tb.rt)||{};
-  if(r.endless)return r.rule?t('rule.'+r.rule):t('rtx.endless');
-  if(r.last)return t('rtx.bossFinal');
-  if(r.boss)return t('rtx.boss',r.rule?t('rule.'+r.rule):t('rtx.bossPlain'));
+  if(!tb)return '';
   const parts=[];
-  if(r.k)parts.push(t(r.k));
-  else if(r.zone)parts.push(zoneName(r.zone));
-  if(r.rule)parts.push(t('rule.'+r.rule));
-  if(r.entry)parts.push(t('rtx.entry',cash(r.entry)));
-  return parts.length?parts.join(' · '):t('rtx.deep');
+  if(tb.rule)parts.push(t('rule.'+tb.rule));
+  if(tb.challenge)parts.push(t('boss.'+tb.challenge));
+  if(tb.entry)parts.push(t('rtx.entry',cash(tb.entry)));
+  return parts.join(' · ')||t(tb.endless?'rtx.endless':'rtx.0');
 }
 
 /* ====== tapis évolutif ====== */
@@ -891,52 +1015,54 @@ function evtDesc(e){return t('evt.'+e.id+'.d');}
 /* CONTRATS (mode nuit) : un défi optionnel par table — le remplir rapporte des ★
    bonus dans la cagnotte. Pousse à jouer AUTREMENT, pas juste à battre le croupier. */
 const CONTRACTS=[
-  {id:'c5',    chk:o=>o.n>=5},
-  {id:'c21',   chk:o=>o.pv===21&&o.n>2},
-  {id:'cpress',chk:o=>o.press>=75},
-  {id:'cmult', chk:o=>o.mult>=3},
-  {id:'cdbl',  chk:o=>o.dbl},
-  {id:'csuite',chk:o=>o.suite},
-  {id:'ccoul', chk:o=>o.coul},
+  {id:'c5', weight:3, chk:o=>o.n>=5},
+  {id:'c21', weight:1.5, chk:o=>o.pv===21&&o.n>2},
+  {id:'cpress',weight:1.5,chk:o=>o.level>=2},
+  {id:'cmult',weight:1, chk:o=>o.mult>=3},
+  {id:'cdbl', weight:1, chk:o=>o.dbl},
+  {id:'csuite',weight:2.5,chk:o=>o.suite},
+  {id:'ccoul',weight:2,chk:o=>o.coul},
 ];
 function contractText(c){return c?t('ctr.'+c.id):'';}
 function rollContract(){
   if(G.endless)return null;
-  const c=CONTRACTS[rndInt(CONTRACTS.length)];
-  return {id:c.id,reward:10+((G.table&&G.table.zone)|0)*5,done:false};
+  const controlled=hasRelic('lunettes')||hasRelic('phare')||G.consumables.some(c=>c.id==='magicien');
+  const easy=CONTRACTS.filter(c=>['c21','cmult','cdbl'].includes(c.id));
+  const hard=CONTRACTS.filter(c=>['cpress','ccoul'].includes(c.id)||(controlled&&['c5','csuite'].includes(c.id)));
+  const make=c=>({id:c.id,reward:Math.round((6+G.table.zone*2)*c.weight),done:false});
+  G.contractChoices=[make(easy[rndInt(easy.length)]),make(hard[rndInt(hard.length)])];
+  return G.contractChoices[0];
 }
 /* appelé sur chaque main GAGNÉE (mult = multiplicateur payé) */
 function checkContract(mult){
   const c=G.contract;if(!c||c.done||G.endless)return;
   const h=G.pHand,n=h.length,pv=handValue(h).total,suits=new Set(h.map(x=>x.s));
-  const o={n,pv,press:barakaPct(),mult:mult||1,dbl:(G.stakeMult||1)>=2,suite:isStraight(h),coul:n>=3&&suits.size===1};
+  const o={n,pv,press:barakaPct(),level:barakaLevel(),mult:mult||1,dbl:(G.stakeMult||1)>=2,suite:isStraight(h),coul:n>=3&&suits.size===1};
   const def=CONTRACTS.find(x=>x.id===c.id);
   if(def&&def.chk(o)){
     c.done=true;G.pot+=c.reward;
-    setTimeout(()=>{sfx.combo&&sfx.combo();coinBurst(8);popText(PXI('scroll')+' '+t('msg.contract'),'+'+c.reward+' '+STAR);renderTop();},1500);
+    gameDelay(()=>{sfx.combo&&sfx.combo();coinBurst(8);popText(PXI('scroll')+' '+t('msg.contract'),'+'+c.reward+' '+STAR);renderTop();},1500);
   }
 }
 /* étoiles : il FAUT atteindre l'objectif pour valider la table.
    0★ = objectif manqué (table ratée) · 1★ objectif · 2★ confort · 3★ maîtrise */
-function starsFor(t,bank){
-  if(bank<t.goal)return 0;                                  // objectif manqué → non validée
-  if(bank>=t.master)return 3;                               // maîtrise
-  if(bank>=t.goal+(t.master-t.goal)*0.5)return 2;           // belle marge
-  return 1;                                                 // objectif tout juste
+function starsFor(tb,bank){
+  if(bank<tb.goal||!bossReady())return 0;
+  return 1+(!G.tableRetried?1:0)+(G.contract?.done?1:0);
 }
 /* réputation d'une table validée : indexée sur la zone, les étoiles, le boss —
    jamais sur le tas de jetons. Petit bonus de risque maîtrisé. */
 function tableRep(t,stars,maxBaraka){
-  const base=4+t.zone*6;
-  let rep=base+stars*6+(t.boss?40:0);
-  if(stars>=2&&(maxBaraka||0)>=10)rep+=8;          // baraka menée haut (niv 3+)
+  const base=6+t.zone*2;
+  let rep=base+stars*4+(t.boss?15:0);
+  if(stars>=2&&(maxBaraka||0)>=BARAKA_STEPS[2])rep+=8;          // baraka menée haut (niv 3+)
   return rep;
 }
 /* réputation totale en fin de run : cagnotte (entière si encaisse, moitié sinon)
    + prime d'effort (tables tenues) + prime de PROXIMITÉ (près du but sur la
    table perdue) — une run ratée sert toujours, et « presque » paie un peu */
 function proximityRep(){
-  if(G.endless||!G.table||!isFinite(G.table.goal)||G.bank>=G.table.goal)return 0;
+  if(G.endless||!G.stats?.played||!G.table||!isFinite(G.table.goal)||G.bank>=G.table.goal)return 0;
   return Math.round(10*Math.max(0,Math.min(1,G.bank/G.table.goal)));
 }
 function repOnEnd(cashout){
@@ -945,7 +1071,7 @@ function repOnEnd(cashout){
     if(cashout&&G._palierCash)r=Math.round(r*1.2);
     return r;
   }
-  const depth=(G.tableIdx|0)+(G.phase==='done'?1:0);
+  const depth=G.tableStars.filter(Boolean).length;
   const base=cashout?G.pot:Math.floor(G.pot*0.5);
   return base+Math.max(0,depth)*3+(G.runStars|0)*2+(cashout?0:proximityRep());
 }
@@ -973,30 +1099,30 @@ const RELIC_POOL=[
 /* éditions de cartes : foil = jetons bonus, holo = +mult, poly = ×mult */
 const TAROT_POOL=[
   {id:'etoile',cost:7,when:'any',
-    use(){addBaraka(2);return t('tarot.etoile.u');}},
+    use(){if(barakaLevel()>=4)return false;addBaraka(2,false);return t('tarot.etoile.u');}},
   {id:'jugement',cost:11,when:'any',
-    use(){const lvl=barakaLevel();const target=lvl<4?BARAKA_STEPS[lvl]:BARAKA_STEPS[3];addBaraka(Math.max(1,target-(G.baraka||0)));return t('tarot.jugement.u');}},
+    use(){const lvl=barakaLevel();if(lvl>=4)return false;addBaraka(BARAKA_STEPS[lvl]-(G.baraka||0),false);return t('tarot.jugement.u');}},
   {id:'soleil',cost:6,when:'any',
-    use(){G.bank+=18;renderTop();coinBurst(8);return t('tarot.soleil.u');}},
+    use(){if((G.baraka||0)<2)return false;const gain=Math.round(G.table.max*.75);G.bank+=gain;G.baraka-=2;renderTop();renderPressure();coinBurst(8);return t('tarot.soleil.u',cash(gain));}},
   {id:'diable',cost:9,when:'play',need:'cards',
     use(){const c=addEditionToHand('poly');return c?t('tarot.diable.u',c.r+c.s):false;}},
   {id:'lune',cost:8,when:'play',need:'cards',
     use(){const c=addEditionToHand('holo');return c?t('tarot.lune.u',c.r+c.s):false;}},
   {id:'etoileD',cost:7,when:'play',need:'cards',
     use(){const c=addEditionToHand('foil');return c?t('tarot.etoileD.u',c.r+c.s):false;}},
-  {id:'pendu',cost:9,when:'play',need:'extra',
-    use(){const c=G.pHand.pop();renderHands();renderMult();updateBustReadout();renderActions();return t('tarot.pendu.u',c.r+c.s);}},
+  {id:'pendu',cost:9,when:'play',
+    use(){if(G.penduArmed)return false;G.penduArmed=true;return t('tarot.pendu.u');}},
   {id:'magicien',cost:10,when:'play',
-    use(){G.magicNext=true;return t('tarot.magicien.u');}},
+    use(){if(G.magicNext||G.smallNext)return false;G.magicNext=true;return t('tarot.magicien.u');}},
   {id:'roue',cost:6,when:'play',need:'cards',
-    use(){if(Math.random()<0.5){const ed=['foil','holo','poly'][rndInt(3)];const c=addEditionToHand(ed);return c?t('tarot.roue.u',ed.toUpperCase()):false;}return t('tarot.roue.f');}},
+    use(){if(!G.pHand.some(c=>!c.ed))return false;const ed=['foil','holo','poly'][rndInt(3)];const c=addEditionToHand(ed);return c?t('tarot.roue.u',ed.toUpperCase()):false;}},
 ];
 
 /* SERVICES de boutique : régulateurs économiques, appliqués immédiatement à l'achat
    (ni relique ni tarot). Aident à encaisser les coups durs sans casser l'économie. */
 const SERVICE_POOL=[
   {id:'soin',      svc:true, baseCost:0.9,
-    apply(){const c=curTable().cap;if(G.bank<c){G.bank=c;}coinBurst(8);return t('svc.soin.u');}},
+    apply(){const gain=advanceAmount();G.bank+=gain;G._advanceUsed=true;coinBurst(8);return t('svc.soin.u',cash(gain));}},
   {id:'assurance', svc:true, baseCost:0.7,
     apply(){G.insurance=true;return t('svc.assurance.u');}},
   {id:'videur',    svc:true, baseCost:1.1,
@@ -1016,11 +1142,167 @@ function announceEd(c){if(c&&c.ed)popText(t('ed.card',ED_NAME[c.ed]),edInfo(c.ed
 /* ICON retiré : effets affichés via jetons SHOPTOK */
 
 
+
+/* Circuit decisions, protections and progression share the same rules in UI and simulations. */
+function canDecide(){return G.phase==='play'&&!G._dealing&&!G._settling&&!GameClock.reasons.size;}
+function playerDraw(){
+  G.knownCard=null;let c;
+  if(G.magicNext)c=drawIdeal();
+  else if(G.smallNext){
+    if(G.shoe.length<15)buildShoe();
+    let best=G.shoe.length-1;
+    for(let i=0;i<G.shoe.length;i++)if((G.shoe[i].r==='A'?1:cardBase(G.shoe[i].r))<(G.shoe[best].r==='A'?1:cardBase(G.shoe[best].r)))best=i;
+    c=maybeEdition(G.shoe.splice(best,1)[0]);
+  }else c=draw();
+  G.magicNext=false;G.smallNext=false;return c;
+}
+function completePlayerDraw(c,before,mustStand){
+  G._dealing=false;let v=handValue(G.pHand).total;
+  if(v>21&&G.penduArmed){
+    G.penduArmed=false;G.pHand.pop();v=handValue(G.pHand).total;
+    popText(t('tarot.pendu.n'),t('circuit.saved'));renderHands();
+  }else if(v<=21&&before>=16&&hasRelic('aimant')){
+    G.bank+=Math.max(1,Math.round(G.bet*(G.stakeMult||1)*.1));renderTop();
+  }
+  updateBustReadout();renderMult();renderRelics();
+  if(c.ed&&G.pHand.includes(c))announceEd(c);
+  if(v>21||v===21||mustStand){
+    G._settling=true;renderActions();
+    gameDelay(()=>{G._settling=false;if(v>21)handBusted();else afterHandDone();},320);
+  }else renderActions();
+}
+function lossRefund(stake,pv){
+  if(G.insurance){G.insurance=false;popText(t('msg.insurance'),t('msg.insuranceSub'));return stake;}
+  if(hasRelic('talisman')&&!G._talismanUsed){G._talismanUsed=true;popText(t('msg.talisman'),t('msg.talismanSub'));return stake;}
+  return hasRelic('jeton')&&pv>=19&&pv<=20?Math.floor(stake/2):0;
+}
+function recordBossWin(mult){
+  const b=G.bossState||(G.bossState={wins:0,qualified:0,totals:[]});
+  // A split cannot remove both seals in one round.
+  if(b.lastHand!==G.hand){b.wins++;b.lastHand=G.hand;}
+  const pv=handValue(G.pHand).total;
+  if(!b.totals.includes(pv))b.totals.push(pv);
+  const id=G.table.challenge;
+  const q=id==='banker'?G.bet>=G.table.max*.6:
+    id==='concierge'?G.pHand.length>=3||G.tarotThisHand:
+    id==='gravedigger'?G.pHand.length>=4:
+    id==='croupier'?barakaLevel()>=1:
+    id==='godfather'?G.pHand.length>=3&&mult>=2: true;
+  if(q&&b.lastQualified!==G.hand){b.qualified++;b.lastQualified=G.hand;}
+}
+function bossReady(){
+  const id=G.table?.challenge;if(!id)return true;
+  const b=G.bossState||{wins:0,qualified:0,totals:[]};
+  if(id==='godfather')return b.wins>=3&&b.qualified>=1;
+  if(id==='accountant')return b.wins>=2&&b.totals.length>=2;
+  if(id==='gravedigger')return b.wins>=2&&(b.qualified>=1||b.wins>=3);
+  if(['banker','concierge','croupier'].includes(id))return b.wins>=2&&b.qualified>=1;
+  return b.wins>=2;
+}
+function bossProgress(){
+  if(!G.table?.challenge)return '';
+  const b=G.bossState||{wins:0,qualified:0,totals:[]},need=G.table.challenge==='godfather'?3:2;
+  return t('circuit.seals',Math.min(bossReady()?need:need-1,b.wins),need)+(bossReady()?' · '+t('circuit.ready'):' · '+t('boss.'+G.table.challenge));
+}
+function checkBankGoal(){
+  if(G.endless||G.phase!=='bet'||G.draftLeft>0)return false;
+  if(G.bank>=G.table.goal&&bossReady()){finishTable();return true;}return false;
+}
+function recommendedBet(){
+  const opts=betChoices().filter(x=>x<=G.bank),target=G.table.max*.75;
+  return opts.reduce((a,b)=>Math.abs(b-target)<Math.abs(a-target)?b:a,opts[0]||G.table.min);
+}
+function resetTableState(retry){
+  const carry=retry?0:Math.min(2,Math.floor((G.baraka||0)/2));
+  Object.assign(G,{hand:1,phase:'bet',pressure:0,baraka:G.table.rule==='depart'?2:carry,tableMaxBaraka:0,dHand:[],pHand:[],forcedUsed:false,tableMaxPressure:0,objHit:false,_talismanUsed:false,_dealing:false,_settling:false,penduArmed:false,magicNext:false,smallNext:false,counterUsed:false,phareUsed:false,knownCard:null,splitActive:false,hands:null,hi:0,stakeMult:1,tarotThisHand:false,bossState:{wins:0,qualified:0,totals:[]}});
+  if(!retry)G.tableRetried=false;
+}
+function grantZoneTarot(){
+  if(G.endless||G.giftZones.includes(G.table.zone))return;
+  const gifts=['pendu','etoileD','etoile','lune','roue','magicien','jugement','diable'];
+  G.zoneGift=gifts[G.table.zone-1];G.giftZones.push(G.table.zone);claimZoneGift();
+}
+function claimZoneGift(){
+  if(!G.zoneGift||G.consumables.length>=consumableSlots())return;
+  G.consumables.push({...TAROT_POOL.find(c=>c.id===G.zoneGift),_paid:0});G.zoneGift=null;
+}
+function showStarterDraft(){
+  const first=G.relics.length===0;
+  const pool=first?['jeton','maitresse','lunettes'].map(id=>RELIC_POOL.find(r=>r.id===id)):
+    RELIC_POOL.filter(r=>!hasRelic(r.id)&&(!r.lock||uLvl(r.lock)));
+  if(!first)for(let i=pool.length-1;i>0;i--){const j=rndInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
+  G.draftChoices=pool.slice(0,3);
+  const screen=$('draftScreen');if(!screen)return;
+  $('draftTitle').textContent=t(first?'circuit.draft':'circuit.contact');
+  $('draftCopy').textContent=t('circuit.draftCopy');
+  $('draftChoices').replaceChildren();
+  G.draftChoices.forEach((r,i)=>{
+    const b=document.createElement('button');b.className='btn draft-choice b-blue';
+    b.innerHTML=effectMark(r.id,tokFor(r.id).c)+'<span>'+iName(r)+'<small>'+iDesc(r)+'</small></span>';
+    b.onclick=()=>chooseStarter(i);$('draftChoices').append(b);
+  });
+  screen.classList.add('show');
+}
+function chooseStarter(i){
+  if(G.phase!=='draft')return;const r=G.draftChoices[i];if(!r)return;
+  G.relics.push({...r,_paid:0});G.draftLeft--;
+  if(G.draftLeft>0){showStarterDraft();return;}
+  $('draftScreen')?.classList.remove('show');enterTable(0);
+}
+function showTableBrief(){
+  const screen=$('tableBrief');if(!screen)return;
+  $('briefTitle').textContent=tableName(G.table);
+  $('briefRule').textContent=tableRuleText(G.table);
+  $('briefGoal').textContent=t('circuit.briefGoal',cash(G.table.goal),G.table.mains,cash(recommendedBet()));
+  $('briefContracts').replaceChildren();
+  G.contractChoices.forEach((c,i)=>{
+    const b=document.createElement('button');b.className='btn b-blue contract-choice';
+    b.innerHTML='<span>'+contractText(c)+'</span><small>+'+c.reward+' '+STAR+' · '+t('circuit.chooseContract')+'</small>';
+    b.onclick=()=>chooseContract(i);$('briefContracts').append(b);
+  });
+  screen.classList.add('show');
+}
+function chooseContract(i){
+  if(G.phase!=='bet'||!G.contractChoices?.[i])return;
+  G.contract=G.contractChoices[i];$('tableBrief')?.classList.remove('show');
+  renderTop();checkBankGoal();
+}
+function renderCircuitStatus(){
+  const el=$('circuitStatus');if(!el)return;
+  if(G.endless){el.hidden=true;return;}
+  el.hidden=false;el.textContent=G.table.challenge?bossProgress():tableRuleText(G.table);
+  el.classList.toggle('complete',!!G.table.challenge&&bossReady());
+}
+function renderShopInventory(){
+  const el=$('shopInventory');if(!el)return;el.replaceChildren();
+  if(G.tableIdx>=RUN_LEN-1)return;
+  if(G.relics.length||G.consumables.length){const label=document.createElement('p');label.textContent=t('shop.manage');el.append(label);}
+  for(const [kind,items] of [['relic',G.relics],['tarot',G.consumables]])items.forEach((item,i)=>{
+    const b=document.createElement('button');b.className='btn shop-sell';
+    b.textContent=t('shop.sellItem',iName(item),cash(sellValue(item)));
+    b.disabled=kind==='relic'&&item.id==='portebonheur'&&G.consumables.length>=consumableSlots();
+    b.onclick=()=>{if(G.phase!=='shop')return;inspectRef={kind,i};sellItem();};el.append(b);
+  });
+}
+function relicStatus(item){
+  const used=item.id==='talisman'?G._talismanUsed:item.id==='compteur'?G.counterUsed:item.id==='phare'?G.phareUsed:null;
+  return used===null?'':t(used?'circuit.used':'circuit.available');
+}
+function relicPower(id){
+  if(!canDecide()||!hasRelic(id))return false;
+  if(id==='compteur'&&!G.counterUsed){
+    if(G.shoe.length<15)buildShoe();G.shoe.pop();G.counterUsed=true;G.knownCard=G.shoe[G.shoe.length-1];updateBustReadout();return true;
+  }
+  if(id==='phare'&&!G.phareUsed&&!G.magicNext&&!G.smallNext){G.smallNext=true;G.phareUsed=true;return true;}
+  return false;
+}
+
 /* ---------- état ---------- */
 let G={};
 function freshGame(){
+  GameClock.clear();
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
-     peekUsed:false,relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,baraka:0,barakaMax:0,insurance:false,objHit:false,
+     peekUsed:false,knownCard:null,penduArmed:false,smallNext:false,counterUsed:false,phareUsed:false,tableRetried:false,bossState:{wins:0,qualified:0,totals:[]},giftZones:[],relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,baraka:0,barakaMax:0,insurance:false,objHit:false,
      phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1,splitActive:false,hands:null,hi:0,
      endless:false,palier:0,peak:0,boons:{relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0},streak:0,event:null,contract:null,_talismanUsed:false,_palierCash:false,
      stats:{won:0,played:0,bestGain:0,bestMult:1}};
@@ -1045,7 +1327,7 @@ function maybeEdition(c){
 function draw(){if(G.shoe.length<15)buildShoe();return maybeEdition(G.shoe.pop());}
 function drawIdeal(){
   if(G.shoe.length<15)buildShoe();
-  const top=Math.max(0,G.shoe.length-30);let bestIdx=-1,bestVal=-1;
+  const top=0;let bestIdx=-1,bestVal=-1;
   for(let i=G.shoe.length-1;i>=top;i--){
     const t=handValue([...G.pHand,G.shoe[i]]).total;
     if(t<=21&&t>bestVal){bestVal=t;bestIdx=i;}
@@ -1061,29 +1343,31 @@ function handValue(cards){
   return {total,soft:aces>0};
 }
 function bustChance(cards){
-  const v=handValue(cards).total;
-  if(v>=21)return v>21?100:0;
-  let bust=0;for(const r of RANKS){let a=cardBase(r);if(r==='A')a=1;if(v+a>21)bust++;}
-  return Math.round(bust/RANKS.length*100);
+  const pool=G.shoe?.length?G.shoe:RANKS.map(r=>({r}));
+  return Math.round(pool.filter(c=>handValue(cards.concat(c)).total>21).length/pool.length*100);
 }
 
 /* ---------- BARAKA (remplace la pression) ----------
    Barre de veine qui persiste entre les mains : monte quand on gagne
    (coup culotté = +2), retombe à zéro quand on perd. Chaque niveau donne
    un multiplicateur ET débloque de plus grosses mises. */
-const BARAKA_STEPS=[3,6,10,15];                 // points cumulés pour les niveaux 1..4
-const BARAKA_MULT=[1,1.25,1.5,1.75,2];          // multiplicateur par niveau (0..4)
+const BARAKA_STEPS=[2,4,7,10];                 // points cumulés pour les niveaux 1..4
+const BARAKA_MULT=[1,1.15,1.3,1.45,1.6];          // multiplicateur par niveau (0..4)
 const BARAKA_COL=['#9bbfa8','#34b6a8','#e8b84a','#f0902a','#e0524f'];
 function barakaLevel(){let l=0;const b=G.baraka||0;for(const s of BARAKA_STEPS)if(b>=s)l++;return l;}
 function barakaPct(){const b=G.baraka||0,lvl=barakaLevel();if(lvl>=4)return 100;const lo=lvl>0?BARAKA_STEPS[lvl-1]:0,hi=BARAKA_STEPS[lvl];return Math.min(100,(lvl+(b-lo)/(hi-lo))/4*100);}
-function addBaraka(n){
-  if(n>0){
+function addBaraka(n,boost=true){
+  if(n>0&&boost){
     if(hasRelic('clope'))n*=1.3;                       // Cigarette : la baraka monte 30 % plus vite
     if(G.table&&G.table.rule==='nervous')n*=2;          // Table nerveuse : la baraka monte 2× plus vite
   }
-  G.baraka=Math.max(0,(G.baraka||0)+n);G.barakaMax=Math.max(G.barakaMax||0,G.baraka);G.tableMaxBaraka=Math.max(G.tableMaxBaraka||0,G.baraka);renderPressure();renderMult();
+  G.baraka=Math.min(BARAKA_STEPS[3],Math.max(0,(G.baraka||0)+n));G.barakaMax=Math.max(G.barakaMax||0,G.baraka);G.tableMaxBaraka=Math.max(G.tableMaxBaraka||0,G.baraka);renderPressure();renderMult();
 }
-function resetBaraka(){if(G.boons&&G.boons.filet){const l=barakaLevel();G.baraka=l>=2?BARAKA_STEPS[l-2]:0;}else G.baraka=0;renderPressure();renderMult();}
+function resetBaraka(){
+  if(G.endless){if(G.boons?.filet){const l=barakaLevel();G.baraka=l>=2?BARAKA_STEPS[l-2]:0;}else G.baraka=0;}
+  else G.baraka=Math.floor((G.baraka||0)*(hasRelic('froid')||G.table.rule==='serein'?.75:.5)*10)/10;
+  renderPressure();renderMult();
+}
 /* coup culotté : gagner de façon osée → +2 baraka au lieu de +1 */
 function isCulotte(pv,mode){
   if((G.stakeMult||1)>=2)return true;                                                   // doublé
@@ -1112,6 +1396,7 @@ function computeMult(mode){
   const isNatural=(mode==='natural'&&G.pHand.length===2&&pv===21);
   if(isNatural){mult*=1.5;lines.push([t('m.blackjack'),'×1.5']);}
   if(pv===21&&!isNatural){mult*=3;lines.push([t('m.perfect'),'×3']);}
+  if(hasRelic('phare')&&G.pHand.length===4&&pv<=21){mult*=1.5;lines.push([t('relic.phare.n'),'×1.5','phare']);}
   if(G.pHand.length>=5&&pv<=21){const cm=hasRelic('phare')?3:2;mult*=cm;lines.push([t('m.charlie'),'×'+cm,hasRelic('phare')?'phare':undefined]);}
   if(countRank('7')>=2){mult*=1.5;lines.push([t('m.pair7'),'×1.5']);}
   /* bonus de COMPOSITION : récompensent les mains construites (≥3 cartes) */
@@ -1122,25 +1407,17 @@ function computeMult(mode){
   if(G.insisted){mult*=1.5;lines.push([t('m.pushing'),'×1.5']);}
   const _bl=barakaLevel();
   if(_bl>0){mult*=BARAKA_MULT[_bl];lines.push([t('m.streak',_bl),'×'+BARAKA_MULT[_bl]]);}   // veine en cours
-  if(hasRelic('bruleur')&&_bl>=2){mult*=1.5;lines.push([t('m.burner'),'×1.5','bruleur']);}
+  if(hasRelic('bruleur')&&_bl>=2){mult*=1.3;lines.push([t('m.burner'),'×1.3','bruleur']);}
   /* éditions des cartes en main */
   let foil=0,holo=0,poly=0;
   for(const c of G.pHand){if(c.ed==='foil')foil++;else if(c.ed==='holo')holo++;else if(c.ed==='poly')poly++;}
-  if(foil){bonusChips+=foil*3;lines.push([PXI('diamond')+' '+t('m.foil'),t('m.foilV',foil*3)]);}
+  if(foil){const chips=foil*Math.max(1,Math.round(G.bet*(G.stakeMult||1)*.15));bonusChips+=chips;lines.push([PXI('diamond')+' '+t('m.foil'),t('m.foilV',chips)]);}
   if(holo){mult+=holo;lines.push([PXI('diamond')+' '+t('m.holo'),'+'+holo]);}
   if(poly){const pm=Math.pow(1.5,poly);mult*=pm;lines.push([PXI('diamond')+' '+t('m.poly'),'×'+(Math.round(pm*100)/100)]);}
   if(hasRelic('as')&&G.pHand.some(c=>c.r==='A')){mult+=1;lines.push([t('m.ace'),'+1','as']);}
-  if(hasRelic('froid')&&_bl>=3){mult+=1;lines.push([t('m.cool'),'+1','froid']);}
-  /* ---- PETITS BONUS SITUATIONNELS : du pep's, en multiplicateur (proportionnel à la mise → facile à équilibrer) ---- */
-  const figs=G.pHand.filter(c=>c.r==='J'||c.r==='Q'||c.r==='K').length;
-  if(figs>=2){mult*=1.5;lines.push([t('m.court'),'×1.5']);}                             // les figures paient (2+ têtes)
-  if(pv<=15){mult*=1.5;lines.push([t('m.lowball'),'×1.5']);}                             // gagner avec un petit total (≤15)
-  if(G.pHand.length>=3&&handValue(G.pHand.slice(0,2)).total<=11&&pv>=17){mult*=1.3;lines.push([t('m.comeback'),'×1.3']);}  // parti de bas, remonté à 17+
-  if(!G.endless&&isFinite(G.table.mains)&&G.hand>=G.table.mains){mult*=1.5;lines.push([t('m.clutch'),'×1.5']);} // dernière main de la table
-  if(G.revealed){const dvv=handValue(G.dHand).total; if(pv<=21&&dvv<=21&&pv-dvv===1){mult*=1.5;lines.push([t('m.byone'),'×1.5']);}} // battre le croupier d'exactement 1
-  /* anti-explosion : rendement décroissant au-delà de ×3, puis plafond de zone */
+  if(pv<=15){mult*=1.5;lines.push([t('m.lowball'),'×1.5']);}
+  /* One explicit cap, with no hidden reduction of individual bonuses. */
   const cap=(ZONE_MULTCAP[curTable().zone]||9)+((G.boons&&G.boons.mult)||0);
-  if(mult>3)mult=3+(mult-3)*0.6;            // au-delà de ×3, chaque bonus compte à 60 %
   if(mult>cap){mult=cap;lines.push([t('m.zonecap'),'×'+cap]);}
   mult=Math.round(mult*100)/100;
   return {mult,lines,bonusChips};
@@ -1247,8 +1524,8 @@ function renderHands(reveal=false){
     if(c._pending)return;                                         // pas encore distribuée
     if(G.doFlip&&reveal&&(G.table.rule==='mute'||i===1)&&!dealerFaceTurns.has(c)){
       const turnState=G;dealerFaceTurns.set(c,false);
-      setTimeout(()=>{if(G===turnState&&dealerFaceTurns.has(c)){dealerFaceTurns.set(c,true);renderHandTotals(true);window.ColdDeckFX?.onCard(c);}},window.ColdDeckFX?.reduced?0:CARD_FACE_AT);
-      setTimeout(()=>{dealerFaceTurns.delete(c);if(G===turnState)renderHands(true);},CARD_FLIP);
+      gameDelay(()=>{if(G===turnState&&dealerFaceTurns.has(c)){dealerFaceTurns.set(c,true);renderHandTotals(true);window.ColdDeckFX?.onCard(c);}},window.ColdDeckFX?.reduced?0:CARD_FACE_AT);
+      gameDelay(()=>{dealerFaceTurns.delete(c);if(G===turnState)renderHands(true);},CARD_FLIP);
     }
     const hideMute=(G.table.rule==='mute'&&!reveal);
     const hideHole=(i===1&&!reveal&&G.phase!=='done');
@@ -1337,7 +1614,8 @@ function comboHints(){
   /* --- déjà acquis (s'appliquent si tu gagnes la main) --- */
   if(v===21&&n===2)add(on,'blackjack',t('m.blackjack')+' ×1.5');
   if(v===21&&n>2)add(on,'perfect',t('m.perfect')+' ×3');
-  if(n>=5&&v<=21)add(on,'charlie',t('m.charlie')+' ×2');
+  if(n>=5&&v<=21)add(on,'charlie',t('m.charlie')+' ×'+(hasRelic('phare')?3:2));
+  if(n===4&&v<=21&&hasRelic('phare'))add(on,'phare',t('relic.phare.n')+' ×1.5');
   if(sevens>=2)add(on,'pair7',t('m.pair7')+' ×1.5');
   if(n>=3&&suits.size===1)add(on,'flush',t('m.flush')+' ×2');
   if(isStraight(h))add(on,'straight',t('m.straight')+' ×2');
@@ -1345,10 +1623,7 @@ function comboHints(){
   if(G.insisted)add(on,'pushing',t('m.pushing')+' ×1.5');
   {const bl=barakaLevel();if(bl>0)add(on,'streak'+bl,t('m.streak',bl)+' ×'+BARAKA_MULT[bl]);}
   /* petits bonus situationnels prévisibles en direct */
-  if(h.filter(c=>c.r==='J'||c.r==='Q'||c.r==='K').length>=2)add(on,'court',t('m.court')+' ×1.5');
   if(n&&v<=15)add(on,'lowball',t('m.lowball')+' ×1.5');
-  if(n>=3&&handValue(h.slice(0,2)).total<=11&&v>=17)add(on,'comeback',t('m.comeback')+' ×1.3');
-  if(!G.endless&&isFinite(G.table.mains)&&G.hand>=G.table.mains)add(on,'clutch',t('m.clutch')+' ×1.5');
   /* --- à portée (une carte / un cran) --- */
   if(v<21&&v>=11&&21-v<=10)add(soon,'perfect',t('cb.to21',21-v));
   if(n===4&&v<=20)add(soon,'charlie',t('cb.charlie'));
@@ -1439,7 +1714,7 @@ function renderTop(){
     bits.push(t('top.worth',STAR+abbr(endlessCashRep())));         // la tension : sécuriser ou replonger
     bits.push(t('top.record',cash(Math.max(G.peak||0,G.bank))));
   }else{
-    bits.push(t('top.mastery',cash(tb.master)));
+    bits.push(t('circuit.stars'));if(tb.challenge)bits.push(bossProgress());
     bits.push(t('top.betRange',abbr(tb.min),abbr(tb.max)));
     bits.push(t('top.stars',G.runStars||0));
     if(G.pot>0)bits.push(t('top.pot',abbr(G.pot)));
@@ -1448,7 +1723,7 @@ function renderTop(){
   $('ruleText').innerHTML=bits.join('  ·  ');
   $('ruleText').classList.toggle('boss',!!tb.boss);
   $('shoeCount').textContent=G.shoe.length;
-  renderObjective();
+  renderObjective();renderCircuitStatus();
 }
 /* barre de progression GAIN → OBJECTIF (au-dessus du tapis) */
 function renderObjective(){
@@ -1554,8 +1829,8 @@ function renderRelics(){
     const key=r.id+':'+occurrence;
     let d=existing.get(key);
     if(!d){d=document.createElement('div');d.className='joker';d.dataset.relic=r.id;d.dataset.inventoryKey=key;d.innerHTML=effectMark(r.id,tokFor(r.id).c);}
-    d.classList.toggle('hot',(r.id==='froid'||r.id==='clope')&&barakaLevel()>=3);
-    d.title=`${iName(r)} — ${iDesc(r)}`;
+    d.classList.toggle('hot',r.id==='bruleur'&&barakaLevel()>=2);
+    d.title=`${iName(r)} — ${iDesc(r)} ${relicStatus(r)}`;d.classList.toggle('spent',!!relicStatus(r)&&relicStatus(r)===t('circuit.used'));
     d.setAttribute('role','button');d.tabIndex=0;d.setAttribute('aria-label',d.title);d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();d.click();}};d.onclick=()=>openInspect('relic',idx);
     return d;
   });
@@ -1585,74 +1860,77 @@ function renderConsumables(){
   fanEffects();
 }
 function addEditionToHand(ed){
-  if(!G.pHand.length)return false;
-  let pool=G.pHand.map((c,i)=>i).filter(i=>!G.pHand[i].ed);
-  if(!pool.length)pool=G.pHand.map((c,i)=>i);
-  const idx=pool[rndInt(pool.length)];
-  G.pHand[idx].ed=ed;renderHands();renderMult();
-  return G.pHand[idx];
+  const eligible=G.pHand.filter(c=>!c.ed);
+  const target=G.pHand[G.editionTarget];
+  const c=target&&!target.ed?target:eligible[0];
+  if(!c)return false;c.ed=ed;renderHands();renderMult();return c;
 }
-function useConsumable(i,el){
-  const card=G.consumables[i];if(!card)return;
+function useConsumable(i,el,target){
+  const card=G.consumables[i];if(!card||!['bet','play'].includes(G.phase)||G._dealing||G._settling||GameClock.reasons.size)return;
   if(card.when==='play'&&G.phase!=='play'){popText(t('msg.notNow'),t('msg.notNowSub'));return;}
-  if(card.need==='cards'&&!G.pHand.length){popText(t('msg.noCards'),'');return;}
-  if(card.need==='extra'&&G.pHand.length<=2){popText(t('msg.cant'),t('msg.keep3'));return;}
-  const res=card.use();
+  if(card.need==='cards'&&!G.pHand.some(c=>!c.ed)){popText(t('circuit.noBlank'),'');return;}
+  G.editionTarget=target;
+  const res=card.use();delete G.editionTarget;
   if(res===false){popText(t('msg.cant'),'');return;}
   if(el)el.classList.add('flash');
-  G.consumables.splice(i,1);sfx.buy();popText(iName(card),res);
-  renderConsumables();
+  G.consumables.splice(i,1);G.tarotThisHand=true;sfx.buy();popText(iName(card),res);claimZoneGift();
+  renderConsumables();renderRelics();renderTop();renderActions();renderMult();checkBankGoal();
 }
 /* prix de revente : la moitié de ce qu'on a payé (jamais plus cher que l'achat) */
 function sellValue(item){
-  const base=(item&&item._paid!=null)?item._paid:itemCost(item||{cost:0});
-  return Math.max(1,Math.round(base*0.5));
+  return Math.max(0,Math.floor((item?._paid||0)*.5));
 }
 let inspectRef=null;
 function openInspect(kind,i){
-  const item=kind==='tarot'?G.consumables[i]:G.relics[i];
-  if(!item)return;
-  inspectRef={kind,i};
-  const tk=tokFor(item.id);
-  const tag=kind==='tarot'
-    ?'<span style="color:var(--grape)">'+t('insp.tarot')+'</span>'
-    :'<span style="color:var(--yellow)">'+t('insp.relic')+'</span>';
-  $('inspectBody').innerHTML=`<div class="inspCard tag ${kind==='tarot'?'tarot':'joker'}">${effectMark(item.id,tk.c)}</div>`
-    +`<h1 class="win" style="font-size:24px;margin:0 0 4px">${iName(item)}</h1>`
-    +`<p style="font-size:10px;letter-spacing:.08em;margin:0 0 12px">${tag}</p>`
-    +`<p style="color:var(--paper);font-size:13px;line-height:1.6;margin:0 0 4px">${iDesc(item)}</p>`;
-  scheduleFitChipText();
+  const item=kind==='tarot'?G.consumables[i]:G.relics[i];if(!item)return;
+  inspectRef={kind,i};GameClock.pause('inspect',true);
+  const status=kind==='relic'?relicStatus(item):'';
+  $('inspectBody').innerHTML='<div class="inspCard tag '+(kind==='tarot'?'tarot':'joker')+'">'+effectMark(item.id,tokFor(item.id).c)+'</div><h1>'+iName(item)+'</h1><p>'+iDesc(item)+'</p>'+(status?'<p class="relic-state">'+status+'</p>':'');
   const act=$('inspectActions');act.innerHTML='';
-  const mk=(label,cls,fn,dis)=>{const b=document.createElement('button');b.className='btn '+cls;b.style.cssText='font-size:13px;padding:11px 15px';b.innerHTML=label;if(dis)b.disabled=true;else b.onclick=fn;act.appendChild(b);return b;};
+  const mk=(label,fn,disabled=false)=>{const b=document.createElement('button');b.className='btn b-blue';b.textContent=label;b.disabled=disabled;b.onclick=fn;act.append(b);return b;};
+  const decision=['bet','play'].includes(G.phase)&&!G._dealing&&!G._settling;
   if(kind==='tarot'){
-    const notYet=(item.when==='play'&&G.phase!=='play');
-    mk(t('insp.use'),'b-purple',()=>{const idx=inspectRef.i;closeInspect();useConsumable(idx);},notYet);
+    const playable=decision&&(item.when!=='play'||G.phase==='play');
+    mk(t('insp.use'),()=>{
+      if(['diable','lune','etoileD'].includes(item.id)){
+        const ed={diable:'poly',lune:'holo',etoileD:'foil'}[item.id];act.replaceChildren();
+        const base=computeMult('stand'),stake=G.bet*(G.stakeMult||1),before=Math.round((stake+base.bonusChips)*base.mult);
+        G.pHand.forEach((c,j)=>{if(c.ed)return;c.ed=ed;const after=computeMult('stand');delete c.ed;
+          const gain=Math.round((stake+after.bonusChips)*after.mult)-before;
+          mk(c.r+c.s+' · '+t('circuit.editionPreview',cash(gain)),()=>{closeInspect();useConsumable(i,null,j);});
+        });
+        mk(t('insp.close'),closeInspect);
+      }else {closeInspect();useConsumable(i);}
+    },!playable||(item.need==='cards'&&!G.pHand.some(c=>!c.ed))||(['etoile','jugement'].includes(item.id)&&barakaLevel()>=4)||(item.id==='soleil'&&G.baraka<2)||(item.id==='pendu'&&G.penduArmed)||(item.id==='magicien'&&(G.magicNext||G.smallNext)));
+  }else if(['compteur','phare'].includes(item.id)){
+    const used=item.id==='compteur'?G.counterUsed:G.phareUsed;
+    mk(t('power.'+item.id),()=>{closeInspect();if(relicPower(item.id)){sfx.buy();renderRelics();renderActions();}},!decision||G.phase!=='play'||used||(item.id==='phare'&&(G.magicNext||G.smallNext)));
   }
-  mk(t('insp.sell',cash(sellValue(item))),'b-gold',sellItem);
-  mk(t('insp.close'),'b-blue',closeInspect);
-  $('inspectScreen').classList.add('show');
+  mk(t('insp.sell',cash(sellValue(item))),sellItem,!['bet','shop'].includes(G.phase)||(kind==='relic'&&item.id==='portebonheur'&&G.consumables.length>=consumableSlots()));
+  mk(t('insp.close'),closeInspect);$('inspectScreen').classList.add('show');
 }
-function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show');inspectRef=null;}
+function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show');inspectRef=null;GameClock.pause('inspect',false);if(typeof syncMenuFocus==='function')syncMenuFocus();}
 function sellItem(){
-  if(!inspectRef)return;
+  if(!inspectRef||!['bet','shop'].includes(G.phase))return;
   const {kind,i}=inspectRef;
   const arr=kind==='tarot'?G.consumables:G.relics;
   const item=arr[i];if(!item){closeInspect();return;}
+  if(kind==='relic'&&item.id==='portebonheur'&&G.consumables.length>=consumableSlots())return;
   const val=sellValue(item);
   G.bank+=val;arr.splice(i,1);sfx.buy();
   closeInspect();
   popText(t('msg.sold'),iName(item)+' · +'+cash(val));
-  renderRelics();renderConsumables();renderTop();renderChips();renderActions();
+  claimZoneGift();renderRelics();renderConsumables();renderTop();renderChips();renderActions();
+  if(G.phase==='shop'){renderShopHead();renderShop();}else checkBankGoal();
 }
 function applyHandIncome(){
-  let inc=0;const parts=[];
-  if(hasRelic('mecene')){inc+=4;parts.push(t('inc.patron',4));}
-  if(hasRelic('usurier')){const u=Math.min(6,Math.floor(G.bank/5));if(u>0){inc+=u;parts.push(t('inc.shark',u));}}
-  const tip=uLvl('pourboire');if(tip>0){inc+=tip;parts.push(t('inc.tip',tip));}
-  if(G.boons&&G.boons.income>0){inc+=G.boons.income;parts.push(t('inc.tier',G.boons.income));}
-  // on ne montre plus le revenu en pop séparé : il est intégré au panneau de début de main
-  if(inc>0){G.bank+=inc;renderTop();renderChips();G._income={amt:inc,parts:parts.slice()};}
-  else G._income=null;
+  let inc=0;const parts=[],unit=G.table.max;
+  if(hasRelic('mecene')&&G.bank<G.table.cap){const n=Math.max(1,Math.round(unit*.12));inc+=n;parts.push(t('inc.patron',n));}
+  if(hasRelic('usurier')){const n=Math.min(Math.round(unit*.12),Math.floor(G.bank*.01));if(n>0){inc+=n;parts.push(t('inc.shark',n));}}
+  const tip=G.endless?uLvl('pourboire'):Math.round(unit*.02*uLvl('pourboire'));
+  if(tip>0){inc+=tip;parts.push(t('inc.tip',tip));}
+  if(G.boons?.income>0){inc+=G.boons.income;parts.push(t('inc.tier',G.boons.income));}
+  if(inc>0){G.bank+=inc;renderTop();renderChips();G._income={amt:inc,parts:parts.slice()};}else G._income=null;
 }
 /* mises échelonnées : on monte avec la banque (100, 200, 500, 1000…) ;
    on n'affiche que les 4 plus grosses valeurs abordables pour ne pas surcharger */
@@ -1670,6 +1948,7 @@ function betChoices(){
   return opts;
 }
 function clampBet(){
+  if(G.phase!=='bet')return; // Never change an already committed stake.
   const opts=betChoices();
   G.bet=Math.max(opts[0],Math.min(opts[opts.length-1],G.bet));
   // toujours calée sur un palier de mise réellement affiché (sinon rien n'apparaît sélectionné)
@@ -1693,10 +1972,10 @@ function renderChips(){
 }
 function syncPeek(){
   const b=$('peekBtn');if(!b)return;
-  b.classList.toggle('show',G.phase==='play'&&hasRelic('lunettes')&&!G.peekUsed);
+  b.classList.toggle('show',G.phase==='play'&&!G._dealing&&!G._settling&&hasRelic('lunettes')&&!G.peekUsed);
 }
 function renderActions(){
-  syncPeek();
+  updateBustReadout();syncPeek();
   $('app').dataset.phase=G.phase;
   $('betRow').hidden=G.phase!=='bet';
   const a=$('actions');a.innerHTML='';
@@ -1719,7 +1998,7 @@ function renderActions(){
     a.appendChild(main);return;
   }
   // Le dock garde sa place pendant les animations, seules les actions jouables sont affichées.
-  const live=(G.phase==='play'&&!G._dealing);
+  const live=(G.phase==='play'&&!G._dealing&&!G._settling);
   if(!live){renderCombos();return;}
   const v=G.pHand.length?handValue(G.pHand).total:0;
   const flirt=v>=17&&v<=20;
@@ -1742,22 +2021,23 @@ function renderActions(){
   if(wide.childElementCount)a.appendChild(wide);
 }
 function usePeek(){
-  if(G.peekUsed||G.phase!=='play'||!hasRelic('lunettes'))return;G.peekUsed=true;
-  const n=G.shoe[G.shoe.length-1];
-  $('tip').textContent=t('ui.next',n.r+n.s);blip(880,.05,'sine',.06);syncPeek();
+  if(!canDecide()||G.peekUsed||!hasRelic('lunettes'))return;
+  if(G.shoe.length<15)buildShoe();G.peekUsed=true;G.knownCard=G.shoe[G.shoe.length-1];
+  blip(880,.05,'sine',.06);syncPeek();updateBustReadout();
 }
 function updateBustReadout(){
-  if(hasRelic('compteur')&&G.phase==='play'){
-    const bc=bustChance(G.pHand);
-    $('tip').textContent=t('ui.bustRisk',bc);
-    $('tip').style.color=bc>50?'var(--orange)':'var(--gold)';
-  }
+  const el=$('drawReadout');if(!el)return;
+  const live=G.phase==='play'&&!G._dealing&&!G._settling&&handValue(G.pHand).total<21;
+  el.hidden=!live;if(!live)return;
+  el.textContent=(G.knownCard?t('ui.next',G.knownCard.r+G.knownCard.s)+' · ':'')+t('ui.bustRisk',bustChance(G.pHand))+(G.penduArmed?' · '+t('circuit.penduReady'):'')+(G.magicNext?' · '+t('tarot.magicien.u'):'')+(G.smallNext?' · '+t('power.phare'):'');
 }
 
 /* ============================================================
    DÉROULÉ
    ============================================================ */
 function deal(){
+  if(G.phase!=='bet'||GameClock.reasons.size)return;
+  if(checkBankGoal())return;
   audioInit();if(!G.betChosen)return;clampBet();if(G.bank<curTable().min)return;
   window.ColdDeckFX?.clear();
   G.bank-=G.bet;G.stakeMult=1;G.splitActive=false;G.hands=null;G.hi=0;G.splitAces=false;
@@ -1766,11 +2046,12 @@ function deal(){
   if(G.hand===1)p0=(G.table.rule==='depart')?30:0;          // table chaude : seulement à l'entrée
   else p0=Math.max(0,(G.pressure||0)-15);                      // léger refroidissement entre les mains
   p0+=Math.round(12*(G.bet-G.table.min)/Math.max(1,G.table.max-G.table.min));   // grosse mise = +pression
+  G.penduArmed=false;G.smallNext=false;G._settling=false;G.knownCard=null;G.tarotThisHand=false;
   G.phase='play';G.pressure=Math.min(100,p0);G.peekUsed=false;G.insisted=false;G.forced=false;G.magicNext=false;G.maxPressureReached=G.pressure;G.revealed=false;G.doFlip=false;
   G.dHand=[];G.pHand=[];$('tip').textContent='';$('tip').style.color='';
   // on tire les 4 cartes mais on les distribue une par une, en animation
   const p1=draw(),d1=draw(),p2=draw(),d2=draw();
-  if(hasRelic('maitresse')&&!p1.ed)p1.ed='foil';
+  if((hasRelic('maitresse')||(G.table.rule==='atelier'&&G.hand%3===1))&&!p1.ed)p1.ed='foil';
   if(G.endless&&G.event&&G.event.id==='etoile'&&!p1.ed)p1.ed='holo';   // CARTE ÉTOILÉE
   [p1,p2,d1,d2].forEach(c=>{c._pending=true;});                 // pas encore arrivées
   G.pHand.push(p1,p2);G.dHand.push(d1,d2);
@@ -1779,7 +2060,7 @@ function deal(){
   dealSequence([p1,d1,p2,d2]);
 }
 // The total updates as soon as the front is visible; input unlocks after settling.
-const CARD_HOLD=180,CARD_FLIP=520;
+const CARD_HOLD=260,CARD_FLIP=520;
 const CARD_FACE_AT=Math.round(CARD_FLIP*.48);
 document.documentElement.style.setProperty('--card-hold-duration',CARD_HOLD+'ms');
 document.documentElement.style.setProperty('--card-flip-duration',CARD_FLIP+'ms');
@@ -1788,17 +2069,17 @@ function dealCardIn(c,opts,done){
   const reveal=!!(opts&&opts.reveal);
   c._pending=false;c._fd=true;c._flip=false;c._arr=true;delete c._faceVisible;
   renderHands(reveal);sfx.card();
-  setTimeout(()=>{
-    window.ColdDeckFX?.onCardLand(c);
+  gameDelay(()=>window.ColdDeckFX?.onCardLand(c),Math.round(CARD_HOLD*.62));
+  gameDelay(()=>{
     c._arr=false;
     if(opts&&opts.stayDown){c._fd=true;renderHands(reveal);done&&done();return;}
     c._fd=false;c._flip=true;renderHands(reveal);if(!window.ColdDeckFX)sfx.flip();
     const drawState=G;
-    setTimeout(()=>{
+    gameDelay(()=>{
       if(G!==drawState||!c._flip)return;
       c._faceVisible=true;renderHandTotals(reveal);renderMult();window.ColdDeckFX?.onCard(c);
     },window.ColdDeckFX?.reduced?0:CARD_FACE_AT);
-    setTimeout(()=>{c._flip=false;delete c._faceVisible;renderHands(reveal);done&&done();},CARD_FLIP);
+    gameDelay(()=>{c._flip=false;delete c._faceVisible;renderHands(reveal);done&&done();},CARD_FLIP);
   },CARD_HOLD);
 }
 // distribution initiale : mes 2 cartes + 2 du croupier, une par une. La 2e du croupier reste dos.
@@ -1812,25 +2093,17 @@ function finishDeal(){
   [...G.pHand,...G.dHand].forEach(c=>{delete c._pending;delete c._fd;delete c._flip;delete c._arr;delete c._faceVisible;});
   renderActions();renderMult();
   const ec=G.pHand.find(c=>c.ed);if(ec)announceEd(ec);
-  if(handValue(G.pHand).total===21)setTimeout(()=>playerStand(true),420);
+  updateBustReadout();
+  if(handValue(G.pHand).total===21){G._settling=true;renderActions();gameDelay(()=>{G._settling=false;playerStand(true);},420);}
 }
 function playerHit(forced){
-  if(G.phase!=='play'||G._dealing)return;
-  const c=(G.magicNext&&!forced)?drawIdeal():draw();G.magicNext=false;
-  c._pending=true;G.pHand.push(c);
-  $('tip').textContent='';
-  G._dealing=true;renderActions();                             // actions et indications masquées pendant l'arrivée
-  dealCardIn(c,{},()=>{
-    G._dealing=false;
-    if(hasRelic('aimant')){G.bank+=1;renderTop();}              // 🧲 +1 $ par carte tirée
-    addPressure(forced?0:10);updateBustReadout();renderMult();
-    if(c.ed)announceEd(c);
-    const v=handValue(G.pHand).total;
-    if(v>21){setTimeout(handBusted,300);return;}
-    if(v===21){setTimeout(afterHandDone,300);return;}
-    if(forced){setTimeout(afterHandDone,350);return;}
-    renderActions();
-  });
+  if(!canDecide())return;
+  const before=handValue(G.pHand).total;
+  if(before>=21)return;
+  if(before>=17)G.insisted=true;
+  const c=playerDraw();c._pending=true;G.pHand.push(c);G.knownCard=null;
+  $('tip').textContent='';G._dealing=true;renderActions();
+  dealCardIn(c,{},()=>completePlayerDraw(c,before,!!forced));
 }
 /* fin d'une main (rester / bust) : en mode séparé on passe à la main suivante, sinon on résout */
 function afterHandDone(){
@@ -1838,12 +2111,13 @@ function afterHandDone(){
   G.phase='dealer';renderActions();dealerPlay(false);
 }
 function handBusted(){
+  if(handValue(G.pHand).total<=21)return;
   if(G.splitActive){afterHandDone();return;}
   resolve('bust');
 }
 /* SÉPARER : une paire (même rang) devient deux mains, chacune reçoit une 2e carte et se joue à tour de rôle */
 function playerSplit(){
-  if(G.phase!=='play'||G._dealing||G.splitActive||G.pHand.length!==2||G.bank<G.bet)return;
+  if(!canDecide()||G.splitActive||G.pHand.length!==2||G.bank<G.bet)return;
   const [a,b]=G.pHand;if(a.r!==b.r)return;
   G.bank-=G.bet;                                   // 2e mise
   G.splitActive=true;G.splitAces=(a.r==='A');
@@ -1854,7 +2128,7 @@ function playerSplit(){
 }
 /* distribue la 2e carte de la main active, puis rend la main jouable (ou l'auto-résout si As séparés/21) */
 function dealSplitCard(){
-  const c=G.magicNext?drawIdeal():draw();G.magicNext=false;
+  const c=playerDraw();
   c._pending=true;G.pHand.push(c);
   G._dealing=true;renderActions();renderHands(false);
   dealCardIn(c,{},()=>{
@@ -1862,55 +2136,39 @@ function dealSplitCard(){
     updateBustReadout();renderMult();renderHands(false);
     if(c.ed)announceEd(c);
     const v=handValue(G.pHand).total;
-    if(G.splitAces){setTimeout(afterHandDone,520);return;}   // As séparés : une seule carte par main
-    if(v>21){setTimeout(handBusted,300);return;}
-    if(v===21){setTimeout(afterHandDone,320);return;}
+    if(G.splitAces){G._settling=true;gameDelay(()=>{G._settling=false;afterHandDone();},520);return;}   // As séparés : une seule carte par main
+    if(v>21){gameDelay(handBusted,300);return;}
+    if(v===21){G._settling=true;gameDelay(()=>{G._settling=false;afterHandDone();},320);return;}
     renderActions();
   });
 }
 function nextSplitHand(){
-  G.hi++;G.pHand=G.hands[G.hi];G.insisted=false;
+  G.hi++;G.pHand=G.hands[G.hi];G.insisted=false;G.penduArmed=false;
   popText(t('msg.hand',G.hi+1),t('msg.handSub'));
   renderHands(false);
   dealSplitCard();
 }
 /* DOUBLER : sur les 2 premières cartes, double la mise, tire UNE carte, puis reste d'office */
 function playerDouble(){
-  if(G.phase!=='play'||G._dealing||G.pHand.length!==2||G.bank<G.bet)return;
-  G.bank-=G.bet;G.stakeMult=2;
-  sfx.buy();shake(10);popText(t('msg.doubled'),t('msg.doubledSub'));   // pas de gerbe de pièces : l'animation de gain est réservée aux victoires
+  if(!canDecide()||G.splitActive||G.pHand.length!==2||G.bank<G.bet||handValue(G.pHand).total>=17)return;
+  const before=handValue(G.pHand).total;
+  G.bank-=G.bet;G.stakeMult=2;sfx.buy();shake(10);popText(t('msg.doubled'),t('msg.doubledSub'));
   renderTop();renderChips();renderMult();
-  const c=G.magicNext?drawIdeal():draw();G.magicNext=false;
-  c._pending=true;G.pHand.push(c);
-  G._dealing=true;renderActions();
-  dealCardIn(c,{},()=>{
-    G._dealing=false;
-    addPressure(14);updateBustReadout();renderMult();
-    if(c.ed)announceEd(c);
-    const v=handValue(G.pHand).total;
-    if(v>21){setTimeout(handBusted,320);return;}
-    setTimeout(afterHandDone,340);
-  });
+  const c=playerDraw();c._pending=true;G.pHand.push(c);G.knownCard=null;
+  G._dealing=true;renderActions();dealCardIn(c,{},()=>completePlayerDraw(c,before,true));
 }
 function forcerChance(){
-  if(G.phase!=='play'||G._dealing)return;
-  const c1=draw(),c2=draw();
-  const test=c=>{const t=handValue([...G.pHand,c]).total;return t>21?-100:t;};
-  const keep=test(c1)>=test(c2)?c1:c2;
-  G.insisted=true;sfx.danger();shake(22);
+  const before=handValue(G.pHand).total;
+  if(!canDecide()||G.forcedUsed||before<17||before>20)return;
+  G.forcedUsed=true;G.forced=true;G.knownCard=null;
+  const c1=playerDraw(),c2=draw(),value=c=>{const v=handValue(G.pHand.concat(c)).total;return v>21?-100:v;};
+  const keep=value(c1)>=value(c2)?c1:c2;G.insisted=true;sfx.danger();shake(22);
   popText(t('msg.forced'),t('msg.kept',keep.r+keep.s));
-  keep._pending=true;G.pHand.push(keep);
-  G._dealing=true;renderActions();
-  dealCardIn(keep,{},()=>{
-    G._dealing=false;
-    addPressure(26);updateBustReadout();renderMult();
-    const v=handValue(G.pHand).total;
-    if(v>21){setTimeout(handBusted,350);return;}
-    renderActions();
-  });
+  keep._pending=true;G.pHand.push(keep);G._dealing=true;renderActions();
+  dealCardIn(keep,{},()=>completePlayerDraw(keep,before,false));
 }
 function playerStand(natural){
-  if(G.phase!=='play'||(G._dealing&&!natural))return;
+  if(!canDecide()&&!(natural&&G.phase==='play'&&!GameClock.reasons.size))return;
   if(G.splitActive){afterHandDone();return;}          // séparé : passe à la main suivante ou au croupier
   G.phase='dealer';renderActions();dealerPlay(natural);
 }
@@ -1924,14 +2182,15 @@ function dealerPlay(natural){
     const mustHit=v.total<goal||(goal===17&&v.total===17&&v.soft&&hitSoft17);
     if(mustHit){                                                // le croupier tire : même arrivée animée
       const c=draw();c._pending=true;G.dHand.push(c);
-      dealCardIn(c,{reveal:true},()=>setTimeout(step,160));
-    } else setTimeout(()=>resolve(natural?'natural':'stand'),420);
+      dealCardIn(c,{reveal:true},()=>gameDelay(step,160));
+    } else gameDelay(()=>resolve(natural?'natural':'stand'),420);
   };
-  setTimeout(step,CARD_FLIP+20);
+  gameDelay(step,CARD_FLIP+20);
 }
 
 /* ---------- résolution ---------- */
 function resolve(mode){
+  if(G.phase==='done'||G.phase==='shop'||G.phase==='lost'||G.phase==='ended')return;
   if(G.splitActive)return resolveSplit();
   G.phase='done';
   if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
@@ -1941,7 +2200,7 @@ function resolve(mode){
   let outcome;
   if(pBust)outcome='lose';else if(dBust)outcome='win';
   else if(pv>dv)outcome='win';else if(pv<dv)outcome='lose';else outcome='push';
-  if(outcome==='push'&&G.table.rule==='sec')outcome='lose';   // patron : pas d'égalité qui sauve
+  if(outcome==='push'&&G.table.rule==='sec'&&!hasRelic('diplomate'))outcome='lose';   // patron : pas d'égalité qui sauve
 
   let mult=1,lines=[];
   const isNat=(mode==='natural'&&G.pHand.length===2&&pv===21);
@@ -1954,7 +2213,7 @@ function resolve(mode){
     const base=stake+r.bonusChips;
     gain=Math.round(base*mult);
     if(G.endless&&G.event&&G.event.id==='doree'){gain*=2;lines.push([PXI('doree')+' '+t('m.golden'),'×2']);}
-    G.bank+=stake+gain;
+    G.bank+=stake+gain;checkContract(mult);recordBossWin(mult);
     if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,gain);G.stats.bestMult=Math.max(G.stats.bestMult,mult);}
     if(lines.length){$('tip').innerHTML=lines.map(l=>l[0]+' '+l[1]).join('  ·  ');$('tip').style.color='var(--gold)';}
     // décompte animé (carte par carte + multiplicateurs), PUIS l'annonce du gain
@@ -1963,27 +2222,23 @@ function resolve(mode){
     const finishWin=()=>{sfx.win(window.ColdDeckFX?.victoryTier(gain,mult,isNat,isRecord)||1);if(!window.ColdDeckFX&&(mult>1||r.bonusChips>0))sfx.combo();
       flashScore();showWord('win',gain,mult,isNat,false,isRecord);
       if(isPerfect)perfectFanfare();
-      if(isRecord)setTimeout(()=>showRecord(gain),isPerfect?560:280);
-      if(!G.objHit&&G.bank>=G.table.goal){G.objHit=true;setTimeout(objectiveReached,360);}};   // 1re fois qu'on franchit l'objectif
+      if(isRecord)gameDelay(()=>showRecord(gain),isPerfect?560:280);
+      if(!G.objHit&&G.bank>=G.table.goal&&bossReady()){G.objHit=true;gameDelay(objectiveReached,360);}};   // 1re fois qu'on franchit l'objectif
     tallyMs=animateScoreTally(mode,lines,finishWin);
   }else if(outcome==='push'){
-    let pg=0;if(hasRelic('diplomate')){pg=Math.floor(stake*0.5);G.bank+=pg;}
+    let pg=0;if(hasRelic('diplomate')&&G.table.rule!=='sec'){pg=Math.floor(stake*.25);G.bank+=pg;}
     G.bank+=stake;gain=pg;sfx.push();showWord('push',pg,1);
   }else{
-    let back=0;
-    if(G.insurance){G.insurance=false;back=stake;popText(t('msg.insurance'),t('msg.insuranceSub'));}      // service boutique
-    else if(hasRelic('talisman')&&!G._talismanUsed){G._talismanUsed=true;back=stake;popText(t('msg.talisman'),t('msg.talismanSub'));}
-    else if(hasRelic('jeton')&&pv===20&&!pBust){back=Math.floor(stake/2);}
+    const back=lossRefund(stake,pv);
     G.bank+=back;gain=back-stake;
     sfx.lose();shake(8);showWord('lose',gain,1,false,pBust);
   }
 
-  if(outcome==='win')checkContract(mult);                 // contrat de table (mode nuit)
-  // BARAKA : gagner remplit la barre (coup culotté = +2), perdre la remet à zéro
-  if(outcome==='win'){const cul=isCulotte(pv,mode);const culN=2+((G.boons&&G.boons.baraplus)?1:0);addBaraka(cul?culN:1);if(cul)setTimeout(()=>popText(t('msg.gutsy'),t('msg.gutsySub',culN)),320);}
+  // BARAKA: wins add points; Circuit losses preserve a fraction.
+  if(outcome==='win'){const cul=isCulotte(pv,mode);const culN=2+((G.boons&&G.boons.baraplus)?1:0);addBaraka(cul?culN:1);if(cul)gameDelay(()=>popText(t('msg.gutsy'),t('msg.gutsySub',culN)),320);}
   else if(outcome==='lose')resetBaraka();
   renderTop();renderRelics();renderPressure();renderMult();
-  setTimeout(()=>nextHandOrEnd(),1750+tallyMs);
+  gameDelay(()=>nextHandOrEnd(),2200+tallyMs);
 }
 
 /* résolution en mode SÉPARÉ : chaque main est comparée au croupier, gains cumulés */
@@ -1998,36 +2253,35 @@ function resolveSplit(){
     let outcome;
     if(pBust)outcome='lose';else if(dBust)outcome='win';
     else if(pv>dv)outcome='win';else if(pv<dv)outcome='lose';else outcome='push';
-    if(outcome==='push'&&G.table.rule==='sec')outcome='lose';
+    if(outcome==='push'&&G.table.rule==='sec'&&!hasRelic('diplomate'))outcome='lose';
     const stake=G.bet;let g=0;
     if(G.stats){G.stats.played++;}
     if(outcome==='win'){
       G.pHand=h;const r=computeMult('stand');const base=stake+r.bonusChips;
       g=Math.round(base*r.mult);G.bank+=stake+g;
-      checkContract(r.mult);
+      checkContract(r.mult);recordBossWin(r.mult);
       if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,g);G.stats.bestMult=Math.max(G.stats.bestMult,r.mult);}
     }else if(outcome==='push'){
-      let pg=0;if(hasRelic('diplomate')){pg=Math.floor(stake*0.5);G.bank+=pg;}
+      let pg=0;if(hasRelic('diplomate')&&G.table.rule!=='sec'){pg=Math.floor(stake*.25);G.bank+=pg;}
       G.bank+=stake;g=pg;
     }else{
-      let back=0;if(hasRelic('jeton')&&pv===20&&!pBust){back=Math.floor(stake/2);}
+      const back=lossRefund(stake,pv);
       G.bank+=back;g=back-stake;
     }
     net+=g;maxG=Math.max(maxG,g);
     const tag=t(outcome==='win'?'sp.win':outcome==='push'?'sp.push':'sp.lose');
     summary.push(t('sp.hand',i+1)+tag+(g>0?' +'+abbr(g):(g<0?' '+abbr(g):'')));
   });
-  if(G.insurance&&net<0){G.insurance=false;G.bank+=Math.abs(net);net=0;popText(t('msg.insurance'),t('msg.insuranceSub'));}
   const kind=net>0?'win':net<0?'lose':'push';
   const isRecord=checkGainRecord(maxG);
   sfx[kind](kind==='win'?(window.ColdDeckFX?.victoryTier(net,1,false,isRecord)||1):undefined);if(kind==='lose'){shake(8);}
   showWord(kind,Math.abs(net),1,false,false,isRecord);
-  if(isRecord)setTimeout(()=>showRecord(maxG),320);
+  if(isRecord)gameDelay(()=>showRecord(maxG),320);
   $('tip').innerHTML=summary.join('  ·  ');$('tip').style.color='var(--gold)';
-  if(net>0&&!G.objHit&&G.bank>=G.table.goal){G.objHit=true;setTimeout(objectiveReached,360);}
+  if(net>0&&!G.objHit&&G.bank>=G.table.goal&&bossReady()){G.objHit=true;gameDelay(objectiveReached,360);}
   if(net>0)addBaraka(1); else if(net<0)resetBaraka();     // BARAKA (mode séparé)
   renderTop();renderRelics();renderPressure();renderMult();
-  setTimeout(()=>{G.splitActive=false;G.hands=null;G.hi=0;nextHandOrEnd();},2100);
+  gameDelay(()=>{G.splitActive=false;G.hands=null;G.hi=0;nextHandOrEnd();},2350);
 }
 
 /* ---------- progression ---------- */
@@ -2038,27 +2292,30 @@ function nextHandOrEnd(){
     G.peak=Math.max(G.peak||0,G.bank);
     if(G.bank<G.table.min)return endlessBust();     // banqueroute = fin
     if(G.bank>=palierTarget(G.palier||0))return reachPalier();   // palier franchi → bonus + mises ↑
-    G.hand++;G.phase='bet';G.dHand=[];G.pHand=[];
+    G.hand++;G.phase='bet';G._settling=false;G.dHand=[];G.pHand=[];
     const cadence=(G.boons&&G.boons.evt3)?3:5;                                   // « Mains spéciales ×2 » resserre le rythme
     G.event=(G.hand%cadence===0)?ENDLESS_EVENTS[rndInt(ENDLESS_EVENTS.length)]:null;   // main spéciale régulière
     clampBet();applyHandIncome();renderAll();renderHands();announceTurn();
     if(G.event)popText(PXI(G.event.ic)+' '+evtTitle(G.event),evtDesc(G.event));
     return;
   }
-  if(G.bank>=G.table.goal){return finishTable();}  // objectif atteint → table gagnée tout de suite
+  if(G.bank>=G.table.goal&&bossReady()){return finishTable();}  // objectif atteint → table gagnée tout de suite
   if(G.bank<G.table.min){return finishTable();}    // à sec : on ne peut plus miser le minimum
   if(G.hand>=G.table.mains){return finishTable();}  // toutes les mains jouées → validation
-  G.hand++;G.phase='bet';G.dHand=[];G.pHand=[];   // la mise garde la dernière valeur jouée
+  G.hand++;G.phase='bet';G._settling=false;G.dHand=[];G.pHand=[];   // la mise garde la dernière valeur jouée
   clampBet();
   applyHandIncome();
+  if(checkBankGoal())return;
   renderAll();renderHands();
   announceTurn();
 }
 /* fin de table : 0★ = perdue · 1★ survie · 2★ objectif · 3★ maîtrise */
 function finishTable(){
+  if(['shop','lost','ended'].includes(G.phase))return;
   const tb=G.table;
   const stars=starsFor(tb,G.bank);
-  if(stars===0){onTableLost('lost.goal',{k:'lost.goalTxt',miss:tb.goal-G.bank});return;}
+  if(stars===0){onTableLost('lost.goal',G.bank>=tb.goal?'circuit.bossUnfinished':{k:'lost.goalTxt',miss:tb.goal-G.bank});return;}
+  G.phase='shop';
   G.tableStars[G.tableIdx]=stars;
   G.runStars=G.tableStars.reduce((a,b)=>a+(b||0),0);
   const reward=tableRep(tb,stars,G.tableMaxBaraka||0);
@@ -2069,9 +2326,9 @@ function finishTable(){
 /* table perdue : seconde chance (jeton) ou fin de descente.
    titre/texte sont des CLÉS i18n (ou {k,...} avec des valeurs) : l'écran est traduit à l'affichage. */
 function onTableLost(titleKey,textKey){
-  updateRecord(G.tableIdx+1);
+  G.phase='lost';updateRecord(0);
   G.loseTitle=titleKey;G.loseText=textKey;
-  if(G.tokens>0){openLose();return;}   // plus de reprise disponible : la descente s'arrête
+  if(G.tokens>0||(!G._adLifeUsed&&Ads.canRewarded())){openLose();return;}   // plus de reprise disponible : la descente s'arrête
   endRun(false);
 }
 
@@ -2117,7 +2374,7 @@ function tokFor(id){
 function effectMark(id,color){
   return `<span class="effect-mark" style="color:${color}" aria-hidden="true">${ColdDeckArt.effect(id)}</span>`;
 }
-function serviceCost(s){return niceRound(s.baseCost*curTable().goal*0.16);}
+function serviceCost(s){return priceRound(shopTable().max*({soin:.3,assurance:.6,videur:1.8}[s.id]||1));}
 let shopOffer=[],rerollCost=5;
 /* prix de boutique indexés sur la profondeur (≈ ta banque) : les cartes
    d'effet restent chères, on ne peut pas en acheter plein d'un coup */
@@ -2126,14 +2383,32 @@ function niceRound(c){if(c<1000)return Math.max(5,Math.round(c/5)*5);const mag=M
 function roundBet(v){let s;if(v<50)s=5;else if(v<200)s=10;else if(v<500)s=25;else if(v<2000)s=50;else if(v<10000)s=100;else s=500;return Math.max(5,Math.round(v/s)*s);}
 /* prix de boutique indexés sur l'objectif de la table (pas sur ta richesse) :
    les bons objets restent chers, impossible de tout rafler d'un coup. */
-function shopScale(){return Math.max(1,curTable().goal/100*1.2);}
-function itemCost(r){return niceRound(r.cost*shopScale());}
+function shopTable(){return RUN[Math.min(RUN_LEN-1,G.tableIdx+1)]||G.table;}
+function priceRound(v){return v<20?Math.max(1,Math.round(v)):niceRound(v);}
+function shopScale(){return shopTable().max/20;}
+function itemCost(r){
+  const unit=shopTable().max;
+  if(r.ns==='tarot'||TAROT_POOL.some(x=>x===r)){
+    const rates={etoile:.25,jugement:.45,soleil:.35,diable:.55,lune:.55,etoileD:.25,pendu:.65,magicien:1,roue:.35};
+    return priceRound(unit*(rates[r.id]||.5)*(hasRelic('portebonheur')?.8:1));
+  }
+  const remaining=RUN_LEN-G.tableIdx-1;
+  return priceRound(unit*(r.cost||12)/10*Math.max(.5,Math.min(1,remaining/5)));
+}
+function advanceAmount(bank=G.bank){return Math.max(0,Math.min(shopTable().max*2,Math.round(shopTable().cap*.7)+shopTable().entry-bank));}
+function serviceAvailable(r){
+  if(r.id==='assurance')return !G.insurance;
+  if(r.id==='videur')return G.tokens<6;
+  return !G._advanceUsed&&advanceAmount()>serviceCost(r);
+}
+function shopReserve(){return shopTable().entry+shopTable().min;}
+
 function openShop(){
-  rerollCost=niceRound(6*shopScale());
+  rerollCost=priceRound(shopTable().max*.5);G._advanceUsed=false;
   G._adReroll=false;                 // une relance offerte par pub, par boutique
   Ads.countTable();                  // rythme des interstitiels : compté par table franchie
   renderShopHead();
-  rollShop();
+  if(G.tableIdx<RUN_LEN-1)rollShop();else{shopOffer=[];renderShop();}
   $('shop').classList.add('show');
 }
 /* en-tête de boutique : reconstruit à chaque achat ET à chaque changement de langue */
@@ -2153,15 +2428,15 @@ function renderShopHead(){
     nextBtn.style.display='none';$('shopGate').textContent=t('shop.gateDone');
     if(nextObj)nextObj.style.display='none';
   }else{
-    const nx=tableFor(G.tableIdx+1),nxName=tableName(nx);
-    nextBtn.style.display='';nextBtn.disabled=false;      // pas de verrou d'étoiles : atteindre l'objectif suffit
+    const base=tableFor(G.tableIdx+1),nx={...base,goal:base.goal+Math.max(0,G.bank-base.entry-base.cap)},nxName=tableName(base);
+    nextBtn.style.display='';nextBtn.disabled=G.bank<nx.entry+nx.min;      // pas de verrou d'étoiles : atteindre l'objectif suffit
     const feeTxt=nx.entry?t('shop.fee',cash(nx.entry)):'';
     nextBtn.innerHTML=t('shop.next')+'<small>'+t('shop.nextInfo',nxName,cash(nx.goal),cash(nx.cap),feeTxt)+'</small>';
     // objectif de la prochaine table, bien visible : aide à décider d'acheter ou de garder du cash
     if(nextObj){nextObj.style.display='';
       nextObj.innerHTML=t('shop.nextObj',nxName,cash(nx.goal),cash(nx.cap))+(nx.entry?t('shop.feeObj',cash(nx.entry)):'');
     }
-    $('shopGate').textContent=nx.entry?t('shop.gateFee',cash(nx.entry)):'';
+    $('shopGate').textContent=t('shop.reserve',cash(Math.max(0,G.bank-nx.entry)))+' · '+t('circuit.stars');
   }
 }
 function rollShop(){
@@ -2172,8 +2447,9 @@ function rollShop(){
   for(let i=pool.length-1;i>0;i--){const j=rndInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
   shopOffer=pool.slice(0,3);
   // un SERVICE de régulation toujours proposé (soin/assurance/seconde chance)
-  const svc=SERVICE_POOL[rndInt(SERVICE_POOL.length)];
-  shopOffer.push({type:'service',data:svc});
+  const services=SERVICE_POOL.filter(serviceAvailable);
+  if(services.length)shopOffer.push({type:'service',data:services[rndInt(services.length)]});
+  else if(pool[3])shopOffer.push(pool[3]);
   renderShop();
 }
 function renderShop(){
@@ -2194,21 +2470,27 @@ function renderShop(){
     const b=document.createElement('button');b.className='btn '+(isSvc?'b-teal':isTarot?'b-purple':'b-gold');
     b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=cash(cost);
     const slotFull=isSvc?false:isTarot?G.consumables.length>=consumableSlots():G.relics.length>=relicMax();
-    if(it.bought||G.bank<cost||slotFull)b.disabled=true;
+    const safe=G.bank-cost>=shopReserve()||(isSvc&&r.id==='soin'&&serviceAvailable(r));
+    if(it.bought||G.bank<cost||slotFull||!safe||(isSvc&&!serviceAvailable(r)))b.disabled=true;
+    if(!it.bought)d.querySelector('.ds').insertAdjacentHTML('beforeend','<small class="shop-reserve">'+t('shop.after',cash(Math.max(0,G.bank-cost+(isSvc&&r.id==='soin'?advanceAmount(G.bank-cost):0)-shopTable().entry)))+'</small>');
     if(it.bought)b.textContent=t('shop.owned');
     else if(slotFull)b.textContent=t('shop.full');
     b.onclick=()=>buyShopItem(i,d,b);
     d.appendChild(b);box.appendChild(d);
   });
   scheduleFitChipText();
-  const rb=$('rerollBtn');if(rb){rb.textContent=t('shop.reroll',cash(rerollCost));rb.disabled=G.bank<rerollCost;}
+  renderShopInventory();
+  const final=G.tableIdx>=RUN_LEN-1;
+  const rb=$('rerollBtn');if(rb){rb.style.display=final?'none':'';rb.textContent=t('shop.reroll',cash(rerollCost));rb.disabled=G.bank-rerollCost<shopReserve();}
   const arb=$('adRerollBtn');
-  if(arb){const show=!G._adReroll&&Ads.canRewarded();arb.style.display=show?'':'none';if(show)arb.textContent=t('ad.rerollBtn');}
+  if(arb){const show=!final&&!G._adReroll&&Ads.canRewarded();arb.style.display=show?'':'none';if(show)arb.textContent=t('ad.rerollBtn');}
 }
 function buyShopItem(i,el,btn){
   const it=shopOffer[i];if(!it||it.bought)return;const r=it.data;
   const cost=it.type==='service'?serviceCost(r):itemCost(r);
-  if(G.bank<cost)return;
+  if(G.phase!=='shop'||G.bank<cost)return;
+  if(it.type==='service'&&!serviceAvailable(r))return;
+  if(G.bank-cost<shopReserve()&&!(it.type==='service'&&r.id==='soin'))return;
   if(it.type==='service'){
     G.bank-=cost;const msg=r.apply();if(msg)popText(iName(r).toUpperCase(),msg);
   }else if(it.type==='tarot'){
@@ -2219,12 +2501,12 @@ function buyShopItem(i,el,btn){
     G.bank-=cost;G.relics.push({...r,_paid:cost});
   }
   it.bought=true;sfx.buy();
-  el.classList.add('bought');btn.disabled=true;btn.textContent=t('shop.owned');
+  el?.classList.add('bought');if(btn){btn.disabled=true;btn.textContent=t('shop.owned');}
   renderShopHead();
   renderRelics();renderConsumables();renderShop();
 }
 function rerollShop(){
-  if(G.bank<rerollCost)return;
+  if(G.phase!=='shop'||G.bank-rerollCost<shopReserve())return;
   G.bank-=rerollCost;rerollCost=niceRound(rerollCost+3*shopScale());renderShopHead();sfx.card();
   rollShop();
 }
@@ -2232,7 +2514,8 @@ function rerollShop(){
 function leaveShop(){
   if(!G.endless&&G.tableIdx+1>=RUN_LEN)return;     // mode normal : pas de table après la dernière
   const nx=tableFor(G.tableIdx+1);
-  if(!nx)return;                                   // sécurité
+  if(!nx||G.phase!=='shop'||G.bank<nx.entry+nx.min)return;
+  G.phase='transition';                                   // sécurité
   $('shop').classList.remove('show');
   const prevZone=G.table.zone;
   // interstitiel sur la TRANSITION (récompense déjà encaissée), jamais sur l'objectif atteint
@@ -2244,28 +2527,15 @@ function leaveShop(){
 }
 /* mise en place d'une nouvelle table (après boutique / choix de palier) */
 function enterTable(prevZone){
-  // droit d'entrée de zone : absorbe une partie des jetons (anti boule de neige)
   if(G.table.entry){G.bank=Math.max(0,G.bank-G.table.entry);popText(t('msg.entryFee'),'−'+cash(G.table.entry));}
-  G.hand=1;G.phase='bet';G.pressure=0;G.baraka=0;G.tableMaxBaraka=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;G._talismanUsed=false;
-  G.contract=rollContract();                               // nouveau contrat à chaque table
-  G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // nouvelle table : on remise à zéro (pas la mise de la table d'avant)
-  G.betChosen=false;                                       // nouvelle table : aucune mise présélectionnée, il faut en choisir une
-  clampBet();
-  G.tableStartBank=G.bank;
-  applyHandIncome();
+  const base=RUN[G.tableIdx];
+  G.table={...base,goal:base.goal+Math.max(0,G.bank-base.cap)};
+  resetTableState(false);G.contract=rollContract();
+  G.bet=recommendedBet();G.betChosen=true;clampBet();G.tableStartBank=G.bank;
+  grantZoneTarot();applyHandIncome();updateRecord(0);
   if(G.bank<G.table.min){onTableLost('lost.broke','lost.brokeTxt');return;}
-  renderAll();renderHands();renderPressure();
-  announceTurn();
-  if(G.table.boss){
-    // entrée de BOSS : on la sent — flash rouge, gros pop, tapis rouge (via applyFelt), secousse forte, double grondement
-    sfx.danger();shake(32);flashScreen('lose');showBoss();
-    setTimeout(()=>{try{sfx.danger&&sfx.danger();}catch(e){}shake(18);},180);
-    popText(t(G.endless?'msg.miniboss':'msg.boss'),tableRuleText(G.table));
-  }
-  else if(G.table.zone>prevZone){
-    sfx.danger();shake(24);flashScreen('win');coinBurst(12);
-    popText(t('msg.zone',G.table.zone,zoneName(G.table.zone)),tableRuleText(G.table));
-  }
+  renderAll();renderHands();renderPressure();announceTurn();
+  showTableBrief();
 }
 /* ENCAISSER : on quitte la descente en banquant toute la cagnotte */
 function cashOut(){
@@ -2284,32 +2554,20 @@ function loseBody(){
 function openLose(){
   $('loseTitle').textContent=t(G.loseTitle||'');
   $('loseText').innerHTML=loseBody()+'<br><br>'+t('lose.info',G.tableIdx+1,STAR+abbr(G.pot));
-  // REPRISE = PUB OBLIGATOIRE : les vies ne sont plus qu'un plafond de reprises,
-  // jamais un passe-droit. Si aucune pub n'est disponible (SDK indisponible /
-  // pas de remplissage), on laisse reprendre gratuitement plutôt que de bloquer.
-  const hasLife=(G.tokens||0)>0, byAd=Ads.canRewarded();
-  const rb=$('retryBtn');
-  rb.style.display=hasLife?'':'none';
-  rb.className='btn menu '+(byAd?'b-teal':'b-gold');
-  rb.innerHTML=(byAd?t('ad.retryBtn'):t('lose.retry'))
-    +'<small>'+(byAd?t('ad.retrySub',G.tokens):t('lose.tokens',G.tokens))+'</small>';
+  const rb=$('retryBtn'),hasLife=G.tokens>0;
+  rb.style.display=hasLife?'':'none';rb.className='btn menu b-gold';
+  rb.innerHTML=t('lose.retry')+'<small>'+t('lose.tokens',G.tokens)+'</small>';
+  const extra=$('extraLifeBtn');if(extra){extra.style.display=!hasLife&&!G._adLifeUsed&&Ads.canRewarded()?'':'none';extra.textContent=t('circuit.extraLife');}
   $('giveupBtn').innerHTML=t('lose.giveup')+'<small>'+t('lose.giveupSub',STAR+abbr(repOnEnd(false)))+'</small>';
   $('loseScreen').classList.add('show');
 }
 /* rejoue la table en cours (sabot neuf, reliques gardées), contre un jeton */
 function retryTable(){
-  if(G.tokens<=0)return;
-  G.tokens--;
-  $('loseScreen').classList.remove('show');
-  buildShoe();
-  G.bank=Math.max(G.tableStartBank||0,curTable().cap);   // on repart au capital conseillé de la table
-  G.hand=1;G.phase='bet';G.pressure=0;G.baraka=0;G.tableMaxBaraka=0;G.dHand=[];G.pHand=[];G.forcedUsed=false;G.tableMaxPressure=0;G.insurance=false;G.objHit=false;G._talismanUsed=false;
-  G.bet=Math.max(curTable().min,Math.min(curTable().max,10));   // nouvelle tentative : mise remise à zéro
-  G.betChosen=false;                                            // seconde chance : il faut re-choisir une mise
-  clampBet();
-  applyHandIncome();
-  renderAll();renderHands();renderPressure();
-  announceTurn();
+  if(G.phase!=='lost'||G.tokens<=0)return;
+  GameClock.clear();G.tokens--;G.tableRetried=true;$('loseScreen').classList.remove('show');buildShoe();
+  G.bank=Math.max(G.tableStartBank||0,curTable().cap);
+  resetTableState(true);G.bet=recommendedBet();G.betChosen=true;clampBet();
+  applyHandIncome();renderAll();renderHands();renderPressure();announceTurn();
 }
 function giveUp(){
   $('loseScreen').classList.remove('show');
@@ -2321,7 +2579,7 @@ function updateRecord(depth){
     r.peak=Math.max(r.peak||0,G.bank);
     r.palier=Math.max(r.palier||0,(G.palier||0)+1);
   }else{
-    if(depth>(r.depth||0))r.depth=depth;
+    r.depth=Math.max(r.depth||0,depth);r.reached=Math.max(r.reached||0,G.tableIdx+1);r.version=2;
     if(G.bank>(r.chips||0))r.chips=G.bank;
   }
   saveMeta();
@@ -2337,6 +2595,8 @@ function coffreBonus(bank){
   return Math.min(40,Math.round(rep));   // plafond dur : 40 ★
 }
 function endRun(cashout){
+  if(G.phase==='ended')return;
+  GameClock.clear();
   $('shop').classList.remove('show');$('loseScreen').classList.remove('show');
   document.body.classList.remove('inf');
   const baseGain=repOnEnd(cashout);
@@ -2345,22 +2605,21 @@ function endRun(cashout){
   const gained=baseGain+coffre;
   metaCur().rep+=gained;
   // nouveau record ? (comparé AVANT la mise à jour)
-  const recBefore=Object.assign({},metaCur().record);
+  const recBefore=Object.assign({},G.recordAtStart||metaCur().record);
   const newRec=G.endless
     ?Math.max(G.peak||0,G.bank)>(recBefore.peak||0)
-    :(G.tableIdx+1>(recBefore.depth||0)||G.bank>(recBefore.chips||0));
+    :(metaCur().record.depth>(recBefore.depth||0)||G.bank>(recBefore.chips||0));
   // raccourci : atteindre la zone 2 (table 4) compte pour le déblocage « départ en zone 2 »
-  if(!G.endless&&G.tableIdx>=3)META.nuit.zone2Runs=(META.nuit.zone2Runs|0)+1;
-  updateRecord(G.tableIdx+1);
+  updateRecord(0);
   saveMeta();
   G.endInfo={cashout,endless:!!G.endless,baseGain,coffre,prox,newRec,
-    depth:G.tableIdx+1,bank:G.bank,peak:Math.max(G.peak||0,G.bank),palier:(G.palier||0)+1,
+    depth:G.tableStars.filter(Boolean).length,bank:G.bank,peak:Math.max(G.peak||0,G.bank),palier:(G.palier||0)+1,
     palierCash:!!G._palierCash,rep:metaCur().rep,
     goal:(G.table&&isFinite(G.table.goal))?G.table.goal:0,
     rec:Object.assign({},metaCur().record),
     stats:Object.assign({won:0,played:0,bestGain:0,bestMult:1},G.stats||{})};
   if(G.endless)G._palierCash=false;
-  renderEndScreen();
+  G.phase='ended';renderEndScreen();
 }
 /* écran de fin : reconstruit depuis G.endInfo (donc retraduisible à chaud) */
 function renderEndScreen(){
@@ -2435,12 +2694,12 @@ function stepBack(d){   // feuilleter les dos un par un (◀ ▶), avec bouclage
 /* ---------- pause en jeu ---------- */
 let pauseReturn=false;
 function openPause(){
-  audioInit();
+  GameClock.pause('manual',true);audioInit();
   const pc=$('pauseCash');
   if(pc){pc.style.display=G.endless?'':'none';if(G.endless)pc.innerHTML=t('pause.cash')+' '+STAR+abbr(endlessCashRep())+'<small>'+t('pause.cashSub')+'</small>';}
   $('pauseScreen').classList.add('show');
 }
-function resumeGame(){$('pauseScreen').classList.remove('show');}
+function resumeGame(){$('pauseScreen').classList.remove('show');GameClock.pause('manual',false);}
 /* ---------- PARAMÈTRES (langue) ---------- */
 function openSettings(){renderLangOpts();renderAdOpts();$('settingsScreen').classList.add('show');}
 function closeSettings(){$('settingsScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
@@ -2449,8 +2708,8 @@ function pauseSettings(){$('pauseScreen').classList.remove('show');pauseReturn=t
 function renderAdOpts(){
   const row=$('adOpts');if(!row)return;row.innerHTML='';
   const mk=(label,cls,fn)=>{const b=document.createElement('button');b.className='btn'+(cls||'');b.innerHTML=label;b.onclick=fn;row.appendChild(b);};
-  mk(t('set.adTestI'),'',()=>{closeSettings();setTimeout(()=>Ads.show('inter').then(()=>Ads.closeNow&&0),260);});
-  mk(t('set.adTestR'),'',()=>{closeSettings();setTimeout(()=>Ads.rewarded(t('ad.demoReward')),260);});
+  mk(t('set.adTestI'),'',()=>{closeSettings();gameDelay(()=>Ads.show('inter').then(()=>Ads.closeNow&&0),260);});
+  mk(t('set.adTestR'),'',()=>{closeSettings();gameDelay(()=>Ads.rewarded(t('ad.demoReward')),260);});
   mk((Ads.removed()?'☑ ':'☐ ')+t('set.adFree'),' wide'+(Ads.removed()?' on':''),()=>Ads.setRemoved(!Ads.removed()));
   mk((Ads.freeCaps()?'☑ ':'☐ ')+t('set.adCaps'),' wide'+(Ads.freeCaps()?' on':''),()=>Ads.setFreeCaps(!Ads.freeCaps()));
 }
@@ -2488,7 +2747,7 @@ function applyI18n(){
   if($('pauseScreen').classList.contains('show'))openPause();
 }
 function pauseRules(){$('pauseScreen').classList.remove('show');pauseReturn=true;openRules();}   // à la fermeture des règles on revient à la pause
-function quitToMenu(){$('pauseScreen').classList.remove('show');endRun(false);}                   // abandonne : encaisse la réputation puis écran de fin → La Planque
+function quitToMenu(){GameClock.clear();$('pauseScreen').classList.remove('show');endRun(false);}                   // abandonne : encaisse la réputation puis écran de fin → La Planque
 // annonce du nombre de tours restants, en gros, au début de chaque main
 // le nombre de tours est désormais permanent dans la barre du haut :
 // on ne garde qu'un petit jeton de revenu (pourboire/mécène) au début de la main
@@ -2508,15 +2767,15 @@ let textTimer;
 function popText(txt,sub){
   $('tip').innerHTML=`<span style="color:var(--cream)">${txt}</span>${sub?' · '+sub:''}`;
   $('tip').style.color='var(--gold)';
-  clearTimeout(textTimer);textTimer=setTimeout(()=>{$('tip').textContent='';},1400);
+  clearGameDelay(textTimer);textTimer=gameDelay(()=>{$('tip').textContent='';},1400);
 }
-function flashScore(){const s=$('scorebox');if(!s)return;s.classList.remove('pop');void s.offsetWidth;s.classList.add('pop');setTimeout(()=>s.classList.remove('pop'),360);}
+function flashScore(){const s=$('scorebox');if(!s)return;s.classList.remove('pop');void s.offsetWidth;s.classList.add('pop');gameDelay(()=>s.classList.remove('pop'),360);}
 /* ---- décompte animé « à la Balatro » : chaque carte rebondit et fait pop sa valeur, puis les multiplicateurs ---- */
 function cardPts(c){if(c.r==='A')return 11;if(c.r==='K'||c.r==='Q'||c.r==='J')return 10;return parseInt(c.r,10)||0;}
 function flyTag(x,y,html,cls){
   const t=document.createElement('div');t.className='sctag '+(cls||'');t.innerHTML=html;
   t.style.left=x+'px';t.style.top=y+'px';$('particles').appendChild(t);
-  if(window.ColdDeckFX?.reduced){setTimeout(()=>t.remove(),1700);return;}
+  if(window.ColdDeckFX?.reduced){gameDelay(()=>t.remove(),1700);return;}
   // pop rapide, puis reste affiché plus longtemps avant de monter et s'effacer
   const a=t.animate([
     {transform:'translate(-50%,-20%) scale(.5)',opacity:0},
@@ -2554,7 +2813,7 @@ function animateScoreTally(mode,lines,cb){
   slots.forEach((slot,i)=>{
     const c=G.pHand[i];if(!c)return;
     const card=slot.querySelector('.card:not(.back)')||slot.querySelector('.card');
-    setTimeout(()=>{
+    gameDelay(()=>{
       bounceEl(card);                                    // les cartes rebondissent (sans chiffre trompeur : elles ne rapportent pas de jetons)
       try{blip(420+Math.min(i,6)*70,.05,'square',.06);}catch(e){}
     },t);
@@ -2562,7 +2821,7 @@ function animateScoreTally(mode,lines,cb){
   });
   t+=140;
   (lines||[]).forEach((ln,index)=>{
-    setTimeout(()=>{
+    gameDelay(()=>{
       // ligne issue d'une relique → le jeton correspondant se déclenche et l'effet jaillit de lui
       const relEl=ln[2]?document.querySelector('#relics .joker[data-relic="'+ln[2]+'"]'):null;
       if(relEl){
@@ -2578,7 +2837,7 @@ function animateScoreTally(mode,lines,cb){
     t+=210;
   });
   const total=t+120;
-  setTimeout(cb,total);
+  gameDelay(cb,total);
   return total;
 }
 /* animation quand on franchit l'objectif de gain de la table */
@@ -2588,10 +2847,10 @@ function objectiveReached(){
   else if(p){p.className='win';p.querySelector('.m').textContent=t('obj.reached');p.querySelector('.t').innerHTML=STAR+' '+t('obj.validated');
     p.classList.remove('go');void p.offsetWidth;p.classList.add('go');}
   // animation sur la barre d'objectif (à la place des confettis)
-  const ow=$('objWrap');if(ow&&!window.ColdDeckFX){ow.classList.remove('goalpop');void ow.offsetWidth;ow.classList.add('goalpop');setTimeout(()=>ow.classList.remove('goalpop'),900);}
+  const ow=$('objWrap');if(ow&&!window.ColdDeckFX){ow.classList.remove('goalpop');void ow.offsetWidth;ow.classList.add('goalpop');gameDelay(()=>ow.classList.remove('goalpop'),900);}
   flashScreen('win');shake(12);
   try{if(window.ColdDeckFX)sfx.goal();else{sfx.win&&sfx.win();sfx.combo&&sfx.combo();}}catch(e){}
-  const sb=$('scorebox');if(sb){sb.classList.add('hot');setTimeout(()=>sb.classList.remove('hot'),1500);}
+  const sb=$('scorebox');if(sb){sb.classList.add('hot');gameDelay(()=>sb.classList.remove('hot'),1500);}
 }
 
 /* une SEULE salve de confettis à la fois : si un jackpot et un record tombent sur la
@@ -2608,7 +2867,7 @@ function bigConfetti(n){
 /* fanfare 21 PARFAIT : gros feedback quand on décroche le ×3 */
 function perfectFanfare(){
   bigConfetti(22);shake(10);
-  const sb=$('scorebox');if(sb){sb.classList.add('hot');setTimeout(()=>sb.classList.remove('hot'),1200);}
+  const sb=$('scorebox');if(sb){sb.classList.add('hot');gameDelay(()=>sb.classList.remove('hot'),1200);}
 }
 /* bannière NOUVEAU RECORD ! (la bannière s'affiche toujours ; les confettis sont mutualisés) */
 function showRecord(gain){
@@ -2646,9 +2905,9 @@ function pixelConfetti(n){
     a.onfinish=()=>c.remove();
   }
 }
-function flashScreen(kind){if(window.ColdDeckFX?.reduced)return;const f=$('fx');f.classList.remove('win','lose');void f.offsetWidth;f.classList.add(kind);setTimeout(()=>f.classList.remove(kind),500);}
+function flashScreen(kind){if(window.ColdDeckFX?.reduced)return;const f=$('fx');f.classList.remove('win','lose');void f.offsetWidth;f.classList.add(kind);gameDelay(()=>f.classList.remove(kind),500);}
 function slamBox(){const s=$('scorebox');s.classList.remove('slam');void s.offsetWidth;s.classList.add('slam');}
-function badFlash(){const s=$('scorebox');if(!s)return;s.classList.remove('bad');void s.offsetWidth;s.classList.add('bad');setTimeout(()=>s.classList.remove('bad'),520);}
+function badFlash(){const s=$('scorebox');if(!s)return;s.classList.remove('bad');void s.offsetWidth;s.classList.add('bad');gameDelay(()=>s.classList.remove('bad'),520);}
 function coinBurst(n){
   if(window.ColdDeckFX?.reduced)return;
   const cont=$('particles'),cx=innerWidth/2,cy=innerHeight*0.5;
@@ -2707,12 +2966,12 @@ const Ads={
   interDelay:120000,       // délai minimum entre deux pubs (ms)
   tablesPerAd:3,           // tables franchies avant d'autoriser un interstitiel
   interSecs:4, rewardSecs:5,
-  _last:0,_tables:99,_busy:false,_resolve:null,_timer:null,_left:0,_kind:'',_ok:false,
+  _last:0,_tables:0,_busy:false,_resolve:null,_timer:null,_left:0,_kind:'',_ok:false,
   /* --- achat « sans pub » (simulé ici par un réglage) --- */
   removed(){try{return localStorage.getItem('t21noads')==='1';}catch(e){return false;}},
   setRemoved(v){try{localStorage.setItem('t21noads',v?'1':'0');}catch(e){}renderAdOpts();},
   /* --- démo : ignorer les plafonds pour voir chaque emplacement --- */
-  freeCaps(){try{return localStorage.getItem('t21adcaps')!=='0';}catch(e){return true;}},
+  freeCaps(){try{return localStorage.getItem('t21adcaps')==='1';}catch(e){return false;}},
   setFreeCaps(v){try{localStorage.setItem('t21adcaps',v?'1':'0');}catch(e){}renderAdOpts();},
   countTable(){this._tables++;},
   canInterstitial(){
@@ -2789,21 +3048,17 @@ const Ads={
 };
 /* met le jeu en veille pendant la pub : boucle d'animation + audio */
 function adPause(on){
-  G._adPaused=!!on;
+  G._adPaused=!!on;GameClock.pause('ad',on);
   try{if(Audio_.ctx&&Audio_.ctx.state){on?Audio_.ctx.suspend():Audio_.ctx.resume();}}catch(e){}
 }
 function popAdToast(txt){try{popText(txt,'');}catch(e){}}
 
 /* ---------- emplacements ---------- */
-/* 1. REPRISE APRÈS DÉFAITE : vidéo obligatoire, puis on consomme une vie.
-   Abandonner la pub en cours = pas de reprise (la vie n'est pas consommée). */
-function adRetryTable(){
-  if((G.tokens||0)<=0)return;
-  if(!Ads.canRewarded()){retryTable();return;}      // aucune pub dispo : on ne bloque pas le joueur
-  Ads.rewarded(t('ad.retryReward')).then(ok=>{
-    if(!ok){popAdToast(t('ad.retryAborted'));return;}
-    retryTable();
-  });
+/* Retries use earned lives. One additional video retry is optional per run. */
+function adRetryTable(){retryTable();}
+function extraLife(){
+  if(G.phase!=='lost'||G.tokens>0||G._adLifeUsed)return;
+  Ads.rewarded(t('ad.retryReward')).then(ok=>{if(ok&&G.phase==='lost'){G._adLifeUsed=true;G.tokens=1;retryTable();}});
 }
 /* 2. fin de run : doubler la réputation gagnée */
 function adDoubleRep(){
@@ -2855,9 +3110,10 @@ function renderMenu(){
     `<div class="mrec"><span class="mrl" style="color:var(--grape)">${t('menu.endless')}</span><span class="mrv">${STAR}${abbrS(META.infini.rep)} · ${t('menu.recTier',i.palier||0)}</span></div>`;
 }
 function openMenu(){
+  GameClock.clear();
   startPalierIdx=null;   // au retour menu, la reprise se remet par défaut sur le plus loin atteint
   document.body.classList.remove('inf');
-  ['intro','endScreen','loseScreen','shop','pauseScreen','palierScreen','confirmRestart'].forEach(id=>$(id).classList.remove('show'));
+  ['intro','endScreen','loseScreen','shop','pauseScreen','palierScreen','confirmRestart','draftScreen','tableBrief'].forEach(id=>$(id).classList.remove('show'));
   renderMenu();
   $('modeMenu').classList.add('show');
 }
@@ -2899,8 +3155,8 @@ function renderPlanque(){
           '<button class="prBtn" '+(startPalierIdx>=maxIdx?'disabled':'')+' data-action="resume-next"><span class="ar" style="--o:.8px;--d:.14s">▶</span></button>';
       } else pr.style.display='none';
     } else {
-      // TOURNÉE : reprendre à une table déjà atteinte (record.depth = plus loin tenu)
-      const maxIdx=Math.max(0,(m.record.depth||0)-1);   // index 0-based de la table la plus loin atteinte
+      // Resume a reached table; record.depth counts only victories.
+      const maxIdx=Math.max(0,(m.record.reached||0)-1);   // index 0-based de la table la plus loin atteinte
       if(startPalierIdx==null)startPalierIdx=maxIdx; else startPalierIdx=Math.min(Math.max(startPalierIdx,0),maxIdx);
       if(maxIdx>=1){
         pr.style.display='';
@@ -2915,7 +3171,7 @@ function renderPlanque(){
   const lb=$('planqueLaunch');if(lb){lb.className='btn menu b-gold';
     const sub=inf?t('planque.startInf'):(resumeAt>0?t('planque.startResume',resumeAt+1):t('planque.startCircuit',RUN_LEN));
     lb.innerHTML=t('planque.start')+'<small>'+sub+'</small>';}
-  const z2=$('planqueZ2');if(z2)z2.style.display=(!inf&&(META.nuit.zone2Runs|0)>=2&&(m.record.depth||0)<2)?'':'none';   // remplacé par le sélecteur « REPRENDRE À » dès qu'une table 2+ est atteinte
+  const z2=$('planqueZ2');if(z2)z2.style.display='none';   // remplacé par le sélecteur « REPRENDRE À » dès qu'une table 2+ est atteinte
   const rb2=$('repBal2');if(rb2)rb2.textContent=abbr(m.rep);
   const lead=$('upgradesLead');if(lead)lead.innerHTML=t(inf?'planque.leadInf':'planque.leadCircuit');
   const box=$('unlockItems');box.innerHTML='';
@@ -2955,19 +3211,13 @@ function toPlanque(){
 }
 
 function startGame(fromTable){
-  audioInit();MODE='nuit';
-  document.body.classList.remove('inf');
-  $('intro').classList.remove('show');$('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');
+  audioInit();MODE='nuit';document.body.classList.remove('inf');
+  ['intro','endScreen','loseScreen','shop','draftScreen','tableBrief'].forEach(id=>$(id)?.classList.remove('show'));
   freshGame();buildShoe();
   fromTable=Math.max(0,Math.min(fromTable|0,RUN_LEN-1));
-  if(fromTable>0){                                  // REPRISE : départ direct à une table déjà atteinte (ou raccourci zone 2)
-    G.tableIdx=fromTable;G.table=RUN[fromTable];
-    G.bank=(RUN[fromTable].cap||0)+(startBank()-50);   // capital calé sur le conseillé de la table (+ Pécule) ; cagnotte ★ à zéro : on va plus vite mais on rapporte moins
-    enterTable(1);return;
-  }
-  G.contract=rollContract();
-  applyHandIncome();renderAll();renderHands();
-  announceTurn();
+  G.recordAtStart={...META.nuit.record};G.tableIdx=fromTable;G.table=RUN[fromTable];
+  G.bank=Math.round(G.table.cap*(1+.05*uLvl('bank')))+G.table.entry;
+  G.draftLeft=1+uLvl('contact');G.phase='draft';showStarterDraft();
 }
 /* MODE INFINI « CAGNOTTE » : blackjack pur, on accumule tant qu'on peut miser */
 function startEndless(){
@@ -3033,7 +3283,7 @@ function applyBoon(id){
   $('palierScreen').classList.remove('show');
   G.table=endlessTier(G.tableIdx);                        // reflète le bonus (ex. mise max)
   G.event=null;                                           // pas d'événement sur la main de palier
-  G.hand++;G.phase='bet';G.dHand=[];G.pHand=[];
+  G.hand++;G.phase='bet';G._settling=false;G.dHand=[];G.pHand=[];
   clampBet();applyHandIncome();renderAll();renderHands();announceTurn();
 }
 /* banqueroute : plus de quoi miser le minimum → fin de la plongée */
@@ -3131,8 +3381,6 @@ renderEndScreen=function(){
 };
 STR.fr['top.metaInf']=(p,a,b)=>'∞ LIBRE · palier '+p+' · mise '+a+'–'+b;
 STR.en['top.metaInf']=(p,a,b)=>'∞ FREE PLAY · tier '+p+' · bet '+a+'–'+b;
-STR.fr['rules.table']='<span class="rt">LES TABLES DU CIRCUIT</span>Atteins l’objectif de jetons avant d’épuiser tes mains. La table se termine dès que l’objectif est atteint. Les mises ont un minimum et un maximum propres à la table.';
-STR.en['rules.table']='<span class="rt">CIRCUIT TABLES</span>Reach the cash goal before you run out of hands. The table ends as soon as you reach the goal. Each table has its own minimum and maximum bet.';
 
 const originalMenuRender=renderMenu;
 renderMenu=function(){
@@ -3195,6 +3443,8 @@ function syncMenuFocus(){
   if(heading){if(!heading.id)heading.id=el.id+'Title';el.setAttribute('aria-labelledby',heading.id);}
  }
  $('shaker').inert=!!top;
+ GameClock.pause('overlay',!!top);
+ document.getAnimations?.().filter(a=>a.effect?.target?.closest?.('#shaker')).forEach(a=>{if(top)a.pause();else if(a.playState==='paused')a.play();});
  if(top!==currentMenu){
   const previous=currentMenu;
   if(top&&!top.contains(document.activeElement)){
@@ -3343,9 +3593,9 @@ syncMenuFocus();
   let lastHaptic = -Infinity;
   const palette = [graphic.yellow,graphic.cream,graphic.teal,graphic.purple];
   const victoryStyles=[null,
-    {name:'win',duration:1300,hold:560,flight:560,bolts:2,fragments:8,reach:110,lift:16,scale:1.11,wash:.32},
-    {name:'combo',duration:1500,hold:710,flight:600,bolts:4,fragments:14,reach:145,lift:22,scale:1.15,wash:.56},
-    {name:'jackpot',duration:1700,hold:840,flight:650,bolts:6,fragments:24,reach:190,lift:28,scale:1.2,wash:.8}
+    {name:'win',duration:1650,hold:780,flight:560,bolts:2,fragments:8,reach:110,lift:16,scale:1.11,wash:.32},
+    {name:'combo',duration:1850,hold:960,flight:600,bolts:4,fragments:14,reach:145,lift:22,scale:1.15,wash:.56},
+    {name:'jackpot',duration:2050,hold:1160,flight:650,bolts:6,fragments:24,reach:190,lift:28,scale:1.2,wash:.8}
   ];
   function victoryTier(gain,mult,natural,record=false){
     return record||mult>=6||gain>=Math.max(1,G.bet*(G.stakeMult||1))*8?3:natural||mult>=3?2:1;
@@ -3438,11 +3688,11 @@ syncMenuFocus();
     return p;
   }
   const place=(dx=0,dy=0,angle=0,scale=1)=>`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) rotate(${angle}deg) scale(${scale})`;
-  function paperBolt(x,y,height,angle,color=graphic.yellow){
+  function paperBolt(x,y,height,angle,color=graphic.yellow,duration=880){
     if(!boardActive())return;
     const bolt=piece('paper-bolt paper-ink',x,y,color);if(!bolt)return;
     bolt.style.height=height+'px';bolt.style.width=Math.max(15,height*.28)+'px';
-    animate(bolt,[{transform:place(0,0,angle,.2),opacity:0},{transform:place(0,0,angle,1),opacity:1,offset:.18},{transform:place(0,0,angle,.92),opacity:.9,offset:.43},{transform:place(0,0,angle,1.04),opacity:1,offset:.57},{transform:place(0,0,angle,.8),opacity:0}],{duration:540},true);
+    animate(bolt,[{transform:place(0,0,angle,.2),opacity:0},{transform:place(0,0,angle,1),opacity:1,offset:.18},{transform:place(0,0,angle,.92),opacity:.9,offset:.43},{transform:place(0,0,angle,1.04),opacity:1,offset:.72},{transform:place(0,0,angle,.8),opacity:0}],{duration},true);
     return bolt;
   }
   function lightning(el,reach=100,arms=4,color=graphic.yellow){
@@ -3553,7 +3803,7 @@ syncMenuFocus();
     const wash=piece('victory-wash',x,y,graphic.yellow);
     if(wash){
       wash.style.width=p.width+'px';wash.style.height=innerHeight+'px';
-      animate(wash,[{opacity:0},{opacity:style.wash,offset:.12},{opacity:style.wash*.45,offset:.5},{opacity:0}],{duration:750+tier*130},true);
+      animate(wash,[{opacity:0},{opacity:style.wash,offset:.12},{opacity:style.wash*.45,offset:.5},{opacity:0}],{duration:980+tier*140},true);
     }
     const wave=tier>=2?piece('victory-wave',x,y,graphic.yellow):null;
     if(wave){
@@ -3607,7 +3857,7 @@ syncMenuFocus();
         {translate:`0 -${lift}px`,rotate:tilt+'deg',scale:String(style.scale),filter:'brightness(1.2)',offset:.32},
         {translate:'0 -3px',rotate:(-tilt*.35)+'deg',scale:'1.025',filter:'brightness(1.03)',offset:.65},
         {translate:'0 0',rotate:'0deg',scale:'1',filter:'brightness(1)'}
-      ],{duration:540+tier*75});
+      ],{duration:720+tier*90});
       cardCharge(card,graphic.yellow,true);
       const flash=piece('card-victory-flash',0,0,graphic.cream,card);
       if(flash)animate(flash,[{opacity:0},{opacity:.26+tier*.08,offset:.2},{opacity:0,offset:.7},{opacity:0}],{duration:330},true);
@@ -3631,33 +3881,33 @@ syncMenuFocus();
     const outline='M9 2 H91 L98 10 V138 L91 146 H9 L2 138 V10 Z';
     if(strong)glow.classList.add('strong');
     glow.innerHTML='<svg viewBox="0 0 100 148" preserveAspectRatio="none" aria-hidden="true">'+(strong?'<path class="charge-halo" d="'+outline+'"/>':'')+'<path d="'+outline+'"/>'+(strong?'<path class="charge-core" d="'+outline+'"/>':'')+'</svg>';
-    animate(glow,[{opacity:0,scale:'.98'},{opacity:strong?1:.65,scale:'1',offset:.15},{opacity:strong?.85:.5,scale:'1.015',offset:.65},{opacity:0,scale:'1.04'}],{duration:strong?850:300},true);
+    animate(glow,[{opacity:0,scale:'.98'},{opacity:strong?1:.65,scale:'1',offset:.15},{opacity:strong?.85:.5,scale:'1.015',offset:.65},{opacity:0,scale:'1.04'}],{duration:strong?1150:300},true);
   }
   function onCardLand(card){
     if(!boardActive())return;
     try{sfx.land();}catch(e){}haptic();
+    const el=cardNode(card),p=rect(el?.closest('.cardslot')||el);if(!p)return;
+    const colors=['#c9bda2','#ece0c7','#a6ab91'];
+    // Dry paper dust travels across the felt, with no border around the card.
+    for(let i=0;i<12;i++){
+      const side=i%2?1:-1,angle=(random()-.5)*1.3;
+      const x=side*p.width*.3,y=p.height*.25;
+      const dust=piece('card-dust paper-ink',p.x+x,p.y+y,colors[i%3]);if(!dust)break;
+      const size=3+random()*7;dust.style.width=size+'px';dust.style.height=(size*.6)+'px';
+      const dx=side*(16+random()*p.width*.6),dy=Math.sin(angle)*(10+random()*14);
+      animate(dust,[
+        {transform:place(0,0,i*37,.2),opacity:0},
+        {transform:place(dx*.2,dy*.2,i*37,1),opacity:.7,offset:.12},
+        {transform:place(dx*.8,dy-7,i*37+25,1.1),opacity:.4,offset:.55},
+        {transform:place(dx,dy-11,i*37+50,.5),opacity:0}
+      ],{duration:450+random()*170,easing:'cubic-bezier(.15,.7,.3,1)'},true);
+    }
+    const shadow=piece('card-impact-shadow',p.x,p.y+p.height*.34,'#111c23');
+    if(shadow){shadow.style.width=p.width*1.04+'px';animate(shadow,[{transform:place(0,0,0,.65),opacity:.1},{transform:place(0,0,0,1.12),opacity:.23,offset:.18},{transform:place(0,0,0,1.22),opacity:0}],{duration:330},true);}
   }
-  function revealImpact(el,color){
-    // Use the stable card slot: the turning face is almost edge-on at this instant.
-    const p=rect(el.closest('.cardslot')||el);if(!p)return;
-    const width=el.offsetWidth||p.width,height=el.offsetHeight||p.height;
-    const wave=piece('card-reveal-wave',p.x,p.y,color);
-    if(wave){
-      wave.style.width=width+10+'px';wave.style.height=height+10+'px';
-      wave.innerHTML='<svg viewBox="0 0 100 148" preserveAspectRatio="none" aria-hidden="true"><path d="M1 44 L0 12 L11 2 L37 0 M70 0 L94 3 L100 14 L98 38 M100 102 L99 139 L88 148 L67 146 M29 148 L5 145 L0 134 L2 109"/></svg>';
-      animate(wave,[{transform:place(0,0,-2,.96),opacity:0},{transform:place(0,0,-1,1.06),opacity:1,offset:.12},{transform:place(0,0,0,1.24),opacity:0}],{duration:310,easing:'cubic-bezier(.12,.7,.25,1)'},true);
-    }
-    const angles=[-160,-112,-24,38,83,151],lengths=[19,29,17,26,21,32];
-    for(let i=0;i<angles.length;i++){
-      const angle=(angles[i]+random()*8-4)*Math.PI/180,dx=Math.cos(angle)*(width*.53+7),dy=Math.sin(angle)*(height*.48+8);
-      const ray=piece('card-reveal-ray paper-ink',p.x,p.y,i%3===0?graphic.yellow:color);if(!ray)break;
-      ray.style.height=lengths[i]+'px';ray.style.width=(i%2?7:5)+'px';
-      const rotation=angle*180/Math.PI+90;
-      animate(ray,[{transform:place(dx*.9,dy*.9,rotation,.4),opacity:0},{transform:place(dx,dy,rotation,1),opacity:1,offset:.12},{transform:place(dx+Math.cos(angle)*25,dy+Math.sin(angle)*25,rotation,.3),opacity:0}],{duration:i%2?280:235},true);
-    }
+  function revealImpact(el){
     const flash=piece('card-reveal-flash',0,0,graphic.cream,el);
-    if(flash)animate(flash,[{opacity:0},{opacity:.36,offset:.18},{opacity:0}],{duration:130},true);
-    haptic();
+    if(flash)animate(flash,[{opacity:0},{opacity:.16,offset:.2},{opacity:0}],{duration:120},true);
   }
   function onCard(card) {
     if(document.hidden||document.querySelector('.overlay.show,#adOverlay.show'))return;
@@ -3909,7 +4159,6 @@ syncMenuFocus();
     'select-circuit': () => chooseMode('nuit'),
     'select-free': () => chooseMode('infini'),
     launchMode: () => launchMode(),
-    'start-zone-two': () => startGame(3),
     'back-previous': () => stepBack(-1),
     'back-next': () => stepBack(1),
     'resume-previous': () => stepResume(-1),
@@ -3942,6 +4191,7 @@ syncMenuFocus();
     cashOut: () => cashOut(),
     leaveShop: () => leaveShop(),
     adRetryTable: () => adRetryTable(),
+    extraLife: () => extraLife(),
     giveUp: () => giveUp(),
     adDoubleRep: () => adDoubleRep(),
     toPlanque: () => toPlanque(),
