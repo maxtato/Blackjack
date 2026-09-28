@@ -644,8 +644,8 @@ body:has(#multPop.go) #tip{visibility:hidden}
 @keyframes result-balance{0%{opacity:0;transform:translate(-58%,-50%) scale(.8) rotate(-10deg)}15%{opacity:1;transform:translate(-46%,-50%) scale(1.06) rotate(4deg)}29%{transform:translate(-52%,-50%) scale(.99) rotate(-3deg)}44%,82%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}100%{opacity:0;transform:translate(-50%,-54%) scale(.95) rotate(0)}}
 @media(max-height:500px) and (orientation:landscape){#multPop.central-result{padding:12px;gap:5px}#multPop.central-result .m{font-size:min(var(--victory-type),54px)}#multPop.central-result .t{font-size:28px}.victory-wave{height:145px}}
 
-/* Circuit guidance shares the purple buttons' printed surface and beveled shape. */
-#circuitStatus{--button-art:var(--art-button-purple);--button-ink:#fff7e6;flex:none;display:flex;align-items:center;gap:7px;width:100%;height:26px;margin:0;padding:3px 12px;border:0;border-radius:0;clip-path:var(--frame-cut);text-align:left;font:500 12px/18px var(--copy-font);box-shadow:none!important;cursor:pointer}
+/* Circuit guidance uses Baraka's mauve paper and the buttons' beveled shape. */
+#circuitStatus{--button-art:var(--art-card-stock);--button-ink:#282a2e;--number-ink:var(--button-ink);--bonus-number-ink:var(--button-ink);flex:none;display:flex;align-items:center;gap:7px;width:100%;height:26px;margin:0;padding:3px 12px;border:0;border-radius:0;clip-path:var(--frame-cut);background-color:#b69bda!important;background-blend-mode:multiply;text-align:left;font:500 12px/18px var(--copy-font);box-shadow:none!important;cursor:pointer}
 .table-rule-summary{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .table-rule-progress{flex:none;font-size:10px;opacity:.8;white-space:nowrap}
 .table-rule-info{flex:none;display:grid;place-items:center;width:16px;height:16px;background:#35224640;border-radius:0;clip-path:var(--frame-cut);font-weight:700;font-size:11px}
