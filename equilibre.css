@@ -134,7 +134,9 @@
 /* Active combinations form a small overlapping fan of yellow tickets. */
 #comboRow{--combo-count:1;--combo-overlap:clamp(10px,2.8vw,16px);--combo-width:min(120px,calc((100% + (var(--combo-count) - 1)*var(--combo-overlap))/var(--combo-count)));box-sizing:border-box;width:100%;height:72px;min-height:0;max-height:100%;flex:0 1 auto;flex-flow:row nowrap;justify-content:center;align-items:center;gap:0;padding:9px 12px;overflow:visible;scrollbar-width:none;scroll-snap-type:none;isolation:isolate}
 #comboRow::-webkit-scrollbar{display:none}
-#comboRow .combo-tile{box-sizing:border-box;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 var(--combo-width);width:var(--combo-width);min-width:0;max-width:120px;height:42px;gap:1px;padding:4px calc(6px + var(--combo-overlap)) 4px 7px;border:0;border-radius:0;clip-path:var(--frame-cut);background:#ffce3a var(--art-button-yellow) center/100% 100% no-repeat;color:#303236;overflow:hidden;transform:translateY(var(--combo-lift,0px)) rotate(var(--combo-angle,-3deg));z-index:var(--combo-layer,1)}
+#comboRow .combo-tile{box-sizing:border-box;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 var(--combo-width);width:var(--combo-width);min-width:0;max-width:120px;height:42px;gap:1px;padding:4px calc(6px + var(--combo-overlap)) 4px 7px;border:0;border-radius:0;background:none;color:#303236;overflow:visible;filter:drop-shadow(0 2px 2px #0004);transform:translateY(var(--combo-lift,0px)) rotate(var(--combo-angle,-3deg));z-index:var(--combo-layer,1)}
+/* Clip the paper alone so each overlapping ticket keeps its outer shadow. */
+#comboRow .combo-tile::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;clip-path:var(--frame-cut);background:#ffce3a var(--art-button-yellow) center/100% 100% no-repeat}
 #comboRow .combo-tile+.combo-tile{margin-inline-start:calc(-1*var(--combo-overlap))}
 #comboRow .combo-tile:last-child{padding-inline-end:7px}
 #comboRow .combo-name{display:block;max-width:100%;font:800 10px/1.1 var(--copy-font);font-weight:800!important;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
@@ -593,7 +595,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 /* Inventory nodes stay mounted; only a real activation adds a local light accent. */
 #effects .joker,#effects .tarot,#effects .joker:hover,#effects .tarot:hover{animation:none!important;translate:none!important;rotate:none!important;transform:none!important;transition:filter .15s}
 #comboRow .combo-tile{transition:filter .2s ease}
-#comboRow .combo-tile.paid{filter:brightness(1.04)}
+#comboRow .combo-tile.paid{filter:drop-shadow(0 2px 2px #0004) brightness(1.04)}
 @media(prefers-reduced-motion:reduce){#comboRow .combo-tile{transition:none}}
 :root[data-motion="gentle"] #comboRow .combo-tile{transition:none}
 
@@ -760,7 +762,7 @@ button:disabled{--number-ink:#ffe093;--bonus-number-ink:#a4f3de}
 #circuitStatus .game-number{font-size:calc(1.5em * var(--value-scale))!important}
 #comboRow .game-number{font-size:calc(1.55em * var(--value-scale))!important}
 #comboRow .combo-tile.on{--number-ink:#303236;--bonus-number-ink:#303236}
-#comboRow .combo-multiplier.game-number{display:block;flex:none;position:static;top:auto;height:21px;margin:0;color:#79d7ff;font:900 21px/1 var(--game-type)!important;filter:drop-shadow(0 1px 0 #315466) drop-shadow(0 0 .45px #315466)}
+#comboRow .combo-multiplier.game-number{display:block;flex:none;position:static;top:auto;height:21px;margin:0;color:#000;font:900 21px/1 var(--game-type)!important;filter:none;text-shadow:none}
 #comboRow .combo-multiplier .raster-glyph{--glyph-width:.78em;height:1em;top:0!important}
 #comboRow .combo-multiplier .raster-punctuation{font-size:.7em!important}
 @media(max-height:600px) and (orientation:landscape){#comboRow .combo-name{font-size:8px}#comboRow .combo-multiplier.game-number{font-size:16px!important;height:16px}}
