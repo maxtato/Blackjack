@@ -719,8 +719,11 @@ body:has(#multPop.go) #tip{visibility:hidden}
 #confirmRestart .shopBtns .btn{white-space:normal;line-height:1.2;padding:12px!important;font-size:15px}
 
 /* Slightly tighter reading lines on the playing screen. */
-#topbar .tt{line-height:1.05}
+#topbar .gainstat{gap:0}
+#topbar .gainstat .lbl{position:relative;top:-4px;line-height:1}
+#topbar .tt{display:block;line-height:.95}
 #topbar .table-context-body :is(#tableMeta,#ruleText){line-height:1.3}
+#objWrap{position:relative;top:3px}
 
 /* Shared illustrated values: one readable amount, one unit, no line break. */
 :root{--value-scale:.66}
