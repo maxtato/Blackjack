@@ -47,7 +47,7 @@
 .card .corner{gap:1px}
 .lives .raster-suit{width:12px!important;height:12px!important}
 .card.foil{filter:drop-shadow(0 0 2px #ffce3a) drop-shadow(0 4px 6px #0004)}
-.card.holo{filter:drop-shadow(0 0 2px #1fd1c8) drop-shadow(0 4px 6px #0004)}
+
 .card.poly{filter:drop-shadow(0 0 2px #a64dff) drop-shadow(0 4px 6px #0004)}
 
 /* Background images stay fixed to the viewport, independently of action rows. */

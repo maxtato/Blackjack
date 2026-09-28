@@ -388,7 +388,7 @@ const RELIC_POOL=[
   {id:'phare',cost:16,lock:'relic2'},
 ];
 
-/* éditions de cartes : foil = jetons bonus, holo = +mult, poly = ×mult */
+/* Deux éditions : Dorée (foil) = mise bonus, Prisme (poly) = ×1,5. */
 const TAROT_POOL=[
   {id:'etoile',cost:7,when:'any',
     use(){if(barakaLevel()>=4)return false;addBaraka(2,false);return t('tarot.etoile.u');}},
@@ -398,8 +398,6 @@ const TAROT_POOL=[
     use(){if((G.baraka||0)<2)return false;const gain=Math.round(G.table.max*.75);G.bank+=gain;G.baraka-=2;renderTop();renderPressure();coinBurst(8);return t('tarot.soleil.u',cash(gain));}},
   {id:'diable',cost:9,when:'play',need:'cards',
     use(){const c=addEditionToHand('poly');return c?t('tarot.diable.u',c.r+c.s):false;}},
-  {id:'lune',cost:8,when:'play',need:'cards',
-    use(){const c=addEditionToHand('holo');return c?t('tarot.lune.u',c.r+c.s):false;}},
   {id:'etoileD',cost:7,when:'play',need:'cards',
     use(){const c=addEditionToHand('foil');return c?t('tarot.etoileD.u',c.r+c.s):false;}},
   {id:'pendu',cost:9,when:'play',
@@ -407,7 +405,7 @@ const TAROT_POOL=[
   {id:'magicien',cost:10,when:'play',
     use(){if(G.magicNext||G.smallNext)return false;G.magicNext=true;return t('tarot.magicien.u');}},
   {id:'roue',cost:6,when:'play',need:'cards',
-    use(){if(!G.pHand.some(c=>!c.ed))return false;const ed=['foil','holo','poly'][rndInt(3)];const c=addEditionToHand(ed);return c?t('tarot.roue.u',ed.toUpperCase()):false;}},
+    use(){if(!G.pHand.some(c=>!c.ed))return false;const ed=['foil','poly'][rndInt(2)];const c=addEditionToHand(ed);return c?t('tarot.roue.u',edName(ed)):false;}},
 ];
 
 /* SERVICES de boutique : régulateurs économiques, appliqués immédiatement à l'achat
@@ -428,9 +426,9 @@ TAROT_POOL.forEach(x=>{x.ns='tarot';});
 SERVICE_POOL.forEach(x=>{x.ns='svc';});
 function iName(o){return o?t(o.ns+'.'+o.id+'.n'):'';}
 function iDesc(o){return o?t(o.ns+'.'+o.id+'.d'):'';}
-const ED_NAME={foil:'FOIL',holo:'HOLO',poly:'POLY'};
+function edName(ed){return t('m.'+ed);}
 function edInfo(ed){return t('ed.'+ed);}
-function announceEd(c){if(c&&c.ed)popText(t('ed.card',ED_NAME[c.ed]),edInfo(c.ed));}
+function announceEd(c){if(c&&c.ed)popText(t('ed.card',edName(c.ed)),edInfo(c.ed));}
 /* ICON retiré : effets affichés via jetons SHOPTOK */
 
 
@@ -511,7 +509,7 @@ function resetTableState(retry){
 }
 function grantZoneTarot(){
   if(G.endless||G.giftZones.includes(G.table.zone))return;
-  const gifts=['pendu','etoileD','etoile','lune','roue','magicien','jugement','diable'];
+  const gifts=['pendu','etoileD','etoile','soleil','roue','magicien','jugement','diable'];
   G.zoneGift=gifts[G.table.zone-1];G.giftZones.push(G.table.zone);claimZoneGift();
 }
 function claimZoneGift(){
@@ -629,7 +627,8 @@ function buildShoe(){
 function maybeEdition(c){
   if(c.ed)return c;
   let chance=0.05;if(hasRelic('collector'))chance*=3;
-  if(Math.random()<chance){const r=Math.random();c.ed=r<0.55?'foil':r<0.85?'holo':'poly';}
+  // Keep the overall edition chance and the rarer Prism rate unchanged.
+  if(Math.random()<chance)c.ed=Math.random()<0.85?'foil':'poly';
   return c;
 }
 function draw(){if(G.shoe.length<15)buildShoe();return maybeEdition(G.shoe.pop());}
@@ -717,10 +716,9 @@ function computeMult(mode){
   if(_bl>0){mult*=BARAKA_MULT[_bl];lines.push([t('m.streak',_bl),'×'+BARAKA_MULT[_bl]]);}   // veine en cours
   if(hasRelic('bruleur')&&_bl>=2){mult*=1.3;lines.push([t('m.burner'),'×1.3','bruleur']);}
   /* éditions des cartes en main */
-  let foil=0,holo=0,poly=0;
-  for(const c of G.pHand){if(c.ed==='foil')foil++;else if(c.ed==='holo')holo++;else if(c.ed==='poly')poly++;}
+  let foil=0,poly=0;
+  for(const c of G.pHand){if(c.ed==='foil')foil++;else if(c.ed==='poly')poly++;}
   if(foil){const chips=foil*Math.max(1,Math.round(G.bet*(G.stakeMult||1)*.15));bonusChips+=chips;lines.push([PXI('diamond')+' '+t('m.foil'),t('m.foilV',chips)]);}
-  if(holo){mult+=holo;lines.push([PXI('diamond')+' '+t('m.holo'),'+'+holo]);}
   if(poly){const pm=Math.pow(1.5,poly);mult*=pm;lines.push([PXI('diamond')+' '+t('m.poly'),'×'+(Math.round(pm*100)/100)]);}
   if(hasRelic('as')&&G.pHand.some(c=>c.r==='A')){mult+=1;lines.push([t('m.ace'),'+1','as']);}
   if(pv<=15){mult*=1.5;lines.push([t('m.lowball'),'×1.5']);}
@@ -763,7 +761,8 @@ function cardEl(c,opts={}){
     if(c.s==='♥'||c.s==='♦')d.classList.add('red');
     if(!opts.dealer&&c.ed)d.classList.add(c.ed);
     const corner='<span class="corner-r">'+ColdDeckArt.lettering(c.r)+'</span>';
-    const tag=(!opts.dealer&&c.ed)?'<span class="edtag '+c.ed+'">'+ED_NAME[c.ed]+'</span>':'';
+    const tag=(!opts.dealer&&c.ed)?'<span class="edtag '+c.ed+'">'+edName(c.ed)+'</span>':'';
+    if(!opts.dealer&&c.ed)d.setAttribute('aria-label',c.r+' '+c.s+' · '+edName(c.ed)+' · '+edInfo(c.ed));
     d.innerHTML=ColdDeckArt.surface('<span class="corner tl">'+corner+'</span>'+ColdDeckArt.face(c.r,c.s)+'<span class="corner br">'+corner+'</span>'+tag);
   }
   if(opts.arrive)d.classList.add('arrive');
@@ -1150,6 +1149,7 @@ function renderConsumables(){
   fanEffects();
 }
 function addEditionToHand(ed){
+  if(ed!=='foil'&&ed!=='poly')return false;
   const eligible=G.pHand.filter(c=>!c.ed);
   const target=G.pHand[G.editionTarget];
   const c=target&&!target.ed?target:eligible[0];
@@ -1182,8 +1182,8 @@ function openInspect(kind,i){
   if(kind==='tarot'){
     const playable=decision&&(item.when!=='play'||G.phase==='play');
     mk(t('insp.use'),()=>{
-      if(['diable','lune','etoileD'].includes(item.id)){
-        const ed={diable:'poly',lune:'holo',etoileD:'foil'}[item.id];act.replaceChildren();
+      if(['diable','etoileD'].includes(item.id)){
+        const ed={diable:'poly',etoileD:'foil'}[item.id];act.replaceChildren();
         const base=computeMult('stand'),stake=G.bet*(G.stakeMult||1),before=Math.round((stake+base.bonusChips)*base.mult);
         G.pHand.forEach((c,j)=>{if(c.ed)return;c.ed=ed;const after=computeMult('stand');delete c.ed;
           const gain=Math.round((stake+after.bonusChips)*after.mult)-before;
@@ -1342,7 +1342,7 @@ function deal(){
   // on tire les 4 cartes mais on les distribue une par une, en animation
   const p1=draw(),d1=draw(),p2=draw(),d2=draw();
   if((hasRelic('maitresse')||(G.table.rule==='atelier'&&G.hand%3===1))&&!p1.ed)p1.ed='foil';
-  if(G.endless&&G.event&&G.event.id==='etoile'&&!p1.ed)p1.ed='holo';   // CARTE ÉTOILÉE
+  if(G.endless&&G.event&&G.event.id==='etoile'&&!p1.ed)p1.ed='poly';   // CARTE ÉTOILÉE
   [p1,p2,d1,d2].forEach(c=>{c._pending=true;});                 // pas encore arrivées
   G.pHand.push(p1,p2);G.dHand.push(d1,d2);
   G._dealing=true;
@@ -1647,7 +1647,7 @@ const SHOPTOK={
   mecene:{t:'+4<small class="sym">$</small>',c:'#ffce3a'},
   usurier:{t:'+1<small class="sym">/5$</small>',c:'#ffce3a'},
   collector:{t:'ED<small>×3</small>',c:'#a64dff'},
-  maitresse:{t:'FOIL',c:'#7fd2ff'},
+  maitresse:{t:'GOLD',c:'#ffd21c'},
   bruleur:{t:'×1.5',c:'#ff9326'},
   portebonheur:{t:'+1<small>'+STAR+'</small>',c:'#a64dff'},
   diplomate:{t:'=<small>+25%</small>',c:'#ffce3a'},
@@ -1657,9 +1657,8 @@ const SHOPTOK={
   etoile:{t:'+2 <small class="sym">streak</small>',c:'#f0902a'},
   jugement:{t:'+1<small class="sym">lv</small>',c:'#f0902a'},
   soleil:{t:'+18<small class="sym">$</small>',c:'#ffce3a'},
-  diable:{t:'POLY',c:'#ff7ad9'},
-  lune:{t:'HOLO',c:'#b388ff'},
-  etoileD:{t:'FOIL',c:'#7fd2ff'},
+  diable:{t:'PRISM',c:'#b59aff'},
+  etoileD:{t:'GOLD',c:'#ffd21c'},
   pendu:{t:'−1 <small>card</small>',c:'#e0524f'},
   magicien:{t:'IDEAL',c:'#9be84a'},
   roue:{t:'ED<small>?</small>',c:'#a64dff'},
@@ -1692,7 +1691,7 @@ function shopScale(){return shopTable().max/20;}
 function itemCost(r){
   const unit=shopTable().max;
   if(r.ns==='tarot'||TAROT_POOL.some(x=>x===r)){
-    const rates={etoile:.25,jugement:.45,soleil:.35,diable:.55,lune:.55,etoileD:.25,pendu:.65,magicien:1,roue:.35};
+    const rates={etoile:.25,jugement:.45,soleil:.35,diable:.55,etoileD:.25,pendu:.65,magicien:1,roue:.35};
     return priceRound(unit*(rates[r.id]||.5)*(hasRelic('portebonheur')?.8:1));
   }
   const remaining=RUN_LEN-G.tableIdx-1;

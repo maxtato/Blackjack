@@ -131,7 +131,7 @@ check('Sun can complete an ordinary table between hands',()=>{
 });
 check('Gift resale is fixed and editions never overwrite',()=>{
  const free=relic('lunettes'),early=a.sellValue(free);a.setTable(23);assert.equal(a.sellValue(free),early);assert.equal(early,0);
- a.G.pHand=[card(7,'♠','poly'),card(5,'♥','holo')];assert.equal(a.addEditionToHand('foil'),false);assert.equal(a.G.pHand[0].ed,'poly');
+ a.G.pHand=[card(7,'♠','poly'),card(5,'♥','foil')];assert.equal(a.addEditionToHand('foil'),false);assert.equal(a.G.pHand[0].ed,'poly');
 });
 check('Stars use decisions; reached and won records are distinct',()=>{
  a.G.tableRetried=false;a.G.contract.done=false;assert.equal(a.starsFor(a.G.table,a.G.table.goal),2);
@@ -154,9 +154,76 @@ check('Tarot Baraka is exact and maxed charges remain unspent',()=>{
  a.useConsumable(0);assert.equal(a.G.baraka,2);a.useConsumable(0);assert.equal(a.G.baraka,4);
  a.G.baraka=10;a.G.consumables=[tarot('jugement')];a.useConsumable(0);assert.equal(a.G.consumables.length,1);
 });
-check('Scaled FOIL, incomes and powers stay useful at depth',()=>{
+check('Scaled Gold, incomes and powers stay useful at depth',()=>{
  a.setTable(23);a.G.bet=10000;a.G.phase='play';a.G.pHand=[card(10,'♠','foil'),card(8)];assert.equal(a.computeMult('stand').bonusChips,1500);
  a.G.relics=[relic('compteur'),relic('phare')];a.G.shoe=[...Array.from({length:50},()=>card(9)),card(2),card('K')];assert(a.relicPower('compteur'));assert.equal(a.G.shoe.at(-1).r,'2');assert(!a.relicPower('compteur'));
  assert(a.relicPower('phare'));assert(a.G.smallNext);assert(!a.relicPower('phare'));
+});
+check('Only Gold and Prism are drawn, with the Collector rate and rarity preserved',()=>{
+ const random=h.w.Math.random;
+ try{
+  for(const [relics,chance,roll,expected] of [
+   [[],.05,.1,undefined],[[],.049,.849,'foil'],[[],.049,.85,'poly'],
+   [[relic('collector')],.149,.1,'foil'],[[relic('collector')],.149,.99,'poly'],[[relic('collector')],.151,.1,undefined]
+  ]){
+   const samples=[chance,roll];h.w.Math.random=()=>samples.shift();a.G.relics=relics;
+   assert.equal(a.maybeEdition(card(7)).ed,expected);
+  }
+  h.w.Math.random=()=>0;const existing=card(7,'♠','poly');assert.equal(a.maybeEdition(existing).ed,'poly');
+ }finally{h.w.Math.random=random;}
+});
+check('Edition payouts combine correctly, include doubled stakes and respect the zone cap',()=>{
+ for(const [editions,stakeMult,zone,gain] of [
+  [[],1,1,40],[['foil'],1,1,46],[['poly'],1,1,60],
+  [['foil','poly'],1,1,69],[['foil','foil'],1,1,52],
+  [['foil'],2,1,92],[['poly','poly'],1,1,80],[['poly','poly'],1,2,90]
+ ]){
+  const table=a.RUN.find(t=>t.zone===zone);
+  a.setup([card(4,'♠',editions[0]),card(6,'♠',editions[1]),card(8,'♠')],[card(10,'♥'),card(7,'♣')],{bet:20,stakeMult,bank:100-20*stakeMult});
+  a.setTable(table.i);a.resolve('stand');
+  assert.equal(h.w.__result.gain,gain,JSON.stringify({editions,stakeMult,zone}));assert.equal(a.G.bank,100+gain);
+ }
+});
+check('Edition Tarots target an unedited card, and the Wheel grants only the two finishes',()=>{
+ assert.deepEqual(Array.from(a.TAROT_POOL.filter(t=>t.need==='cards'),t=>t.id),['diable','etoileD','roue']);
+ for(const [id,expected] of [['diable','poly'],['etoileD','foil']]){
+  a.setup([card(8),card(9,'♥')],[card(10),card(7)],{consumables:[tarot(id)]});
+  a.useConsumable(0,null,1);assert.equal(a.G.pHand[1].ed,expected);assert.equal(a.G.pHand[0].ed,undefined);assert.equal(a.G.consumables.length,0);
+ }
+ const finishes=new Set();
+ for(let i=0;i<100;i++){
+  a.setup([card(8,'♠','poly'),card(9,'♥')],[card(10),card(7)],{consumables:[tarot('roue')]});
+  a.useConsumable(0);assert.equal(a.G.pHand[0].ed,'poly');finishes.add(a.G.pHand[1].ed);assert.equal(a.G.consumables.length,0);
+ }
+ assert.deepEqual([...finishes].sort(),['foil','poly']);
+ a.G.pHand=[card(8)];assert.equal(a.addEditionToHand('unknown'),false);assert.equal(a.G.pHand[0].ed,undefined);
+});
+check('Every zone gift resolves to a playable Tarot after removing the third edition',()=>{
+ for(let zone=1;zone<=8;zone++){
+  a.reset();a.setTable(a.RUN.find(t=>t.zone===zone).i);a.grantZoneTarot();
+  assert.equal(a.G.consumables.length,1);assert.equal(typeof a.G.consumables[0].use,'function');
+  if(zone===4)assert.equal(a.G.consumables[0].id,'soleil');
+  a.grantZoneTarot();assert.equal(a.G.consumables.length,1);
+ }
+});
+check('First-card rules grant Gold or Prism without replacing an existing edition',()=>{
+ const random=h.w.Math.random;h.w.Math.random=()=>.9;
+ try{
+  for(const [rule,relics,endless,event,existing,expected] of [
+   ['atelier',[],false,null,undefined,'foil'],['normal',[relic('maitresse')],false,null,undefined,'foil'],
+   ['normal',[],true,{id:'etoile'},undefined,'poly'],['atelier',[],false,null,'poly','poly']
+  ]){
+   a.setup([],[],{phase:'bet',betChosen:true,relics,endless,event,shoe:Array.from({length:60},()=>card(8,'♠',existing))});
+   a.G.table={...a.G.table,rule};a.deal();assert.equal(a.G.pHand[0].ed,expected);
+  }
+ }finally{h.w.Math.random=random;}
+});
+check('Card tags and accessible descriptions use the two readable edition names',()=>{
+ for(const [ed,name] of [['foil','DORÉE'],['poly','PRISME']]){
+  const node=a.cardEl(card(7,'♠',ed));assert.equal(node.querySelector('.edtag').textContent,name);
+  assert(node.getAttribute('aria-label').includes(a.t('ed.'+ed)));
+  assert.equal(a.cardEl(card(7,'♠',ed),{dealer:true}).querySelector('.edtag'),null);
+ }
+ assert.equal(a.STR.en['m.foil'],'GOLD');assert.equal(a.STR.en['m.poly'],'PRISM');
 });
 console.log(JSON.stringify({passed:results.length,checks:results},null,2));h.close();

@@ -502,33 +502,31 @@
 #modeMenu .mode-arrow .nav-triangle{width:calc(4 * var(--home-u));height:calc(4 * var(--home-u));filter:brightness(.13)}
 #intro .bpArrow .nav-triangle{width:calc(5 * var(--prep-u));height:calc(5 * var(--prep-u))}
 
-/* Approved finishes: smooth metal for Foil, prism for Holo, printed varnish for Poly. */
-.card.foil{--edition-wash:linear-gradient(120deg,#bc9552,#f1dbaa 26%,#cfaa6a 46%,#fff4d2 57%,#c7a165 77%,#f3ddad)}
-.card.holo{--edition-wash:conic-gradient(from 30deg at 35% 35%,#fffa 0deg 46deg,transparent 46deg 118deg,#2737482a 118deg 167deg,#ffffff50 167deg 219deg,transparent 219deg 292deg,#ffffff75 292deg 320deg,transparent 320deg),conic-gradient(from 210deg at 72% 75%,#fff7 0deg 44deg,transparent 44deg 155deg,#3143591e 155deg 224deg,transparent 224deg),linear-gradient(135deg,#84c0be,#d7ebe2 30%,#b0a0c6 60%,#85b7ce)}
-.card.poly{--edition-wash:none;--edition-ink:linear-gradient(110deg,#65366e,#408586 24%,#a56537 48%,#98586e 72%,#65366e)}
-.card:is(.foil,.holo,.poly){filter:drop-shadow(0 4px 4px #0005)}
-.card.poly{filter:drop-shadow(0 0 2px #9563b1) drop-shadow(0 4px 4px #0005)}
-.card:is(.foil,.holo,.poly)>.card-surface{isolation:isolate}
-.card:is(.foil,.holo,.poly) .raster-card-art{z-index:1}
-.card:is(.foil,.holo,.poly) .corner{z-index:3}
-.card:is(.foil,.holo,.poly)>.card-surface::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background-image:var(--edition-wash);background-size:100% 100%;animation:none}
-.card.holo>.card-surface::before{background-size:115% 115%;background-position:40% 50%;animation:edition-facets 4.5s ease-in-out infinite alternate}
-.card:is(.foil,.holo,.poly)>.card-surface::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:none;background:linear-gradient(112deg,transparent 28%,#fffced38 40%,#fffceea6 49%,#ffffffbd 50%,#fffced22 61%,transparent 72%) 150% 50%/300% 100% no-repeat;animation:edition-sheen 2.6s ease-in-out infinite}
-.card.holo>.card-surface::after{background-image:linear-gradient(126deg,transparent 35%,#fff8 36% 41%,transparent 42% 46%,#fff4 47% 51%,transparent 52%);animation-duration:2.4s;animation-delay:-.65s}
-.card.poly>.card-surface::after{background-image:linear-gradient(112deg,transparent 38%,#ffffff52 49%,#ffffff88 50%,transparent 62%);animation-duration:2.9s;animation-delay:-1.4s}
-.card.poly .card-pip,.card.poly .raster-glyph::after{background-image:var(--edition-ink);background-size:240% 100%;animation:edition-ink 3.2s ease-in-out infinite alternate}
-.card.poly .court-image{filter:saturate(.65) contrast(1.08) drop-shadow(1px 0 0 #9563b1)}
-.card:is(.foil,.holo,.poly) .edtag{z-index:4;background:#20333be8;color:#fff7e6;border:0;border-radius:2px;font:500 max(7px,calc(var(--card-w)*.075))/1.1 var(--copy-font);padding:2px 4px}
-@keyframes edition-facets{to{background-position:65% 75%}}
-@keyframes edition-sheen{0%,5%{background-position:150% 50%}88%,100%{background-position:-70% 50%}}
+/* Two finishes: saturated gold metal and reflective prismatic ink. */
+.card.foil{--edition-wash:linear-gradient(118deg,#c47a00 0%,#ffc400 16%,#ffe65c 30%,#e5a000 43%,#ffdf28 52%,#fff9bd 54%,#ffd21c 59%,#cf8700 76%,#ffcf10 88%,#ffe654 100%);filter:drop-shadow(0 0 2px #ffc400) drop-shadow(0 4px 4px #0005)}
+.card.poly{--edition-wash:linear-gradient(130deg,#c5ecff70,transparent 28%,#ebc2ff80 52%,transparent 71%,#a4f4e870);--edition-ink:linear-gradient(110deg,#563291,#167784 24%,#9c3a77 47%,#284d9b 70%,#563291);filter:drop-shadow(0 0 2px #ac86df) drop-shadow(0 4px 4px #0005)}
+.card:is(.foil,.poly)>.card-surface{isolation:isolate}
+.card:is(.foil,.poly) .raster-card-art{z-index:1}
+.card:is(.foil,.poly) .corner{z-index:3}
+.card:is(.foil,.poly)>.card-surface::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background-image:var(--edition-wash);background-size:100% 100%;animation:none}
+/* A narrow white highlight travels over the art; ranks and tags stay above it. */
+.card:is(.foil,.poly)>.card-surface::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:none;background:linear-gradient(112deg,transparent 34%,#fff29720 42%,#fff9c766 46%,#fffefaed 49%,#ffffff 50%,#fff8c499 51%,#ffd00028 55%,transparent 62%) 135% 50%/260% 100% no-repeat;animation:edition-sheen 2.7s ease-in-out infinite}
+.card.poly>.card-surface::after{background-image:linear-gradient(112deg,transparent 34%,#77e7ff44 42%,#dab5ff88 46%,#fffffff0 49%,#ffffff 50%,#b8fff4bb 51%,#c08aff44 55%,transparent 62%);animation-delay:-1.35s}
+.card.poly .card-pip,.card.poly .raster-glyph::after{background-image:var(--edition-ink);background-size:240% 100%;animation:edition-ink 2.7s ease-in-out infinite alternate}
+.card.poly .court-image{filter:saturate(1.2) contrast(1.08) drop-shadow(1px 0 0 #9466d3)}
+.card.foil.red{color:#8d2924}
+.card:is(.foil,.poly) .edtag{z-index:4;background:#20333b;color:#fff7e6;border:0;border-radius:2px;font:500 max(7px,calc(var(--card-w)*.075))/1.1 var(--copy-font);padding:2px 4px}
+.card.foil .edtag{color:#ffe25a}
+.card.poly .edtag{color:#d8caff}
+@keyframes edition-sheen{0%,8%{background-position:135% 50%}84%,100%{background-position:-55% 50%}}
 @keyframes edition-ink{to{background-position:100% 50%}}
-#shaker[inert] .card:is(.foil,.holo,.poly) .card-surface::before,#shaker[inert] .card:is(.foil,.holo,.poly) .card-surface::after,#shaker[inert] .card.poly .card-pip,#shaker[inert] .card.poly .raster-glyph::after{animation-play-state:paused}
+#shaker[inert] .card:is(.foil,.poly) .card-surface::after,#shaker[inert] .card.poly .card-pip,#shaker[inert] .card.poly .raster-glyph::after{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){
- .card:is(.foil,.holo,.poly) .card-surface::before,.card:is(.foil,.holo,.poly) .card-surface::after,.card.poly .card-pip,.card.poly .raster-glyph::after{animation:none}
- .card:is(.foil,.holo,.poly) .card-surface::after{background-position:45% 50%;opacity:.6}
+ .card:is(.foil,.poly) .card-surface::after,.card.poly .card-pip,.card.poly .raster-glyph::after{animation:none}
+ .card:is(.foil,.poly) .card-surface::after{background-position:45% 50%;opacity:.8}
 }
-:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .card-surface::before,:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .card-surface::after,:root[data-motion="gentle"] .card.poly .card-pip,:root[data-motion="gentle"] .card.poly .raster-glyph::after{animation:none}
-:root[data-motion="gentle"] .card:is(.foil,.holo,.poly) .card-surface::after{background-position:45% 50%;opacity:.6}
+:root[data-motion="gentle"] .card:is(.foil,.poly) .card-surface::after,:root[data-motion="gentle"] .card.poly .card-pip,:root[data-motion="gentle"] .card.poly .raster-glyph::after{animation:none}
+:root[data-motion="gentle"] .card:is(.foil,.poly) .card-surface::after{background-position:45% 50%;opacity:.8}
 
 /* Open, high-contrast totals: the number itself is the marker above each hand. */
 #feltInner .hand-total{color:#ffce3a;background:transparent;border:0;border-radius:0;box-shadow:none;clip-path:none;filter:drop-shadow(0 2px 1px #0005)}
@@ -719,14 +717,14 @@ body:has(#multPop.go) #tip{visibility:hidden}
 #confirmRestart .shopBtns .btn{white-space:normal;line-height:1.2;padding:12px!important;font-size:15px}
 
 /* Shared illustrated values: one readable amount, one unit, no line break. */
-:root{--value-scale:.5888}
-.game-number{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;vertical-align:middle;position:relative;top:-2px;height:.84em;margin-inline:.035em;font:900 calc(1.75em * var(--value-scale))/.84 var(--game-type)!important;color:var(--number-ink,#ffdc75);font-variant-numeric:tabular-nums;letter-spacing:0!important;text-transform:none!important}
+:root{--value-scale:.66}
+.game-number{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;vertical-align:-.045em;position:relative;top:0;height:.84em;margin-inline:.035em;font:900 calc(1.75em * var(--value-scale))/.84 var(--game-type)!important;color:var(--number-ink,#ffdc75);font-variant-numeric:tabular-nums;letter-spacing:0!important;text-transform:none!important}
 .game-number[data-value-kind="bonus"]{color:var(--bonus-number-ink,#88e2cf)}
 .game-number .raster-copy,.game-number .raster-ink{display:inline-flex;align-items:center;white-space:nowrap;line-height:1}
 .game-number .raster-ink{column-gap:.16em}
 .game-number .raster-word{align-items:center;line-height:1}
 .game-number .raster-word:has(>[data-digit])+.raster-word:has(>[data-digit]){margin-inline-start:-.1em}
-/* The printed number atlas has more blank space above its ink than below. */
+/* Balance the atlas's blank margins; the wrapper aligns its visible ink to the text baseline. */
 .game-number .raster-glyph{--glyph-width:.86em;height:1.08em;animation:none!important;translate:none!important;rotate:none!important;top:-.055em!important}
 .game-number .raster-glyph[data-font="numbers"]:first-child{margin-inline-start:-.13em}
 .game-number .raster-glyph[data-font="numbers"]:last-child{margin-inline-end:-.13em}

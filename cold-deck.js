@@ -133,11 +133,11 @@ en:{
 /* --- multiplicateur / combos --- */
 'm.blackjack':'BLACKJACK','m.perfect':'PERFECT 21','m.charlie':'CHARLIE','m.pair7':'PAIR OF 7s',
 'm.flush':'FLUSH','m.straight':'STRAIGHT','m.rainbow':'RAINBOW','m.pushing':'PUSHING IT',
-'m.streak':l=>'STREAK LV '+l,'m.burner':'BURNER','m.foil':'FOIL','m.holo':'HOLO','m.poly':'POLY',
+'m.streak':l=>'STREAK LV '+l,'m.burner':'BURNER','m.foil':'GOLD','m.poly':'PRISM',
 'm.foilV':n=>'+'+n+' cash','m.ace':'LOADED ACE','m.cool':'COOL HEAD',
 'm.court':'COURT','m.lowball':'LOWBALL','m.comeback':'COMEBACK','m.clutch':'CLUTCH','m.byone':'BY ONE',
 'm.zonecap':'ZONE CAP','m.golden':'GOLDEN',
-'ed.card':n=>n+' CARD','ed.foil':'+ bonus cash','ed.holo':'+1 to the multiplier','ed.poly':'× multiplier',
+'ed.card':n=>n+' CARD','ed.foil':'+ bonus cash','ed.poly':'× multiplier',
 'cb.to21':n=>'PERFECT 21 ×3 · '+n+' away','cb.charlie':'CHARLIE ×2 · +1 card',
 'cb.flush':s=>'FLUSH ×2 · +1 '+s,'cb.rainbow':'RAINBOW ×1.5 · +1 card',
 'cb.pair7':'PAIR OF 7s · draw a 7','cb.straight':'STRAIGHT ×2 · possible',
@@ -203,8 +203,8 @@ en:{
 'relic.compteur.n':'Counter','relic.compteur.d':'Permanent relic. Constantly shows your odds of going over 21 on the next hit.',
 'relic.mecene.n':'Patron','relic.mecene.d':'Permanent relic. +4 free at the start of every hand.',
 'relic.usurier.n':'Loan Shark','relic.usurier.d':'Permanent relic. At the start of every hand: +1 per 5 in the bank (up to +6).',
-'relic.collector.n':'Collector','relic.collector.d':'Permanent relic. Special editions (FOIL/HOLO/POLY) show up 3× more often on your cards.',
-'relic.maitresse.n':'Trump Card','relic.maitresse.d':'Permanent relic. Your first card each hand is FOIL: bonus cash when you win.',
+'relic.collector.n':'Collector','relic.collector.d':'Permanent relic. Special editions (GOLD/PRISM) show up 3× more often on your cards.',
+'relic.maitresse.n':'Trump Card','relic.maitresse.d':'Permanent relic. Your first card each hand is GOLD: bonus cash when you win.',
 'relic.bruleur.n':'Burner','relic.bruleur.d':'Permanent relic. If you win a hand at streak ≥ 50 %: hand payout ×1.5.',
 'relic.portebonheur.n':'Lucky Charm','relic.portebonheur.d':'Permanent relic. +1 Tarot token slot (you can hold one more token).',
 'relic.diplomate.n':'Diplomat','relic.diplomate.d':'On a tie, recover your stake and earn 25% extra. Against the ties-lose rule, recover only your stake.',
@@ -215,12 +215,11 @@ en:{
 'tarot.etoile.n':'The Star','tarot.etoile.d':'Play any time: +2 STREAK right away (builds your luck).','tarot.etoile.u':'+2 streak',
 'tarot.jugement.n':'Judgement','tarot.jugement.d':'Play any time: jump straight up one STREAK level.','tarot.jugement.u':'STREAK +1 level',
 'tarot.soleil.n':'The Sun','tarot.soleil.d':'Adds 18 to your bank right away, any time.','tarot.soleil.u':'+18',
-'tarot.diable.n':'The Devil','tarot.diable.d':'Play on your hand: turns one of your cards POLYCHROME, multiplying the hand payout (×1.5).','tarot.diable.u':c=>'Polychrome: '+c,
-'tarot.lune.n':'The Moon','tarot.lune.d':'Play on your hand: turns one of your cards HOLOGRAPHIC (+1 to the hand multiplier).','tarot.lune.u':c=>'Holo: '+c,
-'tarot.etoileD.n':'The Shooting Star','tarot.etoileD.d':'Play on your hand: turns one of your cards FOIL, paying bonus cash when the hand is won.','tarot.etoileD.u':c=>'Foil: '+c,
+'tarot.diable.n':'The Devil','tarot.diable.d':'Play on your hand: turns one of your cards PRISM, multiplying the hand payout (×1.5).','tarot.diable.u':c=>'Prism: '+c,
+'tarot.etoileD.n':'The Shooting Star','tarot.etoileD.d':'Play on your hand: turns one of your cards GOLD, paying bonus cash when the hand is won.','tarot.etoileD.u':c=>'Gold: '+c,
 'tarot.pendu.n':'The Hanged Man','tarot.pendu.d':'Play during the hand: cancels the last card you drew (saves you when you drew one too many).','tarot.pendu.u':c=>'Removed: '+c,
 'tarot.magicien.n':'The Magician','tarot.magicien.d':'Play during the hand: rigs your next draw so it is the best possible card for your hand.','tarot.magicien.u':'Next card rigged',
-'tarot.roue.n':'The Wheel','tarot.roue.d':'Play on your hand: a 1-in-2 chance to add a random edition (FOIL, HOLO or POLY) to a card; otherwise nothing.','tarot.roue.u':e=>e+' edition!','tarot.roue.f':'Missed…',
+'tarot.roue.n':'The Wheel','tarot.roue.d':'Add a guaranteed Gold or Prism edition to an unedited card.','tarot.roue.u':e=>e+' edition!','tarot.roue.f':'Missed…',
 /* --- services --- */
 'svc.soin.n':'Cash Advance','svc.soin.d':'Tops your bank up to the table’s recommended bankroll.','svc.soin.u':'Bank topped up',
 'svc.assurance.n':'Insurance','svc.assurance.d':'Your next loss on this table is refunded (1×).','svc.assurance.u':'Insured',
@@ -246,6 +245,7 @@ en:{
 'tok.boon2':'+2 <small>perks</small>',
 'tok.lunettes':'PEEK','tok.jeton':'½ <small>BET</small>','tok.compteur':'BUST<small class="sym">%</small>',
 'tok.collector':'ED<small>×3</small>','tok.aimant':'+1<small class="sym">$/card</small>',
+'tok.maitresse':'GOLD','tok.etoileD':'GOLD','tok.diable':'PRISM',
 'tok.talisman':'1 <small>LIFE</small>','tok.etoile':'+2 <small class="sym">streak</small>',
 'tok.jugement':'+1<small class="sym">lv</small>','tok.pendu':'−1 <small>card</small>',
 'tok.magicien':'IDEAL','tok.roue':'ED<small>?</small>','tok.assurance':'INSU<small>R</small>',
@@ -262,7 +262,7 @@ en:{
 'evt.doree.t':'GOLDEN HAND','evt.doree.d':'payouts doubled on this hand',
 'evt.forcee.t':'FORCED BET','evt.forcee.d':'max bet required',
 'evt.pompette.t':'TIPSY DEALER','evt.pompette.d':'the dealer stands on 16',
-'evt.etoile.t':'STARRED CARD','evt.etoile.d':'your first card is HOLO (+1 mult)',
+'evt.etoile.t':'STARRED CARD','evt.etoile.d':'your first unedited card receives Prism (×1.5)',
 /* --- contrats --- */
 'ctr.c5':'win a 5-card hand','ctr.c21':'win with a perfect 21','ctr.cpress':'win at streak ≥ 75 %',
 'ctr.cmult':'win a hand at ×3 or more','ctr.cdbl':'win a DOUBLED hand',
@@ -375,11 +375,11 @@ fr:{
 'msg.endlessStart':'SANS FIN','msg.endlessStartSub':'monte aussi haut que possible',
 'm.blackjack':'BLACKJACK','m.perfect':'21 PARFAIT','m.charlie':'CHARLIE','m.pair7':'PAIRE DE 7',
 'm.flush':'COULEUR','m.straight':'SUITE','m.rainbow':'ARC-EN-CIEL','m.pushing':'INSISTANCE',
-'m.streak':l=>'BARAKA NIV '+l,'m.burner':'BRÛLEUR','m.foil':'FOIL','m.holo':'HOLO','m.poly':'POLY',
+'m.streak':l=>'BARAKA NIV '+l,'m.burner':'BRÛLEUR','m.foil':'DORÉE','m.poly':'PRISME',
 'm.foilV':n=>'+'+n+' jet','m.ace':'AS TRUQUÉ','m.cool':'SANG-FROID',
 'm.court':'COUR','m.lowball':'FILOU','m.comeback':'REMONTADA','m.clutch':'CLUTCH','m.byone':'AU POIL',
 'm.zonecap':'PLAFOND ZONE','m.golden':'DORÉE',
-'ed.card':n=>'CARTE '+n,'ed.foil':'+ argent bonus','ed.holo':'+1 au multiplicateur','ed.poly':'× multiplicateur',
+'ed.card':n=>'CARTE '+n,'ed.foil':'+ argent bonus','ed.poly':'× multiplicateur',
 'cb.to21':n=>'21 PARFAIT ×3 · à '+n,'cb.charlie':'CHARLIE ×2 · +1 carte',
 'cb.flush':s=>'COULEUR ×2 · +1 '+s,'cb.rainbow':'ARC-EN-CIEL ×1.5 · +1 carte',
 'cb.pair7':'PAIRE DE 7 · tire un 7','cb.straight':'SUITE ×2 · possible',
@@ -440,8 +440,8 @@ fr:{
 'relic.compteur.n':'Compteur','relic.compteur.d':'Relique permanente. Affiche en continu ta probabilité de dépasser 21 au prochain tirage.',
 'relic.mecene.n':'Mécène','relic.mecene.d':'Relique permanente. +4 $ offerts au début de chaque main.',
 'relic.usurier.n':'Usurier','relic.usurier.d':'Relique permanente. Au début de chaque main : +1 $ par tranche de 5 $ en banque (jusqu’à +6).',
-'relic.collector.n':'Collectionneur','relic.collector.d':'Relique permanente. Les éditions spéciales (FOIL/HOLO/POLY) apparaissent 3× plus souvent sur tes cartes.',
-'relic.maitresse.n':'Carte maîtresse','relic.maitresse.d':'Relique permanente. Ta 1re carte de chaque main est FOIL : de l’argent bonus quand tu gagnes.',
+'relic.collector.n':'Collectionneur','relic.collector.d':'Relique permanente. Les éditions spéciales (DORÉE/PRISME) apparaissent 3× plus souvent sur tes cartes.',
+'relic.maitresse.n':'Carte maîtresse','relic.maitresse.d':'Relique permanente. Ta 1re carte de chaque main est DORÉE : de l’argent bonus quand tu gagnes.',
 'relic.bruleur.n':'Brûleur','relic.bruleur.d':'Relique permanente. Si tu gagnes une main avec une baraka ≥ 50 % : gain de la main ×1,5.',
 'relic.portebonheur.n':'Porte-bonheur','relic.portebonheur.d':'Relique permanente. +1 emplacement de jeton Tarot (tu peux garder un jeton de plus).',
 'relic.diplomate.n':'Diplomate','relic.diplomate.d':'Sur une égalité, récupère ta mise et gagne 25 % en plus. Face à « égalité = défaite », récupère seulement ta mise.',
@@ -451,12 +451,11 @@ fr:{
 'tarot.etoile.n':'L’Étoile','tarot.etoile.d':'À jouer à tout moment : +2 BARAKA tout de suite (fait monter ta veine).','tarot.etoile.u':'+2 baraka',
 'tarot.jugement.n':'Le Jugement','tarot.jugement.d':'À jouer à tout moment : monte directement d’un niveau de BARAKA.','tarot.jugement.u':'BARAKA +1 niveau',
 'tarot.soleil.n':'Le Soleil','tarot.soleil.d':'Ajoute aussitôt 18 $ à ta banque, à tout moment.','tarot.soleil.u':'+18 $',
-'tarot.diable.n':'Le Diable','tarot.diable.d':'À jouer sur ta main : transforme une de tes cartes en POLYCHROME, qui multiplie le gain de la main (×1,5).','tarot.diable.u':c=>'Polychrome : '+c,
-'tarot.lune.n':'La Lune','tarot.lune.d':'À jouer sur ta main : transforme une de tes cartes en HOLOGRAPHIQUE (+1 au multiplicateur de la main).','tarot.lune.u':c=>'Holo : '+c,
-'tarot.etoileD.n':'L’Étoile filante','tarot.etoileD.d':'À jouer sur ta main : transforme une de tes cartes en FOIL, qui rapporte de l’argent bonus quand la main est gagnée.','tarot.etoileD.u':c=>'Foil : '+c,
+'tarot.diable.n':'Le Diable','tarot.diable.d':'À jouer sur ta main : transforme une de tes cartes en PRISME, qui multiplie le gain de la main (×1,5).','tarot.diable.u':c=>'Prisme : '+c,
+'tarot.etoileD.n':'L’Étoile filante','tarot.etoileD.d':'À jouer sur ta main : transforme une de tes cartes en DORÉE, qui rapporte de l’argent bonus quand la main est gagnée.','tarot.etoileD.u':c=>'Dorée : '+c,
 'tarot.pendu.n':'Le Pendu','tarot.pendu.d':'À jouer pendant la main : annule ta dernière carte tirée (sauve-toi quand tu as tiré la carte de trop).','tarot.pendu.u':c=>'Retiré : '+c,
 'tarot.magicien.n':'Le Magicien','tarot.magicien.d':'À jouer pendant la main : truque ta prochaine carte tirée, qui sera la meilleure possible pour ta main.','tarot.magicien.u':'Prochaine carte truquée',
-'tarot.roue.n':'La Roue','tarot.roue.d':'À jouer sur ta main : 1 chance sur 2 d’ajouter une édition aléatoire (FOIL, HOLO ou POLY) à une carte ; sinon, rien.','tarot.roue.u':e=>'Édition '+e+' !','tarot.roue.f':'Raté…',
+'tarot.roue.n':'La Roue','tarot.roue.d':'Ajoute une édition garantie, Dorée ou Prisme, sur une carte sans édition.','tarot.roue.u':e=>'Édition '+e+' !','tarot.roue.f':'Raté…',
 'svc.soin.n':'Avance de fonds','svc.soin.d':'Renfloue ta banque jusqu’au capital conseillé de la table.','svc.soin.u':'Banque renflouée',
 'svc.assurance.n':'Assurance','svc.assurance.d':'Ta prochaine perte de la table est remboursée (1×).','svc.assurance.u':'Assuré',
 'svc.videur.n':'Pourboire au videur','svc.videur.d':'+1 jeton de seconde chance.','svc.videur.u':'+1 seconde chance',
@@ -478,6 +477,7 @@ fr:{
 'tok.boon2':'+2 <small>bonus</small>',
 'tok.lunettes':'VOIR','tok.jeton':'½ <small>MISE</small>','tok.compteur':'BUST<small class="sym">%</small>',
 'tok.collector':'ÉD<small>×3</small>','tok.aimant':'+1<small class="sym">$/carte</small>',
+'tok.maitresse':'DORÉE','tok.etoileD':'DORÉE','tok.diable':'PRISME',
 'tok.talisman':'1 <small>VIE</small>','tok.etoile':'+2 <small class="sym">baraka</small>',
 'tok.jugement':'+1<small class="sym">niv</small>','tok.pendu':'−1 <small>carte</small>',
 'tok.magicien':'IDÉAL','tok.roue':'ÉD<small>?</small>','tok.assurance':'ASSU<small>R</small>',
@@ -492,7 +492,7 @@ fr:{
 'evt.doree.t':'MAIN DORÉE','evt.doree.d':'gains doublés sur cette main',
 'evt.forcee.t':'MISE FORCÉE','evt.forcee.d':'mise max obligatoire',
 'evt.pompette.t':'CROUPIER POMPETTE','evt.pompette.d':'le croupier s’arrête à 16',
-'evt.etoile.t':'CARTE ÉTOILÉE','evt.etoile.d':'ta 1re carte est HOLO (+1 mult)',
+'evt.etoile.t':'CARTE ÉTOILÉE','evt.etoile.d':'ta première carte reçoit Prisme (×1,5), si elle est sans édition',
 'ctr.c5':'gagne une main de 5 cartes','ctr.c21':'gagne avec un 21 parfait','ctr.cpress':'gagne à baraka ≥ 75 %',
 'ctr.cmult':'gagne une main à ×3 ou plus','ctr.cdbl':'gagne une main DOUBLÉE',
 'ctr.csuite':'gagne avec une SUITE','ctr.ccoul':'gagne avec une COULEUR',
@@ -534,8 +534,8 @@ Object.assign(STR.fr,{
  'effect.nervous.description':'Les victoires rapportent deux fois plus de Baraka. Les tarots conservent les valeurs indiquées sur leurs cartes.',
  'effect.depart.title':'TU COMMENCES À BARAKA NIVEAU 1','effect.depart.short':'Départ : Baraka niveau 1',
  'effect.depart.description':'Tu entres à cette table avec 2 points de Baraka, soit le niveau 1 et un multiplicateur de ×1,15 sur tes victoires.',
- 'effect.atelier.title':'UNE PREMIÈRE CARTE FOIL','effect.atelier.short':'FOIL aux mains 1, 4, 7 et 10',
- 'effect.atelier.description':'Aux mains 1, 4, 7 et 10, ta première carte reçoit FOIL si elle n’a pas déjà une édition. En cas de victoire, elle ajoute 15 % de la mise avant multiplication.',
+ 'effect.atelier.title':'UNE PREMIÈRE CARTE DORÉE','effect.atelier.short':'DORÉE aux mains 1, 4, 7 et 10',
+ 'effect.atelier.description':'Aux mains 1, 4, 7 et 10, ta première carte reçoit DORÉE si elle n’a pas déjà une édition. En cas de victoire, elle ajoute 15 % de la mise avant multiplication.',
  'effect.serein.title':'TA BARAKA RÉSISTE AUX PERTES','effect.serein.short':'Défaite : 75 % de Baraka gardée',
  'effect.serein.description':'Après une défaite, tu conserves 75 % de ta Baraka au lieu de 50 %. La mise perdue n’est pas remboursée.',
  'circuit.draft':'TON PREMIER ATOUT','circuit.contact':'LE CONTACT','circuit.draftCopy':'Choisis une relique. Elle reste avec toi pendant cette expédition.',
@@ -550,7 +550,7 @@ Object.assign(STR.fr,{
  'power.compteur':'Écarter la prochaine carte','power.phare':'Préparer une petite carte',
  'shop.reserve':n=>'Réserve après entrée : '+n,'shop.after':n=>'Après achat et entrée : '+n,
  'shop.manage':'Tes atouts · vendre pour libérer une place','shop.sellItem':(name,value)=>name+' · vendre '+value,
- 'rule.depart':'La Baraka commence au niveau 1','rule.atelier':'La première carte est FOIL aux mains 1, 4, 7 et 10','rule.serein':'Une perte conserve 75 % de la Baraka',
+ 'rule.depart':'La Baraka commence au niveau 1','rule.atelier':'La première carte est DORÉE aux mains 1, 4, 7 et 10','rule.serein':'Une perte conserve 75 % de la Baraka',
  'boss.bouncer':'Gagne 2 manches contre le Videur',
  'boss.banker':'Gagne 2 manches, dont une avec au moins 60 % de la mise maximale de base',
  'boss.reaper':'Gagne 2 manches contre la Faucheuse',
@@ -564,7 +564,7 @@ Object.assign(STR.fr,{
  'relic.compteur.d':'Le risque de dépassement est affiché pour tous. Une fois par table, écarte la prochaine carte du sabot et révèle celle qui la suit.',
  'relic.mecene.d':'Si ta banque est sous le capital conseillé, reçois 12 % de la mise maximale de base au début de chaque main.',
  'relic.usurier.d':'Reçois 1 % de ta réserve au début de chaque main, jusqu’à 12 % de la mise maximale de base.',
- 'relic.maitresse.d':'La première carte de chaque main est FOIL si elle n’a pas déjà une édition : +15 % de la mise avant multiplication.',
+ 'relic.maitresse.d':'La première carte de chaque main est DORÉE si elle n’a pas déjà une édition : +15 % de la mise avant multiplication.',
  'relic.bruleur.d':'À Baraka niveau 2 ou plus, multiplie les gains par 1,3, dans la limite du plafond de zone.',
  'relic.portebonheur.d':'Un emplacement de tarot supplémentaire et 20 % de réduction sur les tarots en boutique.',
  'relic.diplomate.d':'Sur une égalité, récupère ta mise et gagne 25 % en plus. Face à « égalité = défaite », récupère seulement ta mise.',
@@ -575,13 +575,12 @@ Object.assign(STR.fr,{
  'tarot.jugement.d':'Atteins exactement le prochain niveau de Baraka. Inutilisable au niveau maximal.',
  'tarot.soleil.d':'Échange 2 points de Baraka contre 75 % de la mise maximale de base en banque.',
  'tarot.soleil.u':amount=>'+'+amount+' · −2 Baraka',
- 'tarot.diable.d':'Choisis une carte sans édition : POLY multiplie le multiplicateur par 1,5, avant le plafond de zone.',
- 'tarot.lune.d':'Choisis une carte sans édition : HOLO ajoute 1 au multiplicateur, avant le plafond de zone.',
- 'tarot.etoileD.d':'Choisis une carte sans édition : FOIL ajoute 15 % de la mise engagée avant multiplication.',
+ 'tarot.diable.d':'Choisis une carte sans édition : PRISME multiplie le multiplicateur par 1,5, avant le plafond de zone.',
+ 'tarot.etoileD.d':'Choisis une carte sans édition : DORÉE ajoute 15 % de la mise engagée avant multiplication.',
  'tarot.pendu.d':'Arme-le avant de tirer. Le prochain dépassement de cette main annule automatiquement la carte reçue. Expire à la fin de la main.',
  'tarot.pendu.u':'Prochain dépassement protégé',
  'tarot.magicien.d':'Le prochain tirage reçoit la meilleure carte sûre du sabot restant. Si aucune carte sûre n’existe, le tirage reste normal.',
- 'tarot.roue.d':'Ajoute une édition garantie, choisie au hasard parmi FOIL, HOLO et POLY, sur une carte sans édition. Ne remplace jamais une édition.',
+ 'tarot.roue.d':'Ajoute une édition garantie, choisie au hasard parmi DORÉE et PRISME, sur une carte sans édition. Ne remplace jamais une édition.',
  'svc.soin.d':'Renfloue la réserve vers 70 % du capital de la prochaine table, entrée comprise, jusqu’à 2 mises maximales. Proposé uniquement si l’apport dépasse le prix.',
  'svc.soin.u':amount=>'Réserve renflouée : +'+amount,
  'svc.assurance.d':'Rembourse intégralement la prochaine main perdue. La protection reste active en changeant de table. En séparation, protège une main.',
@@ -589,12 +588,12 @@ Object.assign(STR.fr,{
  'unlock.bank.d':n=>'Capital de départ du circuit : +'+(5*Math.min(5,n+1))+' %, y compris en reprise',
  'unlock.pourboire.d':n=>'Au début de chaque main : '+(2*Math.min(3,n+1))+' % de la mise maximale de base',
  'unlock.contact.d':()=> 'Choisis une deuxième relique parmi 3 offres au départ de chaque expédition',
- 'ed.foil':'+15 % de la mise avant multiplication','ed.holo':'+1 au multiplicateur, avant plafond','ed.poly':'Multiplicateur ×1,5, avant plafond',
+ 'ed.foil':'+15 % de la mise avant multiplication','ed.poly':'Multiplicateur ×1,5, avant plafond',
  'ctr.cpress':'Gagner à Baraka niveau 2 ou plus',
  'rules.streak':'<span class="rt">BARAKA</span>Niveaux à <span class="k">2 / 4 / 7 / 10 points</span> : ×1,15 / ×1,3 / ×1,45 / ×1,6. Victoire +1, coup culotté +2. En circuit, une perte conserve la moitié ; jusqu’à 2 points passent à la table suivante. En libre, une perte remet à zéro, sauf bonus Filet.',
  'rules.stars':'<span class="rt">ÉTOILES</span>Une étoile pour l’objectif et le défi du boss. Une de plus sans reprise de la table. Une de plus pour le contrat choisi. Le montant du dernier gain ne change pas ces critères.',
  'rules.contracts':'<span class="rt">CONTRATS</span>Choisis parmi deux défis en arrivant à une table. Les plus rares rapportent davantage de réputation. Le contrat accompli reste acquis en cas de reprise.',
- 'rules.bonus':'<span class="rt">BONUS</span>FOIL ajoute 15 % de la mise avant multiplication ; HOLO ajoute 1 au multiplicateur ; POLY le multiplie par 1,5. Les bonus respectent le plafond de zone affiché dans le décompte. Le risque de dépassement tient compte des As souples et du sabot restant.',
+ 'rules.bonus':'<span class="rt">BONUS</span>Une seule édition par carte. DORÉE ajoute 15 % de la mise au gain de base, avant multiplication. PRISME multiplie le multiplicateur par 1,5, dans la limite du plafond de zone. Plusieurs cartes cumulent leurs bonus. Ces bonus sont appliqués en cas de victoire.',
  'ui.peekTitle':'Voir la prochaine carte · 1 fois par main','cb.charlie':'Charlie · 5 cartes',
  'ad.retrySub':n=>n+' reprises disponibles, sans vidéo',
  'msg.talismanSub':'Une main remboursée','msg.insuranceSub':'Une main remboursée',
@@ -625,8 +624,8 @@ Object.assign(STR.en,{
  'effect.nervous.description':'Wins earn twice as many streak points. Tarot cards keep their stated values.',
  'effect.depart.title':'START AT STREAK LEVEL 1','effect.depart.short':'Start: streak level 1',
  'effect.depart.description':'You enter with 2 streak points: level 1 and a ×1.15 multiplier on winning hands.',
- 'effect.atelier.title':'YOUR FIRST CARD IS FOIL','effect.atelier.short':'FOIL on hands 1, 4, 7 and 10',
- 'effect.atelier.description':'On hands 1, 4, 7 and 10, your first card receives FOIL if it has no edition. On a win it adds 15% of your stake before multiplication.',
+ 'effect.atelier.title':'YOUR FIRST CARD IS GOLD','effect.atelier.short':'GOLD on hands 1, 4, 7 and 10',
+ 'effect.atelier.description':'On hands 1, 4, 7 and 10, your first card receives GOLD if it has no edition. On a win it adds 15% of your stake before multiplication.',
  'effect.serein.title':'YOUR STREAK SURVIVES LOSSES','effect.serein.short':'Loss: keep 75% of your streak',
  'effect.serein.description':'After a loss, keep 75% of your streak instead of 50%. The lost stake is not refunded.',
  'circuit.draft':'YOUR FIRST RELIC','circuit.contact':'THE CONTACT','circuit.draftCopy':'Choose one relic to keep for this expedition.',
@@ -641,7 +640,7 @@ Object.assign(STR.en,{
  'power.compteur':'Discard the next card','power.phare':'Prepare a small card',
  'shop.reserve':n=>'Reserve after entry: '+n,'shop.after':n=>'After purchase and entry: '+n,
  'shop.manage':'Your perks · sell to make room','shop.sellItem':(name,value)=>name+' · sell '+value,
- 'rule.depart':'Start at streak level 1','rule.atelier':'Your first card is FOIL on hands 1, 4, 7 and 10','rule.serein':'Keep 75% of your streak after a loss',
+ 'rule.depart':'Start at streak level 1','rule.atelier':'Your first card is GOLD on hands 1, 4, 7 and 10','rule.serein':'Keep 75% of your streak after a loss',
  'boss.bouncer':'Win 2 rounds against the Bouncer',
  'boss.banker':'Win 2 rounds, including one betting at least 60% of the base maximum',
  'boss.reaper':'Win 2 rounds against the Reaper',
@@ -655,7 +654,7 @@ Object.assign(STR.en,{
  'relic.compteur.d':'Bust odds are shown to everyone. Once per table, discard the next card in the shoe and reveal the card after it.',
  'relic.mecene.d':'While your bank is below the recommended capital, earn 12% of the base maximum bet at the start of each hand.',
  'relic.usurier.d':'Earn 1% of your reserve at the start of each hand, capped at 12% of the base maximum bet.',
- 'relic.maitresse.d':'The first card of every hand is FOIL unless it already has an edition: +15% of your stake before multiplication.',
+ 'relic.maitresse.d':'The first card of every hand is GOLD unless it already has an edition: +15% of your stake before multiplication.',
  'relic.bruleur.d':'At streak level 2 or higher, multiply winnings by 1.3, up to the zone cap.',
  'relic.portebonheur.d':'One extra Tarot slot and 20% off Tarot purchases.',
  'relic.diplomate.d':'On a tie, recover your stake and earn 25% extra. Against the ties-lose rule, recover only your stake.',
@@ -666,13 +665,12 @@ Object.assign(STR.en,{
  'tarot.jugement.d':'Reach exactly the next streak level. Cannot be used at the maximum level.',
  'tarot.soleil.d':'Exchange 2 streak points for 75% of the base maximum bet in cash.',
  'tarot.soleil.u':amount=>'+'+amount+' · −2 streak',
- 'tarot.diable.d':'Choose an unedited card: POLY multiplies your multiplier by 1.5 before the zone cap.',
- 'tarot.lune.d':'Choose an unedited card: HOLO adds 1 to your multiplier before the zone cap.',
- 'tarot.etoileD.d':'Choose an unedited card: FOIL adds 15% of your committed stake before multiplication.',
+ 'tarot.diable.d':'Choose an unedited card: PRISM multiplies your multiplier by 1.5 before the zone cap.',
+ 'tarot.etoileD.d':'Choose an unedited card: GOLD adds 15% of your committed stake before multiplication.',
  'tarot.pendu.d':'Arm before drawing. Automatically discard the next card that would bust this hand. Expires when the hand ends.',
  'tarot.pendu.u':'Next bust protected',
  'tarot.magicien.d':'Your next draw gets the best safe card in the remaining shoe. If none is safe, you draw normally.',
- 'tarot.roue.d':'Add a guaranteed random FOIL, HOLO or POLY edition to an unedited card. Never overwrites an edition.',
+ 'tarot.roue.d':'Add a guaranteed random GOLD or PRISM edition to an unedited card. Never overwrites an edition.',
  'svc.soin.d':'Top up towards 70% of the next table’s capital including entry, up to 2 maximum bets. Offered only when the benefit exceeds its cost.',
  'svc.soin.u':amount=>'Reserve topped up: +'+amount,
  'svc.assurance.d':'Refund the next lost hand in full. Protection carries to the next table. When splitting, protects one hand.',
@@ -680,12 +678,12 @@ Object.assign(STR.en,{
  'unlock.bank.d':n=>'Circuit starting capital: +'+(5*Math.min(5,n+1))+'%, including resumed runs',
  'unlock.pourboire.d':n=>'Each hand: '+(2*Math.min(3,n+1))+'% of the base maximum bet',
  'unlock.contact.d':()=> 'Choose a second relic from 3 offers at the start of each expedition',
- 'ed.foil':'+15% of stake before multiplication','ed.holo':'+1 multiplier before the cap','ed.poly':'Multiplier ×1.5 before the cap',
+ 'ed.foil':'+15% of stake before multiplication','ed.poly':'Multiplier ×1.5 before the cap',
  'ctr.cpress':'Win at streak level 2 or higher',
  'rules.streak':'<span class="rt">STREAK</span>Levels at <span class="k">2 / 4 / 7 / 10 points</span>: ×1.15 / ×1.3 / ×1.45 / ×1.6. Win +1, gutsy win +2. Circuit losses keep half your streak; up to 2 points carry to the next table. Free Play losses reset it unless you have Safety Net.',
  'rules.stars':'<span class="rt">STARS</span>One star for reaching the goal and completing the boss challenge. One extra without retrying the table. One extra for your chosen contract.',
  'rules.contracts':'<span class="rt">CONTRACTS</span>Choose one of two challenges when entering a table. Rarer ones award more reputation. A completed contract stays complete when you retry.',
- 'rules.bonus':'<span class="rt">BONUSES</span>FOIL adds 15% of the stake before multiplication; HOLO adds 1 multiplier; POLY multiplies it by 1.5. Bonuses respect the zone cap shown in the tally. Bust odds account for soft Aces and the remaining shoe.',
+ 'rules.bonus':'<span class="rt">BONUSES</span>One edition per card. GOLD adds 15% of the stake to the base winnings before multiplication. PRISM multiplies the multiplier by 1.5, up to the zone cap. Multiple cards stack their bonuses. These bonuses apply when you win.',
  'ui.peekTitle':'Reveal the next card · once per hand','cb.charlie':'Charlie · 5 cards',
  'ad.retrySub':n=>n+' retries available, no video required',
  'msg.talismanSub':'One hand refunded','msg.insuranceSub':'One hand refunded',
@@ -1171,7 +1169,7 @@ const RELIC_POOL=[
   {id:'phare',cost:16,lock:'relic2'},
 ];
 
-/* éditions de cartes : foil = jetons bonus, holo = +mult, poly = ×mult */
+/* Deux éditions : Dorée (foil) = mise bonus, Prisme (poly) = ×1,5. */
 const TAROT_POOL=[
   {id:'etoile',cost:7,when:'any',
     use(){if(barakaLevel()>=4)return false;addBaraka(2,false);return t('tarot.etoile.u');}},
@@ -1181,8 +1179,6 @@ const TAROT_POOL=[
     use(){if((G.baraka||0)<2)return false;const gain=Math.round(G.table.max*.75);G.bank+=gain;G.baraka-=2;renderTop();renderPressure();coinBurst(8);return t('tarot.soleil.u',cash(gain));}},
   {id:'diable',cost:9,when:'play',need:'cards',
     use(){const c=addEditionToHand('poly');return c?t('tarot.diable.u',c.r+c.s):false;}},
-  {id:'lune',cost:8,when:'play',need:'cards',
-    use(){const c=addEditionToHand('holo');return c?t('tarot.lune.u',c.r+c.s):false;}},
   {id:'etoileD',cost:7,when:'play',need:'cards',
     use(){const c=addEditionToHand('foil');return c?t('tarot.etoileD.u',c.r+c.s):false;}},
   {id:'pendu',cost:9,when:'play',
@@ -1190,7 +1186,7 @@ const TAROT_POOL=[
   {id:'magicien',cost:10,when:'play',
     use(){if(G.magicNext||G.smallNext)return false;G.magicNext=true;return t('tarot.magicien.u');}},
   {id:'roue',cost:6,when:'play',need:'cards',
-    use(){if(!G.pHand.some(c=>!c.ed))return false;const ed=['foil','holo','poly'][rndInt(3)];const c=addEditionToHand(ed);return c?t('tarot.roue.u',ed.toUpperCase()):false;}},
+    use(){if(!G.pHand.some(c=>!c.ed))return false;const ed=['foil','poly'][rndInt(2)];const c=addEditionToHand(ed);return c?t('tarot.roue.u',edName(ed)):false;}},
 ];
 
 /* SERVICES de boutique : régulateurs économiques, appliqués immédiatement à l'achat
@@ -1211,9 +1207,9 @@ TAROT_POOL.forEach(x=>{x.ns='tarot';});
 SERVICE_POOL.forEach(x=>{x.ns='svc';});
 function iName(o){return o?t(o.ns+'.'+o.id+'.n'):'';}
 function iDesc(o){return o?t(o.ns+'.'+o.id+'.d'):'';}
-const ED_NAME={foil:'FOIL',holo:'HOLO',poly:'POLY'};
+function edName(ed){return t('m.'+ed);}
 function edInfo(ed){return t('ed.'+ed);}
-function announceEd(c){if(c&&c.ed)popText(t('ed.card',ED_NAME[c.ed]),edInfo(c.ed));}
+function announceEd(c){if(c&&c.ed)popText(t('ed.card',edName(c.ed)),edInfo(c.ed));}
 /* ICON retiré : effets affichés via jetons SHOPTOK */
 
 
@@ -1294,7 +1290,7 @@ function resetTableState(retry){
 }
 function grantZoneTarot(){
   if(G.endless||G.giftZones.includes(G.table.zone))return;
-  const gifts=['pendu','etoileD','etoile','lune','roue','magicien','jugement','diable'];
+  const gifts=['pendu','etoileD','etoile','soleil','roue','magicien','jugement','diable'];
   G.zoneGift=gifts[G.table.zone-1];G.giftZones.push(G.table.zone);claimZoneGift();
 }
 function claimZoneGift(){
@@ -1412,7 +1408,8 @@ function buildShoe(){
 function maybeEdition(c){
   if(c.ed)return c;
   let chance=0.05;if(hasRelic('collector'))chance*=3;
-  if(Math.random()<chance){const r=Math.random();c.ed=r<0.55?'foil':r<0.85?'holo':'poly';}
+  // Keep the overall edition chance and the rarer Prism rate unchanged.
+  if(Math.random()<chance)c.ed=Math.random()<0.85?'foil':'poly';
   return c;
 }
 function draw(){if(G.shoe.length<15)buildShoe();return maybeEdition(G.shoe.pop());}
@@ -1500,10 +1497,9 @@ function computeMult(mode){
   if(_bl>0){mult*=BARAKA_MULT[_bl];lines.push([t('m.streak',_bl),'×'+BARAKA_MULT[_bl]]);}   // veine en cours
   if(hasRelic('bruleur')&&_bl>=2){mult*=1.3;lines.push([t('m.burner'),'×1.3','bruleur']);}
   /* éditions des cartes en main */
-  let foil=0,holo=0,poly=0;
-  for(const c of G.pHand){if(c.ed==='foil')foil++;else if(c.ed==='holo')holo++;else if(c.ed==='poly')poly++;}
+  let foil=0,poly=0;
+  for(const c of G.pHand){if(c.ed==='foil')foil++;else if(c.ed==='poly')poly++;}
   if(foil){const chips=foil*Math.max(1,Math.round(G.bet*(G.stakeMult||1)*.15));bonusChips+=chips;lines.push([PXI('diamond')+' '+t('m.foil'),t('m.foilV',chips)]);}
-  if(holo){mult+=holo;lines.push([PXI('diamond')+' '+t('m.holo'),'+'+holo]);}
   if(poly){const pm=Math.pow(1.5,poly);mult*=pm;lines.push([PXI('diamond')+' '+t('m.poly'),'×'+(Math.round(pm*100)/100)]);}
   if(hasRelic('as')&&G.pHand.some(c=>c.r==='A')){mult+=1;lines.push([t('m.ace'),'+1','as']);}
   if(pv<=15){mult*=1.5;lines.push([t('m.lowball'),'×1.5']);}
@@ -1546,7 +1542,8 @@ function cardEl(c,opts={}){
     if(c.s==='♥'||c.s==='♦')d.classList.add('red');
     if(!opts.dealer&&c.ed)d.classList.add(c.ed);
     const corner='<span class="corner-r">'+ColdDeckArt.lettering(c.r)+'</span>';
-    const tag=(!opts.dealer&&c.ed)?'<span class="edtag '+c.ed+'">'+ED_NAME[c.ed]+'</span>':'';
+    const tag=(!opts.dealer&&c.ed)?'<span class="edtag '+c.ed+'">'+edName(c.ed)+'</span>':'';
+    if(!opts.dealer&&c.ed)d.setAttribute('aria-label',c.r+' '+c.s+' · '+edName(c.ed)+' · '+edInfo(c.ed));
     d.innerHTML=ColdDeckArt.surface('<span class="corner tl">'+corner+'</span>'+ColdDeckArt.face(c.r,c.s)+'<span class="corner br">'+corner+'</span>'+tag);
   }
   if(opts.arrive)d.classList.add('arrive');
@@ -1933,6 +1930,7 @@ function renderConsumables(){
   fanEffects();
 }
 function addEditionToHand(ed){
+  if(ed!=='foil'&&ed!=='poly')return false;
   const eligible=G.pHand.filter(c=>!c.ed);
   const target=G.pHand[G.editionTarget];
   const c=target&&!target.ed?target:eligible[0];
@@ -1965,8 +1963,8 @@ function openInspect(kind,i){
   if(kind==='tarot'){
     const playable=decision&&(item.when!=='play'||G.phase==='play');
     mk(t('insp.use'),()=>{
-      if(['diable','lune','etoileD'].includes(item.id)){
-        const ed={diable:'poly',lune:'holo',etoileD:'foil'}[item.id];act.replaceChildren();
+      if(['diable','etoileD'].includes(item.id)){
+        const ed={diable:'poly',etoileD:'foil'}[item.id];act.replaceChildren();
         const base=computeMult('stand'),stake=G.bet*(G.stakeMult||1),before=Math.round((stake+base.bonusChips)*base.mult);
         G.pHand.forEach((c,j)=>{if(c.ed)return;c.ed=ed;const after=computeMult('stand');delete c.ed;
           const gain=Math.round((stake+after.bonusChips)*after.mult)-before;
@@ -2125,7 +2123,7 @@ function deal(){
   // on tire les 4 cartes mais on les distribue une par une, en animation
   const p1=draw(),d1=draw(),p2=draw(),d2=draw();
   if((hasRelic('maitresse')||(G.table.rule==='atelier'&&G.hand%3===1))&&!p1.ed)p1.ed='foil';
-  if(G.endless&&G.event&&G.event.id==='etoile'&&!p1.ed)p1.ed='holo';   // CARTE ÉTOILÉE
+  if(G.endless&&G.event&&G.event.id==='etoile'&&!p1.ed)p1.ed='poly';   // CARTE ÉTOILÉE
   [p1,p2,d1,d2].forEach(c=>{c._pending=true;});                 // pas encore arrivées
   G.pHand.push(p1,p2);G.dHand.push(d1,d2);
   G._dealing=true;
@@ -2430,7 +2428,7 @@ const SHOPTOK={
   mecene:{t:'+4<small class="sym">$</small>',c:'#ffce3a'},
   usurier:{t:'+1<small class="sym">/5$</small>',c:'#ffce3a'},
   collector:{t:'ED<small>×3</small>',c:'#a64dff'},
-  maitresse:{t:'FOIL',c:'#7fd2ff'},
+  maitresse:{t:'GOLD',c:'#ffd21c'},
   bruleur:{t:'×1.5',c:'#ff9326'},
   portebonheur:{t:'+1<small>'+STAR+'</small>',c:'#a64dff'},
   diplomate:{t:'=<small>+25%</small>',c:'#ffce3a'},
@@ -2440,9 +2438,8 @@ const SHOPTOK={
   etoile:{t:'+2 <small class="sym">streak</small>',c:'#f0902a'},
   jugement:{t:'+1<small class="sym">lv</small>',c:'#f0902a'},
   soleil:{t:'+18<small class="sym">$</small>',c:'#ffce3a'},
-  diable:{t:'POLY',c:'#ff7ad9'},
-  lune:{t:'HOLO',c:'#b388ff'},
-  etoileD:{t:'FOIL',c:'#7fd2ff'},
+  diable:{t:'PRISM',c:'#b59aff'},
+  etoileD:{t:'GOLD',c:'#ffd21c'},
   pendu:{t:'−1 <small>card</small>',c:'#e0524f'},
   magicien:{t:'IDEAL',c:'#9be84a'},
   roue:{t:'ED<small>?</small>',c:'#a64dff'},
@@ -2475,7 +2472,7 @@ function shopScale(){return shopTable().max/20;}
 function itemCost(r){
   const unit=shopTable().max;
   if(r.ns==='tarot'||TAROT_POOL.some(x=>x===r)){
-    const rates={etoile:.25,jugement:.45,soleil:.35,diable:.55,lune:.55,etoileD:.25,pendu:.65,magicien:1,roue:.35};
+    const rates={etoile:.25,jugement:.45,soleil:.35,diable:.55,etoileD:.25,pendu:.65,magicien:1,roue:.35};
     return priceRound(unit*(rates[r.id]||.5)*(hasRelic('portebonheur')?.8:1));
   }
   const remaining=RUN_LEN-G.tableIdx-1;
@@ -4214,8 +4211,8 @@ syncMenuFocus();
     const shadow=piece('card-impact-shadow',p.x,p.y+p.height*.34,'#111c23');
     if(shadow){shadow.style.width=p.width*1.04+'px';animate(shadow,[{transform:place(0,0,0,.65),opacity:.1},{transform:place(0,0,0,1.12),opacity:.23,offset:.18},{transform:place(0,0,0,1.22),opacity:0}],{duration:330},true);}
   }
-  function revealImpact(el){
-    const flash=piece('card-reveal-flash',0,0,graphic.cream,el);
+  function revealImpact(el,color=graphic.cream){
+    const flash=piece('card-reveal-flash',0,0,color,el);
     if(flash)animate(flash,[{opacity:0},{opacity:.16,offset:.2},{opacity:0}],{duration:120},true);
   }
   function onCard(card) {
@@ -4224,7 +4221,7 @@ syncMenuFocus();
     if(!boardActive())return;
     const el = cardNode(card); if (!el) return;
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
-    const color=card.ed==='poly'?graphic.purple:card.ed==='holo'?graphic.teal:graphic.cream;
+    const color=G.dHand.includes(card)?graphic.cream:card.ed==='poly'?graphic.purple:card.ed==='foil'?graphic.yellow:graphic.cream;
     revealImpact(el,color);
   }
   // Reference rhythm: a local card accent, then an energy transfer to the HUD.

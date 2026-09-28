@@ -461,8 +461,8 @@
     const shadow=piece('card-impact-shadow',p.x,p.y+p.height*.34,'#111c23');
     if(shadow){shadow.style.width=p.width*1.04+'px';animate(shadow,[{transform:place(0,0,0,.65),opacity:.1},{transform:place(0,0,0,1.12),opacity:.23,offset:.18},{transform:place(0,0,0,1.22),opacity:0}],{duration:330},true);}
   }
-  function revealImpact(el){
-    const flash=piece('card-reveal-flash',0,0,graphic.cream,el);
+  function revealImpact(el,color=graphic.cream){
+    const flash=piece('card-reveal-flash',0,0,color,el);
     if(flash)animate(flash,[{opacity:0},{opacity:.16,offset:.2},{opacity:0}],{duration:120},true);
   }
   function onCard(card) {
@@ -471,7 +471,7 @@
     if(!boardActive())return;
     const el = cardNode(card); if (!el) return;
     pulse($(G.dHand.includes(card)?'dVal':'pVal'));
-    const color=card.ed==='poly'?graphic.purple:card.ed==='holo'?graphic.teal:graphic.cream;
+    const color=G.dHand.includes(card)?graphic.cream:card.ed==='poly'?graphic.purple:card.ed==='foil'?graphic.yellow:graphic.cream;
     revealImpact(el,color);
   }
   // Reference rhythm: a local card accent, then an energy transfer to the HUD.
