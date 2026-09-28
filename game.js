@@ -1034,14 +1034,15 @@ function renderTop(){
 }
 /* barre de progression GAIN → OBJECTIF (au-dessus du tapis) */
 function renderObjective(){
-  const gv=$('gainVal');if(gv){gv.textContent=boardCash(G.bank);sizeBoardValue(gv,4.3);}
+  const bank=window.ColdDeckFX?.bankValue??G.bank;
+  const gv=$('gainVal');if(gv){gv.textContent=boardCash(bank);sizeBoardValue(gv,4.3);}
   const lbl=document.querySelector('#gainStat .lbl');if(lbl)lbl.textContent=G.endless?t('ui.potLbl'):t('ui.gain');
   // nouvelle table / palier : la barre repart de 0 SANS glisser depuis l'objectif précédent (on coupe la transition le temps de la remettre à zéro)
   const _of=$('objFill'),_snap=_of&&G._objBarIdx!==G.tableIdx;
   if(_snap){_of.style.transition='none';_of.style.width='0%';void _of.offsetWidth;_of.style.transition='';G._objBarIdx=G.tableIdx;}
   if(G.endless){                                           // barre = cagnotte vers le prochain PALIER (depuis 0, jamais vide tant qu'on a des jetons)
     const p=G.palier||0,target=palierTarget(p);
-    const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,target)*100));
+    const pct=Math.max(0,Math.min(100,bank/Math.max(1,target)*100));
     const f=$('objFill');if(f)f.style.width=pct+'%';
     const g=$('objGoal');if(g)g.textContent=boardCash(target);
     updateObjectiveReadout(pct);
@@ -1051,12 +1052,12 @@ function renderObjective(){
   }
   const goal=(G.table&&G.table.goal)||1;
   // barre = jetons ABSOLUS (depuis 0) vers l'objectif, exactement comme les paliers en Sans Fin (bank/target)
-  const pct=Math.max(0,Math.min(100,G.bank/Math.max(1,goal)*100));
+  const pct=Math.max(0,Math.min(100,bank/Math.max(1,goal)*100));
   const f=$('objFill');if(f)f.style.width=pct+'%';
   const g=$('objGoal');if(g)g.textContent=boardCash(goal);
   updateObjectiveReadout(pct);
-  if(gv)gv.classList.toggle('warn',!!(G.table&&G.bank<G.table.min*3));
-  const bar=$('objBar');if(bar)bar.classList.toggle('full',G.bank>=goal);
+  if(gv)gv.classList.toggle('warn',!!(G.table&&bank<G.table.min*3));
+  const bar=$('objBar');if(bar)bar.classList.toggle('full',bank>=goal);
 }
 function updateObjectiveReadout(pct){
   const rounded=Math.round(pct),label=$('objPct'),bar=$('objBar');
@@ -1521,6 +1522,7 @@ function resolve(mode){
     const base=stake+r.bonusChips;
     gain=Math.round(base*mult);
     if(G.endless&&G.event&&G.event.id==='doree'){gain*=2;lines.push([PXI('doree')+' '+t('m.golden'),'×2']);}
+    window.ColdDeckFX?.holdBank();
     G.bank+=stake+gain;checkContract(mult);recordBossWin(mult);
     if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,gain);G.stats.bestMult=Math.max(G.stats.bestMult,mult);}
     if(lines.length){$('tip').innerHTML=lines.map(l=>l[0]+' '+l[1]).join('  ·  ');$('tip').style.color='var(--gold)';}
@@ -1552,6 +1554,7 @@ function resolve(mode){
 /* résolution en mode SÉPARÉ : chaque main est comparée au croupier, gains cumulés */
 function resolveSplit(){
   G.phase='done';
+  window.ColdDeckFX?.holdBank();
   if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
   renderHands(true);G.doFlip=false;
   const dv=handValue(G.dHand).total,dBust=dv>21;
@@ -2168,6 +2171,7 @@ function animateScoreTally(mode,lines,cb){
 }
 /* animation quand on franchit l'objectif de gain de la table */
 function objectiveReached(){
+  if(window.ColdDeckFX?.deferBankEffect(objectiveReached))return;
   const p=$('multPop');
   if(window.ColdDeckFX)window.ColdDeckFX.onGoal();
   else if(p){p.className='win';p.querySelector('.m').textContent=t('obj.reached');p.querySelector('.t').innerHTML=STAR+' '+t('obj.validated');

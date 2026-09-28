@@ -38,6 +38,26 @@
   try{preference=localStorage.getItem('colddeck-motion');}catch(e){}
   const reduced = () => preference==='gentle'||motion.matches;
   const boardActive = () => !reduced()&&!document.hidden&&!document.querySelector('.overlay.show,#adOverlay.show');
+  // Only the displayed bank waits for the payout; the settled balance stays exact.
+  let bankHold=null;
+  function heldBank(){
+    return bankHold?.game===G&&bankHold.tableIdx===G.tableIdx&&bankHold.hand===G.hand?bankHold:null;
+  }
+  function holdBank(){
+    bankHold=boardActive()?{game:G,tableIdx:G.tableIdx,hand:G.hand,value:G.bank,onArrival:null}:null;
+  }
+  function revealBank(hold=bankHold,withEffects=true){
+    if(!hold||hold!==bankHold)return;
+    const current=heldBank()===hold;
+    bankHold=null;
+    if(!current)return;
+    renderObjective();
+    if(withEffects&&boardActive())hold.onArrival?.();
+  }
+  function deferBankEffect(callback){
+    const hold=heldBank();if(!hold)return false;
+    hold.onArrival=callback;return true;
+  }
   // Original motion moves by one physical pixel at every display density.
   let densityQuery;
   function syncPixelDensity(){
@@ -61,6 +81,7 @@
     return id;
   }
   function clear() {
+    revealBank(bankHold,false);
     for (const id of timers) clearTimeout(id);
     timers.clear();
     for (const animation of [...animations]) animation.cancel();
@@ -193,11 +214,12 @@
   function transferGain(gain,mult,tier){
     const announcement=$('multPop');
     const style=victoryStyles[tier];
+    const held=bankHold,settle=(withEffects=true)=>revealBank(held,withEffects);
     later(()=>{
-      if(!boardActive()||!announcement.classList.contains('go')||announcement.classList.contains('goal-result'))return;
+      if(!boardActive()||!announcement.classList.contains('go')||announcement.classList.contains('goal-result')){settle();return;}
       const amount=announcement.querySelector('.t'),bank=$('gainVal');
-      const start=rect(amount),end=rect(bank);if(!start||!end)return;
-      const label=piece('payout-value',start.x,start.y,graphic.yellow,foreground);if(!label)return;
+      const start=rect(amount),end=rect(bank);if(!start||!end){settle();return;}
+      const label=piece('payout-value',start.x,start.y,graphic.yellow,foreground);if(!label){settle();return;}
       label.innerHTML=ColdDeckArt.lettering((mult>1?fmtMult(mult)+'  ':'')+'+'+cash(gain));
       // A larger readable amount leads the trail; long payouts still fit a phone.
       const font=Math.min(48,(parseFloat(getComputedStyle(amount).fontSize)||28)*1.3);
@@ -229,8 +251,8 @@
         {transform:place(dx,dy,0,.56),opacity:1,offset:.94},
         {transform:place(dx,dy,0,.42),opacity:0}
       ],{duration:style.flight,easing:'cubic-bezier(.32,0,.55,1)'},true);
-      if(flight){const finish=flight.onfinish;flight.onfinish=()=>{
-        finish();if(!boardActive())return;
+      if(flight){const finish=flight.onfinish,cancel=flight.oncancel;flight.onfinish=()=>{
+        finish();settle();if(!boardActive())return;
         animate(bank,[
           {scale:'1',filter:'brightness(1)'},
           {scale:String(1.18+tier*.02),filter:'brightness(1.55)',offset:.24},
@@ -240,7 +262,8 @@
         ],{duration:500});
         graphicRays(bank,4,graphic.yellow,20+tier*4);
         haptic(true);
-      };}
+      };flight.oncancel=()=>{cancel?.();settle(false);};}
+      else settle();
     },style.hold);
   }
   function finishChain(){
@@ -345,6 +368,7 @@
     },i*75));
   }
   function onResult(kind, gain, mult, natural, bust, record=false) {
+    if(kind!=='win'||!boardActive())revealBank();
     finishChain();
     const tier=victoryTier(gain,mult,natural,record);
     onAnnouncement(true,tier,kind);
@@ -592,6 +616,8 @@
   }
   window.ColdDeckFX = {
     get reduced() { return reduced(); },
+    get bankValue() { return heldBank()?.value??G.bank; },
+    holdBank,deferBankEffect,
     clear, onHome, onCardLand, onCard, onResult, onScoreCard, onRelic, onPressure, onAnnouncement, onCombo, onComboReady, victoryTier,
     setMotion(value){
       preference=value==='gentle'?'gentle':'punchy';
