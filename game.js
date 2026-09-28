@@ -607,7 +607,7 @@ function relicPower(id){
 /* ---------- état ---------- */
 let G={};
 function freshGame(){
-  GameClock.clear();
+  GameClock.clear();window.ColdDeckFX?.clear();
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
      peekUsed:false,knownCard:null,penduArmed:false,smallNext:false,counterUsed:false,phareUsed:false,tableRetried:false,bossState:{wins:0,qualified:0,totals:[]},giftZones:[],relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,baraka:0,barakaMax:0,insurance:false,objHit:false,
      phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1,splitActive:false,hands:null,hi:0,

@@ -26,9 +26,9 @@
   let lastHaptic = -Infinity;
   const palette = [graphic.yellow,graphic.cream,graphic.teal,graphic.purple];
   const victoryStyles=[null,
-    {name:'win',duration:1900,hold:1000,flight:560,bolts:4,fragments:12,reach:125,lift:22,scale:1.15,wash:.42},
-    {name:'combo',duration:2050,hold:1120,flight:600,bolts:6,fragments:18,reach:160,lift:28,scale:1.19,wash:.62},
-    {name:'jackpot',duration:2150,hold:1220,flight:650,bolts:8,fragments:24,reach:190,lift:34,scale:1.23,wash:.8}
+    {name:'win',duration:1900,hold:1000,flight:760,bolts:4,fragments:12,reach:125,lift:22,scale:1.15,wash:.42},
+    {name:'combo',duration:2050,hold:1120,flight:800,bolts:6,fragments:18,reach:160,lift:28,scale:1.19,wash:.62},
+    {name:'jackpot',duration:2150,hold:1220,flight:840,bolts:8,fragments:24,reach:190,lift:34,scale:1.23,wash:.8}
   ];
   const outcomeStyles={lose:{name:'lose',duration:1900},push:{name:'push',duration:1750}};
   function victoryTier(gain,mult,natural,record=false){
@@ -68,6 +68,11 @@
     layer.replaceChildren();
     foreground.replaceChildren();
     lightningLayer?.replaceChildren();
+    // Legacy reward paper must not spill out of a menu onto a fresh table.
+    document.querySelectorAll('#particles .coin,#particles .confetti').forEach(particle=>{
+      particle.getAnimations?.().forEach(animation=>animation.cancel());
+      particle.remove();
+    });
     chainStar=null;chainCount=0;
     shakeAmt = 0;
     $('shaker').style.transform = '';
@@ -190,17 +195,51 @@
     const style=victoryStyles[tier];
     later(()=>{
       if(!boardActive()||!announcement.classList.contains('go')||announcement.classList.contains('goal-result'))return;
-      const start=rect(announcement.querySelector('.t')),end=rect($('gainVal'));if(!start||!end)return;
+      const amount=announcement.querySelector('.t'),bank=$('gainVal');
+      const start=rect(amount),end=rect(bank);if(!start||!end)return;
       const label=piece('payout-value',start.x,start.y,graphic.yellow,foreground);if(!label)return;
       label.innerHTML=ColdDeckArt.lettering((mult>1?fmtMult(mult)+'  ':'')+'+'+cash(gain));
-      label.style.fontSize=getComputedStyle(announcement.querySelector('.t')).fontSize;
+      // A larger readable amount leads the trail; long payouts still fit a phone.
+      const font=Math.min(48,(parseFloat(getComputedStyle(amount).fontSize)||28)*1.3);
+      label.style.fontSize=font+'px';
+      const maxWidth=Math.min(innerWidth*.8,420);
+      if(label.scrollWidth>maxWidth)label.style.fontSize=(font*maxWidth/label.scrollWidth)+'px';
       announcement.classList.add('gain-in-flight');
       const dx=end.x-start.x,dy=end.y-start.y;
-      const flight=animate(label,[{transform:place(0,0,-4,1),opacity:1},{transform:place(dx*.08,dy*.08-8,-4,1.06),opacity:1,offset:.18},{transform:place(dx*.5,dy*.5-20,-2,.8),opacity:1,offset:.6},{transform:place(dx,dy,0,.35),opacity:0}],{duration:style.flight,easing:'cubic-bezier(.4,0,.7,1)'},true);
+      const arc=-Math.sign(dx)*Math.min(34,Math.abs(dx)*.22);
+      const angle=Math.atan2(dy,dx)*180/Math.PI+90;
+      // A few long printed strokes read as motion, never as falling confetti.
+      for(let i=0;i<4+tier;i++){
+        const streak=piece('payout-streak paper-ink',start.x,start.y,i%3?graphic.yellow:graphic.cream,foreground);
+        if(!streak)break;
+        streak.style.width=(5+tier)+'px';streak.style.height=(26+tier*7)+'px';
+        const spread=(i-(3+tier)/2)*7,delay=i*28;
+        animate(streak,[
+          {transform:place(spread,12,angle,.2),opacity:0},
+          {transform:place(dx*.12+arc*.5+spread,dy*.12+12,angle,1),opacity:.85,offset:.2},
+          {transform:place(dx*.66+arc*.6+spread*.35,dy*.66+15,angle,.9),opacity:.65,offset:.7},
+          {transform:place(dx,dy,angle,.15),opacity:0}
+        ],{duration:style.flight-delay,delay,easing:'cubic-bezier(.32,0,.55,1)'},true);
+      }
+      const flight=animate(label,[
+        {transform:place(0,0,-4,1.06),opacity:1},
+        {transform:place(dx*.04,dy*.03+10,-6,1.18),opacity:1,offset:.16},
+        {transform:place(dx*.3+arc,dy*.3-22,-5,1.08),opacity:1,offset:.45},
+        {transform:place(dx*.76+arc*.4,dy*.76-14,-2,.86),opacity:1,offset:.78},
+        {transform:place(dx,dy,0,.56),opacity:1,offset:.94},
+        {transform:place(dx,dy,0,.42),opacity:0}
+      ],{duration:style.flight,easing:'cubic-bezier(.32,0,.55,1)'},true);
       if(flight){const finish=flight.onfinish;flight.onfinish=()=>{
         finish();if(!boardActive())return;
-        animate($('gainVal'),[{scale:'1'},{scale:'1.1',offset:.23},{scale:'1'}],{duration:280});
-        graphicRays($('gainVal'),2,graphic.yellow,13);
+        animate(bank,[
+          {scale:'1',filter:'brightness(1)'},
+          {scale:String(1.18+tier*.02),filter:'brightness(1.55)',offset:.24},
+          {scale:'.97',filter:'brightness(1.15)',offset:.52},
+          {scale:'1.05',filter:'brightness(1.05)',offset:.72},
+          {scale:'1',filter:'brightness(1)'}
+        ],{duration:500});
+        graphicRays(bank,4,graphic.yellow,20+tier*4);
+        haptic(true);
       };}
     },style.hold);
   }

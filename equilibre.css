@@ -566,7 +566,8 @@
 .combo-impact{font-size:clamp(15px,4.7vw,23px);padding:2px 8px;background:#20252ae6;clip-path:var(--frame-cut)}
 .combo-impact.long{font-size:clamp(13px,3.7vw,19px)}
 .card-value-pop{position:absolute;font-size:clamp(18px,4.8vw,25px)}
-.payout-value{color:#ffce3a;font-size:clamp(23px,6vw,32px)}
+.payout-value{color:#ffce3a;font-size:clamp(30px,7.8vw,42px);filter:drop-shadow(0 3px 0 #20252a) drop-shadow(0 0 5px #ffce3a55)}
+.payout-streak{position:absolute;pointer-events:none;transform-origin:center;clip-path:polygon(20% 0,100% 0,75% 100%,0 80%);opacity:0;z-index:1}
 :is(.combo-impact,.card-value-pop,.payout-value) .raster-glyph{--glyph-width:.8em;animation:none!important}
 #multPop .m,#multPop .t{-webkit-text-stroke-color:#20252a;text-shadow:0 3px 0 #20252a;filter:none}
 #multPop.win .m{color:#ffce3a}#multPop.win .t{color:#fff7e6}
