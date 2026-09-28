@@ -2007,42 +2007,11 @@ function openPause(){
 }
 function resumeGame(){$('pauseScreen').classList.remove('show');GameClock.pause('manual',false);}
 /* ---------- PARAMÈTRES (langue) ---------- */
-function openSettings(){renderLangOpts();renderFontControls();renderTestOptions();renderAdOpts();$('settingsScreen').classList.add('show');}
+function openSettings(){renderLangOpts();renderTestOptions();renderAdOpts();$('settingsScreen').classList.add('show');}
 function closeSettings(){$('testScreen').classList.remove('show');$('settingsScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
 function pauseSettings(){$('pauseScreen').classList.remove('show');pauseReturn=true;openSettings();}   // à la fermeture on revient à la pause
 function openTestTools(){renderTestOptions();renderAdOpts();$('testScreen').classList.add('show');}
 function closeTestTools(){$('testScreen').classList.remove('show');}
-let fontPreviewReturn=null;
-function previewFonts(){
-  if($('fontPreview').classList.contains('show'))return;
-  fontPreviewReturn=['settingsScreen','pauseScreen'].find(id=>$(id).classList.contains('show'))||null;
-  if(fontPreviewReturn)$(fontPreviewReturn).classList.remove('show');
-  renderFontControls();$('fontPreview').classList.add('show');
-  if(typeof syncMenuFocus==='function')syncMenuFocus();
-  $('fontPreviewSelect').focus({preventScroll:true});
-}
-function closeFontPreview(){
-  if(!$('fontPreview').classList.contains('show'))return;
-  if(fontPreviewReturn)$(fontPreviewReturn).classList.add('show');
-  $('fontPreview').classList.remove('show');fontPreviewReturn=null;
-  if(typeof syncMenuFocus==='function')syncMenuFocus();
-}
-function renderFontControls(){
-  const font=CopyFonts.options.find(font=>font.id===CopyFonts.selected);
-  document.querySelectorAll('[data-font-select]').forEach(select=>{
-    if(!select.options.length)CopyFonts.options.forEach(font=>{
-      const option=document.createElement('option');option.value=font.id;option.textContent=font.name;select.append(option);
-    });
-    select.value=font.id;select.setAttribute('aria-busy',String(CopyFonts.status==='loading'));
-  });
-  document.querySelectorAll('[data-font-current]').forEach(el=>{if(el.textContent!==font.name)el.textContent=font.name;});
-  document.querySelectorAll('[data-font-status]').forEach(el=>{
-    const message=CopyFonts.status==='loading'?t('font.loading'):CopyFonts.status==='error'?t('font.error'):'';
-    if(el.textContent!==message)el.textContent=message;el.hidden=!message;
-  });
-  $('fontPrevious').setAttribute('aria-label',t('font.previous'));
-  $('fontNext').setAttribute('aria-label',t('font.next'));
-}
 function renderTestOptions(){
   const off=Ads.testDisabled(),button=$('testAdsToggle');
   button.textContent=t(off?'test.adsOff':'test.adsOn');button.setAttribute('aria-checked',String(off));
@@ -2086,7 +2055,7 @@ function applyI18n(){
   document.querySelectorAll('[data-i18n-title]').forEach(el=>{el.title=t(el.getAttribute('data-i18n-title'));});
   const hw=$('handWord');if(hw)hw.textContent=(LANG==='fr'?'main':'hand');
   const mc=$('menuCircuit');if(mc)mc.textContent=t('menu.circuit');
-  renderLangOpts();renderFontControls();renderTestOptions();renderAdOpts();renderRules();
+  renderLangOpts();renderTestOptions();renderAdOpts();renderRules();
   renderAll();renderMenu();renderPlanque();renderBackPicker();
   if($('shop').classList.contains('show')){renderShopHead();renderShop();}
   if($('loseScreen').classList.contains('show'))openLose();

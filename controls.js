@@ -19,10 +19,6 @@
     usePeek: () => usePeek(),
     openRules: () => openRules(),
     openSettings: () => openSettings(),
-    previewFonts: () => previewFonts(),
-    closeFontPreview: () => closeFontPreview(),
-    fontPrevious: () => CopyFonts.step(-1),
-    fontNext: () => CopyFonts.step(1),
     openTestTools: () => openTestTools(),
     closeTestTools: () => closeTestTools(),
     toggleTestAds: () => Ads.setTestDisabled(!Ads.testDisabled()),
@@ -59,9 +55,6 @@
     if(action)action(element,event);
   });
   document.querySelectorAll('[data-action="select-circuit"],[data-action="select-free"]').forEach(button=>{button.disabled=false;});
-  document.querySelectorAll('[data-font-select]').forEach(select=>select.addEventListener('change',()=>CopyFonts.select(select.value)));
-  document.addEventListener('cold-deck-font-change',renderFontControls);
-  renderFontControls();
   $('bootNotice')?.remove();
   // Fonts, alpha masks and the artwork visible on the home screen share one reveal.
   const decodeImage=src=>new Promise(resolve=>{
@@ -74,7 +67,7 @@
     ...[...$('modeMenu').querySelectorAll('img')].map(image=>image.src),
     ...['background-menu','button-yellow','button-teal','card-shape','card-stock','suit-spade'].map(ColdDeckArt.image)
   ]);
-  const resources=[window.ColdDeckRaster?.ready,CopyFonts.ready,document.fonts?.ready,...Array.from(homeAssets,decodeImage)];
+  const resources=[window.ColdDeckRaster?.ready,document.fonts?.load('500 16px "Baloo 2"'),document.fonts?.ready,...Array.from(homeAssets,decodeImage)];
   Promise.allSettled(resources).then(()=>{
     window.ColdDeckRaster?.refresh();
     requestAnimationFrame(()=>requestAnimationFrame(()=>window.ColdDeckBoot?.finish()));

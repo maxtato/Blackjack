@@ -18,7 +18,6 @@ Object.assign(STR.fr,{
  'planque.startInf':'Sans limite de mains',
  'planque.startCircuit':n=>'Commencer le circuit',
  'set.title':'RÉGLAGES','set.close':'TERMINÉ','set.dev':'OUTILS DE DÉMONSTRATION',
- 'font.open':'POLICES','font.label':'Police des textes','font.preview':'Comparer sur le jeu','font.previous':'Police précédente','font.next':'Police suivante','font.loading':'Chargement de la police…','font.error':'Police indisponible. Réessaie ou choisis-en une autre.',
  'rules.close':'RETOUR','rules.basic':'Les bases du blackjack','rules.bonuses':'Baraka & combinaisons','rules.modes':'Les modes de jeu',
  'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>',
  'back.cb9':'Éclair','back.cb10':'Chance','back.cb11':'Cœur','back.cb12':'Lune','back.cb13':'Dés','back.cb14':'Couronne','back.cb15':'Œil','back.cb16':'Cerises','back.cb18':'Flamme','back.cb19':'Diamant','back.cb22':'Serpent','back.cb26':'Soleil',
@@ -48,7 +47,6 @@ Object.assign(STR.en,{
  'planque.seeAll':'Collection ›','planque.start':'PLAY',
  'planque.startInf':'Unlimited hands','planque.startCircuit':n=>'Start the circuit',
  'set.close':'DONE','set.dev':'DEMO TOOLS','rules.close':'BACK',
- 'font.open':'FONTS','font.label':'Text font','font.preview':'Compare in the game','font.previous':'Previous font','font.next':'Next font','font.loading':'Loading font…','font.error':'Font unavailable. Try again or choose another.',
  'rules.basic':'Blackjack basics','rules.bonuses':'Streaks & combinations','rules.modes':'Game modes',
  'tok.bankI':'+$','tok.pourboireI':'+$<small>/hand</small>',
  'back.cb9':'Lightning','back.cb10':'Luck','back.cb11':'Heart','back.cb12':'Moon','back.cb13':'Dice','back.cb14':'Crown','back.cb15':'Eye','back.cb16':'Cherries','back.cb18':'Flame','back.cb19':'Diamond','back.cb22':'Snake','back.cb26':'Sun',
@@ -171,7 +169,7 @@ overlays.forEach(el=>menuObserver.observe(el,{attributes:true,attributeFilter:['
 document.addEventListener('keydown',e=>{
  const top=activeMenu();if(!top)return;
  if(e.key==='Escape'){
-   const close={rulesScreen:closeRules,settingsScreen:closeSettings,fontPreview:closeFontPreview,testScreen:closeTestTools,upgradesScreen:closeUpgrades,backPickScreen:closeBacks,inspectScreen:closeInspect,confirmRestart:closeRestart,pauseScreen:resumeGame,intro:openMenu,adOverlay:()=>{if($('adX').classList.contains('on'))Ads.closeNow();}}[top.id];
+   const close={rulesScreen:closeRules,settingsScreen:closeSettings,testScreen:closeTestTools,upgradesScreen:closeUpgrades,backPickScreen:closeBacks,inspectScreen:closeInspect,confirmRestart:closeRestart,pauseScreen:resumeGame,intro:openMenu,adOverlay:()=>{if($('adX').classList.contains('on'))Ads.closeNow();}}[top.id];
   if(close){e.preventDefault();close();}return;
  }
  if(e.key==='Tab'){

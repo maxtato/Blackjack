@@ -254,18 +254,9 @@ button .raster-glyph{--glyph-width:.62em}
 @media(prefers-reduced-motion:reduce){.hand .card{animation:none!important;top:0!important}}
 :root[data-motion=gentle] .hand .card{animation:none!important;top:0!important}
 
-/* Local reading faces load on selection; the saved choice joins the boot gate. */
-@font-face{font-family:"Fredoka";src:url("fonts/fredoka-latin-500-normal.woff2") format("woff2");font-style:normal;font-weight:500;font-display:swap}
+/* The chosen reading face is local and ready before the home screen appears. */
 @font-face{font-family:"Baloo 2";src:url("fonts/baloo-2-latin-500-normal.woff2") format("woff2");font-style:normal;font-weight:500;font-display:swap}
-@font-face{font-family:"Grandstander";src:url("fonts/grandstander-latin-500-normal.woff2") format("woff2");font-style:normal;font-weight:500;font-display:swap}
-@font-face{font-family:"Sniglet";src:url("fonts/sniglet-latin-400-normal.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap}
-@font-face{font-family:"DynaPuff";src:url("fonts/dynapuff-latin-400-normal.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap}
-@font-face{font-family:"Itim";src:url("fonts/itim-latin-400-normal.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap}
-@font-face{font-family:"Quicksand";src:url("fonts/quicksand-latin-500-normal.woff2") format("woff2");font-style:normal;font-weight:500;font-display:swap}
-@font-face{font-family:"Nunito";src:url("fonts/nunito-latin-500-normal.woff2") format("woff2");font-style:normal;font-weight:500;font-display:swap}
-@font-face{font-family:"Comfortaa";src:url("fonts/comfortaa-latin-500-normal.woff2") format("woff2");font-style:normal;font-weight:500;font-display:swap}
-@font-face{font-family:"Bree Serif";src:url("fonts/bree-serif-latin-400-normal.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap}
-:root{--copy-font:"Fredoka","Avenir Next","Segoe UI",Arial,sans-serif;--font:var(--copy-font)}
+:root{--copy-font:"Baloo 2","Avenir Next","Segoe UI",Arial,sans-serif;--font:var(--copy-font)}
 .readable-copy,.readable-copy :where(span,b,strong,em,small){font-family:var(--copy-font)!important;font-weight:500!important;letter-spacing:normal!important;text-transform:none!important}
 .readable-copy{line-height:1.4}
 .readable-copy .live-letter{animation:none!important;top:0!important;transform:none!important}

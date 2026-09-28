@@ -69,7 +69,7 @@
   // Emphasize the exact displayed value, including its sign, decimal, unit and
   // grouped thousands. Only text nodes are replaced: links and controls survive.
   const numberPattern=/(?<![\p{L}\p{N}])(?:[+−-]\s*)?(?:[$€×]\s*)?\d+(?:[ \u00a0\u2009\u200a\u202f]\d{3})*(?:[.,]\d+)*(?:[KMBTP](?!\p{L}))?(?:[\/–]\d+(?:[.,]\d+)?)?(?:[ \u00a0\u2009\u200a\u202f]*(?:%|[$€]))?/gu;
-  const numberSkip='.game-number,.raster-copy,.live-word,.sr-only,.card,.chip-value,.repNum,.tnum,#menuBestGain,#gainVal,#chipsVal,#multVal,#pVal,#dVal,svg,script,style,textarea,select,option,[data-font-control],[aria-hidden="true"]:not(.overlay)';
+  const numberSkip='.game-number,.raster-copy,.live-word,.sr-only,.card,.chip-value,.repNum,.tnum,#menuBestGain,#gainVal,#chipsVal,#multVal,#pVal,#dVal,svg,script,style,textarea,select,option,[aria-hidden="true"]:not(.overlay)';
   function numbers(root){
     const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];
     while(walker.nextNode()){

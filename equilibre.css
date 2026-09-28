@@ -60,7 +60,7 @@
 #topbar #pauseBtn{grid-column:2;grid-row:1;justify-self:end;align-self:start;display:grid;place-items:center;width:35px;height:35px;clip-path:var(--frame-cut);border:1px solid #5b6c78;background:#152229!important;color:#fff7e6!important;box-shadow:inset 0 0 0 2px #33434e!important;border-radius:0;padding:6px}
 #topbar .tstats{grid-column:1 / 3;grid-row:2;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr) minmax(0,.83fr) minmax(0,.76fr);gap:0;align-items:center;min-height:65px}
 #topbar #scorebox{display:contents}
-#topbar .gainstat,#topbar .seg,#topbar .turnstat{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;min-height:48px;padding:0 6px;border:0;border-left:1px solid #5d71807d;border-radius:0;background:none;box-shadow:none}
+#topbar .gainstat,#topbar .seg,#topbar .turnstat{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0;min-height:48px;padding:0 6px;border:0;border-left:1px solid #5d71807d;border-radius:0;background:none;box-shadow:none}
 #topbar .gainstat{grid-column:1;grid-row:1;order:0;border:0;padding-left:0}
 #topbar .gainstat .v,#topbar .seg .v{order:-1}
 #topbar .turnstat{grid-column:2;grid-row:1;order:0}
@@ -161,7 +161,7 @@
 #actions .btn .blbl{font-size:inherit!important;line-height:1.05;max-width:100%;white-space:nowrap;text-wrap:nowrap}
 #actions .btn[data-game-action="force"] .blbl{max-width:100%}
 #actions .raster-glyph{--glyph-width:.93em}
-#actions .action-copy{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;width:100%;min-width:0;max-width:100%}
+#actions .action-copy{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;width:100%;min-width:0;max-width:100%}
 #app #actions .actMain .btn small{display:block;font:500 clamp(12px,3.65vw,18px)/1.1 var(--copy-font);color:inherit;opacity:1;max-width:100%;white-space:normal}
 #app #actions .actWide .btn small{display:none}
 #actions .actWide .btn{font-size:clamp(18px,5.5vw,27px)!important;line-height:1.1}
@@ -344,7 +344,7 @@
  #topbar #pauseBtn{width:calc(8.7 * var(--ui-u));height:calc(8.7 * var(--ui-u));padding:calc(1.7 * var(--ui-u))}
  #pauseBtn .pause-mark{width:100%;height:100%}
  #topbar .tstats{min-height:0;height:100%;grid-template-columns:1.5fr 1fr .9fr .77fr}
- #topbar .gainstat,#topbar .seg,#topbar .turnstat{height:100%;min-height:0;gap:calc(.6 * var(--ui-u));padding:0 calc(1.2 * var(--ui-u))}
+ #topbar .gainstat,#topbar .seg,#topbar .turnstat{height:100%;min-height:0;gap:calc(.4 * var(--ui-u));padding:0 calc(1.2 * var(--ui-u))}
  #topbar .gainstat{padding-left:0}
  #topbar #gainVal{font-size:calc(16.1 * var(--ui-u));line-height:.95}
  #topbar #gainVal .raster-glyph{--glyph-width:.86em}
@@ -377,7 +377,7 @@
  #actions .btn{font-size:calc(7.2 * var(--ui-u))!important;padding:calc(.5 * var(--ui-u)) calc(1.3 * var(--ui-u))!important}
  #actions .actWide .btn{font-size:calc(7.2 * var(--ui-u))!important}
  #app #actions .actMain .btn small{font-size:max(11px,calc(3.1 * var(--ui-u)));line-height:1.1}
- #actions .action-copy{gap:calc(.5 * var(--ui-u))}
+ #actions .action-copy{gap:calc(.35 * var(--ui-u))}
  #app[data-phase="bet"] #actions .btn{font-size:calc(7.2 * var(--ui-u))!important}
  #bottombar #betRow{height:var(--dock-secondary);gap:calc(2 * var(--ui-u))}
  #chips{gap:calc(2.5 * var(--ui-u))}
@@ -654,9 +654,9 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .table-effect-card{--number-ink:#403055;--bonus-number-ink:#273337;margin:14px 0;padding:16px 18px;background:#b69bda;border:0;text-align:left;border-radius:0;clip-path:var(--frame-cut);color:#273337}
 .table-effect-label{display:block;margin-bottom:7px;font:500 11px/1.3 var(--copy-font);text-transform:uppercase;letter-spacing:.09em;color:#273337}
 .table-effect-card>strong{display:block;font:900 24px/1.1 var(--game-type);color:#273337}
-.table-effect-card p{margin:8px 0 0!important;font:500 14px/1.45 var(--copy-font)!important;color:#273337}
+.table-effect-card p{margin:8px 0 0!important;font:500 14px/1.35 var(--copy-font)!important;color:#273337}
 .table-effect-card .table-effect-protection{color:#273337}
-#briefRule{padding:0 3px;margin:12px 0;color:#e4decd;line-height:1.65}
+#briefRule{padding:0 3px;margin:12px 0;color:#e4decd;line-height:1.45}
 #tableBrief .ovpanel{max-width:470px}
 .overlay h1[tabindex="-1"]:focus{outline:none}
 .brief-stats{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.55fr) minmax(0,1fr);gap:10px;align-items:end;margin:16px 0 12px;padding:0 2px}
@@ -669,7 +669,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .draw-readout[hidden]{display:block!important;visibility:hidden}
 .circuit-choices{display:flex;flex-direction:column;gap:12px;margin-top:18px}
 .circuit-panel h1{font-size:25px;line-height:1.15}
-.circuit-panel p{font:500 14px/1.45 var(--copy-font)}
+.circuit-panel p{font:500 14px/1.35 var(--copy-font)}
 .circuit-choices .draft-choice{display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:14px;width:100%;text-align:left;white-space:normal;padding:14px!important}
 .draft-choice>.effect-mark{flex:none;width:48px;height:68px}
 .draft-choice>span:last-child{flex:1;min-width:0;font:600 18px/1.2 var(--copy-font)}
@@ -718,21 +718,9 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .test-panel .setOpts .btn{white-space:normal;line-height:1.3}
 #confirmRestart .shopBtns .btn{white-space:normal;line-height:1.2;padding:12px!important;font-size:15px}
 
-/* The compact font picker leaves the current table visible while it is paused. */
-#settingsScreen .font-setting{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;text-align:left}
-#settingsScreen .font-setting .setLbl{font:500 14px/1.3 var(--copy-font);letter-spacing:0;text-transform:none}
-.copy-font-select{display:block;box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:8px 12px;border:1px solid #8193a0;border-radius:4px;background:#46505b;color:#fff7e6;color-scheme:dark;font:500 16px/1.3 var(--copy-font);letter-spacing:0;text-transform:none}
-.copy-font-select option{background:#303840;color:#fff7e6}
-#settingsScreen .font-preview-open{margin:0;min-height:44px;padding:10px!important;white-space:normal;font:500 14px/1.3 var(--copy-font)}
-#fontPreview{z-index:180;align-items:flex-end;padding:12px 10px max(12px,env(safe-area-inset-bottom));background:none;backdrop-filter:none;-webkit-backdrop-filter:none;pointer-events:none}
-#fontPreview .font-toolbar{box-sizing:border-box;pointer-events:auto;width:100%;max-width:510px;padding:10px 12px;background:#303840;color:#fff7e6;box-shadow:0 -5px 24px #0005;border-radius:6px;font:500 14px/1.3 var(--copy-font)}
-.font-toolbar-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:7px}
-#fontPreview .font-toolbar-heading .btn{flex:none;min-height:44px;padding:8px 13px!important;font:500 13px/1.2 var(--copy-font)}
-.font-toolbar-picker{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:8px;align-items:center}
-#fontPreview .font-toolbar-picker .btn{display:grid;place-items:center;min-width:44px;height:44px;min-height:44px;padding:10px!important}
-#fontPreview .font-toolbar-picker .nav-triangle{width:22px;height:22px;object-fit:contain}
-#fontPreview .font-status,#settingsScreen .font-status{margin:7px 0 0;color:#e1d1f2;font:500 12px/1.3 var(--copy-font);text-align:left}
-.font-status[hidden]{display:none!important}
+/* Slightly tighter reading lines on the playing screen. */
+#topbar .tt{line-height:1.05}
+#topbar .table-context-body :is(#tableMeta,#ruleText){line-height:1.3}
 
 /* Shared illustrated values: one readable amount, one unit, no line break. */
 :root{--value-scale:.66}
