@@ -710,7 +710,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 #confirmRestart .shopBtns .btn{white-space:normal;line-height:1.2;padding:12px!important;font-size:15px}
 
 /* Shared illustrated values: one readable amount, one unit, no line break. */
-.game-number{display:inline-flex;align-items:center;white-space:nowrap;vertical-align:-.15em;height:.84em;margin-inline:.035em;font:900 1.75em/.84 var(--game-type)!important;color:var(--number-ink,#ffdc75);font-variant-numeric:tabular-nums;letter-spacing:0!important;text-transform:none!important}
+.game-number{display:inline-flex;align-items:center;white-space:nowrap;vertical-align:middle;height:.84em;margin-inline:.035em;font:900 1.75em/.84 var(--game-type)!important;color:var(--number-ink,#ffdc75);font-variant-numeric:tabular-nums;letter-spacing:0!important;text-transform:none!important}
 .game-number[data-value-kind="bonus"]{color:var(--bonus-number-ink,#88e2cf)}
 .game-number .raster-copy,.game-number .raster-ink{white-space:nowrap;line-height:0}
 .game-number .raster-glyph{--glyph-width:.86em;height:1.08em;animation:none!important;translate:none!important;rotate:none!important;top:0!important}
@@ -727,6 +727,10 @@ body:has(#multPop.go) #tip{visibility:hidden}
 :is(.b-gold,.b-teal,.b-red,.chip,.mode-card){--number-ink:#542f55;--bonus-number-ink:#15504d}
 :is(.b-blue,.b-purple){--number-ink:#ffe093;--bonus-number-ink:#a4f3de}
 button:disabled{--number-ink:#ffe093;--bonus-number-ink:#a4f3de}
+:is(.b-gold,.b-teal,.b-red):enabled .rep-star{filter:brightness(.32) saturate(.55)}
+.overlay .btn small{font-size:13px;line-height:1.5;opacity:1}
+#app #actions .actMain .btn small{display:flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap}
+#actions .btn small .game-number{font-size:1.5em!important;height:.72em}
 .shopItem>.btn .game-number{font-size:1.5em!important}
 .shopItem>.btn{white-space:nowrap}
 .ds,.rule-entry,#inspectBody p,#endText,#loseText{line-height:1.7}

@@ -3735,7 +3735,7 @@ syncMenuFocus();
     if(pause&&!pause.querySelector('.pause-mark'))pause.innerHTML='<i class="raster-nav pause-mark" aria-hidden="true"></i>';
     for(const el of roots)observer.observe(el,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['aria-hidden']});
   }
-  const roots=[...document.querySelectorAll('.overlay,#adOverlay,#topbar,#bottombar,#center,.zlbl,#pVal,#dVal,#peekBtn,#pBar,#effects,#circuitStatus')];
+  const roots=[...document.querySelectorAll('.overlay,#adOverlay,#topbar,#bottombar,#center,.zlbl,#pVal,#dVal,#peekBtn,#pBar,#effects,#circuitStatus,#recPop,#turnPop')];
   const observer=new MutationObserver(decorate);
   decorate();
   // Deterministic entry point for renders and tests, without any game-state writes.
