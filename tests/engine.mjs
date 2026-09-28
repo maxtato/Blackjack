@@ -5,29 +5,31 @@ import {Window} from 'happy-dom';
 import FakeTimers from '@sinonjs/fake-timers';
 
 export const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-export function engine(){
+export function engine({realAds=false,persist=false,storage={}}={}){
   const w=new Window({url:'http://localhost:8000',settings:{disableJavaScriptFileLoading:true,disableCSSFileLoading:true,enableJavaScriptEvaluation:true,suppressInsecureJavaScriptEnvironmentWarning:true}});
+  for(const [key,value] of Object.entries(storage))w.localStorage.setItem(key,value);
   w.document.write(fs.readFileSync(root+'/index.html','utf8').replace(/<script[\s\S]*?<\/script>/g,''));
   w.requestAnimationFrame=()=>1;w.cancelAnimationFrame=()=>{};
   const clock=FakeTimers.withGlobal(w).install({toFake:['setTimeout','clearTimeout','setInterval','clearInterval','Date','performance'],loopLimit:20000});
   const noops=['renderTop','renderRelics','renderConsumables','renderActions','renderPressure','renderMult','renderHands','renderHandTotals','renderCombos','renderShopHead','announceTurn','popText','flashScore','showWord','perfectFanfare','showRecord','objectiveReached','showBoss','flashScreen','coinBurst','shake','updateBustReadout','renderPlanque','renderBackPicker','audioInit','announceEd','renderCircuitStatus','renderShopInventory','showTableBrief','saveMeta','saveRecs'];
   const expose=['RUN','RUN_LEN','ZONE_MULTCAP','RELIC_POOL','TAROT_POOL','SERVICE_POOL','UNLOCKS_NUIT','CONTRACTS','BARAKA_STEPS','BARAKA_MULT','STR','Ads','startGame','freshGame','enterTable','retryTable','deal','playerHit','playerStand','playerDouble','playerSplit','forcerChance','usePeek','useConsumable','handValue','computeMult','barakaLevel','barakaPct','addBaraka','hasRelic','drawIdeal','buildShoe','resolve','resolveSplit','betChoices','clampBet','itemCost','serviceCost','niceRound','roundBet','starsFor','GameClock','chooseStarter','chooseContract','bossReady','bossProgress','lossRefund','checkBankGoal','recommendedBet','relicPower','resetTableState','shopReserve','serviceAvailable','advanceAmount','openPause','resumeGame','openInspect','closeInspect','migrateCircuitRecord','extraLife','tableRep','repOnEnd','coffreBonus','buyShopItem','leaveShop','cashOut','endRun','updateRecord','addEditionToHand','consumableSlots','relicMax','applyHandIncome','checkContract','t','bustChance','sellValue'];
   let code=['game-data.js','card-art.js','game.js'].map(f=>fs.readFileSync(root+'/'+f,'utf8')).join('\n');
+  expose.push('openSettings','closeSettings','pauseSettings','openTestTools','closeTestTools','requestCircuitReset','closeRestart','doRestart','restartAll','startEndless');
   code=code.replace('freshGame();buildShoe();applyI18n();renderHands();tick();','');
-  code+='\n'+noops.map(n=>n+'=()=>{};').join('\n');
+  code+='\n'+noops.filter(n=>!persist||!['saveMeta','saveRecs'].includes(n)).map(n=>n+'=()=>{};').join('\n');
   code+=`\nLANG='fr';
     renderChips=()=>clampBet();renderAll=()=>clampBet();
     showWord=(kind,gain,mult,natural,bust,record,reason='')=>{window.__result={kind,gain,mult,natural,bust,record,reason};};
     renderShop=()=>{window.__screen='shop';};openLose=()=>{window.__screen='lose';};renderEndScreen=()=>{window.__screen='end';};
     animateScoreTally=(mode,lines,finish)=>{finish();return 0;};
     const originalStartGame=startGame;startGame=(...args)=>{originalStartGame(...args);while(G.phase==='draft')chooseStarter(G.draftChoices.findIndex(r=>r.id==='lunettes')>=0?G.draftChoices.findIndex(r=>r.id==='lunettes'):0);};
-    Ads.canRewarded=()=>false;Ads.interstitial=()=>({then(fn){fn();}});Ads.countTable=()=>{};
+    ${realAds?'':'Ads.canRewarded=()=>false;Ads.interstitial=()=>({then(fn){fn();}});Ads.countTable=()=>{};'}
     for(const key of Object.keys(sfx))sfx[key]=()=>{};
     window.ColdDeckFX=new Proxy({reduced:true},{get:(target,key)=>key in target?target[key]:()=>{}});
     const originalAuditMult=computeMult;
     computeMult=function(mode){const value=originalAuditMult(mode);if(G.phase==='done')window.__onScore?.({mult:value.mult,lines:value.lines,n:G.pHand.length,pv:handValue(G.pHand).total,baraka:barakaLevel(),cap:ZONE_MULTCAP[G.table.zone],table:G.tableIdx+1});return value;};
     window.__audit={${expose.join(',')},buyUnlock,
-      get G(){return G},get META(){return META},get offers(){return shopOffer},
+      get G(){return G},get META(){return META},get RECS(){return RECS},get MODE(){return MODE},get offers(){return shopOffer},
       reset(unlocks={}){META=blankMeta();META.nuit.unlocks={...unlocks};RECS={};window.__screen='';startGame(0);},
       setup(hand,dealer,opts={}){freshGame();window.__result=null;G.pHand=hand;G.dHand=dealer;Object.assign(G,{phase:'play',revealed:false,bet:10,betChosen:true,bank:100},opts);},
       setTable(i){G.tableIdx=i;G.table=RUN[i];},

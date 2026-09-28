@@ -28,6 +28,8 @@ La palette D validée utilise un rose poudré très clair pour les reliques et u
 
 ## Vérification
 
+Les réglages donnent accès au Mode test. La coupure de toutes les publicités est mémorisée et bloque aussi les vidéos récompensées, sans attribuer leurs bonus. Le circuit peut être réinitialisé après confirmation : réputation, améliorations et records sont effacés, puis une nouvelle expédition commence à la table 1. Le mode Libre et les préférences sont conservés. Six contrôles supplémentaires vérifient la persistance, la pause, l’annulation, les publicités et la portée exacte de la remise à zéro.
+
 Vingt-deux contrôles reproductibles couvrent notamment les égalités ordinaires et les trois exceptions annoncées, les mises doublées, les mains séparées, Diplomate, les As souples, Assurance, Talisman, FORCER, Pendu, la pause, les mises engagées, Soleil, les éditions, la boutique, les records et le boss final. Les commandes sont dans `tests/README.md`.
 
 La passe d’équilibrage du 27 septembre utilise 600 expéditions pour chacune de cinq politiques, 600 essais par table dans deux équipements fixes, et 200 campagnes avec réputation et reprises : **78 281 tentatives de table et 500 447 mains**. Les effets de table de cette simulation sont conservés ; leur annonce est renforcée le 28 septembre.

@@ -506,6 +506,15 @@ function hasStr(key){return (STR[LANG]&&key in STR[LANG])||(key in STR.en);}
 
 /* Circuit balance: the same terms are used in rules, offers and decisions. */
 Object.assign(STR.fr,{
+ 'test.title':'MODE TEST','test.kicker':'RÉGLAGES / TESTS','test.hint':'Publicités et réinitialisation du circuit','test.activeStatus':'Toutes les publicités sont coupées',
+ 'test.adsTitle':'PUBLICITÉS','test.adsCopy':'Interstitiels et vidéos récompensées.','test.cutAds':'Couper toutes les publicités','test.adsOff':'COUPÉES','test.adsOn':'ACTIVES',
+ 'test.adsDisabledNote':'Coupure mémorisée. Les bonus vidéo sont indisponibles tant que les publicités sont coupées.',
+ 'test.adsEnabledNote':'Coupe toutes les publicités pour jouer et tester sans interruption. Ton choix est mémorisé.',
+ 'test.circuitTitle':'CIRCUIT À ZÉRO','test.resetCopy':'Repars à la table 1 avec une progression neuve : réputation, améliorations et records du circuit remis à zéro.',
+ 'test.reset':'RÉINITIALISER LE CIRCUIT','test.resetTitle':'EFFACER LE CIRCUIT ?',
+ 'test.resetConfirmCopy':'La <b>réputation</b>, les <b>améliorations</b> et les <b>records du circuit</b> seront effacés. La partie en cours sera arrêtée.<br><br>Tu recommences à la <b>table 1</b> avec le choix de ta première relique.<br><br>La progression du mode Libre et tes réglages sont conservés.',
+ 'test.resetConfirm':'EFFACER ET REJOUER','test.back':'RETOUR AUX RÉGLAGES','test.adPreviews':'TESTER LES PUBLICITÉS',
+ 'set.adFree':'RETIRER LES INTERSTITIELS','set.adsNote':'Aperçus de démonstration. Réactive les publicités pour les tester. « Retirer les interstitiels » conserve les vidéos récompensées. « Ignorer les plafonds » affiche un interstitiel à chaque occasion.',
  'circuit.tableEffect':'Règle de la table','rule.sec':'Égalité = défaite','rule.mute':'Les cartes et le total du croupier restent cachés',
  'w.tableTie':'ÉGALITÉ PERDUE','w.tableTieReason':'Le croupier gagne les égalités ici','sp.tableTie':'ÉGALITÉ PERDUE',
  'effect.standard.title':'RÈGLES CLASSIQUES','effect.standard.short':'Égalité : mise rendue',
@@ -587,6 +596,15 @@ Object.assign(STR.fr,{
  'planque.tables':n=>n+' tables remportées','menu.recTables':n=>n+' tables remportées'
 });
 Object.assign(STR.en,{
+ 'test.title':'TEST MODE','test.kicker':'SETTINGS / TESTS','test.hint':'Ads and Circuit reset','test.activeStatus':'All ads are turned off',
+ 'test.adsTitle':'ADS','test.adsCopy':'Interstitials and rewarded videos.','test.cutAds':'Turn off all ads','test.adsOff':'OFF','test.adsOn':'ON',
+ 'test.adsDisabledNote':'Preference saved. Video rewards are unavailable while ads are turned off.',
+ 'test.adsEnabledNote':'Turn off all ads to play and test without interruptions. Your choice is saved.',
+ 'test.circuitTitle':'FRESH CIRCUIT','test.resetCopy':'Start at table 1 with fresh progress: Circuit reputation, upgrades and records are reset.',
+ 'test.reset':'RESET THE CIRCUIT','test.resetTitle':'ERASE CIRCUIT PROGRESS?',
+ 'test.resetConfirmCopy':'Circuit <b>reputation</b>, <b>upgrades</b> and <b>records</b> will be erased. Your current game will end.<br><br>You restart at <b>table 1</b> by choosing your first relic.<br><br>Free Play progress and your settings are kept.',
+ 'test.resetConfirm':'ERASE AND PLAY','test.back':'BACK TO SETTINGS','test.adPreviews':'PREVIEW ADS',
+ 'set.adFree':'REMOVE INTERSTITIALS','set.adsNote':'Demo previews. Turn ads on to test them. “Remove interstitials” keeps rewarded videos. “Ignore caps” shows an interstitial at every opportunity.',
  'circuit.tableEffect':'Table rule','rule.sec':'Ties count as losses','rule.mute':'The dealer’s cards and total stay hidden',
  'w.tableTie':'TIE LOST','w.tableTieReason':'The dealer wins ties at this table','sp.tableTie':'TIE LOST',
  'effect.standard.title':'CLASSIC RULES','effect.standard.short':'Tie: stake returned',

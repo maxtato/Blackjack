@@ -2012,17 +2012,27 @@ function openPause(){
 }
 function resumeGame(){$('pauseScreen').classList.remove('show');GameClock.pause('manual',false);}
 /* ---------- PARAMÈTRES (langue) ---------- */
-function openSettings(){renderLangOpts();renderAdOpts();$('settingsScreen').classList.add('show');}
-function closeSettings(){$('settingsScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
+function openSettings(){renderLangOpts();renderTestOptions();renderAdOpts();$('settingsScreen').classList.add('show');}
+function closeSettings(){$('testScreen').classList.remove('show');$('settingsScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
 function pauseSettings(){$('pauseScreen').classList.remove('show');pauseReturn=true;openSettings();}   // à la fermeture on revient à la pause
+function openTestTools(){renderTestOptions();renderAdOpts();$('testScreen').classList.add('show');}
+function closeTestTools(){$('testScreen').classList.remove('show');}
+function renderTestOptions(){
+  const off=Ads.testDisabled(),button=$('testAdsToggle');
+  button.textContent=t(off?'test.adsOff':'test.adsOn');button.setAttribute('aria-checked',String(off));
+  button.setAttribute('aria-label',t('test.cutAds'));button.className='btn '+(off?'b-teal':'b-blue');
+  $('testAdsNote').textContent=t(off?'test.adsDisabledNote':'test.adsEnabledNote');
+  $('testModeStatus').textContent=t(off?'test.activeStatus':'test.hint');
+}
 /* réglages pub de démo : aperçu des deux formats, achat « sans pub », plafonds */
 function renderAdOpts(){
   const row=$('adOpts');if(!row)return;row.innerHTML='';
-  const mk=(label,cls,fn)=>{const b=document.createElement('button');b.className='btn'+(cls||'');b.innerHTML=label;b.onclick=fn;row.appendChild(b);};
-  mk(t('set.adTestI'),'',()=>{closeSettings();gameDelay(()=>Ads.show('inter').then(()=>Ads.closeNow&&0),260);});
-  mk(t('set.adTestR'),'',()=>{closeSettings();gameDelay(()=>Ads.rewarded(t('ad.demoReward')),260);});
-  mk((Ads.removed()?'☑ ':'☐ ')+t('set.adFree'),' wide'+(Ads.removed()?' on':''),()=>Ads.setRemoved(!Ads.removed()));
-  mk((Ads.freeCaps()?'☑ ':'☐ ')+t('set.adCaps'),' wide'+(Ads.freeCaps()?' on':''),()=>Ads.setFreeCaps(!Ads.freeCaps()));
+  const mk=(label,cls,fn)=>{const b=document.createElement('button');b.className='btn'+(cls||'');b.textContent=label;b.onclick=fn;row.appendChild(b);return b;};
+  mk(t('set.adTestI'),' b-blue',()=>Ads.show('inter')).disabled=Ads.testDisabled();
+  mk(t('set.adTestR'),' b-blue',()=>Ads.rewarded(t('ad.demoReward'))).disabled=Ads.testDisabled();
+  for(const [key,on,fn] of [['set.adFree',Ads.removed(),()=>Ads.setRemoved(!Ads.removed())],['set.adCaps',Ads.freeCaps(),()=>Ads.setFreeCaps(!Ads.freeCaps())]]){
+    const b=mk(t(key)+' : '+t(on?'set.on':'set.off'),' wide'+(on?' on':''),fn);b.setAttribute('aria-pressed',String(on));b.disabled=Ads.testDisabled();
+  }
 }
 function renderLangOpts(){
   const row=$('langOpts');if(!row)return;row.innerHTML='';
@@ -2050,7 +2060,7 @@ function applyI18n(){
   document.querySelectorAll('[data-i18n-title]').forEach(el=>{el.title=t(el.getAttribute('data-i18n-title'));});
   const hw=$('handWord');if(hw)hw.textContent=(LANG==='fr'?'main':'hand');
   const mc=$('menuCircuit');if(mc)mc.textContent=t('menu.circuit');
-  renderLangOpts();renderAdOpts();renderRules();
+  renderLangOpts();renderTestOptions();renderAdOpts();renderRules();
   renderAll();renderMenu();renderPlanque();renderBackPicker();
   if($('shop').classList.contains('show')){renderShopHead();renderShop();}
   if($('loseScreen').classList.contains('show'))openLose();
@@ -2278,6 +2288,13 @@ const Ads={
   tablesPerAd:3,           // tables franchies avant d'autoriser un interstitiel
   interSecs:4, rewardSecs:5,
   _last:0,_tables:0,_busy:false,_resolve:null,_timer:null,_left:0,_kind:'',_ok:false,
+  _testDisabled:(()=>{try{return localStorage.getItem('t21testAds')==='1';}catch(e){return false;}})(),
+  testDisabled(){return this._testDisabled;},
+  setTestDisabled(v){
+    this._testDisabled=!!v;try{localStorage.setItem('t21testAds',v?'1':'0');}catch(e){}
+    if(v&&this._busy){this._ok=false;this.closeNow();}
+    this._last=Date.now();this._tables=0;renderTestOptions();renderAdOpts();
+  },
   /* --- achat « sans pub » (simulé ici par un réglage) --- */
   removed(){try{return localStorage.getItem('t21noads')==='1';}catch(e){return false;}},
   setRemoved(v){try{localStorage.setItem('t21noads',v?'1':'0');}catch(e){}renderAdOpts();},
@@ -2286,11 +2303,11 @@ const Ads={
   setFreeCaps(v){try{localStorage.setItem('t21adcaps',v?'1':'0');}catch(e){}renderAdOpts();},
   countTable(){this._tables++;},
   canInterstitial(){
-    if(this.removed()||this._busy)return false;
+    if(this.testDisabled()||this.removed()||this._busy)return false;
     if(this.freeCaps())return true;                                  // mode démo
     return (Date.now()-this._last>this.interDelay)&&this._tables>=this.tablesPerAd;
   },
-  canRewarded(){return !this._busy;},                                // le rewarded reste dispo même « sans pub »
+  canRewarded(){return !this.testDisabled()&&!this._busy;},
   interstitial(){
     if(!this.canInterstitial())return Promise.resolve(false);
     return this.show('inter').then(()=>{this._last=Date.now();this._tables=0;return true;});
@@ -2301,6 +2318,7 @@ const Ads={
   },
   /* ---- rendu de la fausse pub (à remplacer par le SDK) ---- */
   show(kind,label){
+    if(this.testDisabled()||this._busy)return Promise.resolve(false);
     return new Promise(resolve=>{
       const ov=$('adOverlay');
       if(!ov){resolve(kind!=='reward');return;}
@@ -2604,14 +2622,28 @@ function endlessBust(){
   endRun(false);
 }
 /* recommencer la progression DU MODE COURANT : on perd sa réputation, ses déblocages et son record */
-function restartAll(){audioInit();$('confirmRestart').classList.add('show');}   // petite fenêtre de confirmation in-game
-function closeRestart(){$('confirmRestart').classList.remove('show');}
+let restartTarget=null;
+function showRestartPrompt(mode,launch){
+  restartTarget={mode,launch};
+  for(const [id,attr,key] of [['resetTitle','data-i18n',launch?'test.resetTitle':'rst.title'],['resetCopy','data-i18n-html',launch?'test.resetConfirmCopy':'rst.text'],['resetConfirm','data-i18n',launch?'test.resetConfirm':'rst.ok']]){
+    const el=$(id);el.setAttribute(attr,key);if(attr==='data-i18n-html')el.innerHTML=t(key);else el.textContent=t(key);
+  }
+  $('confirmRestart').classList.add('show');
+}
+function restartAll(){audioInit();showRestartPrompt(MODE,false);}
+function requestCircuitReset(){showRestartPrompt('nuit',true);}
+function closeRestart(){$('confirmRestart').classList.remove('show');restartTarget=null;}
 function doRestart(){
-  META[MODE]=blankMeta()[MODE];saveMeta();
+  if(!restartTarget)return;
+  const {mode,launch}=restartTarget;restartTarget=null;
+  META[mode]=blankMeta()[mode];delete RECS[mode];saveMeta();saveRecs();
+  MODE=mode;startPalierIdx=0;pauseReturn=false;inspectRef=null;
+  window.ColdDeckFX?.clear();document.body.classList.remove('inf');
+  document.querySelectorAll('.overlay.show').forEach(el=>el.classList.remove('show'));
+  renderMenu();
+  if(launch){startGame(0);return;}
   freshGame();buildShoe();renderAll();renderHands();
   renderPlanque();renderBackPicker();
-  $('confirmRestart').classList.remove('show');
-  $('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');$('shop').classList.remove('show');
   $('intro').classList.add('show');                       // on reste dans La Planque du mode, état neuf
 }
 freshGame();buildShoe();applyI18n();renderHands();tick();

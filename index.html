@@ -5,15 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Cold Deck</title>
 <meta name="description" content="Une carte de plus, et tout peut basculer. Un blackjack roguelite de combos, de culot et de belles mains.">
-<meta name="theme-color" content="#202124">
+<meta name="theme-color" content="#20252a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Cold Deck">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/svg+xml" href="icons/club-21.svg">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/ace-favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="icons/ace-favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/ace-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/ace-apple-touch-180.png">
 <link rel="stylesheet" href="modern.css">
 <link rel="stylesheet" href="electric.css">
 <link rel="stylesheet" href="illustrated.css">
@@ -197,11 +198,11 @@
 <!-- CONFIRMATION RECOMMENCER -->
 <div class="overlay" id="confirmRestart">
   <div class="ovpanel" style="max-width:360px;text-align:center">
-    <h1 class="dead" style="font-size:21px" data-i18n="rst.title">RESTART?</h1>
-    <p data-i18n-html="rst.text"></p>
+    <h1 id="resetTitle" class="dead" style="font-size:21px" data-i18n="rst.title">RESTART?</h1>
+    <p id="resetCopy" data-i18n-html="rst.text"></p>
     <div class="shopBtns" style="margin-top:14px;gap:9px">
       <button class="btn b-teal" data-action="closeRestart" style="flex:1" data-i18n="rst.cancel">CANCEL</button>
-      <button class="btn b-red" data-action="doRestart" style="flex:1" data-i18n="rst.ok">RESTART</button>
+      <button id="resetConfirm" class="btn b-red" data-action="doRestart" style="flex:1" data-i18n="rst.ok">RESTART</button>
     </div>
   </div>
 </div>
@@ -278,8 +279,24 @@
  <div class="dialog-kicker">COLD DECK / <span data-i18n="nav.settings">RÉGLAGES</span></div><h1 data-i18n="set.title">RÉGLAGES</h1>
  <div class="setRow"><span class="setLbl" data-i18n="set.lang">LANGUE</span><div class="setOpts" id="langOpts"></div></div>
  <div class="setRow"><span class="setLbl" data-i18n="modern.motion">ANIMATIONS</span><div class="setOpts" id="motionOpts"></div></div>
- <details class="dev-options"><summary data-i18n="set.dev">OUTILS DE DÉMONSTRATION</summary><div class="setRow"><span class="setLbl" data-i18n="set.ads">PUBLICITÉS (DÉMO)</span><div class="setOpts" id="adOpts"></div></div><p class="setNote" data-i18n="set.adsNote"></p></details>
+ <button class="btn b-purple test-entry" data-action="openTestTools"><span data-i18n="test.title">MODE TEST</span><small id="testModeStatus"></small></button>
  <button class="btn b-gold menu" data-action="closeSettings" data-i18n="set.close">TERMINÉ</button>
+</div></div>
+
+<div class="overlay" id="testScreen"><div class="ovpanel test-panel">
+ <div class="dialog-kicker" data-i18n="test.kicker">RÉGLAGES / TESTS</div><h1 data-i18n="test.title">MODE TEST</h1>
+ <div class="test-option">
+  <div><h2 data-reading-label data-i18n="test.adsTitle">PUBLICITÉS</h2><p data-i18n="test.adsCopy">Interstitiels et vidéos récompensées.</p></div>
+  <button id="testAdsToggle" class="btn b-teal" type="button" role="switch" aria-checked="false" data-reading-label data-action="toggleTestAds"></button>
+ </div>
+ <p class="test-note" id="testAdsNote"></p>
+ <div class="test-reset">
+  <h2 data-reading-label data-i18n="test.circuitTitle">CIRCUIT À ZÉRO</h2>
+  <p data-i18n="test.resetCopy">Repars à la table 1 avec une progression neuve : réputation, améliorations et records du circuit remis à zéro.</p>
+  <button class="btn b-red" data-action="requestCircuitReset" data-i18n="test.reset">RÉINITIALISER LE CIRCUIT</button>
+ </div>
+ <details class="dev-options"><summary data-reading-label data-i18n="test.adPreviews">TESTER LES PUBLICITÉS</summary><div class="setOpts" id="adOpts"></div><p class="setNote" data-i18n="set.adsNote"></p></details>
+ <button class="btn b-gold test-close" data-action="closeTestTools" data-i18n="test.back">RETOUR AUX RÉGLAGES</button>
 </div></div>
 
 <!-- ÉCRAN DE PUBLICITÉ (bouchon de démo : aucune régie branchée) -->

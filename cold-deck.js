@@ -510,6 +510,15 @@ function hasStr(key){return (STR[LANG]&&key in STR[LANG])||(key in STR.en);}
 
 /* Circuit balance: the same terms are used in rules, offers and decisions. */
 Object.assign(STR.fr,{
+ 'test.title':'MODE TEST','test.kicker':'RÉGLAGES / TESTS','test.hint':'Publicités et réinitialisation du circuit','test.activeStatus':'Toutes les publicités sont coupées',
+ 'test.adsTitle':'PUBLICITÉS','test.adsCopy':'Interstitiels et vidéos récompensées.','test.cutAds':'Couper toutes les publicités','test.adsOff':'COUPÉES','test.adsOn':'ACTIVES',
+ 'test.adsDisabledNote':'Coupure mémorisée. Les bonus vidéo sont indisponibles tant que les publicités sont coupées.',
+ 'test.adsEnabledNote':'Coupe toutes les publicités pour jouer et tester sans interruption. Ton choix est mémorisé.',
+ 'test.circuitTitle':'CIRCUIT À ZÉRO','test.resetCopy':'Repars à la table 1 avec une progression neuve : réputation, améliorations et records du circuit remis à zéro.',
+ 'test.reset':'RÉINITIALISER LE CIRCUIT','test.resetTitle':'EFFACER LE CIRCUIT ?',
+ 'test.resetConfirmCopy':'La <b>réputation</b>, les <b>améliorations</b> et les <b>records du circuit</b> seront effacés. La partie en cours sera arrêtée.<br><br>Tu recommences à la <b>table 1</b> avec le choix de ta première relique.<br><br>La progression du mode Libre et tes réglages sont conservés.',
+ 'test.resetConfirm':'EFFACER ET REJOUER','test.back':'RETOUR AUX RÉGLAGES','test.adPreviews':'TESTER LES PUBLICITÉS',
+ 'set.adFree':'RETIRER LES INTERSTITIELS','set.adsNote':'Aperçus de démonstration. Réactive les publicités pour les tester. « Retirer les interstitiels » conserve les vidéos récompensées. « Ignorer les plafonds » affiche un interstitiel à chaque occasion.',
  'circuit.tableEffect':'Règle de la table','rule.sec':'Égalité = défaite','rule.mute':'Les cartes et le total du croupier restent cachés',
  'w.tableTie':'ÉGALITÉ PERDUE','w.tableTieReason':'Le croupier gagne les égalités ici','sp.tableTie':'ÉGALITÉ PERDUE',
  'effect.standard.title':'RÈGLES CLASSIQUES','effect.standard.short':'Égalité : mise rendue',
@@ -591,6 +600,15 @@ Object.assign(STR.fr,{
  'planque.tables':n=>n+' tables remportées','menu.recTables':n=>n+' tables remportées'
 });
 Object.assign(STR.en,{
+ 'test.title':'TEST MODE','test.kicker':'SETTINGS / TESTS','test.hint':'Ads and Circuit reset','test.activeStatus':'All ads are turned off',
+ 'test.adsTitle':'ADS','test.adsCopy':'Interstitials and rewarded videos.','test.cutAds':'Turn off all ads','test.adsOff':'OFF','test.adsOn':'ON',
+ 'test.adsDisabledNote':'Preference saved. Video rewards are unavailable while ads are turned off.',
+ 'test.adsEnabledNote':'Turn off all ads to play and test without interruptions. Your choice is saved.',
+ 'test.circuitTitle':'FRESH CIRCUIT','test.resetCopy':'Start at table 1 with fresh progress: Circuit reputation, upgrades and records are reset.',
+ 'test.reset':'RESET THE CIRCUIT','test.resetTitle':'ERASE CIRCUIT PROGRESS?',
+ 'test.resetConfirmCopy':'Circuit <b>reputation</b>, <b>upgrades</b> and <b>records</b> will be erased. Your current game will end.<br><br>You restart at <b>table 1</b> by choosing your first relic.<br><br>Free Play progress and your settings are kept.',
+ 'test.resetConfirm':'ERASE AND PLAY','test.back':'BACK TO SETTINGS','test.adPreviews':'PREVIEW ADS',
+ 'set.adFree':'REMOVE INTERSTITIALS','set.adsNote':'Demo previews. Turn ads on to test them. “Remove interstitials” keeps rewarded videos. “Ignore caps” shows an interstitial at every opportunity.',
  'circuit.tableEffect':'Table rule','rule.sec':'Ties count as losses','rule.mute':'The dealer’s cards and total stay hidden',
  'w.tableTie':'TIE LOST','w.tableTieReason':'The dealer wins ties at this table','sp.tableTie':'TIE LOST',
  'effect.standard.title':'CLASSIC RULES','effect.standard.short':'Tie: stake returned',
@@ -2773,17 +2791,27 @@ function openPause(){
 }
 function resumeGame(){$('pauseScreen').classList.remove('show');GameClock.pause('manual',false);}
 /* ---------- PARAMÈTRES (langue) ---------- */
-function openSettings(){renderLangOpts();renderAdOpts();$('settingsScreen').classList.add('show');}
-function closeSettings(){$('settingsScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
+function openSettings(){renderLangOpts();renderTestOptions();renderAdOpts();$('settingsScreen').classList.add('show');}
+function closeSettings(){$('testScreen').classList.remove('show');$('settingsScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
 function pauseSettings(){$('pauseScreen').classList.remove('show');pauseReturn=true;openSettings();}   // à la fermeture on revient à la pause
+function openTestTools(){renderTestOptions();renderAdOpts();$('testScreen').classList.add('show');}
+function closeTestTools(){$('testScreen').classList.remove('show');}
+function renderTestOptions(){
+  const off=Ads.testDisabled(),button=$('testAdsToggle');
+  button.textContent=t(off?'test.adsOff':'test.adsOn');button.setAttribute('aria-checked',String(off));
+  button.setAttribute('aria-label',t('test.cutAds'));button.className='btn '+(off?'b-teal':'b-blue');
+  $('testAdsNote').textContent=t(off?'test.adsDisabledNote':'test.adsEnabledNote');
+  $('testModeStatus').textContent=t(off?'test.activeStatus':'test.hint');
+}
 /* réglages pub de démo : aperçu des deux formats, achat « sans pub », plafonds */
 function renderAdOpts(){
   const row=$('adOpts');if(!row)return;row.innerHTML='';
-  const mk=(label,cls,fn)=>{const b=document.createElement('button');b.className='btn'+(cls||'');b.innerHTML=label;b.onclick=fn;row.appendChild(b);};
-  mk(t('set.adTestI'),'',()=>{closeSettings();gameDelay(()=>Ads.show('inter').then(()=>Ads.closeNow&&0),260);});
-  mk(t('set.adTestR'),'',()=>{closeSettings();gameDelay(()=>Ads.rewarded(t('ad.demoReward')),260);});
-  mk((Ads.removed()?'☑ ':'☐ ')+t('set.adFree'),' wide'+(Ads.removed()?' on':''),()=>Ads.setRemoved(!Ads.removed()));
-  mk((Ads.freeCaps()?'☑ ':'☐ ')+t('set.adCaps'),' wide'+(Ads.freeCaps()?' on':''),()=>Ads.setFreeCaps(!Ads.freeCaps()));
+  const mk=(label,cls,fn)=>{const b=document.createElement('button');b.className='btn'+(cls||'');b.textContent=label;b.onclick=fn;row.appendChild(b);return b;};
+  mk(t('set.adTestI'),' b-blue',()=>Ads.show('inter')).disabled=Ads.testDisabled();
+  mk(t('set.adTestR'),' b-blue',()=>Ads.rewarded(t('ad.demoReward'))).disabled=Ads.testDisabled();
+  for(const [key,on,fn] of [['set.adFree',Ads.removed(),()=>Ads.setRemoved(!Ads.removed())],['set.adCaps',Ads.freeCaps(),()=>Ads.setFreeCaps(!Ads.freeCaps())]]){
+    const b=mk(t(key)+' : '+t(on?'set.on':'set.off'),' wide'+(on?' on':''),fn);b.setAttribute('aria-pressed',String(on));b.disabled=Ads.testDisabled();
+  }
 }
 function renderLangOpts(){
   const row=$('langOpts');if(!row)return;row.innerHTML='';
@@ -2811,7 +2839,7 @@ function applyI18n(){
   document.querySelectorAll('[data-i18n-title]').forEach(el=>{el.title=t(el.getAttribute('data-i18n-title'));});
   const hw=$('handWord');if(hw)hw.textContent=(LANG==='fr'?'main':'hand');
   const mc=$('menuCircuit');if(mc)mc.textContent=t('menu.circuit');
-  renderLangOpts();renderAdOpts();renderRules();
+  renderLangOpts();renderTestOptions();renderAdOpts();renderRules();
   renderAll();renderMenu();renderPlanque();renderBackPicker();
   if($('shop').classList.contains('show')){renderShopHead();renderShop();}
   if($('loseScreen').classList.contains('show'))openLose();
@@ -3039,6 +3067,13 @@ const Ads={
   tablesPerAd:3,           // tables franchies avant d'autoriser un interstitiel
   interSecs:4, rewardSecs:5,
   _last:0,_tables:0,_busy:false,_resolve:null,_timer:null,_left:0,_kind:'',_ok:false,
+  _testDisabled:(()=>{try{return localStorage.getItem('t21testAds')==='1';}catch(e){return false;}})(),
+  testDisabled(){return this._testDisabled;},
+  setTestDisabled(v){
+    this._testDisabled=!!v;try{localStorage.setItem('t21testAds',v?'1':'0');}catch(e){}
+    if(v&&this._busy){this._ok=false;this.closeNow();}
+    this._last=Date.now();this._tables=0;renderTestOptions();renderAdOpts();
+  },
   /* --- achat « sans pub » (simulé ici par un réglage) --- */
   removed(){try{return localStorage.getItem('t21noads')==='1';}catch(e){return false;}},
   setRemoved(v){try{localStorage.setItem('t21noads',v?'1':'0');}catch(e){}renderAdOpts();},
@@ -3047,11 +3082,11 @@ const Ads={
   setFreeCaps(v){try{localStorage.setItem('t21adcaps',v?'1':'0');}catch(e){}renderAdOpts();},
   countTable(){this._tables++;},
   canInterstitial(){
-    if(this.removed()||this._busy)return false;
+    if(this.testDisabled()||this.removed()||this._busy)return false;
     if(this.freeCaps())return true;                                  // mode démo
     return (Date.now()-this._last>this.interDelay)&&this._tables>=this.tablesPerAd;
   },
-  canRewarded(){return !this._busy;},                                // le rewarded reste dispo même « sans pub »
+  canRewarded(){return !this.testDisabled()&&!this._busy;},
   interstitial(){
     if(!this.canInterstitial())return Promise.resolve(false);
     return this.show('inter').then(()=>{this._last=Date.now();this._tables=0;return true;});
@@ -3062,6 +3097,7 @@ const Ads={
   },
   /* ---- rendu de la fausse pub (à remplacer par le SDK) ---- */
   show(kind,label){
+    if(this.testDisabled()||this._busy)return Promise.resolve(false);
     return new Promise(resolve=>{
       const ov=$('adOverlay');
       if(!ov){resolve(kind!=='reward');return;}
@@ -3365,14 +3401,28 @@ function endlessBust(){
   endRun(false);
 }
 /* recommencer la progression DU MODE COURANT : on perd sa réputation, ses déblocages et son record */
-function restartAll(){audioInit();$('confirmRestart').classList.add('show');}   // petite fenêtre de confirmation in-game
-function closeRestart(){$('confirmRestart').classList.remove('show');}
+let restartTarget=null;
+function showRestartPrompt(mode,launch){
+  restartTarget={mode,launch};
+  for(const [id,attr,key] of [['resetTitle','data-i18n',launch?'test.resetTitle':'rst.title'],['resetCopy','data-i18n-html',launch?'test.resetConfirmCopy':'rst.text'],['resetConfirm','data-i18n',launch?'test.resetConfirm':'rst.ok']]){
+    const el=$(id);el.setAttribute(attr,key);if(attr==='data-i18n-html')el.innerHTML=t(key);else el.textContent=t(key);
+  }
+  $('confirmRestart').classList.add('show');
+}
+function restartAll(){audioInit();showRestartPrompt(MODE,false);}
+function requestCircuitReset(){showRestartPrompt('nuit',true);}
+function closeRestart(){$('confirmRestart').classList.remove('show');restartTarget=null;}
 function doRestart(){
-  META[MODE]=blankMeta()[MODE];saveMeta();
+  if(!restartTarget)return;
+  const {mode,launch}=restartTarget;restartTarget=null;
+  META[mode]=blankMeta()[mode];delete RECS[mode];saveMeta();saveRecs();
+  MODE=mode;startPalierIdx=0;pauseReturn=false;inspectRef=null;
+  window.ColdDeckFX?.clear();document.body.classList.remove('inf');
+  document.querySelectorAll('.overlay.show').forEach(el=>el.classList.remove('show'));
+  renderMenu();
+  if(launch){startGame(0);return;}
   freshGame();buildShoe();renderAll();renderHands();
   renderPlanque();renderBackPicker();
-  $('confirmRestart').classList.remove('show');
-  $('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');$('shop').classList.remove('show');
   $('intro').classList.add('show');                       // on reste dans La Planque du mode, état neuf
 }
 freshGame();buildShoe();applyI18n();renderHands();tick();
@@ -3433,7 +3483,7 @@ for(const key of Object.keys(STR.en))if(typeof STR.en[key]==='string')STR.en[key
 for(const [name,key] of [['chip','ui-chip'],['burst','ui-burst'],['star','etoile']]){
  document.documentElement.style.setProperty('--art-'+name,`url("${ColdDeckArt.image(key)}")`);
 }
-for(const [id,key] of Object.entries({rulesScreen:'boon2',upgradesScreen:'relic2',backPickScreen:'as',confirmRestart:'roue',pauseScreen:'ui-pause',palierScreen:'elan',shop:'ui-trophy',loseScreen:'net',endScreen:'ui-trophy',settingsScreen:'ui-settings'})){
+for(const [id,key] of Object.entries({rulesScreen:'boon2',upgradesScreen:'relic2',backPickScreen:'as',confirmRestart:'roue',pauseScreen:'ui-pause',palierScreen:'elan',shop:'ui-trophy',loseScreen:'net',endScreen:'ui-trophy',settingsScreen:'ui-settings',testScreen:'ui-settings'})){
  const heading=$(id)?.querySelector('h1');if(!heading)continue;
  const header=document.createElement('div');header.className='illustrated-heading';
  heading.before(header);header.innerHTML=ColdDeckArt.illustration(key,'dialog-art',true);header.append(heading);
@@ -3538,7 +3588,7 @@ overlays.forEach(el=>menuObserver.observe(el,{attributes:true,attributeFilter:['
 document.addEventListener('keydown',e=>{
  const top=activeMenu();if(!top)return;
  if(e.key==='Escape'){
-   const close={rulesScreen:closeRules,settingsScreen:closeSettings,upgradesScreen:closeUpgrades,backPickScreen:closeBacks,inspectScreen:closeInspect,confirmRestart:closeRestart,pauseScreen:resumeGame,intro:openMenu,adOverlay:()=>{if($('adX').classList.contains('on'))Ads.closeNow();}}[top.id];
+   const close={rulesScreen:closeRules,settingsScreen:closeSettings,testScreen:closeTestTools,upgradesScreen:closeUpgrades,backPickScreen:closeBacks,inspectScreen:closeInspect,confirmRestart:closeRestart,pauseScreen:resumeGame,intro:openMenu,adOverlay:()=>{if($('adX').classList.contains('on'))Ads.closeNow();}}[top.id];
   if(close){e.preventDefault();close();}return;
  }
  if(e.key==='Tab'){
@@ -4304,6 +4354,10 @@ syncMenuFocus();
     usePeek: () => usePeek(),
     openRules: () => openRules(),
     openSettings: () => openSettings(),
+    openTestTools: () => openTestTools(),
+    closeTestTools: () => closeTestTools(),
+    toggleTestAds: () => Ads.setTestDisabled(!Ads.testDisabled()),
+    requestCircuitReset: () => requestCircuitReset(),
     openMenu: () => openMenu(),
     openUpgrades: () => openUpgrades(),
     openBacks: () => openBacks(),

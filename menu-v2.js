@@ -52,7 +52,7 @@ for(const key of Object.keys(STR.en))if(typeof STR.en[key]==='string')STR.en[key
 for(const [name,key] of [['chip','ui-chip'],['burst','ui-burst'],['star','etoile']]){
  document.documentElement.style.setProperty('--art-'+name,`url("${ColdDeckArt.image(key)}")`);
 }
-for(const [id,key] of Object.entries({rulesScreen:'boon2',upgradesScreen:'relic2',backPickScreen:'as',confirmRestart:'roue',pauseScreen:'ui-pause',palierScreen:'elan',shop:'ui-trophy',loseScreen:'net',endScreen:'ui-trophy',settingsScreen:'ui-settings'})){
+for(const [id,key] of Object.entries({rulesScreen:'boon2',upgradesScreen:'relic2',backPickScreen:'as',confirmRestart:'roue',pauseScreen:'ui-pause',palierScreen:'elan',shop:'ui-trophy',loseScreen:'net',endScreen:'ui-trophy',settingsScreen:'ui-settings',testScreen:'ui-settings'})){
  const heading=$(id)?.querySelector('h1');if(!heading)continue;
  const header=document.createElement('div');header.className='illustrated-heading';
  heading.before(header);header.innerHTML=ColdDeckArt.illustration(key,'dialog-art',true);header.append(heading);
@@ -157,7 +157,7 @@ overlays.forEach(el=>menuObserver.observe(el,{attributes:true,attributeFilter:['
 document.addEventListener('keydown',e=>{
  const top=activeMenu();if(!top)return;
  if(e.key==='Escape'){
-   const close={rulesScreen:closeRules,settingsScreen:closeSettings,upgradesScreen:closeUpgrades,backPickScreen:closeBacks,inspectScreen:closeInspect,confirmRestart:closeRestart,pauseScreen:resumeGame,intro:openMenu,adOverlay:()=>{if($('adX').classList.contains('on'))Ads.closeNow();}}[top.id];
+   const close={rulesScreen:closeRules,settingsScreen:closeSettings,testScreen:closeTestTools,upgradesScreen:closeUpgrades,backPickScreen:closeBacks,inspectScreen:closeInspect,confirmRestart:closeRestart,pauseScreen:resumeGame,intro:openMenu,adOverlay:()=>{if($('adX').classList.contains('on'))Ads.closeNow();}}[top.id];
   if(close){e.preventDefault();close();}return;
  }
  if(e.key==='Tab'){
