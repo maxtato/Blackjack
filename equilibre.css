@@ -710,16 +710,17 @@ body:has(#multPop.go) #tip{visibility:hidden}
 #confirmRestart .shopBtns .btn{white-space:normal;line-height:1.2;padding:12px!important;font-size:15px}
 
 /* Shared illustrated values: one readable amount, one unit, no line break. */
-.game-number{display:inline-flex;align-items:center;white-space:nowrap;vertical-align:middle;height:.84em;margin-inline:.035em;font:900 1.75em/.84 var(--game-type)!important;color:var(--number-ink,#ffdc75);font-variant-numeric:tabular-nums;letter-spacing:0!important;text-transform:none!important}
+:root{--value-scale:.92}
+.game-number{display:inline-flex;align-items:center;white-space:nowrap;vertical-align:middle;height:.84em;margin-inline:.035em;font:900 calc(1.75em * var(--value-scale))/.84 var(--game-type)!important;color:var(--number-ink,#ffdc75);font-variant-numeric:tabular-nums;letter-spacing:0!important;text-transform:none!important}
 .game-number[data-value-kind="bonus"]{color:var(--bonus-number-ink,#88e2cf)}
 .game-number .raster-copy,.game-number .raster-ink{white-space:nowrap;line-height:0}
 .game-number .raster-glyph{--glyph-width:.86em;height:1.08em;animation:none!important;translate:none!important;rotate:none!important;top:0!important}
 .game-number .raster-glyph[data-font="numbers"]:first-child{margin-inline-start:-.13em}
 .game-number .raster-glyph[data-font="numbers"]:last-child{margin-inline-end:-.13em}
 .game-number .raster-punctuation{font:900 .7em/1 var(--copy-font)!important;align-self:center}
-.raster-label .game-number{font-size:1.22em!important}
-.readable-copy .game-number{font-size:1.75em!important}
-.brief-stats .game-number{font-size:30px!important}
+.raster-label .game-number{font-size:calc(1.22em * var(--value-scale))!important}
+.readable-copy .game-number{font-size:calc(1.75em * var(--value-scale))!important}
+.brief-stats .game-number{font-size:calc(30px * var(--value-scale))!important}
 .rep-value{display:inline-flex;align-items:center;gap:1px;white-space:nowrap;vertical-align:middle;line-height:1}
 .rep-value .game-number{vertical-align:middle;margin:0}
 .rep-star{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical-align:middle;transform:translateY(-1px);flex:none}
@@ -730,25 +731,25 @@ button:disabled{--number-ink:#ffe093;--bonus-number-ink:#a4f3de}
 :is(.b-gold,.b-teal,.b-red):enabled .rep-star{filter:brightness(.32) saturate(.55)}
 .overlay .btn small{font-size:13px;line-height:1.5;opacity:1}
 #app #actions .actMain .btn small{display:flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap}
-#actions .btn small .game-number{font-size:1.5em!important;height:.72em}
-.shopItem>.btn .game-number{font-size:1.5em!important}
+#actions .btn small .game-number{font-size:calc(1.5em * var(--value-scale))!important;height:.72em}
+.shopItem>.btn .game-number{font-size:calc(1.5em * var(--value-scale))!important}
 .shopItem>.btn{white-space:nowrap}
 .ds,.rule-entry,#inspectBody p,#endText,#loseText{line-height:1.7}
 .runstats .v{display:block;margin-top:6px}
-.runstats .v .game-number{font-size:30px!important}
+.runstats .v .game-number{font-size:calc(30px * var(--value-scale))!important}
 #topbar :is(#gainVal,#chipsVal){color:#ffdc75}
 #topbar #multVal{color:#88e2cf}
 #topbar .tnum{color:#d1b5ef}
-:is(#tableNumber,#objGoal,#objPct,#pPct,#lives .lvn) .game-number{font-size:1.6em!important}
+:is(#tableNumber,#objGoal,#objPct,#pPct,#lives .lvn) .game-number{font-size:calc(1.6em * var(--value-scale))!important}
 #objWrap{min-height:24px}
-#circuitStatus .game-number{font-size:1.5em!important}
-#comboRow .game-number{font-size:1.55em!important}
+#circuitStatus .game-number{font-size:calc(1.5em * var(--value-scale))!important}
+#comboRow .game-number{font-size:calc(1.55em * var(--value-scale))!important}
 #comboRow .combo-tile:not(.on) .game-number{color:inherit}
 #comboRow .combo-tile.on{--number-ink:#522d51;--bonus-number-ink:#174d46}
-#tip .game-number,#drawReadout .game-number{font-size:1.6em!important}
+#tip .game-number,#drawReadout .game-number{font-size:calc(1.6em * var(--value-scale))!important}
 #recBox>span{white-space:normal!important}
-#recBox .game-number{font-size:1.6em!important}
-@media(max-width:350px){.brief-stats{gap:6px}.brief-stats .game-number{font-size:26px!important}.table-effect-card{padding:14px}.table-effect-card>strong{font-size:22px}.contract-prompt{font-size:11px}}
+#recBox .game-number{font-size:calc(1.6em * var(--value-scale))!important}
+@media(max-width:350px){.brief-stats{gap:6px}.brief-stats .game-number{font-size:calc(26px * var(--value-scale))!important}.table-effect-card{padding:14px}.table-effect-card>strong{font-size:22px}.contract-prompt{font-size:11px}}
 
 /* Equipment keeps the selected paper palette. */
 .effect-card{--effect-paper:#adbeb3;position:relative;isolation:isolate;display:grid;place-items:center;width:100%;height:100%;padding:10% 7%;background:none!important;border:0;border-radius:0;box-shadow:none}
