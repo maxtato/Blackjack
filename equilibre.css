@@ -215,7 +215,7 @@
 }
 @media(max-height:600px) and (orientation:landscape){
  #modeMenu .ovpanel{max-width:510px;min-height:720px;height:auto;--home-u:3.9px}
- #app{max-width:960px;min-height:350px;--base-card-w:88px;--dock-main:48px;--dock-secondary:42px;padding:8px 18px;grid-template-rows:76px minmax(0,1fr) 48px;gap:6px}
+ #app{max-width:960px;min-height:350px;--base-card-w:94px;--dock-main:48px;--dock-secondary:42px;padding:8px 18px;grid-template-rows:76px minmax(0,1fr) 48px;gap:6px}
  #topbar{grid-template-columns:130px minmax(0,1fr) 44px;grid-template-rows:46px 23px;gap:3px 15px}
  #topbar .brand-block{grid-column:1;grid-row:1}
  #topbar .table-number{font-size:19px;height:28px}
@@ -365,7 +365,7 @@
  #feltInner .hand{width:100%;gap:0;min-height:0;align-self:center;--card-w:min(calc(var(--base-card-w) - min(4,max(0,var(--hand-count,2) - 2)) * 0.45 * var(--ui-u)),calc((100cqh - var(--combo-room) - 29 * var(--ui-u))/2.96));--card-step:min(calc(1.3 * var(--ui-u)),calc((100cqw - 2 * var(--ui-u) - var(--card-w) * var(--hand-count,2))/max(1,var(--hand-count,2) - 1)))}
  #feltInner .hand>.cardslot+.cardslot{margin-left:var(--card-step)!important}
  #feltInner .card,#feltInner .flipwrap{height:calc(var(--card-w)*1.48)}
- #feltInner .splitwrap{--card-w:min(calc(18 * var(--ui-u)),calc((100cqh - var(--combo-room) - 29 * var(--ui-u))/2.96),calc((100cqw - 10 * var(--ui-u))/var(--split-count,4)));gap:calc(2 * var(--ui-u))}
+ #feltInner .splitwrap{--card-w:min(calc(19.5 * var(--ui-u)),calc((100cqh - var(--combo-room) - 29 * var(--ui-u))/2.96),calc((100cqw - 10 * var(--ui-u))/var(--split-count,4)));gap:calc(2 * var(--ui-u))}
  #feltInner .splithand{gap:calc(.7 * var(--ui-u));padding:calc(.7 * var(--ui-u))}
  #feltInner .splithand .cardslot+.cardslot{margin-left:0!important}
  #comboRow .combo-name{font-size:clamp(8.5px,calc(2.4 * var(--ui-u)),9px)}
@@ -815,14 +815,14 @@ button:disabled{--number-ink:#ffe093;--bonus-number-ink:#a4f3de}
 
 /* Status and active tickets keep a fixed band between the two hands. */
 @media (min-height:601px), (orientation:portrait){
- #app{--base-card-w:calc(19.5 * var(--ui-u));--dock-secondary:max(42px,calc(10.8 * var(--ui-u)))}
- #stage{--combo-room:95px}
- #center{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:20px 72px;gap:3px}
+ #app{--base-card-w:calc(21 * var(--ui-u));--dock-secondary:max(42px,calc(10.8 * var(--ui-u)))}
+ #stage{--combo-room:83px}
+ #center{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:20px 60px;gap:3px}
  #center #drawReadout{grid-column:1;grid-row:1;align-self:center;justify-self:center;height:14px;min-height:14px;line-height:14px}
  #center #tip{grid-column:1;grid-row:1;align-self:center;display:block;width:100%;height:20px;min-height:20px;max-height:20px;margin:0;padding:0;font-size:9.5px;line-height:10px;text-align:center;overflow:visible}
  #center #tip:empty{visibility:hidden}
  #center:has(#tip:not(:empty)) #drawReadout{visibility:hidden}
- #comboRow{grid-column:1;grid-row:2;align-self:center;justify-self:center;width:100%;height:72px;min-height:72px;max-height:none}
+ #comboRow{grid-column:1;grid-row:2;align-self:center;justify-self:center;width:100%;height:60px;min-height:60px;max-height:none}
  #actions .actMain,#actions .actWide{width:94%}
  #actions .btn,#actions .actWide .btn,#app[data-phase="bet"] #actions .btn{font-size:calc(7.2 * var(--ui-u))!important}
 }
