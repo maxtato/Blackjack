@@ -9,8 +9,8 @@ check('Soft Aces and remaining-shoe odds',()=>{
  assert.equal(a.bustChance([card('A'),card(6)]),0);
  a.G.shoe=[card(10),card('K'),card(2),card('A')];assert.equal(a.bustChance([card(10),card(7)]),50);
 });
-check('Ties refund the complete stake at all 24 tables and in free play',()=>{
- const tables=[...a.RUN,{...a.RUN[0],endless:true},{...a.RUN[8],rule:'sec'}];
+check('Ties refund the complete stake on ordinary tables and in free play',()=>{
+ const tables=[...a.RUN.filter(table=>table.rule!=='sec'),{...a.RUN[0],endless:true}];
  for(const table of tables)for(const total of [17,18,19,20,21])for(const stakeMult of [1,2]){
   const bet=table.min,bankBefore=bet*10,stake=bet*stakeMult;
   const hand=total===21?[card('A'),card('K')]:[card(10),card(total-10)];
@@ -22,25 +22,45 @@ check('Ties refund the complete stake at all 24 tables and in free play',()=>{
   assert.equal(a.G.stats.won,0);
  }
 });
-check('Both tied split hands refund both stakes, including former ties-lose tables',()=>{
- for(const table of [a.RUN[0],a.RUN[8],a.RUN[14],a.RUN[23],{...a.RUN[8],rule:'sec'}]){
+check('The three ties-lose tables retain their rule and explain the loss',()=>{
+ assert.deepEqual(Array.from(a.RUN.filter(table=>table.rule==='sec'),table=>table.i+1),[9,15,24]);
+ for(const table of a.RUN.filter(table=>table.rule==='sec'))for(const total of [17,18,19,20,21])for(const stakeMult of [1,2]){
+  const bet=table.min,stake=bet*stakeMult,bank=bet*10-stake;
+  const hand=total===21?[card('A'),card('K')]:[card(10),card(total-10)];
+  a.setup(hand,hand.map(c=>({...c,s:'♥'})),{table,bet,stakeMult,bank,baraka:4});
+  a.resolve('stand');assert.equal(a.G.bank,bank);assert.equal(a.G.baraka,2);
+  assert.equal(h.w.__result.kind,'lose');assert.equal(h.w.__result.gain,-stake);assert.equal(h.w.__result.reason,'tableTie');
+ }
+});
+check('Both tied split hands refund both stakes on ordinary tables',()=>{
+ for(const table of a.RUN.filter(table=>table.rule!=='sec')){
   const hands=[[card(10),card(8)],[card(9),card(9)]];
   a.setup(hands[1],[card(10),card(8)],{table,bank:80,bet:10,splitActive:true,hands,hi:1,baraka:4});
   a.resolveSplit();assert.equal(a.G.bank,100);assert.equal(h.w.__result.kind,'push');assert.equal(h.w.__result.gain,0);assert.equal(a.G.baraka,4);
  }
 });
+check('Both split ties are lost and identified on ties-lose tables',()=>{
+ for(const table of a.RUN.filter(table=>table.rule==='sec')){
+  const hands=[[card(10),card(8)],[card(9),card(9)]];
+  a.setup(hands[1],[card(10),card(8)],{table,bank:80,bet:10,splitActive:true,hands,hi:1,baraka:4});
+  a.resolveSplit();assert.equal(a.G.bank,80);assert.equal(a.G.baraka,2);
+  assert.equal(h.w.__result.kind,'lose');assert.equal(h.w.__result.gain,-20);assert.equal(h.w.__result.reason,'tableTie');
+  assert.equal((h.w.document.getElementById('tip').textContent.match(/ÉGALITÉ PERDUE/g)||[]).length,2);
+ }
+});
 check('A split tie returns its stake while the other hand can still lose',()=>{
  const hands=[[card(10),card(8)],[card(10),card(7)]];
- a.setup(hands[1],[card(10),card(8)],{table:a.RUN[8],bank:80,bet:10,splitActive:true,hands,hi:1});
+ a.setup(hands[1],[card(10),card(8)],{table:a.RUN[0],bank:80,bet:10,splitActive:true,hands,hi:1});
  a.resolveSplit();assert.equal(a.G.bank,90);assert.equal(h.w.__result.kind,'lose');assert.equal(h.w.__result.gain,-10);
 });
-check('Diplomat adds its tie bonus without reducing the returned stake',()=>{
- for(const table of [a.RUN[0],a.RUN[8],a.RUN[14],a.RUN[23],{...a.RUN[8],rule:'sec'}]){
+check('Diplomat refunds special-table ties and grants its bonus elsewhere',()=>{
+ for(const table of [a.RUN[0],a.RUN[8],a.RUN[14],a.RUN[23]]){
+  const bonus=table.rule==='sec'?0:10;
   a.setup([card(10),card(8)],[card(10),card(8)],{table,bank:60,bet:20,stakeMult:2,relics:[relic('diplomate')]});
-  a.resolve('stand');assert.equal(a.G.bank,110);assert.equal(h.w.__result.kind,'push');assert.equal(h.w.__result.gain,10);
+  a.resolve('stand');assert.equal(a.G.bank,100+bonus);assert.equal(h.w.__result.kind,'push');assert.equal(h.w.__result.gain,bonus);assert.equal(h.w.__result.reason,'');
   const hands=[[card(10),card(8)],[card(9),card(9)]];
   a.setup(hands[1],[card(10),card(8)],{table,bank:60,bet:20,relics:[relic('diplomate')],splitActive:true,hands,hi:1,baraka:4});
-  a.resolveSplit();assert.equal(a.G.bank,110);assert.equal(h.w.__result.kind,'push');assert.equal(h.w.__result.gain,10);assert.equal(a.G.baraka,4);
+  a.resolveSplit();assert.equal(a.G.bank,100+bonus);assert.equal(h.w.__result.kind,'push');assert.equal(h.w.__result.gain,bonus);assert.equal(a.G.baraka,4);
  }
 });
 check('Matching bust totals remain losses and do not trigger Diplomat',()=>{

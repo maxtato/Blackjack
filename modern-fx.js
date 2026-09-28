@@ -216,6 +216,7 @@
     if(central)pop.dataset.victory=style.name;else delete pop.dataset.victory;
     pop.classList.remove('goal-result','goal-earned','gain-in-flight');
     pop.querySelector('.victory-goal')?.remove();
+    pop.querySelector('.result-reason')?.remove();
     if(p){pop.style.left=p.x+'px';pop.style.top=(central?innerHeight*.5:p.y)+'px';}
     if(central){
       const width=Math.min(innerWidth*.86,p?.width*.9||innerWidth*.86,440);

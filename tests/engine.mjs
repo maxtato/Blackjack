@@ -17,7 +17,7 @@ export function engine(){
   code+='\n'+noops.map(n=>n+'=()=>{};').join('\n');
   code+=`\nLANG='fr';
     renderChips=()=>clampBet();renderAll=()=>clampBet();
-    showWord=(kind,gain,mult,natural,bust,record)=>{window.__result={kind,gain,mult,natural,bust,record};};
+    showWord=(kind,gain,mult,natural,bust,record,reason='')=>{window.__result={kind,gain,mult,natural,bust,record,reason};};
     renderShop=()=>{window.__screen='shop';};openLose=()=>{window.__screen='lose';};renderEndScreen=()=>{window.__screen='end';};
     animateScoreTally=(mode,lines,finish)=>{finish();return 0;};
     const originalStartGame=startGame;startGame=(...args)=>{originalStartGame(...args);while(G.phase==='draft')chooseStarter(G.draftChoices.findIndex(r=>r.id==='lunettes')>=0?G.draftChoices.findIndex(r=>r.id==='lunettes'):0);};

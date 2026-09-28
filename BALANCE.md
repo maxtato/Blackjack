@@ -16,7 +16,7 @@ Deux contrats sont proposés par table, avec des récompenses liées à leur dif
 
 ## Corrections
 
-Depuis le 28 septembre, une égalité à 21 ou moins rembourse toute la mise sur les 24 tables et en jeu libre, y compris après Doubler et pour chaque main séparée. Elle ne réduit pas la Baraka et ne consomme ni Assurance ni Talisman. L’ancienne exception des tables 9, 15 et 24 est supprimée ; leurs défis de victoires restent en place. Diplomate ajoute toujours 25 % à la mise rendue. L’annonce est « ÉGALITÉ · mise rendue ». Un dépassement de 21 reste une défaite, même si le croupier a le même total.
+Les règles spéciales sont conservées : aux tables 9, 15 et 24, les égalités sont perdues sans Diplomate. Depuis le 28 septembre, chaque effet est expliqué avant le choix du contrat, puis reste visible dans un bandeau cliquable pendant la partie. Le message « ÉGALITÉ PERDUE » précise que le croupier gagne les égalités ici. Diplomate rend la mise sur ces tables, sans son bonus habituel de 25 %. Ailleurs, une égalité à 21 ou moins rend toute la mise, y compris après Doubler et pour chaque main séparée ; elle ne réduit pas la Baraka et ne consomme ni Assurance ni Talisman. Un dépassement de 21 reste une défaite, même si le croupier a le même total.
 
 Assurance persiste entre les tables. Talisman protège aussi une main séparée. Le calcul de risque réévalue les As souples. FORCER applique sa limite d’un usage par table. Les tarots ne peuvent plus modifier une résolution déjà engagée. La pause et l’inspection suspendent réellement les délais du moteur. Les mises engagées ne sont plus recalculées pendant la main. Tout apport de banque entre les mains vérifie l’objectif. La revente des objets offerts ne s’apprécie plus avec la profondeur. Les services sans bénéfice sont écartés. Le raccourci de zone 2 obsolète est retiré.
 
@@ -28,9 +28,9 @@ La palette D validée utilise un rose poudré très clair pour les reliques et u
 
 ## Vérification
 
-Vingt contrôles reproductibles couvrent notamment les égalités sur toutes les tables, les mises doublées, les mains séparées, Diplomate, les As souples, Assurance, Talisman, FORCER, Pendu, la pause, les mises engagées, Soleil, les éditions, la boutique, les records et le boss final. Les commandes sont dans `tests/README.md`.
+Vingt-deux contrôles reproductibles couvrent notamment les égalités ordinaires et les trois exceptions annoncées, les mises doublées, les mains séparées, Diplomate, les As souples, Assurance, Talisman, FORCER, Pendu, la pause, les mises engagées, Soleil, les éditions, la boutique, les records et le boss final. Les commandes sont dans `tests/README.md`.
 
-La passe d’équilibrage du 27 septembre utilise 600 expéditions pour chacune de cinq politiques, 600 essais par table dans deux équipements fixes, et 200 campagnes avec réputation et reprises : **78 281 tentatives de table et 500 447 mains**. Les résultats ci-dessous précèdent la suppression de l’exception sur les égalités ; ils restent un historique de cet audit, et non une mesure de la version corrigée.
+La passe d’équilibrage du 27 septembre utilise 600 expéditions pour chacune de cinq politiques, 600 essais par table dans deux équipements fixes, et 200 campagnes avec réputation et reprises : **78 281 tentatives de table et 500 447 mains**. Les effets de table de cette simulation sont conservés ; leur annonce est renforcée le 28 septembre.
 
 | Politique depuis la table 1 | Table médiane atteinte | Circuit terminé dans l’expédition |
 | --- | ---: | ---: |

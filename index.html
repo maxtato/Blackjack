@@ -68,7 +68,7 @@
   </header>
 
   <div id="mid">
-  <p id="circuitStatus" class="circuit-status" aria-live="polite"></p>
+  <button id="circuitStatus" class="circuit-status" type="button" data-reading-label aria-live="polite" aria-haspopup="dialog"></button>
   <div id="effects" role="group" data-i18n-label="modern.loadout">
     <div class="inventory-label sr-only" data-i18n="modern.loadout">Tes atouts</div>
     <div id="relicRow"><div id="relics"></div><span class="inventory-count sr-only"><span id="slotc"></span></span></div>
@@ -232,7 +232,7 @@
 
 <!-- SHOP -->
 <div class="overlay" id="draftScreen"><div class="ovpanel circuit-panel"><h1 id="draftTitle"></h1><p id="draftCopy"></p><div id="draftChoices" class="circuit-choices"></div></div></div>
-<div class="overlay" id="tableBrief"><div class="ovpanel circuit-panel"><h1 id="briefTitle"></h1><p id="briefRule"></p><p id="briefGoal"></p><div id="briefContracts" class="circuit-choices"></div></div></div>
+<div class="overlay" id="tableBrief"><div class="ovpanel circuit-panel"><h1 id="briefTitle"></h1><div id="briefEffect" class="table-effect-card"></div><p id="briefRule"></p><p id="briefGoal"></p><div id="briefContracts" class="circuit-choices"></div></div></div>
 <div class="overlay" id="shop">
   <div class="ovpanel">
     <h1 class="win" id="shopTitle" style="font-size:23px">TABLE CLEARED</h1>

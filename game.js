@@ -196,12 +196,12 @@ const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 const RUN=[
   [80,115,5,25,null], [105,180,5,30,'nervous'], [150,255,10,40,'gros','bouncer'],
   [215,355,10,50,'atelier',null,20], [290,490,15,65,'mute'], [395,655,15,85,null,'banker'],
-  [535,865,20,85,'nervous',null,45], [725,1230,25,110,'gros'], [975,1660,30,150,null,'reaper'],
+  [535,865,20,85,'nervous',null,45], [725,1230,25,110,'gros'], [975,1660,30,150,'sec','reaper'],
   [1320,2270,40,185,'atelier'], [1780,3205,50,250,'mute'], [2400,4320,60,335,'mute','concierge'],
-  [3240,5830,80,420,'serein',null,200], [4375,8225,100,570,'atelier'], [5905,11100,150,770,null,'accountant'],
+  [3240,5830,80,420,'serein',null,200], [4375,8225,100,570,'atelier'], [5905,11100,150,770,'sec','accountant'],
   [7970,14825,200,995,'atelier'], [10760,20875,250,1345,'nervous'], [14525,28180,350,1815,'gros','gravedigger'],
   [19610,37650,450,2355,'serein',null,1300], [26475,52950,600,3175,'mute'], [35740,71480,800,4290,'depart','croupier'],
-  [48250,96500,1000,5550,'atelier'], [65140,135490,1500,7490,'mute'], [87940,182915,2000,10115,null,'godfather']
+  [48250,96500,1000,5550,'atelier'], [65140,135490,1500,7490,'mute'], [87940,182915,2000,10115,'sec','godfather']
 ].map(([cap,goal,min,max,rule,challenge,entry=0],i)=>({i,zone:1+Math.floor(i/3),mains:10,min,max,cap,goal,master:goal,rule,challenge,entry,need:0,boss:!!challenge,rt:{rule,entry,boss:!!challenge,last:i===23}}));
 function zoneName(z){return t('zone.'+z);}
 const ZONE_MULTCAP={1:4,2:5,3:6,4:7,5:8,6:9,7:10,8:12};
@@ -217,6 +217,22 @@ function tableRuleText(tb){
   if(tb.challenge)parts.push(t('boss.'+tb.challenge));
   if(tb.entry)parts.push(t('rtx.entry',cash(tb.entry)));
   return parts.join(' · ')||t(tb.endless?'rtx.endless':'rtx.0');
+}
+function tableEffectData(tb=G.table){
+  const rule=tb?.rule||'standard';
+  return {rule,title:t('effect.'+rule+'.title'),short:t('effect.'+rule+'.short'),description:t('effect.'+rule+'.description')};
+}
+function renderTableEffect(box){
+  if(!box)return;
+  const effect=tableEffectData();box.dataset.rule=effect.rule;
+  box.innerHTML='<span class="table-effect-label">'+t('circuit.tableEffect')+'</span><strong>'+effect.title+'</strong><p>'+effect.description+'</p>'+(effect.rule==='sec'&&hasRelic('diplomate')?'<p class="table-effect-protection">'+t('effect.sec.protected')+'</p>':'');
+}
+function openTableRules(){
+  inspectRef=null;GameClock.pause('inspect',true);
+  const body=$('inspectBody');body.innerHTML='<h1>'+tableName(G.table)+'</h1><div class="table-effect-card"></div>'+(G.table.challenge?'<p>'+bossProgress()+'</p>':'');
+  renderTableEffect(body.querySelector('.table-effect-card'));
+  const close=document.createElement('button');close.className='btn b-blue';close.textContent=t('insp.close');close.onclick=closeInspect;
+  $('inspectActions').replaceChildren(close);$('inspectScreen').classList.add('show');
 }
 
 /* ====== tapis évolutif ====== */
@@ -529,7 +545,9 @@ function chooseStarter(i){
 function showTableBrief(){
   const screen=$('tableBrief');if(!screen)return;
   $('briefTitle').textContent=tableName(G.table);
-  $('briefRule').textContent=tableRuleText(G.table);
+  renderTableEffect($('briefEffect'));
+  $('briefRule').textContent=[G.table.challenge?t('boss.'+G.table.challenge):'',G.table.entry?t('rtx.entry',cash(G.table.entry)):''].filter(Boolean).join(' · ');
+  $('briefRule').hidden=!$('briefRule').textContent;
   $('briefGoal').textContent=t('circuit.briefGoal',cash(G.table.goal),G.table.mains,cash(recommendedBet()));
   $('briefContracts').replaceChildren();
   G.contractChoices.forEach((c,i)=>{
@@ -546,8 +564,15 @@ function chooseContract(i){
 }
 function renderCircuitStatus(){
   const el=$('circuitStatus');if(!el)return;
-  if(G.endless){el.hidden=true;return;}
-  el.hidden=false;el.textContent=G.table.challenge?bossProgress():tableRuleText(G.table);
+  const effect=tableEffectData(),protectedTie=effect.rule==='sec'&&hasRelic('diplomate');
+  el.hidden=false;el.dataset.rule=effect.rule;el.dataset.protected=String(protectedTie);
+  if(!el.querySelector('.table-rule-summary'))el.innerHTML='<span class="table-rule-summary"></span><span class="table-rule-progress"></span><span class="table-rule-info" aria-hidden="true">?</span>';
+  el.querySelector('.table-rule-summary').textContent=protectedTie?t('effect.sec.protectedShort'):effect.short;
+  const progress=el.querySelector('.table-rule-progress');
+  progress.textContent=G.table.challenge?bossProgress().split(' · ')[0]:'';progress.hidden=!G.table.challenge;
+  el.title=t('circuit.tableEffect')+' · '+effect.description;
+  el.setAttribute('aria-label',t('circuit.tableEffect')+' : '+(protectedTie?t('effect.sec.protected'):effect.description)+(G.table.challenge?' · '+bossProgress():''));
+  el.onclick=openTableRules;
   el.classList.toggle('complete',!!G.table.challenge&&bossReady());
 }
 function renderShopInventory(){
@@ -1477,6 +1502,8 @@ function resolve(mode){
   let outcome;
   if(pBust)outcome='lose';else if(dBust)outcome='win';
   else if(pv>dv)outcome='win';else if(pv<dv)outcome='lose';else outcome='push';
+  const tableTieLoss=outcome==='push'&&G.table.rule==='sec'&&!hasRelic('diplomate');
+  if(tableTieLoss)outcome='lose';
 
   let mult=1,lines=[];
   const isNat=(mode==='natural'&&G.pHand.length===2&&pv===21);
@@ -1502,12 +1529,12 @@ function resolve(mode){
       if(!G.objHit&&G.bank>=G.table.goal&&bossReady()){G.objHit=true;gameDelay(objectiveReached,360);}};   // 1re fois qu'on franchit l'objectif
     tallyMs=animateScoreTally(mode,lines,finishWin);
   }else if(outcome==='push'){
-    let pg=0;if(hasRelic('diplomate')){pg=Math.floor(stake*.25);G.bank+=pg;}
+    let pg=0;if(hasRelic('diplomate')&&G.table.rule!=='sec'){pg=Math.floor(stake*.25);G.bank+=pg;}
     G.bank+=stake;gain=pg;sfx.push();showWord('push',pg,1);
   }else{
     const back=lossRefund(stake,pv);
     G.bank+=back;gain=back-stake;
-    sfx.lose();shake(8);showWord('lose',gain,1,false,pBust);
+    sfx.lose();shake(8);showWord('lose',gain,1,false,pBust,false,tableTieLoss?'tableTie':'');
   }
 
   // BARAKA: wins add points; Circuit losses preserve a fraction.
@@ -1523,12 +1550,14 @@ function resolveSplit(){
   if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
   renderHands(true);G.doFlip=false;
   const dv=handValue(G.dHand).total,dBust=dv>21;
-  let net=0,maxG=0,tied=0;const summary=[];
+  let net=0,maxG=0,tied=0,tieLosses=0;const summary=[];
   G.hands.forEach((h,i)=>{
     const pv=handValue(h).total,pBust=pv>21;
     let outcome;
     if(pBust)outcome='lose';else if(dBust)outcome='win';
     else if(pv>dv)outcome='win';else if(pv<dv)outcome='lose';else outcome='push';
+    const tableTieLoss=outcome==='push'&&G.table.rule==='sec'&&!hasRelic('diplomate');
+    if(tableTieLoss){outcome='lose';tieLosses++;}
     const stake=G.bet;let g=0;
     if(G.stats){G.stats.played++;}
     if(outcome==='win'){
@@ -1538,21 +1567,21 @@ function resolveSplit(){
       if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,g);G.stats.bestMult=Math.max(G.stats.bestMult,r.mult);}
     }else if(outcome==='push'){
       tied++;
-      let pg=0;if(hasRelic('diplomate')){pg=Math.floor(stake*.25);G.bank+=pg;}
+      let pg=0;if(hasRelic('diplomate')&&G.table.rule!=='sec'){pg=Math.floor(stake*.25);G.bank+=pg;}
       G.bank+=stake;g=pg;
     }else{
       const back=lossRefund(stake,pv);
       G.bank+=back;g=back-stake;
     }
     net+=g;maxG=Math.max(maxG,g);
-    const tag=t(outcome==='win'?'sp.win':outcome==='push'?'sp.push':'sp.lose');
+    const tag=t(tableTieLoss?'sp.tableTie':outcome==='win'?'sp.win':outcome==='push'?'sp.push':'sp.lose');
     summary.push(t('sp.hand',i+1)+tag+(g>0?' +'+abbr(g):(g<0?' '+abbr(g):'')));
   });
   const allTied=tied===G.hands.length;
-  const kind=allTied?'push':net>0?'win':net<0?'lose':'push';
+  const kind=allTied?'push':tieLosses===G.hands.length?'lose':net>0?'win':net<0?'lose':'push';
   const isRecord=!allTied&&checkGainRecord(maxG);
   sfx[kind](kind==='win'?(window.ColdDeckFX?.victoryTier(net,1,false,isRecord)||1):undefined);if(kind==='lose'){shake(8);}
-  showWord(kind,net,1,false,false,isRecord);
+  showWord(kind,net,1,false,false,isRecord,tieLosses===G.hands.length?'tableTie':'');
   if(isRecord)gameDelay(()=>showRecord(maxG),320);
   $('tip').innerHTML=summary.join('  ·  ');$('tip').style.color='var(--gold)';
   if(net>0&&!G.objHit&&G.bank>=G.table.goal&&bossReady()){G.objHit=true;gameDelay(objectiveReached,360);}
@@ -1944,18 +1973,22 @@ function popMult(m,label){
 }
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
 function pickWord(kind){return pick(t('w.'+kind));}
-function showWord(kind,gain,mult,natural,bust,record=false){
+function showWord(kind,gain,mult,natural,bust,record=false,reason=''){
   let word,sub='';
   if(kind==='win'){
     word=natural?pickWord('bj'):(mult>=3?pickWord('jackpot'):pickWord('win'));
     sub=(mult>1?fmtMult(mult)+'   ':'')+'+'+cash(gain);
   }else if(kind==='push'){word=pickWord('push');sub=gain>0?('+'+cash(gain)):t('w.betBack');}
   else{word=bust?pickWord('bust'):pickWord('lose');sub=gain?cash(gain):'';}
+  if(reason==='tableTie')word=t('w.tableTie');
   const p=$('multPop');
   p.className=kind+(word.length>7?' long':'');
   p.querySelector('.m').textContent=word;p.querySelector('.t').textContent=sub;
   p.classList.remove('go');void p.offsetWidth;p.classList.add('go');
   window.ColdDeckFX?.onResult(kind,gain,mult,natural,bust,record);
+  if(reason==='tableTie'){
+    const note=document.createElement('span');note.className='result-reason';note.textContent=t('w.tableTieReason');p.append(note);
+  }
 }
 const RULE_KEYS=['rules.goal','rules.table','rules.moves','rules.stars','rules.streak','rules.combos','rules.bonus','rules.contracts','rules.circuit','rules.hideout','rules.endless'];
 function renderRules(){const b=$('rulesBody');if(b)b.innerHTML=RULE_KEYS.map(k=>'<div>'+t(k)+'</div>').join('');}
