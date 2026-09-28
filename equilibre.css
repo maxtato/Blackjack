@@ -710,7 +710,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 
 /* Shared illustrated values: one readable amount, one unit, no line break. */
 :root{--value-scale:.5888}
-.game-number{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;vertical-align:middle;height:.84em;margin-inline:.035em;font:900 calc(1.75em * var(--value-scale))/.84 var(--game-type)!important;color:var(--number-ink,#ffdc75);font-variant-numeric:tabular-nums;letter-spacing:0!important;text-transform:none!important}
+.game-number{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;vertical-align:middle;position:relative;top:-2px;height:.84em;margin-inline:.035em;font:900 calc(1.75em * var(--value-scale))/.84 var(--game-type)!important;color:var(--number-ink,#ffdc75);font-variant-numeric:tabular-nums;letter-spacing:0!important;text-transform:none!important}
 .game-number[data-value-kind="bonus"]{color:var(--bonus-number-ink,#88e2cf)}
 .game-number .raster-copy,.game-number .raster-ink{display:inline-flex;align-items:center;white-space:nowrap;line-height:1}
 .game-number .raster-ink{column-gap:.16em}
@@ -731,6 +731,9 @@ body:has(#multPop.go) #tip{visibility:hidden}
 :is(.b-gold,.b-teal,.b-red,.chip,.mode-card){--number-ink:#542f55;--bonus-number-ink:#15504d}
 :is(.b-blue,.b-purple){--number-ink:#ffe093;--bonus-number-ink:#a4f3de}
 button:disabled{--number-ink:#ffe093;--bonus-number-ink:#a4f3de}
+/* Keep illustrated amounts legible on the yellow income and resale surfaces. */
+.tp-coin{--number-ink:#303236;--bonus-number-ink:#303236;color:#303236}
+.shop-inventory .shop-sell:enabled{--number-ink:#303236;--bonus-number-ink:#303236;--button-ink:#303236!important}
 :is(.b-gold,.b-teal,.b-red):enabled .rep-star{filter:brightness(.32) saturate(.55)}
 .overlay .btn small{font-size:13px;line-height:1.5;opacity:1}
 #app #actions .actMain .btn small{display:flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap}

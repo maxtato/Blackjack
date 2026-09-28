@@ -1719,7 +1719,7 @@ function comboHints(){
   if(n===3&&suits.size===3)add(soon,'rainbow',t('cb.rainbow'));
   if(sevens===1&&n<=3)add(soon,'pair7',t('cb.pair7'));
   if(!isStraight(h)&&n>=2&&n<=4&&RANKS.some(r=>isStraight(h.concat([{r,s:'♠'}]))))add(soon,'straight',t('cb.straight'));
-  {const bl=barakaLevel();if(bl<4){const need=BARAKA_STEPS[bl]-(G.baraka||0);if(need<=2&&need>0)add(soon,'streak'+(bl+1),t('cb.streak',bl+1,need));}}
+  {const bl=barakaLevel();if(bl<4){const need=BARAKA_STEPS[bl]-(G.baraka||0);if(need<=2&&need>0)add(soon,'streak'+(bl+1),t('cb.streak',bl+1,Math.round(need*100)/100));}}
   return {on,soon};
 }
 function renderCombos(){
