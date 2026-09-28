@@ -727,7 +727,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .game-number .raster-copy,.game-number .raster-ink{display:inline-flex;align-items:center;white-space:nowrap;line-height:1}
 .game-number .raster-ink{column-gap:.16em}
 .game-number .raster-word{align-items:center;line-height:1}
-.game-number .raster-word:has(>[data-digit])+.raster-word:has(>[data-digit]){margin-inline-start:-.1em}
+.game-number .raster-word:has(>[data-digit])+.raster-word:has(>[data-digit]){margin-inline-start:-.16em}
 /* Balance the atlas's blank margins; the wrapper aligns its visible ink to the text baseline. */
 .game-number .raster-glyph{--glyph-width:.86em;height:1.08em;animation:none!important;translate:none!important;rotate:none!important;top:-.055em!important}
 .game-number .raster-glyph[data-font="numbers"]:first-child{margin-inline-start:-.13em}
