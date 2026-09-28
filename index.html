@@ -242,7 +242,13 @@
 
 <!-- SHOP -->
 <div class="overlay" id="draftScreen"><div class="ovpanel circuit-panel"><h1 id="draftTitle"></h1><p id="draftCopy"></p><div id="draftChoices" class="circuit-choices"></div></div></div>
-<div class="overlay" id="tableBrief"><div class="ovpanel circuit-panel"><h1 id="briefTitle"></h1><div id="briefEffect" class="table-effect-card"></div><p id="briefRule"></p><div id="briefGoal" class="brief-stats"></div><h2 class="choice-heading" id="briefContractTitle" data-reading-label data-i18n="circuit.contractTitle">Choisir un contrat</h2><p class="choice-hint" data-i18n="circuit.contractHint">Un objectif bonus pour cette table. Choisis-en un.</p><div id="briefContracts" class="circuit-choices" role="group" aria-labelledby="briefContractTitle"></div></div></div>
+<div class="overlay" id="tableBrief"><div class="ovpanel circuit-panel">
+ <div class="illustrated-heading table-brief-heading"><img class="dialog-art" src="assets/illustrations/table-emblem.webp" width="96" height="96" alt="" decoding="async"><div class="table-heading-copy"><span id="briefTableLabel" class="table-brief-kicker" data-reading-label></span><h1 id="briefTitle"></h1></div></div>
+ <div id="briefGoal" class="brief-stats"></div>
+ <div id="briefEffect" class="table-effect-card"></div><p id="briefRule"></p>
+ <h2 class="choice-heading" id="briefContractTitle" data-reading-label data-i18n="circuit.contractTitle">Choisir un contrat</h2><p class="choice-hint" data-i18n="circuit.contractHint">Un objectif bonus pour cette table. Choisis-en un.</p>
+ <div id="briefContracts" class="circuit-choices" role="group" aria-labelledby="briefContractTitle"></div>
+</div></div>
 <div class="overlay" id="shop">
   <div class="ovpanel">
     <h1 class="win" id="shopTitle" style="font-size:23px">TABLE CLEARED</h1>

@@ -228,7 +228,7 @@ function renderTableEffect(box){
 }
 function openTableRules(){
   inspectRef=null;GameClock.pause('inspect',true);
-  const body=$('inspectBody');body.innerHTML='<h1>'+tableName(G.table)+'</h1><div class="table-effect-card"></div>'+(G.table.challenge?'<p>'+bossProgress()+'</p>':'');
+  const body=$('inspectBody');body.innerHTML='<div class="illustrated-heading table-brief-heading"><img class="dialog-art" src="'+ColdDeckArt.image('table-emblem')+'" width="96" height="96" alt="" decoding="async"><h1>'+tableName(G.table)+'</h1></div><div class="table-effect-card"></div>'+(G.table.challenge?'<p>'+bossProgress()+'</p>':'');
   renderTableEffect(body.querySelector('.table-effect-card'));
   const close=document.createElement('button');close.className='btn b-blue';close.textContent=t('insp.close');close.onclick=closeInspect;
   $('inspectActions').replaceChildren(close);$('inspectScreen').classList.add('show');
@@ -542,6 +542,7 @@ function chooseStarter(i){
 }
 function showTableBrief(){
   const screen=$('tableBrief');if(!screen)return;
+  $('briefTableLabel').textContent=G.table.pal!=null?t('planque.tierLabel',G.table.pal+1):t('planque.tableLabel',G.tableIdx+1);
   $('briefTitle').textContent=tableName(G.table);
   renderTableEffect($('briefEffect'));
   $('briefRule').textContent=[G.table.challenge?t('boss.'+G.table.challenge):'',G.table.entry?t('rtx.entry',cash(G.table.entry)):''].filter(Boolean).join(' · ');
@@ -556,7 +557,7 @@ function showTableBrief(){
   $('briefContracts').replaceChildren();
   G.contractChoices.forEach((c,i)=>{
     const b=document.createElement('button');b.className='btn b-blue contract-choice';
-    b.innerHTML='<span>'+contractText(c)+'</span><small class="contract-reward">+'+c.reward+' '+STAR+'<span class="contract-prompt">'+t('circuit.chooseContract')+'</span></small>';
+    b.innerHTML='<span class="contract-copy" data-reading-label>'+contractText(c)+'</span><small class="contract-reward">+'+c.reward+' '+STAR+'<span class="contract-prompt">'+t('circuit.chooseContract')+'</span></small><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
     b.onclick=()=>chooseContract(i);$('briefContracts').append(b);
   });
   screen.classList.add('show');
