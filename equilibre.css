@@ -135,9 +135,9 @@
 #comboRow{width:100%;min-height:0;max-height:100%;flex:0 1 auto;flex-flow:row wrap;justify-content:center;align-items:stretch;align-content:flex-start;gap:4px;padding:0;overflow-x:hidden;overflow-y:auto;scrollbar-width:none;scroll-snap-type:none}
 #comboRow::-webkit-scrollbar{display:none}
 #comboRow .combo-tile{box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 80px;min-width:0;max-width:80px;height:24px;gap:0;padding:1px 4px;border:0;border-radius:0;clip-path:var(--frame-cut);background:#3b454f var(--art-button-graphite) center/100% 100% no-repeat;color:#e0e6eb;overflow:hidden;transition:background-color .24s ease,color .24s ease}
-#comboRow .combo-name{display:block;max-width:100%;font:800 9.5px/1.1 var(--copy-font);font-weight:800!important;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
-#comboRow .combo-tile.compact .combo-name{font-size:8.5px}
-#comboRow .combo-detail{display:block;max-width:100%;margin:0;color:#b3bdc5;font:500 8px/1.1 var(--copy-font);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;letter-spacing:0}
+#comboRow .combo-name{display:block;max-width:100%;font:800 9px/1.1 var(--copy-font);font-weight:800!important;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+#comboRow .combo-tile.compact .combo-name{font-size:8px}
+#comboRow .combo-detail{display:block;max-width:100%;margin:0;color:#b3bdc5;font:500 7.6px/1.1 var(--copy-font);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;letter-spacing:0}
 #comboRow .combo-tile.on{background-image:var(--art-button-yellow);background-color:#ffce3a;color:#30291e}
 #comboRow .combo-tile.on .combo-detail{color:#655431}
 @media(prefers-reduced-motion:reduce){#comboRow .combo-tile{transition:none}}
@@ -355,8 +355,8 @@
  #feltInner .splitwrap{--card-w:min(calc(16 * var(--ui-u)),calc((100cqw - 10 * var(--ui-u))/var(--split-count,4)));gap:calc(2 * var(--ui-u))}
  #feltInner .splithand{gap:calc(.7 * var(--ui-u));padding:calc(.7 * var(--ui-u))}
  #feltInner .splithand .cardslot+.cardslot{margin-left:0!important}
- #comboRow .combo-name{font-size:clamp(8.5px,calc(2.6 * var(--ui-u)),10px)}
- #comboRow .combo-tile.compact .combo-name{font-size:clamp(8px,calc(2.3 * var(--ui-u)),9px)}
+ #comboRow .combo-name{font-size:clamp(8.1px,calc(2.47 * var(--ui-u)),9.5px)}
+ #comboRow .combo-tile.compact .combo-name{font-size:clamp(7.6px,calc(2.185 * var(--ui-u)),8.55px)}
  #tip:not(:empty){font-size:calc(2.9 * var(--ui-u));line-height:1.2;max-height:calc(5 * var(--ui-u))}
  #bottombar,#actions{gap:calc(2.2 * var(--ui-u))}
  #actions .actMain,#actions .actWide{width:94%;justify-self:center;gap:calc(2 * var(--ui-u))}
@@ -660,7 +660,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .brief-stat-value{display:block;white-space:nowrap;line-height:1.1}
 .brief-stats .game-number{font-size:30px}
 .result-reason{position:absolute;top:calc(100% + 9px);left:50%;transform:translateX(-50%);width:max-content;max-width:100%;padding:5px 9px;background:#322329f5;color:#f4aaa1;font:500 12px/1.3 var(--copy-font);clip-path:var(--frame-cut)}
-.draw-readout{flex:none;margin:0;min-height:14px;max-width:100%;font:500 11px/14px var(--copy-font);text-align:center;color:#c7d3cf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.draw-readout{flex:none;margin:0;min-height:14px;max-width:100%;font:500 10.5px/14px var(--copy-font);text-align:center;color:#c7d3cf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .draw-readout[hidden]{display:block!important;visibility:hidden}
 .circuit-choices{display:flex;flex-direction:column;gap:12px;margin-top:18px}
 .circuit-panel h1{font-size:25px;line-height:1.15}
@@ -683,7 +683,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .joker.spent{opacity:.58}
 .card-dust{position:absolute;pointer-events:none;clip-path:polygon(12% 0,79% 7%,100% 63%,60% 100%,0 74%)}
 .card-impact-shadow{position:absolute;height:12px;background:#17252b;border-radius:50%;pointer-events:none}
-@media(max-height:700px){#mid{gap:6px}#circuitStatus{height:24px;font-size:11px;line-height:16px}.draw-readout{font-size:10px}}
+@media(max-height:700px){#mid{gap:6px}#circuitStatus{height:24px;font-size:11px;line-height:16px}.draw-readout{font-size:9.5px}}
 @media(prefers-reduced-motion:reduce){.card-dust,.card-impact-shadow{display:none}}
 :root[data-motion=gentle] :is(.card-dust,.card-impact-shadow){display:none}
 
@@ -774,15 +774,15 @@ button:disabled{--number-ink:#ffe093;--bonus-number-ink:#a4f3de}
 
 /* All nine possible hints fit; status text shares the draw readout's fixed band. */
 @media (min-height:601px), (orientation:portrait){
- #app{--base-card-w:calc(19.5 * var(--ui-u));--dock-secondary:max(36px,calc(9.8 * var(--ui-u)))}
- #stage{--combo-room:106px}
- #center{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:22px 80px;gap:4px}
+ #app{--base-card-w:calc(19.5 * var(--ui-u));--dock-secondary:max(42px,calc(10.8 * var(--ui-u)))}
+ #stage{--combo-room:95px}
+ #center{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:20px 72px;gap:3px}
  #center #drawReadout{grid-column:1;grid-row:1;align-self:center;justify-self:center;height:14px;min-height:14px;line-height:14px}
- #center #tip{grid-column:1;grid-row:1;align-self:center;display:block;width:100%;height:22px;min-height:22px;max-height:22px;margin:0;padding:0;font-size:10px;line-height:11px;text-align:center;overflow:visible}
+ #center #tip{grid-column:1;grid-row:1;align-self:center;display:block;width:100%;height:20px;min-height:20px;max-height:20px;margin:0;padding:0;font-size:9.5px;line-height:10px;text-align:center;overflow:visible}
  #center #tip:empty{visibility:hidden}
  #center:has(#tip:not(:empty)) #drawReadout{visibility:hidden}
- #comboRow{grid-column:1;grid-row:2;align-self:start;height:80px;min-height:80px;max-height:none;overflow:visible;align-content:flex-start}
- #comboRow .combo-tile{flex-basis:calc((100% - 8px)/3);max-width:calc((100% - 8px)/3);padding-inline:2px}
- #actions .actMain,#actions .actWide{width:89%}
- #actions .btn,#actions .actWide .btn,#app[data-phase="bet"] #actions .btn{font-size:calc(6.6 * var(--ui-u))!important}
+ #comboRow{grid-column:1;grid-row:2;align-self:start;justify-self:center;width:96%;height:72px;min-height:72px;max-height:none;gap:3px;overflow:visible;align-content:flex-start}
+ #comboRow .combo-tile{flex-basis:calc((100% - 6px)/3);max-width:calc((100% - 6px)/3);height:22px;padding-inline:2px}
+ #actions .actMain,#actions .actWide{width:94%}
+ #actions .btn,#actions .actWide .btn,#app[data-phase="bet"] #actions .btn{font-size:calc(7.2 * var(--ui-u))!important}
 }
