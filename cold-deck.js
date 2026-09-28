@@ -749,7 +749,7 @@ const ColdDeckArt = (() => {
     10:[[33,39],[67,39],[33,55],[67,55],[33,71],[67,71],[33,87],[67,87],[33,103],[67,103]]
   };
   function face(rank,s){
-    const courts={K:'king',Q:'queen',J:'jack'};
+    const courts={K:'king-beige',Q:'queen-beige',J:'jack-beige'};
     // Keep the traditional count inside a tighter central area, clear of both indices.
     const art=courts[rank]
       ?`<img class="court-image" data-court="${rank}" src="${image('court-'+courts[rank])}" width="1024" height="1536" alt="" decoding="async" draggable="false">`

@@ -505,32 +505,34 @@
 #modeMenu .mode-arrow .nav-triangle{width:calc(4 * var(--home-u));height:calc(4 * var(--home-u));filter:brightness(.13)}
 #intro .bpArrow .nav-triangle{width:calc(5 * var(--prep-u));height:calc(5 * var(--prep-u))}
 
-/* Two finishes: light Gold metal and reflective prismatic ink. */
+/* Two finishes: light Gold metal and the original iridescent prism facets. */
 .card.foil{--edition-wash:linear-gradient(118deg,#e2c15d 0%,#f5d977 16%,#ffec9b 30%,#efd071 43%,#ffe895 52%,#fffde7 55%,#ffe487 60%,#e3c15f 76%,#f4d674 88%,#ffebaa 100%);filter:drop-shadow(0 0 2px #edcf70) drop-shadow(0 5px 5px #0005)}
-.card.poly{--edition-wash:linear-gradient(130deg,#c5ecff70,transparent 28%,#ebc2ff80 52%,transparent 71%,#a4f4e870);--edition-ink:linear-gradient(110deg,#563291,#167784 24%,#9c3a77 47%,#284d9b 70%,#563291);filter:drop-shadow(0 0 2px #ac86df) drop-shadow(0 4px 4px #0005)}
+.card.poly{--edition-wash:conic-gradient(from 30deg at 35% 35%,#fffa 0deg 46deg,transparent 46deg 118deg,#2737482a 118deg 167deg,#ffffff50 167deg 219deg,transparent 219deg 292deg,#ffffff75 292deg 320deg,transparent 320deg),conic-gradient(from 210deg at 72% 75%,#fff7 0deg 44deg,transparent 44deg 155deg,#3143591e 155deg 224deg,transparent 224deg),linear-gradient(135deg,#84c0be,#d7ebe2 30%,#b0a0c6 60%,#85b7ce);filter:drop-shadow(0 4px 4px #0005)}
 .card:is(.foil,.poly)>.card-surface{isolation:isolate}
 .card:is(.foil,.poly) .raster-card-art{z-index:1}
 .card:is(.foil,.poly) .corner{z-index:3}
 .card:is(.foil,.poly)>.card-surface::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background-image:var(--edition-wash);background-size:100% 100%;animation:none}
+.card.poly>.card-surface::before{background-size:115% 115%;background-position:40% 50%;animation:prism-facets 4.5s ease-in-out infinite alternate}
 /* A narrow white highlight travels over the art; ranks and tags stay above it. */
 .card:is(.foil,.poly)>.card-surface::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:none;background:linear-gradient(112deg,transparent 34%,#fff29720 42%,#fff9c766 46%,#fffefaed 49%,#ffffff 50%,#fff8c499 51%,#ffd00028 55%,transparent 62%) 135% 50%/260% 100% no-repeat;animation:edition-sheen 2.7s ease-in-out infinite}
 .card.foil>.card-surface::after{background-image:linear-gradient(112deg,transparent 32%,#fff9d230 40%,#fffbdc90 46%,#fffffff2 49%,#ffffff 50%,#fffdeab0 53%,#ffec9c30 58%,transparent 66%)}
-.card.poly>.card-surface::after{background-image:linear-gradient(112deg,transparent 34%,#77e7ff44 42%,#dab5ff88 46%,#fffffff0 49%,#ffffff 50%,#b8fff4bb 51%,#c08aff44 55%,transparent 62%);animation-delay:-1.35s}
-.card.poly .card-pip,.card.poly .raster-glyph::after{background-image:var(--edition-ink);background-size:240% 100%;animation:edition-ink 2.7s ease-in-out infinite alternate}
-.card.poly .court-image{filter:saturate(1.2) contrast(1.08) drop-shadow(1px 0 0 #9466d3)}
+.card.poly>.card-surface::after{background:linear-gradient(126deg,transparent 35%,#fff8 36% 41%,transparent 42% 46%,#fff4 47% 51%,transparent 52%) 150% 50%/300% 100% no-repeat;animation:prism-sheen 2.4s ease-in-out -.65s infinite}
 .card.foil.red{color:#8d2924}
 .card:is(.foil,.poly) .edtag{z-index:4;background:#20333b;color:#fff7e6;border:0;border-radius:2px;font:500 max(7px,calc(var(--card-w)*.075))/1.1 var(--copy-font);padding:2px 4px}
 .card.foil .edtag{color:#ffed9c}
 .card.poly .edtag{color:#d8caff}
 @keyframes edition-sheen{0%,8%{background-position:135% 50%}84%,100%{background-position:-55% 50%}}
-@keyframes edition-ink{to{background-position:100% 50%}}
-#shaker[inert] .card:is(.foil,.poly) .card-surface::after,#shaker[inert] .card.poly .card-pip,#shaker[inert] .card.poly .raster-glyph::after{animation-play-state:paused}
+@keyframes prism-facets{to{background-position:65% 75%}}
+@keyframes prism-sheen{0%,5%{background-position:150% 50%}88%,100%{background-position:-70% 50%}}
+#shaker[inert] .card.poly .card-surface::before,#shaker[inert] .card:is(.foil,.poly) .card-surface::after{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){
- .card:is(.foil,.poly) .card-surface::after,.card.poly .card-pip,.card.poly .raster-glyph::after{animation:none}
+ .card.poly .card-surface::before,.card:is(.foil,.poly) .card-surface::after{animation:none}
  .card:is(.foil,.poly) .card-surface::after{background-position:45% 50%;opacity:.8}
+ .card.poly .card-surface::after{opacity:.6}
 }
-:root[data-motion="gentle"] .card:is(.foil,.poly) .card-surface::after,:root[data-motion="gentle"] .card.poly .card-pip,:root[data-motion="gentle"] .card.poly .raster-glyph::after{animation:none}
+:root[data-motion="gentle"] .card.poly .card-surface::before,:root[data-motion="gentle"] .card:is(.foil,.poly) .card-surface::after{animation:none}
 :root[data-motion="gentle"] .card:is(.foil,.poly) .card-surface::after{background-position:45% 50%;opacity:.8}
+:root[data-motion="gentle"] .card.poly .card-surface::after{opacity:.6}
 
 /* Open, high-contrast totals: the number itself is the marker above each hand. */
 #feltInner .hand-total{color:#ffce3a;background:transparent;border:0;border-radius:0;box-shadow:none;clip-path:none;filter:drop-shadow(0 2px 1px #0005)}
