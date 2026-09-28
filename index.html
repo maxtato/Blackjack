@@ -10,6 +10,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Cold Deck">
+<script src="boot.js"></script>
+<style>
+#bootSplash{display:none}
+.boot-loading #bootSplash{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;margin:0;background:#20252a;color:#fff7e6;font:500 15px/1.4 system-ui,sans-serif;letter-spacing:.04em}
+.boot-loading #modeMenu .ovpanel{visibility:hidden}
+</style>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/ace-favicon-32.png">
 <link rel="icon" type="image/png" sizes="48x48" href="icons/ace-favicon-48.png">
@@ -22,8 +28,11 @@
 <link rel="stylesheet" href="equilibre.css">
 <link rel="preload" as="image" type="image/webp" href="assets/illustrations/type-letters.webp">
 <link rel="preload" as="image" type="image/webp" href="assets/illustrations/type-numbers.webp">
+<link rel="preload" as="image" type="image/webp" href="assets/illustrations/brand-wordmark.webp">
+<link rel="preload" as="font" type="font/woff2" href="fonts/barlow-latin-500-normal.woff2" crossorigin>
 </head>
 <body>
+<p id="bootSplash" role="status">Chargement…</p>
 <div id="bg">
   <div id="pattern"></div>
   <div id="sparks"></div>
@@ -147,7 +156,7 @@
   <div class="hideout-heading"><div class="planqueMode" id="planqueMode"></div><h1 id="planqueTitle">LA PLANQUE</h1><p id="planqueSub"></p></div>
   <main class="hideout-grid">
    <section class="ready-panel"><span class="section-label" data-i18n="menu.nextHand">LA PROCHAINE MAIN T'ATTEND</span><div id="readySuit" class="ready-suit" aria-hidden="true"></div><div id="palierResume" style="display:none"></div><button class="btn b-gold menu" id="planqueLaunch" data-action="launchMode"></button></section>
-   <section class="prep-panel"><div class="section-label" data-i18n="menu.preparation">TA PRÉPARATION</div><div class="repBar"><div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl" data-i18n="planque.rep">réputation</span></div><div class="recBox" id="recBox"></div></div><button class="prep-link" id="upgradesBtn" data-action="openUpgrades"><span><strong data-i18n="planque.upgrades">AMÉLIORATIONS</strong><small id="upgradesSub"></small></span><span aria-hidden="true">↗</span></button>
+   <section class="prep-panel"><div class="section-label" data-i18n="menu.preparation">TA PRÉPARATION</div><div class="repBar"><div class="repBig"><span class="repNum" id="repBal">0</span><span class="repLbl" data-i18n="planque.rep">réputation</span></div><div class="recBox" id="recBox"></div></div><button class="prep-link" id="upgradesBtn" data-action="openUpgrades"><span><strong data-i18n="planque.upgrades">AMÉLIORATIONS</strong><small id="upgradesSub" aria-live="polite"></small></span><span aria-hidden="true">↗</span></button>
     <div class="backPick"><div class="back-caption"><span class="section-label" data-i18n="planque.back">DOS DE CARTE</span><button class="quiet-btn bpAll" data-reading-label data-action="openBacks" data-i18n="planque.seeAll">LA COLLECTION →</button></div><div class="bpCurrent"><button class="bpArrow" id="bpPrev" data-action="back-previous" data-i18n-title="planque.prevBack" aria-label="Previous back"><img class="nav-triangle" data-direction="left" src="icons/nav-triangle.svg" alt="" aria-hidden="true" width="24" height="24"></button><div class="bpPrevWrap"><div class="card back bpCard" id="bpPreview" aria-hidden="true"></div><div class="bpNum" id="bpSub" aria-live="polite"></div></div><button class="bpArrow" id="bpNext" data-action="back-next" data-i18n-title="planque.nextBack" aria-label="Next back"><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" alt="" aria-hidden="true" width="24" height="24"></button></div></div>
    </section>
   </main>
@@ -233,7 +242,7 @@
 
 <!-- SHOP -->
 <div class="overlay" id="draftScreen"><div class="ovpanel circuit-panel"><h1 id="draftTitle"></h1><p id="draftCopy"></p><div id="draftChoices" class="circuit-choices"></div></div></div>
-<div class="overlay" id="tableBrief"><div class="ovpanel circuit-panel"><h1 id="briefTitle"></h1><div id="briefEffect" class="table-effect-card"></div><p id="briefRule"></p><div id="briefGoal" class="brief-stats"></div><div id="briefContracts" class="circuit-choices"></div></div></div>
+<div class="overlay" id="tableBrief"><div class="ovpanel circuit-panel"><h1 id="briefTitle"></h1><div id="briefEffect" class="table-effect-card"></div><p id="briefRule"></p><div id="briefGoal" class="brief-stats"></div><h2 class="choice-heading" id="briefContractTitle" data-reading-label data-i18n="circuit.contractTitle">Choisir un contrat</h2><p class="choice-hint" data-i18n="circuit.contractHint">Un objectif bonus pour cette table. Choisis-en un.</p><div id="briefContracts" class="circuit-choices" role="group" aria-labelledby="briefContractTitle"></div></div></div>
 <div class="overlay" id="shop">
   <div class="ovpanel">
     <h1 class="win" id="shopTitle" style="font-size:23px">TABLE CLEARED</h1>

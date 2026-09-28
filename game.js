@@ -539,7 +539,8 @@ function chooseStarter(i){
   if(G.phase!=='draft')return;const r=G.draftChoices[i];if(!r)return;
   G.relics.push({...r,_paid:0});G.draftLeft--;
   if(G.draftLeft>0){showStarterDraft();return;}
-  $('draftScreen')?.classList.remove('show');enterTable(0);
+  $('draftScreen')?.classList.remove('show');
+  G.phase='shop';renderTop();renderRelics();renderConsumables();openShop();
 }
 function showTableBrief(){
   const screen=$('tableBrief');if(!screen)return;
@@ -610,7 +611,7 @@ function freshGame(){
   GameClock.clear();window.ColdDeckFX?.clear();
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
      peekUsed:false,knownCard:null,penduArmed:false,smallNext:false,counterUsed:false,phareUsed:false,tableRetried:false,bossState:{wins:0,qualified:0,totals:[]},giftZones:[],relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,baraka:0,barakaMax:0,insurance:false,objHit:false,
-     phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1,splitActive:false,hands:null,hi:0,
+     phase:'bet',draftLeft:0,rewardDraftPending:0,pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1,splitActive:false,hands:null,hi:0,
      endless:false,palier:0,peak:0,boons:{relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0},streak:0,event:null,contract:null,_talismanUsed:false,_palierCash:false,
      stats:{won:0,played:0,bestGain:0,bestMult:1}};
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // valeur interne par défaut
@@ -910,90 +911,71 @@ function renderMult(){
   $('scorebox').classList.toggle('hot',m>1||bonus>0);
   renderCombos();
 }
-/* ---------- combos visibles : ce que ta main vaut DÉJÀ, et ce qui est À PORTÉE ----------
-   Le vrai jeu est de CONSTRUIRE ses mains ; ces pastilles l'enseignent en jouant. */
-function comboHints(){
-  const on=[],soon=[];
-  const add=(list,key,text)=>list.push({key,text});
+/* ---------- only combinations already formed by the visible hand ---------- */
+function activeCombos(){
+  const active=[];
+  const add=(key,title,mult)=>active.push({key,title,mult});
   const h=G.pHand,n=h.length,v=handValue(h).total;
+  if(!n||v>21)return active;
   const suits=new Set(h.map(c=>c.s));
   const sevens=h.filter(c=>c.r==='7').length;
-  /* --- déjà acquis (s'appliquent si tu gagnes la main) --- */
-  if(v===21&&n===2)add(on,'blackjack',t('m.blackjack')+' ×1.5');
-  if(v===21&&n>2)add(on,'perfect',t('m.perfect')+' ×3');
-  if(n>=5&&v<=21)add(on,'charlie',t('m.charlie')+' ×'+(hasRelic('phare')?3:2));
-  if(n===4&&v<=21&&hasRelic('phare'))add(on,'phare',t('relic.phare.n')+' ×1.5');
-  if(sevens>=2)add(on,'pair7',t('m.pair7')+' ×1.5');
-  if(n>=3&&suits.size===1)add(on,'flush',t('m.flush')+' ×2');
-  if(isStraight(h))add(on,'straight',t('m.straight')+' ×2');
-  if(n>=4&&suits.size===4)add(on,'rainbow',t('m.rainbow')+' ×1.5');
-  if(G.insisted)add(on,'pushing',t('m.pushing')+' ×1.5');
-  {const bl=barakaLevel();if(bl>0)add(on,'streak'+bl,t('m.streak',bl)+' ×'+BARAKA_MULT[bl]);}
-  /* petits bonus situationnels prévisibles en direct */
-  if(n&&v<=15)add(on,'lowball',t('m.lowball')+' ×1.5');
-  /* --- à portée (une carte / un cran) --- */
-  if(v<21&&v>=11&&21-v<=10)add(soon,'perfect',t('cb.to21',21-v));
-  if(n===4&&v<=20)add(soon,'charlie',t('cb.charlie'));
-  if(n===2&&suits.size===1)add(soon,'flush',t('cb.flush',h[0].s));
-  if(n===3&&suits.size===3)add(soon,'rainbow',t('cb.rainbow'));
-  if(sevens===1&&n<=3)add(soon,'pair7',t('cb.pair7'));
-  if(!isStraight(h)&&n>=2&&n<=4&&RANKS.some(r=>isStraight(h.concat([{r,s:'♠'}]))))add(soon,'straight',t('cb.straight'));
-  {const bl=barakaLevel();if(bl<4){const need=BARAKA_STEPS[bl]-(G.baraka||0);if(need<=2&&need>0)add(soon,'streak'+(bl+1),t('cb.streak',bl+1,Math.round(need*100)/100));}}
-  return {on,soon};
+  if(v===21&&n===2)add('blackjack',t('m.blackjack'),1.5);
+  if(v===21&&n>2)add('perfect',t('m.perfect'),3);
+  if(n>=5)add('charlie',t('m.charlie'),hasRelic('phare')?3:2);
+  if(n===4&&hasRelic('phare'))add('phare',t('relic.phare.n'),1.5);
+  if(sevens>=2)add('pair7',t('m.pair7'),1.5);
+  if(n>=3&&suits.size===1)add('flush',t('m.flush'),2);
+  if(isStraight(h))add('straight',t('m.straight'),2);
+  if(n>=4&&suits.size===4)add('rainbow',t('m.rainbow'),1.5);
+  if(G.insisted)add('pushing',t('m.pushing'),1.5);
+  const bl=barakaLevel();if(bl>0)add('streak'+bl,t('m.streak',bl),BARAKA_MULT[bl]);
+  if(v<=15)add('lowball',t('m.lowball'),1.5);
+  return active;
 }
 function renderCombos(){
   const row=$('comboRow');if(!row)return;
-  // Keep the qualifying bonuses visible through the dealer turn and payout.
-  if((G.phase==='dealer'||G.phase==='done')&&G.pHand.length&&row.childElementCount){
-    const contract=row.querySelector('[data-combo-key="contract"]');
-    if(contract&&G.contract?.done&&!contract.classList.contains('on')){
-      contract.classList.add('on');contract.querySelector('.combo-detail').textContent=LANG==='fr'?'Validé':'Complete';
-      contract.title=contractText(G.contract)+' · '+contract.querySelector('.combo-detail').textContent;
-      contract.setAttribute('aria-label',contract.title);window.ColdDeckFX?.onComboReady(contract);
-    }
-    row.setAttribute('aria-busy','false');return;
-  }
-  if(G.phase!=='play'||!G.pHand.length){row.replaceChildren();row.style.display='none';row.removeAttribute('aria-busy');return;}
-  // Keep each visible box in place while the next card lands and turns.
+  const clear=()=>{row.replaceChildren();row.style.display='none';row.removeAttribute('aria-busy');};
+  if(!['play','dealer','done'].includes(G.phase)||!G.pHand.length){clear();return;}
+  // Wait for the drawn face; a hidden card must not reveal a new combination.
   if(G._dealing&&G.pHand.some(c=>!cardFaceVisible(c))){row.setAttribute('aria-busy','true');return;}
-  if(handValue(G.pHand).total>21){row.replaceChildren();row.style.display='none';row.removeAttribute('aria-busy');return;}
-  const {on,soon}=comboHints();
-  const win=LANG==='fr'?'Si victoire':'On a win';
-  const entries=new Map();
-  const add=({key,text},ready)=>{
-    const [title,...detail]=text.split(' · ');
-    entries.set(key,{key,title:title.charAt(0)+title.slice(1).toLocaleLowerCase(),detail:ready?win:(detail.join(' · ')||(LANG==='fr'?'À compléter':'In reach')),ready});
-  };
-  if(handValue(G.pHand).total<21)soon.forEach(item=>add(item,false));
-  on.forEach(item=>add(item,true));
-  if(G.endless&&G.event)entries.set('event',{key:'event',title:LANG==='fr'?'Événement':'Event',detail:evtTitle(G.event),ready:false});
-  if(!G.endless&&G.contract){
-    const short={c5:LANG==='fr'?'5 cartes':'5 cards',c21:'21',cpress:'Baraka 75%',cmult:'Multi ×3',cdbl:t('act.double'),csuite:t('m.straight'),ccoul:t('m.flush')};
-    entries.set('contract',{key:'contract',title:LANG==='fr'?'Contrat':'Contract',detail:G.contract.done?(LANG==='fr'?'Validé':'Complete'):short[G.contract.id]||contractText(G.contract),ready:!!G.contract.done,full:contractText(G.contract)});
-  }
-  const order=['blackjack','perfect','charlie','pair7','flush','straight','rainbow','lowball','court','comeback','pushing','clutch','streak1','streak2','streak3','streak4','event','contract'];
+  if(handValue(G.pHand).total>21){clear();return;}
+  // Freeze the qualifying multipliers while the dealer plays and the payout lands.
+  if(G.phase==='dealer'||G.phase==='done'){row.setAttribute('aria-busy','false');return;}
+  const entries=activeCombos();
+  const order=['blackjack','perfect','charlie','phare','pair7','flush','straight','rainbow','lowball','pushing','streak1','streak2','streak3','streak4'];
+  entries.sort((a,b)=>order.indexOf(a.key)-order.indexOf(b.key));
+  const keys=new Set(entries.map(entry=>entry.key));
   const boxes=new Map([...row.children].map(box=>[box.dataset.comboKey,box]));
   const activated=[];
-  [...entries.values()].sort((a,b)=>order.indexOf(a.key)-order.indexOf(b.key)).forEach((entry,index)=>{
+  entries.forEach((entry,index)=>{
     let box=boxes.get(entry.key);
-    const becameReady=entry.ready&&!box?.classList.contains('on');
-    if(!box){box=document.createElement('div');box.className='combo-tile';box.dataset.comboKey=entry.key;box.setAttribute('role','listitem');
+    if(!box){
+      box=document.createElement('div');box.className='combo-tile on';box.dataset.comboKey=entry.key;box.setAttribute('role','listitem');
       const title=document.createElement('span');title.className='combo-name';
-      const detail=document.createElement('span');detail.className='combo-detail';box.append(title,detail);}
-    box.classList.toggle('on',entry.ready);box.classList.toggle('compact',entry.title.length>14);
-    box.querySelector('.combo-name').textContent=entry.title;
-    box.querySelector('.combo-detail').textContent=entry.detail;
-    box.title=entry.title+' · '+(entry.full||entry.detail)+(entry.full&&entry.ready?' · '+entry.detail:'');
-    box.setAttribute('aria-label',box.title);
+      const multiplier=document.createElement('span');multiplier.className='combo-detail combo-multiplier game-number';
+      multiplier.dataset.valueKind='bonus';box.append(title,multiplier);activated.push(box);
+    }
+    const title=entry.title.charAt(0)+entry.title.slice(1).toLocaleLowerCase();
+    const value=LANG==='fr'?fmtMult(entry.mult).replace('.',','):fmtMult(entry.mult);
+    box.classList.toggle('compact',title.length>12);
+    box.querySelector('.combo-name').textContent=title;
+    box.querySelector('.combo-multiplier').innerHTML=ColdDeckArt.lettering(value);
+    box.style.setProperty('--combo-angle',[-4,2,-2.5,3.5,-2,2][index%6]+'deg');
+    box.style.setProperty('--combo-lift',(index%2?2:-1)+'px');
+    box.style.setProperty('--combo-layer',index+1);
+    const status=box.classList.contains('paid')?(LANG==='fr'?'Bonus gagné':'Bonus won'):(LANG==='fr'?'Si victoire':'On a win');
+    box.title=title+' '+value+' · '+status;box.setAttribute('aria-label',box.title);
     if(row.children[index]!==box)row.insertBefore(box,row.children[index]||null);
-    if(becameReady)activated.push(box);
   });
-  for(const box of [...row.children])if(!entries.has(box.dataset.comboKey))box.remove();
+  for(const box of [...row.children])if(!keys.has(box.dataset.comboKey))box.remove();
+  row.style.setProperty('--combo-count',Math.max(1,Math.min(entries.length,4)));
+  row.dataset.scroll=String(entries.length>4);
   row.setAttribute('aria-busy','false');row.tabIndex=0;row.setAttribute('role','list');
-  row.setAttribute('aria-label',LANG==='fr'?'Combos : gris à compléter, jaune condition remplie, turquoise bonus gagné':'Combos: grey in reach, yellow condition met, turquoise bonus won');
+  row.setAttribute('aria-label',LANG==='fr'?'Combos actifs et multiplicateurs':'Active combinations and multipliers');
   row.style.display=row.childElementCount?'flex':'none';
   activated.forEach(box=>window.ColdDeckFX?.onComboReady(box));
 }
+
 function renderTop(){
   const tb=G.table;
   const nMains=isFinite(tb.mains)?tb.mains:0;        // en infini mains = Infinity (bandeau masqué)
@@ -1625,7 +1607,7 @@ function nextHandOrEnd(){
 }
 /* fin de table : 0★ = perdue · 1★ survie · 2★ objectif · 3★ maîtrise */
 function finishTable(){
-  if(['shop','lost','ended'].includes(G.phase))return;
+  if(['shop','draft','lost','ended'].includes(G.phase))return;
   const tb=G.table;
   const stars=starsFor(tb,G.bank);
   if(stars===0){onTableLost('lost.goal',G.bank>=tb.goal?'circuit.bossUnfinished':{k:'lost.goalTxt',miss:tb.goal-G.bank});return;}
@@ -1635,6 +1617,12 @@ function finishTable(){
   const reward=tableRep(tb,stars,G.tableMaxBaraka||0);
   G.pot+=reward;G.lastReward=reward;G.lastStars=stars;
   updateRecord(G.tableIdx+1);
+  // Bonus cards are earned after a cleared table, never before the first hand.
+  grantZoneTarot();
+  if(G.rewardDraftPending>0){
+    G.draftLeft=G.rewardDraftPending;G.rewardDraftPending=0;
+    G.phase='draft';showStarterDraft();return;
+  }
   openShop();
 }
 /* table perdue : seconde chance (jeton) ou fin de descente.
@@ -1847,7 +1835,7 @@ function enterTable(prevZone){
   G.table={...base,goal:base.goal+Math.max(0,G.bank-base.cap)};
   resetTableState(false);G.contract=rollContract();
   G.bet=recommendedBet();G.betChosen=true;clampBet();G.tableStartBank=G.bank;
-  grantZoneTarot();applyHandIncome();updateRecord(0);
+  applyHandIncome();updateRecord(0);
   if(G.bank<G.table.min){onTableLost('lost.broke','lost.brokeTxt');return;}
   renderAll();renderHands();renderPressure();announceTurn();
   showTableBrief();
@@ -2530,6 +2518,7 @@ function renderPlanque(){
   // sous-titre du bouton d'ouverture : indique ce qui est achetable maintenant
   const sub=$('upgradesSub');if(sub)sub.textContent=allMax?t('planque.allMax')
     :affordable?t('planque.avail',affordable):t('planque.upgradesSub');
+  $('upgradesBtn')?.classList.toggle('has-upgrades',affordable>0);
 }
 function buyUnlock(id){
   const u=findUnlock(id);if(!u)return;
@@ -2555,7 +2544,7 @@ function startGame(fromTable){
   fromTable=Math.max(0,Math.min(fromTable|0,RUN_LEN-1));
   G.recordAtStart={...META.nuit.record};G.tableIdx=fromTable;G.table=RUN[fromTable];
   G.bank=Math.round(G.table.cap*(1+.05*uLvl('bank')))+G.table.entry;
-  G.draftLeft=1+uLvl('contact');G.phase='draft';showStarterDraft();
+  G.rewardDraftPending=1+uLvl('contact');enterTable(0);
 }
 /* MODE INFINI « CAGNOTTE » : blackjack pur, on accumule tant qu'on peut miser */
 function startEndless(){

@@ -68,7 +68,9 @@ const ColdDeckArt = (() => {
   const backKey=id=>backKeys[id]||backKeys.cb9;
   const surface=content=>`<div class="card-surface">${content}</div>`;
   const illustration=(key,className='scene-art',lazy=false)=>`<img class="${className}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`;
-  const back=(id,lazy=false)=>surface(`<img class="card-back-image" src="${image(backKey(id))}" width="1024" height="1536" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`);
+  // The frame follows the bevel inside the shared cut-paper silhouette.
+  // The bitmap supplies the original motif; its old edge is cropped by CSS.
+  const back=(id,lazy=false)=>surface(`<img class="card-back-image" src="${image(backKey(id))}" width="1024" height="1536" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false"><svg class="card-back-frame" viewBox="0 0 100 142" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M14 5 L86 5 L96 15 L96 127 L86 137 L14 137 L4 127 L4 15 Z"/></svg>`);
   function effect(id){
     const requested=effectAliases[id]||id;
     const key=illustrationKeys.has(requested)?requested:'etoile';

@@ -21,7 +21,13 @@ Object.assign(STR.fr,{
  'rules.close':'RETOUR','rules.basic':'Les bases du blackjack','rules.bonuses':'Baraka & combinaisons','rules.modes':'Les modes de jeu',
  'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>',
  'back.cb9':'Éclair','back.cb10':'Chance','back.cb11':'Cœur','back.cb12':'Lune','back.cb13':'Dés','back.cb14':'Couronne','back.cb15':'Œil','back.cb16':'Cerises','back.cb18':'Flamme','back.cb19':'Diamant','back.cb22':'Serpent','back.cb26':'Soleil',
- 'set.open':'RÉGLAGES'
+ 'set.open':'RÉGLAGES',
+ 'planque.avail':n=>n+' amélioration'+(n>1?'s disponibles':' disponible'),
+ 'circuit.contractTitle':'Choisir un contrat','circuit.contractHint':'Un objectif bonus pour cette table. Choisis-en un.',
+ 'circuit.draft':'CHOISIR UNE CARTE BONUS','circuit.contact':'CHOISIR UNE DEUXIÈME CARTE',
+ 'circuit.draftCopy':'Table remportée ! Cette relique reste avec toi jusqu’à la fin de la partie.',
+ 'unlock.contact.d':()=> 'Après ta première table remportée, choisis une deuxième relique offerte',
+ 'test.resetConfirmCopy':'La <b>réputation</b>, les <b>améliorations</b> et les <b>records du circuit</b> seront effacés. La partie en cours sera arrêtée.<br><br>Tu recommences à la <b>table 1</b>, en choisissant ton contrat.<br><br>La progression du mode Libre et tes réglages sont conservés.'
 });
 Object.assign(STR.en,{
  'ui.bet':'Bet','ui.mult':'Multi','ui.gain':'Bank','ui.potLbl':'Bank','ui.turnsLeft':'hands<br>left','ui.you':'Your hand','ui.dealer':'Dealer','act.force':'PUSH LUCK','modern.table':'Table',
@@ -44,7 +50,13 @@ Object.assign(STR.en,{
  'rules.basic':'Blackjack basics','rules.bonuses':'Streaks & combinations','rules.modes':'Game modes',
  'tok.bankI':'+$','tok.pourboireI':'+$<small>/hand</small>',
  'back.cb9':'Lightning','back.cb10':'Luck','back.cb11':'Heart','back.cb12':'Moon','back.cb13':'Dice','back.cb14':'Crown','back.cb15':'Eye','back.cb16':'Cherries','back.cb18':'Flame','back.cb19':'Diamond','back.cb22':'Snake','back.cb26':'Sun',
- 'set.open':'SETTINGS'
+ 'set.open':'SETTINGS',
+ 'planque.avail':n=>n+' upgrade'+(n>1?'s':'')+' available',
+ 'circuit.contractTitle':'Choose a contract','circuit.contractHint':'A bonus goal for this table. Pick one.',
+ 'circuit.draft':'CHOOSE A BONUS CARD','circuit.contact':'CHOOSE A SECOND CARD',
+ 'circuit.draftCopy':'Table cleared! Keep this relic until the end of your run.',
+ 'unlock.contact.d':()=> 'After your first cleared table, choose a second free relic',
+ 'test.resetConfirmCopy':'Circuit <b>reputation</b>, <b>upgrades</b> and <b>records</b> will be erased. Your current game will end.<br><br>You restart at <b>table 1</b> by choosing a contract.<br><br>Free Play progress and your settings are kept.'
 });
 for(const key of Object.keys(STR.fr))if(typeof STR.fr[key]==='string')STR.fr[key]=STR.fr[key].replaceAll('SANS FIN','LIBRE').replaceAll('LA TOURNÉE','CIRCUIT');
 for(const key of Object.keys(STR.en))if(typeof STR.en[key]==='string')STR.en[key]=STR.en[key].replaceAll('ENDLESS','FREE PLAY');

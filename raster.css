@@ -32,6 +32,9 @@
 }
 .card:not(.back):not(.menu-card-image)>.card-surface{background:#fff7e6 var(--art-card-stock) center/100% 100% no-repeat}
 .card-back-image,.raster-card-art{border-radius:0}
+/* Crop only the obsolete printed edge, then draw a complete inset bevel. */
+.card.back>.card-surface>.card-back-image{position:absolute;left:-4.5%;top:-4.5%;width:109%;height:109%;max-width:none;object-fit:fill}
+.card-back-frame{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;fill:none;stroke:#fff7e6;stroke-width:1.1;stroke-linejoin:bevel}
 .card:not(.back)::after{display:none}
 .raster-card-art{position:relative;width:100%;height:100%;transform:none;overflow:hidden;border-radius:inherit}
 .card-pip{position:absolute;display:block;pointer-events:none}
@@ -249,7 +252,7 @@ button .raster-glyph{--glyph-width:.62em}
 :root[data-motion=gentle] .hand .card{animation:none!important;top:0!important}
 
 /* Reading text uses a local lowercase-capable font; display artwork is unchanged. */
-@font-face{font-family:"Barlow";src:url("fonts/barlow-latin-500-normal.woff2") format("woff2");font-style:normal;font-weight:500;font-display:swap}
+@font-face{font-family:"Barlow";src:url("fonts/barlow-latin-500-normal.woff2") format("woff2");font-style:normal;font-weight:500;font-display:optional}
 :root{--copy-font:"Barlow","Avenir Next","Segoe UI",Arial,sans-serif;--font:var(--copy-font)}
 .readable-copy,.readable-copy :where(span,b,strong,em,small){font-family:var(--copy-font)!important;font-weight:500!important;letter-spacing:normal!important;text-transform:none!important}
 .readable-copy{line-height:1.4}

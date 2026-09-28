@@ -4,6 +4,28 @@ const h=engine(),a=h.api,results=[];
 const check=(name,fn)=>{h.reset(123);fn();results.push(name);};
 const relic=id=>({...a.RELIC_POOL.find(r=>r.id===id),_paid:0});
 const tarot=id=>({...a.TAROT_POOL.find(r=>r.id===id),_paid:10});
+check('Circuit starts with a contract and no unearned bonus cards',()=>{
+ for(const from of [0,8]){
+  a.startGame(from);assert.equal(a.G.phase,'bet');assert.equal(a.G.tableIdx,from);
+  assert.equal(a.G.draftLeft,0);assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
+  assert.equal(a.G.giftZones.length,0);assert.equal(a.G.contractChoices.length,2);
+  a.chooseContract(1);assert.equal(a.G.contract,a.G.contractChoices[1]);
+ }
+});
+check('First cleared table awards cards once, including the Contact upgrade',()=>{
+ for(const contact of [0,1]){
+  h.reset(123,{contact});a.G.bank=a.G.table.goal;assert(a.checkBankGoal());
+  assert.equal(a.G.phase,'draft');assert.equal(a.G.draftLeft,1+contact);assert.equal(a.G.consumables.length,1);
+  const bank=a.G.bank,pot=a.G.pot,table=a.G.tableIdx;
+  for(let i=0;i<=contact;i++)a.chooseStarter(0);
+  assert.equal(a.G.phase,'shop');assert.equal(a.G.relics.length,1+contact);
+  assert.equal(a.G.bank,bank);assert.equal(a.G.pot,pot);assert.equal(a.G.tableIdx,table);
+  a.chooseStarter(0);assert.equal(a.G.relics.length,1+contact);
+  a.setTable(1);a.enterTable(1);assert.equal(a.G.consumables.length,1);
+  a.G.bank=a.G.table.goal;assert(a.checkBankGoal());assert.equal(a.G.phase,'shop');
+  assert.equal(a.G.consumables.length,1);assert.equal(a.G.relics.length,1+contact);
+ }
+});
 check('Soft Aces and remaining-shoe odds',()=>{
  a.G.shoe=['A','2','3','4','5','6','7','8','9','10','J','Q','K'].map(card);
  assert.equal(a.bustChance([card('A'),card(6)]),0);
@@ -104,10 +126,11 @@ check('Pause and inspection suspend the remaining engine time',()=>{
 });
 check('Sun can complete an ordinary table between hands',()=>{
  a.G.bank=a.G.table.goal-5;a.G.baraka=2;a.G.consumables=[tarot('soleil')];a.useConsumable(0);
- assert.equal(a.G.phase,'shop');assert.equal(a.G.baraka,0);
+ assert.equal(a.G.phase,'draft');assert.equal(a.G.baraka,0);
+ a.chooseStarter(0);assert.equal(a.G.phase,'shop');
 });
 check('Gift resale is fixed and editions never overwrite',()=>{
- const free=a.G.relics[0],early=a.sellValue(free);a.setTable(23);assert.equal(a.sellValue(free),early);assert.equal(early,0);
+ const free=relic('lunettes'),early=a.sellValue(free);a.setTable(23);assert.equal(a.sellValue(free),early);assert.equal(early,0);
  a.G.pHand=[card(7,'♠','poly'),card(5,'♥','holo')];assert.equal(a.addEditionToHand('foil'),false);assert.equal(a.G.pHand[0].ed,'poly');
 });
 check('Stars use decisions; reached and won records are distinct',()=>{

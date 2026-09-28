@@ -22,7 +22,6 @@ export function engine({realAds=false,persist=false,storage={}}={}){
     showWord=(kind,gain,mult,natural,bust,record,reason='')=>{window.__result={kind,gain,mult,natural,bust,record,reason};};
     renderShop=()=>{window.__screen='shop';};openLose=()=>{window.__screen='lose';};renderEndScreen=()=>{window.__screen='end';};
     animateScoreTally=(mode,lines,finish)=>{finish();return 0;};
-    const originalStartGame=startGame;startGame=(...args)=>{originalStartGame(...args);while(G.phase==='draft')chooseStarter(G.draftChoices.findIndex(r=>r.id==='lunettes')>=0?G.draftChoices.findIndex(r=>r.id==='lunettes'):0);};
     ${realAds?'':'Ads.canRewarded=()=>false;Ads.interstitial=()=>({then(fn){fn();}});Ads.countTable=()=>{};'}
     for(const key of Object.keys(sfx))sfx[key]=()=>{};
     window.ColdDeckFX=new Proxy({reduced:true},{get:(target,key)=>key in target?target[key]:()=>{}});

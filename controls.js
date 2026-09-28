@@ -56,4 +56,20 @@
   });
   document.querySelectorAll('[data-action="select-circuit"],[data-action="select-free"]').forEach(button=>{button.disabled=false;});
   $('bootNotice')?.remove();
+  // Fonts, alpha masks and the artwork visible on the home screen share one reveal.
+  const decodeImage=src=>new Promise(resolve=>{
+    const image=new Image();image.decoding='async';
+    image.onerror=()=>resolve();
+    image.onload=()=>image.decode?image.decode().catch(()=>{}).then(resolve):resolve();
+    image.src=src;
+  });
+  const homeAssets=new Set([
+    ...[...$('modeMenu').querySelectorAll('img')].map(image=>image.src),
+    ...['background-menu','button-yellow','button-teal','card-shape','card-stock','suit-spade'].map(ColdDeckArt.image)
+  ]);
+  const resources=[window.ColdDeckRaster?.ready,document.fonts?.ready,document.fonts?.load('500 16px Barlow'),...Array.from(homeAssets,decodeImage)];
+  Promise.allSettled(resources).then(()=>{
+    window.ColdDeckRaster?.refresh();
+    requestAnimationFrame(()=>requestAnimationFrame(()=>window.ColdDeckBoot?.finish()));
+  });
 })();
