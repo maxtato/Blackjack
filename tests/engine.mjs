@@ -17,6 +17,7 @@ export function engine(){
   code+='\n'+noops.map(n=>n+'=()=>{};').join('\n');
   code+=`\nLANG='fr';
     renderChips=()=>clampBet();renderAll=()=>clampBet();
+    showWord=(kind,gain,mult,natural,bust,record)=>{window.__result={kind,gain,mult,natural,bust,record};};
     renderShop=()=>{window.__screen='shop';};openLose=()=>{window.__screen='lose';};renderEndScreen=()=>{window.__screen='end';};
     animateScoreTally=(mode,lines,finish)=>{finish();return 0;};
     const originalStartGame=startGame;startGame=(...args)=>{originalStartGame(...args);while(G.phase==='draft')chooseStarter(G.draftChoices.findIndex(r=>r.id==='lunettes')>=0?G.draftChoices.findIndex(r=>r.id==='lunettes'):0);};
@@ -28,7 +29,7 @@ export function engine(){
     window.__audit={${expose.join(',')},buyUnlock,
       get G(){return G},get META(){return META},get offers(){return shopOffer},
       reset(unlocks={}){META=blankMeta();META.nuit.unlocks={...unlocks};RECS={};window.__screen='';startGame(0);},
-      setup(hand,dealer,opts={}){freshGame();G.pHand=hand;G.dHand=dealer;Object.assign(G,{phase:'play',revealed:false,bet:10,betChosen:true,bank:100},opts);},
+      setup(hand,dealer,opts={}){freshGame();window.__result=null;G.pHand=hand;G.dHand=dealer;Object.assign(G,{phase:'play',revealed:false,bet:10,betChosen:true,bank:100},opts);},
       setTable(i){G.tableIdx=i;G.table=RUN[i];},
       setOffers(offers){shopOffer=offers;},
       french(){return STR.fr;}

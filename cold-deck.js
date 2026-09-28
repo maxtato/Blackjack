@@ -67,7 +67,7 @@ en:{
 
 /* --- règles --- */
 'rules.title':'RULES','rules.close':'CLOSE',
-'rules.goal':'<span class="rt">GOAL</span>Beat the dealer on every hand without going over <span class="k">21</span>. Face cards are worth 10, an Ace is 1 or 11.',
+'rules.goal':'<span class="rt">GOAL</span>Beat the dealer on every hand without going over <span class="k">21</span>. Face cards are worth 10, an Ace is 1 or 11. Matching totals of 21 or less return your entire stake, including against bosses.',
 'rules.table':'<span class="rt">THE TABLE</span>Play <span class="k">every required hand</span>, bet within the <span class="k">limits</span> (fixed min–max), and reach the <span class="k">cash goal</span> before the last hand. Below the goal = table lost.',
 'rules.moves':'<span class="rt">YOUR MOVES</span><span class="k">HIT</span> for a card, <span class="k">STAND</span> on your hand, or <span class="k">FORCE YOUR LUCK</span> (2 cards, keep the best · 1×/table).',
 'rules.stars':'<span class="rt"><i class="pxstar"></i> STARS</span>Every table awards them based on your result: <span class="k">goal</span> · <span class="k">comfort</span> · <span class="k">mastery</span>. The more you take, the higher your <span class="k">reputation</span> climbs.',
@@ -152,7 +152,7 @@ en:{
 /* --- mots de résolution --- */
 'w.jackpot':['JACKPOT!','MEGA!','BOOM!','ON FIRE!'],
 'w.win':['WIN!','YEAH!','BANG!','SMOOTH!','POW!'],
-'w.bj':['BLACKJACK!'],'w.push':['PUSH','TIE'],
+'w.bj':['BLACKJACK!'],'w.push':['TIE'],
 'w.lose':['MISSED!','DANG!','LOST!','OUCH!'],'w.bust':['BUSTED!','BURNED!','TOO HIGH!'],
 'w.betBack':'bet returned',
 'sp.win':'WON','sp.push':'PUSH','sp.lose':'LOST','sp.hand':i=>'Hand '+i+': ',
@@ -189,9 +189,9 @@ en:{
 'zone.1':'Initiation','zone.2':'The Squeeze','zone.3':'Deep Casino','zone.4':'Red Circle',
 'zone.5':'The Vault','zone.6':'The Underbelly','zone.7':'Private Sphere','zone.8':'The Summit',
 'rule.nervous':'Streak builds 2× faster','rule.mute':'Silent dealer',
-'rule.gros':'The dealer hits up to 18','rule.depart':'Table already hot (+30 %)','rule.sec':'A push counts as a loss',
+'rule.gros':'The dealer hits up to 18','rule.depart':'Table already hot (+30 %)',
 'rtx.0':'Initiation','rtx.4':'Hushed parlour','rtx.7':'Merciless dealer (18)',
-'rtx.boss':r=>'BOSS · '+r,'rtx.bossFinal':'FINAL BOSS · a push counts as a loss','rtx.bossPlain':'showdown',
+'rtx.boss':r=>'BOSS · '+r,'rtx.bossFinal':'FINAL BOSS','rtx.bossPlain':'showdown',
 'rtx.entry':f=>'entry fee '+f,'rtx.deep':'Deep room','rtx.endless':'Endless pot',
 'endless.tier':n=>'Tier '+n,
 /* --- reliques --- */
@@ -207,7 +207,7 @@ en:{
 'relic.maitresse.n':'Trump Card','relic.maitresse.d':'Permanent relic. Your first card each hand is FOIL: bonus cash when you win.',
 'relic.bruleur.n':'Burner','relic.bruleur.d':'Permanent relic. If you win a hand at streak ≥ 50 %: hand payout ×1.5.',
 'relic.portebonheur.n':'Lucky Charm','relic.portebonheur.d':'Permanent relic. +1 Tarot token slot (you can hold one more token).',
-'relic.diplomate.n':'Diplomat','relic.diplomate.d':'Permanent relic. On a push with the dealer, you get half your bet back.',
+'relic.diplomate.n':'Diplomat','relic.diplomate.d':'On a tie, recover your full stake and earn 25% extra.',
 'relic.talisman.n':'Talisman','relic.talisman.d':'Rare relic. Once per table, your first lost hand is fully refunded.',
 'relic.aimant.n':'Magnet','relic.aimant.d':'Rare relic. +1 for every card you draw.',
 'relic.phare.n':'The Lighthouse','relic.phare.d':'Rare relic. CHARLIE (5 cards without busting) pays ×3 instead of ×2.',
@@ -318,7 +318,7 @@ fr:{
 'set.adsNote':'Démo uniquement : aucune régie n’est branchée. « Sans pub » simule l’achat (les récompensées restent). « Ignorer les plafonds » déclenche chaque interstitiel pour que tu les voies — coupé, les vraies règles s’appliquent : 1 pub maximum toutes les 3 tables et jamais à moins de 2 min d’intervalle.',
 
 'rules.title':'RÈGLES','rules.close':'FERMER',
-'rules.goal':'<span class="rt">BUT</span>Bats le croupier à chaque main sans dépasser <span class="k">21</span>. Une figure vaut 10, l\'As vaut 1 ou 11.',
+'rules.goal':'<span class="rt">BUT</span>Bats le croupier à chaque main sans dépasser <span class="k">21</span>. Une figure vaut 10, l\'As vaut 1 ou 11. Une égalité à 21 ou moins rend toute la mise, même contre un boss.',
 'rules.table':'<span class="rt">LA TABLE</span>Joue <span class="k">toutes les mains imposées</span>, mise dans la <span class="k">limite</span> (min–max fixe), et atteins l\'<span class="k">objectif de gain</span> avant la dernière main. Sous l\'objectif = table perdue.',
 'rules.moves':'<span class="rt">TES COUPS</span><span class="k">TIRER</span> une carte, <span class="k">RESTER</span> sur ta main, ou <span class="k">FORCER LA CHANCE</span> (2 cartes, on garde la meilleure · 1×/table).',
 'rules.stars':'<span class="rt"><i class="pxstar"></i> ÉTOILES</span>Chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Plus tu en décroches, plus ta <span class="k">réputation</span> grimpe.',
@@ -392,7 +392,7 @@ fr:{
 'top.metaInf':(p,a,b)=>'∞ SANS FIN · palier '+p+' · mise '+a+'–'+b,
 'w.jackpot':['JACKPOT!','MÉGA!','BOOM!','EN FEU!'],
 'w.win':['GAGNÉ!','OUAIS!','BANG!','CLASSE!','POW!'],
-'w.bj':['BLACKJACK!'],'w.push':['ÉGALITÉ','MATCH NUL'],
+'w.bj':['BLACKJACK!'],'w.push':['ÉGALITÉ'],
 'w.lose':['RATÉ!','ZUT!','PERDU!','AÏE!'],'w.bust':['BUSTÉ!','CRAMÉ!','TROP HAUT!'],
 'w.betBack':'mise rendue',
 'sp.win':'GAGNÉ','sp.push':'ÉGALITÉ','sp.lose':'PERDU','sp.hand':i=>'Main '+i+' : ',
@@ -427,9 +427,9 @@ fr:{
 'zone.1':'Initiation','zone.2':'La Pression','zone.3':'Casino profond','zone.4':'Cercle rouge',
 'zone.5':'Chambre forte','zone.6':'Les Bas-fonds','zone.7':'Sphère privée','zone.8':'Le Sommet',
 'rule.nervous':'La baraka monte 2× plus vite','rule.mute':'Croupier muet',
-'rule.gros':'Le croupier tire jusqu’à 18','rule.depart':'Table déjà chaude (+30 %)','rule.sec':'Égalité = défaite',
+'rule.gros':'Le croupier tire jusqu’à 18','rule.depart':'Table déjà chaude (+30 %)',
 'rtx.0':'Initiation','rtx.4':'Salon feutré','rtx.7':'Croupier impitoyable (18)',
-'rtx.boss':r=>'BOSS · '+r,'rtx.bossFinal':'BOSS FINAL · égalité = défaite','rtx.bossPlain':'affrontement',
+'rtx.boss':r=>'BOSS · '+r,'rtx.bossFinal':'BOSS FINAL','rtx.bossPlain':'affrontement',
 'rtx.entry':f=>'droit d’entrée '+f,'rtx.deep':'Salle profonde','rtx.endless':'Cagnotte sans fin',
 'endless.tier':n=>'Palier '+n,
 'relic.lunettes.n':'Lunettes','relic.lunettes.d':'Relique permanente. Une fois par main, révèle la prochaine carte du sabot avant de décider de tirer.',
@@ -444,7 +444,7 @@ fr:{
 'relic.maitresse.n':'Carte maîtresse','relic.maitresse.d':'Relique permanente. Ta 1re carte de chaque main est FOIL : de l’argent bonus quand tu gagnes.',
 'relic.bruleur.n':'Brûleur','relic.bruleur.d':'Relique permanente. Si tu gagnes une main avec une baraka ≥ 50 % : gain de la main ×1,5.',
 'relic.portebonheur.n':'Porte-bonheur','relic.portebonheur.d':'Relique permanente. +1 emplacement de jeton Tarot (tu peux garder un jeton de plus).',
-'relic.diplomate.n':'Diplomate','relic.diplomate.d':'Relique permanente. En cas d’égalité avec le croupier, tu récupères la moitié de ta mise.',
+'relic.diplomate.n':'Diplomate','relic.diplomate.d':'Sur une égalité, récupère toute ta mise et gagne 25 % en plus.',
 'relic.talisman.n':'Talisman','relic.talisman.d':'Relique rare. Une fois par table, ta première main perdue est intégralement remboursée.',
 'relic.aimant.n':'Aimant','relic.aimant.d':'Relique rare. +1 $ à chaque carte que tu tires.',
 'relic.phare.n':'Le Phare','relic.phare.d':'Relique rare. CHARLIE (5 cartes sans dépasser) paie ×3 au lieu de ×2.',
@@ -524,7 +524,7 @@ Object.assign(STR.fr,{
  'rule.depart':'La Baraka commence au niveau 1','rule.atelier':'La première carte est FOIL aux mains 1, 4, 7 et 10','rule.serein':'Une perte conserve 75 % de la Baraka',
  'boss.bouncer':'Gagne 2 manches contre le Videur',
  'boss.banker':'Gagne 2 manches, dont une avec au moins 60 % de la mise maximale de base',
- 'boss.reaper':'Gagne 2 manches ; les égalités sont perdues',
+ 'boss.reaper':'Gagne 2 manches contre la Faucheuse',
  'boss.concierge':'Gagne 2 manches, dont une avec 3 cartes ou un tarot joué',
  'boss.accountant':'Gagne 2 manches avec des totaux différents',
  'boss.gravedigger':'Gagne 2 manches dont une à 4 cartes, ou gagne 3 manches',
@@ -538,7 +538,7 @@ Object.assign(STR.fr,{
  'relic.maitresse.d':'La première carte de chaque main est FOIL si elle n’a pas déjà une édition : +15 % de la mise avant multiplication.',
  'relic.bruleur.d':'À Baraka niveau 2 ou plus, multiplie les gains par 1,3, dans la limite du plafond de zone.',
  'relic.portebonheur.d':'Un emplacement de tarot supplémentaire et 20 % de réduction sur les tarots en boutique.',
- 'relic.diplomate.d':'Sur une égalité, récupère ta mise et gagne 25 % en plus. Face à « égalité = défaite », récupère seulement ta mise.',
+ 'relic.diplomate.d':'Sur une égalité, récupère toute ta mise et gagne 25 % en plus.',
  'relic.talisman.d':'Rembourse entièrement la première main perdue de chaque tentative. En séparation, protège une seule des deux mains.',
  'relic.aimant.d':'Chaque tirage sûr depuis un total de 16 ou plus rapporte 10 % de la mise engagée. Fonctionne avec Tirer, Doubler et Forcer.',
  'relic.phare.d':'À 4 cartes : ×1,5. Charlie à 5 cartes : ×3. Une fois par table, prépare le plus petit rang du sabot pour ton prochain tirage.',
@@ -586,7 +586,7 @@ Object.assign(STR.en,{
  'rule.depart':'Start at streak level 1','rule.atelier':'Your first card is FOIL on hands 1, 4, 7 and 10','rule.serein':'Keep 75% of your streak after a loss',
  'boss.bouncer':'Win 2 rounds against the Bouncer',
  'boss.banker':'Win 2 rounds, including one betting at least 60% of the base maximum',
- 'boss.reaper':'Win 2 rounds; ties are losses',
+ 'boss.reaper':'Win 2 rounds against the Reaper',
  'boss.concierge':'Win 2 rounds, including one with 3 cards or a played Tarot',
  'boss.accountant':'Win 2 rounds with different hand totals',
  'boss.gravedigger':'Win 2 rounds including one with 4 cards, or win 3 rounds',
@@ -600,7 +600,7 @@ Object.assign(STR.en,{
  'relic.maitresse.d':'The first card of every hand is FOIL unless it already has an edition: +15% of your stake before multiplication.',
  'relic.bruleur.d':'At streak level 2 or higher, multiply winnings by 1.3, up to the zone cap.',
  'relic.portebonheur.d':'One extra Tarot slot and 20% off Tarot purchases.',
- 'relic.diplomate.d':'On a tie, recover your stake and earn 25% extra. Against the ties-lose rule, recover only your stake.',
+ 'relic.diplomate.d':'On a tie, recover your full stake and earn 25% extra.',
  'relic.talisman.d':'Refund the first lost hand of each attempt. When splitting, protects one of the two hands.',
  'relic.aimant.d':'Every safe draw from a total of at least 16 earns 10% of your committed stake. Works with Hit, Double and Push Luck.',
  'relic.phare.d':'4 cards pay ×1.5. A 5-card Charlie pays ×3. Once per table, prepare the lowest remaining rank for your next draw.',
@@ -919,12 +919,12 @@ const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 const RUN=[
   [80,115,5,25,null], [105,180,5,30,'nervous'], [150,255,10,40,'gros','bouncer'],
   [215,355,10,50,'atelier',null,20], [290,490,15,65,'mute'], [395,655,15,85,null,'banker'],
-  [535,865,20,85,'nervous',null,45], [725,1230,25,110,'gros'], [975,1660,30,150,'sec','reaper'],
+  [535,865,20,85,'nervous',null,45], [725,1230,25,110,'gros'], [975,1660,30,150,null,'reaper'],
   [1320,2270,40,185,'atelier'], [1780,3205,50,250,'mute'], [2400,4320,60,335,'mute','concierge'],
-  [3240,5830,80,420,'serein',null,200], [4375,8225,100,570,'atelier'], [5905,11100,150,770,'sec','accountant'],
+  [3240,5830,80,420,'serein',null,200], [4375,8225,100,570,'atelier'], [5905,11100,150,770,null,'accountant'],
   [7970,14825,200,995,'atelier'], [10760,20875,250,1345,'nervous'], [14525,28180,350,1815,'gros','gravedigger'],
   [19610,37650,450,2355,'serein',null,1300], [26475,52950,600,3175,'mute'], [35740,71480,800,4290,'depart','croupier'],
-  [48250,96500,1000,5550,'atelier'], [65140,135490,1500,7490,'mute'], [87940,182915,2000,10115,'sec','godfather']
+  [48250,96500,1000,5550,'atelier'], [65140,135490,1500,7490,'mute'], [87940,182915,2000,10115,null,'godfather']
 ].map(([cap,goal,min,max,rule,challenge,entry=0],i)=>({i,zone:1+Math.floor(i/3),mains:10,min,max,cap,goal,master:goal,rule,challenge,entry,need:0,boss:!!challenge,rt:{rule,entry,boss:!!challenge,last:i===23}}));
 function zoneName(z){return t('zone.'+z);}
 const ZONE_MULTCAP={1:4,2:5,3:6,4:7,5:8,6:9,7:10,8:12};
@@ -2200,7 +2200,6 @@ function resolve(mode){
   let outcome;
   if(pBust)outcome='lose';else if(dBust)outcome='win';
   else if(pv>dv)outcome='win';else if(pv<dv)outcome='lose';else outcome='push';
-  if(outcome==='push'&&G.table.rule==='sec'&&!hasRelic('diplomate'))outcome='lose';   // patron : pas d'égalité qui sauve
 
   let mult=1,lines=[];
   const isNat=(mode==='natural'&&G.pHand.length===2&&pv===21);
@@ -2226,7 +2225,7 @@ function resolve(mode){
       if(!G.objHit&&G.bank>=G.table.goal&&bossReady()){G.objHit=true;gameDelay(objectiveReached,360);}};   // 1re fois qu'on franchit l'objectif
     tallyMs=animateScoreTally(mode,lines,finishWin);
   }else if(outcome==='push'){
-    let pg=0;if(hasRelic('diplomate')&&G.table.rule!=='sec'){pg=Math.floor(stake*.25);G.bank+=pg;}
+    let pg=0;if(hasRelic('diplomate')){pg=Math.floor(stake*.25);G.bank+=pg;}
     G.bank+=stake;gain=pg;sfx.push();showWord('push',pg,1);
   }else{
     const back=lossRefund(stake,pv);
@@ -2247,13 +2246,12 @@ function resolveSplit(){
   if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
   renderHands(true);G.doFlip=false;
   const dv=handValue(G.dHand).total,dBust=dv>21;
-  let net=0,maxG=0;const summary=[];
+  let net=0,maxG=0,tied=0;const summary=[];
   G.hands.forEach((h,i)=>{
     const pv=handValue(h).total,pBust=pv>21;
     let outcome;
     if(pBust)outcome='lose';else if(dBust)outcome='win';
     else if(pv>dv)outcome='win';else if(pv<dv)outcome='lose';else outcome='push';
-    if(outcome==='push'&&G.table.rule==='sec'&&!hasRelic('diplomate'))outcome='lose';
     const stake=G.bet;let g=0;
     if(G.stats){G.stats.played++;}
     if(outcome==='win'){
@@ -2262,7 +2260,8 @@ function resolveSplit(){
       checkContract(r.mult);recordBossWin(r.mult);
       if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,g);G.stats.bestMult=Math.max(G.stats.bestMult,r.mult);}
     }else if(outcome==='push'){
-      let pg=0;if(hasRelic('diplomate')&&G.table.rule!=='sec'){pg=Math.floor(stake*.25);G.bank+=pg;}
+      tied++;
+      let pg=0;if(hasRelic('diplomate')){pg=Math.floor(stake*.25);G.bank+=pg;}
       G.bank+=stake;g=pg;
     }else{
       const back=lossRefund(stake,pv);
@@ -2272,14 +2271,15 @@ function resolveSplit(){
     const tag=t(outcome==='win'?'sp.win':outcome==='push'?'sp.push':'sp.lose');
     summary.push(t('sp.hand',i+1)+tag+(g>0?' +'+abbr(g):(g<0?' '+abbr(g):'')));
   });
-  const kind=net>0?'win':net<0?'lose':'push';
-  const isRecord=checkGainRecord(maxG);
+  const allTied=tied===G.hands.length;
+  const kind=allTied?'push':net>0?'win':net<0?'lose':'push';
+  const isRecord=!allTied&&checkGainRecord(maxG);
   sfx[kind](kind==='win'?(window.ColdDeckFX?.victoryTier(net,1,false,isRecord)||1):undefined);if(kind==='lose'){shake(8);}
   showWord(kind,net,1,false,false,isRecord);
   if(isRecord)gameDelay(()=>showRecord(maxG),320);
   $('tip').innerHTML=summary.join('  ·  ');$('tip').style.color='var(--gold)';
   if(net>0&&!G.objHit&&G.bank>=G.table.goal&&bossReady()){G.objHit=true;gameDelay(objectiveReached,360);}
-  if(net>0)addBaraka(1); else if(net<0)resetBaraka();     // BARAKA (mode séparé)
+  if(kind==='win')addBaraka(1); else if(kind==='lose')resetBaraka();     // BARAKA (mode séparé)
   renderTop();renderRelics();renderPressure();renderMult();
   gameDelay(()=>{G.splitActive=false;G.hands=null;G.hi=0;nextHandOrEnd();},2350);
 }
@@ -2348,7 +2348,7 @@ const SHOPTOK={
   maitresse:{t:'FOIL',c:'#7fd2ff'},
   bruleur:{t:'×1.5',c:'#ff9326'},
   portebonheur:{t:'+1<small>'+STAR+'</small>',c:'#a64dff'},
-  diplomate:{t:'=<small>½</small>',c:'#ffce3a'},
+  diplomate:{t:'=<small>+25%</small>',c:'#ffce3a'},
   talisman:{t:'1 <small>LIFE</small>',c:'#19c3c3'},
   aimant:{t:'+1<small class="sym">$/card</small>',c:'#ffce3a'},
   phare:{t:'C<small>×3</small>',c:'#ff9326'},

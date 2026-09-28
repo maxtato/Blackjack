@@ -196,12 +196,12 @@ const RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 const RUN=[
   [80,115,5,25,null], [105,180,5,30,'nervous'], [150,255,10,40,'gros','bouncer'],
   [215,355,10,50,'atelier',null,20], [290,490,15,65,'mute'], [395,655,15,85,null,'banker'],
-  [535,865,20,85,'nervous',null,45], [725,1230,25,110,'gros'], [975,1660,30,150,'sec','reaper'],
+  [535,865,20,85,'nervous',null,45], [725,1230,25,110,'gros'], [975,1660,30,150,null,'reaper'],
   [1320,2270,40,185,'atelier'], [1780,3205,50,250,'mute'], [2400,4320,60,335,'mute','concierge'],
-  [3240,5830,80,420,'serein',null,200], [4375,8225,100,570,'atelier'], [5905,11100,150,770,'sec','accountant'],
+  [3240,5830,80,420,'serein',null,200], [4375,8225,100,570,'atelier'], [5905,11100,150,770,null,'accountant'],
   [7970,14825,200,995,'atelier'], [10760,20875,250,1345,'nervous'], [14525,28180,350,1815,'gros','gravedigger'],
   [19610,37650,450,2355,'serein',null,1300], [26475,52950,600,3175,'mute'], [35740,71480,800,4290,'depart','croupier'],
-  [48250,96500,1000,5550,'atelier'], [65140,135490,1500,7490,'mute'], [87940,182915,2000,10115,'sec','godfather']
+  [48250,96500,1000,5550,'atelier'], [65140,135490,1500,7490,'mute'], [87940,182915,2000,10115,null,'godfather']
 ].map(([cap,goal,min,max,rule,challenge,entry=0],i)=>({i,zone:1+Math.floor(i/3),mains:10,min,max,cap,goal,master:goal,rule,challenge,entry,need:0,boss:!!challenge,rt:{rule,entry,boss:!!challenge,last:i===23}}));
 function zoneName(z){return t('zone.'+z);}
 const ZONE_MULTCAP={1:4,2:5,3:6,4:7,5:8,6:9,7:10,8:12};
@@ -1477,7 +1477,6 @@ function resolve(mode){
   let outcome;
   if(pBust)outcome='lose';else if(dBust)outcome='win';
   else if(pv>dv)outcome='win';else if(pv<dv)outcome='lose';else outcome='push';
-  if(outcome==='push'&&G.table.rule==='sec'&&!hasRelic('diplomate'))outcome='lose';   // patron : pas d'égalité qui sauve
 
   let mult=1,lines=[];
   const isNat=(mode==='natural'&&G.pHand.length===2&&pv===21);
@@ -1503,7 +1502,7 @@ function resolve(mode){
       if(!G.objHit&&G.bank>=G.table.goal&&bossReady()){G.objHit=true;gameDelay(objectiveReached,360);}};   // 1re fois qu'on franchit l'objectif
     tallyMs=animateScoreTally(mode,lines,finishWin);
   }else if(outcome==='push'){
-    let pg=0;if(hasRelic('diplomate')&&G.table.rule!=='sec'){pg=Math.floor(stake*.25);G.bank+=pg;}
+    let pg=0;if(hasRelic('diplomate')){pg=Math.floor(stake*.25);G.bank+=pg;}
     G.bank+=stake;gain=pg;sfx.push();showWord('push',pg,1);
   }else{
     const back=lossRefund(stake,pv);
@@ -1524,13 +1523,12 @@ function resolveSplit(){
   if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
   renderHands(true);G.doFlip=false;
   const dv=handValue(G.dHand).total,dBust=dv>21;
-  let net=0,maxG=0;const summary=[];
+  let net=0,maxG=0,tied=0;const summary=[];
   G.hands.forEach((h,i)=>{
     const pv=handValue(h).total,pBust=pv>21;
     let outcome;
     if(pBust)outcome='lose';else if(dBust)outcome='win';
     else if(pv>dv)outcome='win';else if(pv<dv)outcome='lose';else outcome='push';
-    if(outcome==='push'&&G.table.rule==='sec'&&!hasRelic('diplomate'))outcome='lose';
     const stake=G.bet;let g=0;
     if(G.stats){G.stats.played++;}
     if(outcome==='win'){
@@ -1539,7 +1537,8 @@ function resolveSplit(){
       checkContract(r.mult);recordBossWin(r.mult);
       if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,g);G.stats.bestMult=Math.max(G.stats.bestMult,r.mult);}
     }else if(outcome==='push'){
-      let pg=0;if(hasRelic('diplomate')&&G.table.rule!=='sec'){pg=Math.floor(stake*.25);G.bank+=pg;}
+      tied++;
+      let pg=0;if(hasRelic('diplomate')){pg=Math.floor(stake*.25);G.bank+=pg;}
       G.bank+=stake;g=pg;
     }else{
       const back=lossRefund(stake,pv);
@@ -1549,14 +1548,15 @@ function resolveSplit(){
     const tag=t(outcome==='win'?'sp.win':outcome==='push'?'sp.push':'sp.lose');
     summary.push(t('sp.hand',i+1)+tag+(g>0?' +'+abbr(g):(g<0?' '+abbr(g):'')));
   });
-  const kind=net>0?'win':net<0?'lose':'push';
-  const isRecord=checkGainRecord(maxG);
+  const allTied=tied===G.hands.length;
+  const kind=allTied?'push':net>0?'win':net<0?'lose':'push';
+  const isRecord=!allTied&&checkGainRecord(maxG);
   sfx[kind](kind==='win'?(window.ColdDeckFX?.victoryTier(net,1,false,isRecord)||1):undefined);if(kind==='lose'){shake(8);}
   showWord(kind,net,1,false,false,isRecord);
   if(isRecord)gameDelay(()=>showRecord(maxG),320);
   $('tip').innerHTML=summary.join('  ·  ');$('tip').style.color='var(--gold)';
   if(net>0&&!G.objHit&&G.bank>=G.table.goal&&bossReady()){G.objHit=true;gameDelay(objectiveReached,360);}
-  if(net>0)addBaraka(1); else if(net<0)resetBaraka();     // BARAKA (mode séparé)
+  if(kind==='win')addBaraka(1); else if(kind==='lose')resetBaraka();     // BARAKA (mode séparé)
   renderTop();renderRelics();renderPressure();renderMult();
   gameDelay(()=>{G.splitActive=false;G.hands=null;G.hi=0;nextHandOrEnd();},2350);
 }
@@ -1625,7 +1625,7 @@ const SHOPTOK={
   maitresse:{t:'FOIL',c:'#7fd2ff'},
   bruleur:{t:'×1.5',c:'#ff9326'},
   portebonheur:{t:'+1<small>'+STAR+'</small>',c:'#a64dff'},
-  diplomate:{t:'=<small>½</small>',c:'#ffce3a'},
+  diplomate:{t:'=<small>+25%</small>',c:'#ffce3a'},
   talisman:{t:'1 <small>LIFE</small>',c:'#19c3c3'},
   aimant:{t:'+1<small class="sym">$/card</small>',c:'#ffce3a'},
   phare:{t:'C<small>×3</small>',c:'#ff9326'},

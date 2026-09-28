@@ -35,6 +35,7 @@ screen.add(new Option('Effets C : relique et objectif','fx-goal'));
 screen.add(new Option('Victoire simple','fx-simple'));
 screen.add(new Option('Défaite','fx-loss'));
 screen.add(new Option('Égalité','fx-push'));
+for(const [name,id] of [['Égalité contre la Faucheuse','fx-push-reaper'],['Égalité contre le Comptable','fx-push-accountant'],['Égalité contre le Parrain','fx-push-godfather'],['Égalité après mise doublée','fx-push-double'],['Deux mains séparées à égalité','fx-push-split']])screen.add(new Option(name,id));
 screen.add(new Option('Dépassement de 21','fx-bust'));
 screen.add(new Option('Victoire avec combo','fx-combo'));
 screen.add(new Option('Jackpot','fx-jackpot'));
@@ -111,6 +112,16 @@ async function render(){
     G.phase='bet';G.pHand=[];G.dHand=[];
     G.shoe.splice(-4,4,{r:'7',s:'♥'},{r:'K',s:'♥'},{r:'K',s:'♣'},{r:'A',s:'♠'});
    }
+  }
+  if(visualScreen.startsWith('fx-push-')){
+   const tableIndex=visualScreen==='fx-push-accountant'?14:visualScreen==='fx-push-godfather'?23:8;
+   G.tableIdx=tableIndex;G.table={...RUN[tableIndex]};G.bet=G.table.min;G.contract=null;
+   G.relics=[];G.consumables=[];G.baraka=4;G.stakeMult=visualScreen==='fx-push-double'?2:1;
+   G.pHand=[{r:'10',s:'♣'},{r:'8',s:'♥'}];G.dHand=[{r:'K',s:'♣'},{r:'8',s:'♦'}];
+   if(visualScreen==='fx-push-split'){
+    G.splitActive=true;G.hands=[G.pHand,[{r:'9',s:'♠'},{r:'9',s:'♥'}]];G.hi=1;G.pHand=G.hands[1];
+   }
+   G.bank=G.table.cap-G.bet*(G.splitActive?2:G.stakeMult);
   }
   if(visualScreen==='new-art'){
    G.pHand=[{r:'Q',s:'♥'},{r:'A',s:'♠'},{r:'5',s:'♦'}];
