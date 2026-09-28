@@ -655,12 +655,10 @@ body:has(#multPop.go) #tip{visibility:hidden}
 #tableBrief .ovpanel{max-width:470px}
 .overlay h1[tabindex="-1"]:focus{outline:none}
 .brief-stats{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.55fr) minmax(0,1fr);gap:10px;align-items:end;margin:16px 0 12px;padding:0 2px}
-.brief-stat{min-width:0}
+.brief-stat{min-width:0;text-align:center}
 .brief-stat-label{display:block;min-height:28px;font:500 11px/1.25 var(--copy-font);color:#c8d1d3}
 .brief-stat-value{display:block;white-space:nowrap;line-height:1.1}
 .brief-stats .game-number{font-size:30px}
-.brief-stat:nth-child(2){text-align:center}
-.brief-stat:last-child{text-align:right}
 .result-reason{position:absolute;top:calc(100% + 9px);left:50%;transform:translateX(-50%);width:max-content;max-width:100%;padding:5px 9px;background:#322329f5;color:#f4aaa1;font:500 12px/1.3 var(--copy-font);clip-path:var(--frame-cut)}
 .draw-readout{flex:none;margin:0;min-height:14px;max-width:100%;font:500 11px/14px var(--copy-font);text-align:center;color:#c7d3cf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .draw-readout[hidden]{display:block!important;visibility:hidden}
@@ -710,11 +708,14 @@ body:has(#multPop.go) #tip{visibility:hidden}
 #confirmRestart .shopBtns .btn{white-space:normal;line-height:1.2;padding:12px!important;font-size:15px}
 
 /* Shared illustrated values: one readable amount, one unit, no line break. */
-:root{--value-scale:.736}
-.game-number{display:inline-flex;align-items:center;white-space:nowrap;vertical-align:middle;height:.84em;margin-inline:.035em;font:900 calc(1.75em * var(--value-scale))/.84 var(--game-type)!important;color:var(--number-ink,#ffdc75);font-variant-numeric:tabular-nums;letter-spacing:0!important;text-transform:none!important}
+:root{--value-scale:.5888}
+.game-number{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;vertical-align:middle;height:.84em;margin-inline:.035em;font:900 calc(1.75em * var(--value-scale))/.84 var(--game-type)!important;color:var(--number-ink,#ffdc75);font-variant-numeric:tabular-nums;letter-spacing:0!important;text-transform:none!important}
 .game-number[data-value-kind="bonus"]{color:var(--bonus-number-ink,#88e2cf)}
-.game-number .raster-copy,.game-number .raster-ink{white-space:nowrap;line-height:0}
-.game-number .raster-glyph{--glyph-width:.86em;height:1.08em;animation:none!important;translate:none!important;rotate:none!important;top:0!important}
+.game-number .raster-copy,.game-number .raster-ink{display:inline-flex;align-items:center;white-space:nowrap;line-height:1}
+.game-number .raster-ink{column-gap:.16em}
+.game-number .raster-word{align-items:center;line-height:1}
+/* The printed number atlas has more blank space above its ink than below. */
+.game-number .raster-glyph{--glyph-width:.86em;height:1.08em;animation:none!important;translate:none!important;rotate:none!important;top:-.055em!important}
 .game-number .raster-glyph[data-font="numbers"]:first-child{margin-inline-start:-.13em}
 .game-number .raster-glyph[data-font="numbers"]:last-child{margin-inline-end:-.13em}
 .game-number .raster-punctuation{font:900 .7em/1 var(--copy-font)!important;align-self:center}
@@ -735,7 +736,8 @@ button:disabled{--number-ink:#ffe093;--bonus-number-ink:#a4f3de}
 .shopItem>.btn .game-number{font-size:calc(1.5em * var(--value-scale))!important}
 .shopItem>.btn{white-space:nowrap}
 .ds,.rule-entry,#inspectBody p,#endText,#loseText{line-height:1.7}
-.runstats .v{display:block;margin-top:6px}
+.runstats>div{text-align:center}
+.runstats .v{display:flex;align-items:center;justify-content:center;margin-top:6px}
 .runstats .v .game-number{font-size:calc(30px * var(--value-scale))!important}
 #topbar :is(#gainVal,#chipsVal){color:#ffdc75}
 #topbar #multVal{color:#88e2cf}
