@@ -22,7 +22,7 @@
 .raster-punctuation{display:inline-block;line-height:1}
 /* Pull decimal separators and thousands groups a little closer to their digits. */
 .raster-glyph[data-digit]+.raster-punctuation:is([data-glyph=","],[data-glyph="."]):has(+.raster-glyph[data-digit]){margin-inline:-.08em}
-.raster-word:has(>[data-digit])+.raster-word:has(>[data-digit]){margin-inline-start:-.09em}
+.raster-word:has(>[data-digit])+.raster-word:has(>[data-digit]){margin-inline-start:-.18em}
 .raster-suit{display:inline-block;background:currentColor;font-style:normal;-webkit-mask:var(--suit-art) center/contain no-repeat;mask:var(--suit-art) center/contain no-repeat;mask-mode:luminance}
 [data-suit-art="spade"]{--suit-art:var(--art-suit-spade)}
 [data-suit-art="heart"]{--suit-art:var(--art-suit-heart)}
