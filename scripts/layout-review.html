@@ -39,6 +39,7 @@ for(const [name,id] of [['Égalité contre la Faucheuse','fx-push-reaper'],['Ég
 screen.add(new Option('Égalité protégée par Diplomate','fx-push-diplomate'));
 screen.add(new Option('Réglages et mode test','test-tools'));
 screen.add(new Option('Mode test depuis la pause','test-pause'));
+for(const [name,id] of [['Chiffres · améliorations','numbers-upgrades'],['Chiffres · relique','numbers-relic'],['Chiffres · bilan','numbers-results'],['Chiffres · seconde chance','numbers-retry'],['Chiffres · palier libre','numbers-tier']])screen.add(new Option(name,id));
 screen.add(new Option('Dépassement de 21','fx-bust'));
 screen.add(new Option('Victoire avec combo','fx-combo'));
 screen.add(new Option('Jackpot','fx-jackpot'));
@@ -78,6 +79,23 @@ async function render(){
   if(visualScreen!=='draft')while(G.phase==='draft')chooseStarter(0);
   if(visualScreen==='circuit-shop'){
    chooseContract(0);GameClock.clear();G.bank=350;G.phase='done';finishTable();
+  }
+ }
+ else if(visualScreen.startsWith('numbers-')){
+  META.nuit={rep:180,unlocks:{bank:2},record:{depth:8,reached:9,chips:12500,version:2}};
+  chooseMode('nuit');
+  if(visualScreen==='numbers-upgrades')openUpgrades();
+  else if(visualScreen==='numbers-tier'){
+   chooseMode('infini');startEndless();G.bank=330;reachPalier();
+  }else{
+   startGame(8);while(G.phase==='draft')chooseStarter(0);chooseContract(0);GameClock.clear();
+   if(visualScreen==='numbers-relic'){
+    G.relics=[{...RELIC_POOL.find(r=>r.id==='diplomate')}];renderRelics();openInspect('relic',0);
+   }else if(visualScreen==='numbers-results'){
+    Object.assign(G.stats,{played:10,won:7,bestGain:1250,bestMult:3.5});G.pot=84;G.bank=7300;endRun(true);
+   }else{
+    G.phase='lost';G.tokens=2;G.pot=36;G.loseTitle='lost.broke';G.loseText='lost.brokeTxt';openLose();
+   }
   }
  }
  else if(visualScreen==='test-tools'||visualScreen==='test-pause'){

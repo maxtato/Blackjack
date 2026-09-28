@@ -540,6 +540,7 @@ Object.assign(STR.fr,{
  'effect.serein.description':'Après une défaite, tu conserves 75 % de ta Baraka au lieu de 50 %. La mise perdue n’est pas remboursée.',
  'circuit.draft':'TON PREMIER ATOUT','circuit.contact':'LE CONTACT','circuit.draftCopy':'Choisis une relique. Elle reste avec toi pendant cette expédition.',
  'circuit.briefGoal':(goal,hands,bet)=>'Objectif '+goal+' · '+hands+' mains · mise conseillée '+bet,
+ 'circuit.goalLabel':'Objectif','circuit.handsLabel':'Mains','circuit.betLabel':'Mise conseillée',
  'circuit.chooseContract':'Choisir ce contrat','circuit.stars':'Étoiles : objectif · sans reprise · contrat',
  'circuit.seals':(n,total)=>'Sceaux '+n+'/'+total,'circuit.ready':'Défi rempli','circuit.bossUnfinished':'La banque suffit, mais les sceaux du boss ne sont pas tous brisés.',
  'circuit.saved':'Dépassement annulé. La carte est écartée.','circuit.penduReady':'Pendu armé',
@@ -630,6 +631,7 @@ Object.assign(STR.en,{
  'effect.serein.description':'After a loss, keep 75% of your streak instead of 50%. The lost stake is not refunded.',
  'circuit.draft':'YOUR FIRST RELIC','circuit.contact':'THE CONTACT','circuit.draftCopy':'Choose one relic to keep for this expedition.',
  'circuit.briefGoal':(goal,hands,bet)=>'Goal '+goal+' · '+hands+' hands · suggested bet '+bet,
+ 'circuit.goalLabel':'Goal','circuit.handsLabel':'Hands','circuit.betLabel':'Suggested bet',
  'circuit.chooseContract':'Choose this contract','circuit.stars':'Stars: goal · no retry · contract',
  'circuit.seals':(n,total)=>'Seals '+n+'/'+total,'circuit.ready':'Challenge complete','circuit.bossUnfinished':'Your bankroll is sufficient, but the boss still has unbroken seals.',
  'circuit.saved':'Bust cancelled. The drawn card is discarded.','circuit.penduReady':'Hanged Man armed',
@@ -799,7 +801,7 @@ const GameClock={
 function gameDelay(fn,ms){return GameClock.delay(fn,ms);}
 function clearGameDelay(id){GameClock.cancel(id);}
 document.addEventListener('visibilitychange',()=>GameClock.pause('hidden',document.hidden));
-const STAR=ColdDeckArt.icon('doree'),STARE='<span class="empty-star">'+ColdDeckArt.icon('doree')+'</span>';
+const STAR=ColdDeckArt.icon('doree').replace('class="','class="rep-star '),STARE='<span class="empty-star">'+STAR+'</span>';
 const PXI=n=>ColdDeckArt.icon(n);
 const rndInt=n=>Math.floor(Math.random()*n);
 /* abrège les grands nombres : 1 500 → 1.5K, 2 000 000 → 2M, etc. */
@@ -815,9 +817,8 @@ function abbr(n){
   else s=fix(n/1e15)+'P';
   return (neg?'-':'')+s;
 }
-/* même nombre, mais le séparateur de milliers passe par .thouSep (comme les contextes animés :
-   gains, etc.) → écart identique partout, même dans les pages figées (Planque, menu). À utiliser en innerHTML. */
-function abbrS(n){return abbr(n).replace(/ /g,'<span class="thouSep"></span>');}
+/* Keep grouped values in one text node for lettering and screen readers. */
+function abbrS(n){return abbr(n);}
 /* montant d'argent, abrégé ET placé selon la langue : « 1.5K $ » en FR, « $1.5K » en EN */
 function cash(n){const a=abbr(n);return LANG==='fr'?(a+' $'):(a.charAt(0)==='-'?('-$'+a.slice(1)):('$'+a));}
 // Compact currency used by the Équilibre scoreboard and home record.
@@ -1327,11 +1328,17 @@ function showTableBrief(){
   renderTableEffect($('briefEffect'));
   $('briefRule').textContent=[G.table.challenge?t('boss.'+G.table.challenge):'',G.table.entry?t('rtx.entry',cash(G.table.entry)):''].filter(Boolean).join(' · ');
   $('briefRule').hidden=!$('briefRule').textContent;
-  $('briefGoal').textContent=t('circuit.briefGoal',cash(G.table.goal),G.table.mains,cash(recommendedBet()));
+  $('briefGoal').replaceChildren();
+  for(const [key,value] of [['circuit.goalLabel',cash(G.table.goal)],['circuit.handsLabel',G.table.mains],['circuit.betLabel',cash(recommendedBet())]]){
+    const stat=document.createElement('div');stat.className='brief-stat';
+    const label=document.createElement('span');label.className='brief-stat-label';label.textContent=t(key);
+    const amount=document.createElement('span');amount.className='brief-stat-value';amount.textContent=value;
+    stat.append(label,amount);$('briefGoal').append(stat);
+  }
   $('briefContracts').replaceChildren();
   G.contractChoices.forEach((c,i)=>{
     const b=document.createElement('button');b.className='btn b-blue contract-choice';
-    b.innerHTML='<span>'+contractText(c)+'</span><small>+'+c.reward+' '+STAR+' · '+t('circuit.chooseContract')+'</small>';
+    b.innerHTML='<span>'+contractText(c)+'</span><small class="contract-reward">+'+c.reward+' '+STAR+'<span class="contract-prompt">'+t('circuit.chooseContract')+'</span></small>';
     b.onclick=()=>chooseContract(i);$('briefContracts').append(b);
   });
   screen.classList.add('show');
@@ -3645,20 +3652,22 @@ syncMenuFocus();
     prepareAlphaMask('brand-wordmark','raster-brand-ready')
   ]);
   // Reserve illustrated glyphs for display labels, not reading-sized copy.
-  const labelSelector='button,h1:not(.menuTitle),.mode-card strong,.chip-value,#menuBestGain,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum';
+  const labelSelector='button,h1:not(.menuTitle),.table-effect-card>strong,.mode-card strong,.chip-value,#menuBestGain,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum';
   const copySelector='[data-reading-label],.menu-record-label,.planqueMode,#recBox,small,p,.ds,.mode-description,.mode-topline,.mode-bottom,.hero-copy,.hero-tags,.menu-record-note,.rules .rule-entry,.rules .rt,#tip,#comboRow,#tableName,#tableMeta,#ruleText,#pBar .pmeta,.zlbl>[data-i18n],.tstats .k,.tstats .lbl,.tstats .tt,.tstats .ts,.inventory-label,.objective-label,.section-label,.eyebrow,.setLbl,.back-name,.repLbl,.mrl,.mrv,#slotc,#consumeSlots';
   function readableCopy(el){
     el.classList.add('readable-copy');
     for(const ink of el.querySelectorAll('.raster-copy,.live-word')){
+      if(ink.closest('.game-number'))continue;
       const text=ink.querySelector('.sr-only')?.textContent;
       if(text!=null)ink.replaceWith(document.createTextNode(text));
     }
   }
   function label(el){
+    el.classList.add('raster-label');
     const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),nodes=[];
     while(walker.nextNode()){
       const node=walker.currentNode;
-      if(node.textContent.trim()&&!node.parentElement.closest('.raster-copy,.sr-only,.readable-copy,small,svg,[aria-hidden="true"]'))nodes.push(node);
+      if(node.textContent.trim()&&!node.parentElement.closest('.raster-copy,.game-number,.sr-only,.readable-copy,small,svg,[aria-hidden="true"]'))nodes.push(node);
     }
     for(const node of nodes){
       const fragment=document.createElement('span');fragment.innerHTML=ColdDeckArt.lettering(node.textContent);
@@ -3669,16 +3678,64 @@ syncMenuFocus();
     if(el.querySelector('.brand-image'))return;
     el.innerHTML='<span class="brand-image" role="img" aria-label="Cold Deck"><span class="brand-fallback" aria-hidden="true"><span>COLD</span><span>DECK</span></span></span>';
   }
-  function decorate(){
+  // Emphasize the exact displayed value, including its sign, decimal, unit and
+  // grouped thousands. Only text nodes are replaced: links and controls survive.
+  const numberPattern=/(?<![\p{L}\p{N}])(?:[+−-]\s*)?(?:[$€×]\s*)?\d+(?:[ \u00a0\u2009\u200a\u202f]\d{3})*(?:[.,]\d+)*(?:[KMBTP](?!\p{L}))?(?:[\/–]\d+(?:[.,]\d+)?)?(?:[ \u00a0\u2009\u200a\u202f]*(?:%|[$€]))?/gu;
+  const numberSkip='.game-number,.raster-copy,.live-word,.sr-only,.card,.chip-value,.repNum,.tnum,#menuBestGain,#gainVal,#chipsVal,#multVal,#pVal,#dVal,svg,script,style,textarea,[aria-hidden="true"]:not(.overlay)';
+  function numbers(root){
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];
+    while(walker.nextNode()){
+      const node=walker.currentNode;
+      if(/\d/.test(node.textContent)&&!node.parentElement.closest(numberSkip))nodes.push(node);
+    }
+    for(const node of nodes){
+      const value=node.textContent,matches=[...value.matchAll(numberPattern)];
+      if(!matches.length)continue;
+      const fragment=document.createDocumentFragment();let end=0;
+      for(const match of matches){
+        fragment.append(document.createTextNode(value.slice(end,match.index)));
+        const number=document.createElement('strong');number.className='game-number';
+        number.dataset.valueKind=/[$€]/.test(match[0])?'money':/[×%]/.test(match[0])?'bonus':'quantity';
+        number.innerHTML=ColdDeckArt.lettering(match[0]);fragment.append(number);
+        end=match.index+match[0].length;
+      }
+      fragment.append(document.createTextNode(value.slice(end)));node.replaceWith(fragment);
+    }
+  }
+  function reputation(root){
+    for(const star of root.querySelectorAll('.rep-star')){
+      if(star.closest('.rep-value,.empty-star'))continue;
+      const adjacent=direction=>{
+        let node=star[direction];
+        while(node?.nodeType===3&&!node.textContent.trim())node=node[direction];
+        return node?.nodeType===1&&node.matches('.game-number')?node:null;
+      };
+      const before=adjacent('previousSibling'),after=adjacent('nextSibling'),value=before||after;
+      if(!value)continue;
+      const group=document.createElement('span');group.className='rep-value';
+      value.dataset.valueKind='reputation';
+      const first=before?value:star,last=before?star:value;
+      first.before(group);
+      while(group.nextSibling){const node=group.nextSibling;group.append(node);if(node===last)break;}
+    }
+  }
+  function select(root,selector){return [...(root.matches(selector)?[root]:[]),...root.querySelectorAll(selector)];}
+  function decorate(records){
     observer.disconnect();
-    document.querySelectorAll(copySelector).forEach(readableCopy);
-    document.querySelectorAll(labelSelector).forEach(label);
-    document.querySelectorAll('.menuTitle,.table-brand,.wordmark').forEach(brand);
+    // Updating a score never redecorates every shop and menu in the background.
+    const scopes=Array.isArray(records)?[...new Set(records.map(record=>roots.find(root=>root.contains(record.target))).filter(Boolean))]:roots;
+    for(const root of scopes){
+      select(root,copySelector).forEach(readableCopy);
+      numbers(root);
+      select(root,labelSelector).forEach(label);
+      reputation(root);
+      select(root,'.menuTitle,.table-brand,.wordmark').forEach(brand);
+    }
     const pause=$('pauseBtn');
     if(pause&&!pause.querySelector('.pause-mark'))pause.innerHTML='<i class="raster-nav pause-mark" aria-hidden="true"></i>';
     for(const el of roots)observer.observe(el,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['aria-hidden']});
   }
-  const roots=[...document.querySelectorAll('.overlay,#adOverlay,#topbar,#bottombar,#center,.zlbl,#pVal,#dVal,#peekBtn,#pBar,#effects')];
+  const roots=[...document.querySelectorAll('.overlay,#adOverlay,#topbar,#bottombar,#center,.zlbl,#pVal,#dVal,#peekBtn,#pBar,#effects,#circuitStatus')];
   const observer=new MutationObserver(decorate);
   decorate();
   // Deterministic entry point for renders and tests, without any game-state writes.

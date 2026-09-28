@@ -20,7 +20,7 @@ const GameClock={
 function gameDelay(fn,ms){return GameClock.delay(fn,ms);}
 function clearGameDelay(id){GameClock.cancel(id);}
 document.addEventListener('visibilitychange',()=>GameClock.pause('hidden',document.hidden));
-const STAR=ColdDeckArt.icon('doree'),STARE='<span class="empty-star">'+ColdDeckArt.icon('doree')+'</span>';
+const STAR=ColdDeckArt.icon('doree').replace('class="','class="rep-star '),STARE='<span class="empty-star">'+STAR+'</span>';
 const PXI=n=>ColdDeckArt.icon(n);
 const rndInt=n=>Math.floor(Math.random()*n);
 /* abrège les grands nombres : 1 500 → 1.5K, 2 000 000 → 2M, etc. */
@@ -36,9 +36,8 @@ function abbr(n){
   else s=fix(n/1e15)+'P';
   return (neg?'-':'')+s;
 }
-/* même nombre, mais le séparateur de milliers passe par .thouSep (comme les contextes animés :
-   gains, etc.) → écart identique partout, même dans les pages figées (Planque, menu). À utiliser en innerHTML. */
-function abbrS(n){return abbr(n).replace(/ /g,'<span class="thouSep"></span>');}
+/* Keep grouped values in one text node for lettering and screen readers. */
+function abbrS(n){return abbr(n);}
 /* montant d'argent, abrégé ET placé selon la langue : « 1.5K $ » en FR, « $1.5K » en EN */
 function cash(n){const a=abbr(n);return LANG==='fr'?(a+' $'):(a.charAt(0)==='-'?('-$'+a.slice(1)):('$'+a));}
 // Compact currency used by the Équilibre scoreboard and home record.
@@ -548,11 +547,17 @@ function showTableBrief(){
   renderTableEffect($('briefEffect'));
   $('briefRule').textContent=[G.table.challenge?t('boss.'+G.table.challenge):'',G.table.entry?t('rtx.entry',cash(G.table.entry)):''].filter(Boolean).join(' · ');
   $('briefRule').hidden=!$('briefRule').textContent;
-  $('briefGoal').textContent=t('circuit.briefGoal',cash(G.table.goal),G.table.mains,cash(recommendedBet()));
+  $('briefGoal').replaceChildren();
+  for(const [key,value] of [['circuit.goalLabel',cash(G.table.goal)],['circuit.handsLabel',G.table.mains],['circuit.betLabel',cash(recommendedBet())]]){
+    const stat=document.createElement('div');stat.className='brief-stat';
+    const label=document.createElement('span');label.className='brief-stat-label';label.textContent=t(key);
+    const amount=document.createElement('span');amount.className='brief-stat-value';amount.textContent=value;
+    stat.append(label,amount);$('briefGoal').append(stat);
+  }
   $('briefContracts').replaceChildren();
   G.contractChoices.forEach((c,i)=>{
     const b=document.createElement('button');b.className='btn b-blue contract-choice';
-    b.innerHTML='<span>'+contractText(c)+'</span><small>+'+c.reward+' '+STAR+' · '+t('circuit.chooseContract')+'</small>';
+    b.innerHTML='<span>'+contractText(c)+'</span><small class="contract-reward">+'+c.reward+' '+STAR+'<span class="contract-prompt">'+t('circuit.chooseContract')+'</span></small>';
     b.onclick=()=>chooseContract(i);$('briefContracts').append(b);
   });
   screen.classList.add('show');
