@@ -29,8 +29,7 @@
 <link rel="preload" as="image" type="image/webp" href="assets/illustrations/type-letters.webp">
 <link rel="preload" as="image" type="image/webp" href="assets/illustrations/type-numbers.webp">
 <link rel="preload" as="image" type="image/webp" href="assets/illustrations/brand-wordmark.webp">
-<link rel="preload" as="font" type="font/woff2" href="fonts/balsamiq-sans-latin-400-normal.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="fonts/balsamiq-sans-latin-700-normal.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/fredoka-latin-500-normal.woff2" crossorigin>
 </head>
 <body>
 <p id="bootSplash" role="status">Chargement…</p>
@@ -227,6 +226,7 @@
       <button class="btn b-gold menu" id="pauseCash" data-action="cash-out-endless" style="width:100%;display:none"></button>
       <button class="btn b-purple menu" data-action="pauseRules" style="width:100%" data-i18n="pause.rules">RULES</button>
       <button class="btn b-teal menu" data-action="pauseSettings" style="width:100%" data-i18n="set.open">⚙ SETTINGS</button>
+      <button class="btn b-blue menu" data-action="previewFonts" style="width:100%"><span data-i18n="font.open">POLICES</span><small data-font-current data-font-control></small></button>
       <button class="btn b-blue menu" data-action="quitToMenu" style="width:100%"><span data-i18n="pause.menu">BACK TO MENU</span><small data-i18n="pause.menuSub"></small></button>
     </div>
   </div>
@@ -288,6 +288,12 @@
 <div class="overlay" id="settingsScreen"><div class="ovpanel">
  <div class="dialog-kicker">COLD DECK / <span data-i18n="nav.settings">RÉGLAGES</span></div><h1 data-i18n="set.title">RÉGLAGES</h1>
  <div class="setRow"><span class="setLbl" data-i18n="set.lang">LANGUE</span><div class="setOpts" id="langOpts"></div></div>
+ <div class="setRow font-setting">
+  <label class="setLbl" for="fontSelect" data-reading-label data-i18n="font.label">Police des textes</label>
+  <select id="fontSelect" class="copy-font-select" data-font-select data-font-control></select>
+  <button class="btn b-blue font-preview-open" data-reading-label data-action="previewFonts" data-i18n="font.preview">Comparer sur le jeu</button>
+  <p class="font-status" data-font-status role="status" aria-live="polite" hidden></p>
+ </div>
  <div class="setRow"><span class="setLbl" data-i18n="modern.motion">ANIMATIONS</span><div class="setOpts" id="motionOpts"></div></div>
  <button class="btn b-purple test-entry" data-action="openTestTools"><span data-i18n="test.title">MODE TEST</span><small id="testModeStatus"></small></button>
  <button class="btn b-gold menu" data-action="closeSettings" data-i18n="set.close">TERMINÉ</button>
@@ -307,6 +313,16 @@
  </div>
  <details class="dev-options"><summary data-reading-label data-i18n="test.adPreviews">TESTER LES PUBLICITÉS</summary><div class="setOpts" id="adOpts"></div><p class="setNote" data-i18n="set.adsNote"></p></details>
  <button class="btn b-gold test-close" data-action="closeTestTools" data-i18n="test.back">RETOUR AUX RÉGLAGES</button>
+</div></div>
+
+<div class="overlay" id="fontPreview" aria-labelledby="fontPreviewLabel"><div class="font-toolbar">
+ <div class="font-toolbar-heading"><span id="fontPreviewLabel" data-reading-label data-i18n="font.label">Police des textes</span><button class="btn b-gold" data-reading-label data-action="closeFontPreview" data-i18n="set.close">TERMINÉ</button></div>
+ <div class="font-toolbar-picker">
+  <button class="btn b-blue" id="fontPrevious" data-action="fontPrevious" data-i18n-title="font.previous"><img class="nav-triangle" data-direction="left" src="icons/nav-triangle.svg" width="22" height="22" alt=""></button>
+  <select id="fontPreviewSelect" class="copy-font-select" data-font-select data-font-control aria-labelledby="fontPreviewLabel"></select>
+  <button class="btn b-blue" id="fontNext" data-action="fontNext" data-i18n-title="font.next"><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" width="22" height="22" alt=""></button>
+ </div>
+ <p class="font-status" data-font-status role="status" aria-live="polite" hidden></p>
 </div></div>
 
 <!-- ÉCRAN DE PUBLICITÉ (bouchon de démo : aucune régie branchée) -->

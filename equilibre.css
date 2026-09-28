@@ -651,12 +651,11 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .table-rule-summary{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #circuitStatus .table-rule-progress,#circuitStatus .table-rule-info{display:none}
 .circuit-status:focus-visible{outline:2px solid #ffce3a;outline-offset:2px}
-.table-effect-card{--number-ink:#60385e;--bonus-number-ink:#195b58;margin:14px 0;padding:16px 18px;background:#c4d0b8;border:0;text-align:left;border-radius:0;clip-path:var(--frame-cut);color:#273337}
-.table-effect-card[data-rule="sec"]{background:#d6b6b4}
-.table-effect-label{display:block;margin-bottom:7px;font:500 11px/1.3 var(--copy-font);text-transform:uppercase;letter-spacing:.09em;color:#435052}
+.table-effect-card{--number-ink:#403055;--bonus-number-ink:#273337;margin:14px 0;padding:16px 18px;background:#b69bda;border:0;text-align:left;border-radius:0;clip-path:var(--frame-cut);color:#273337}
+.table-effect-label{display:block;margin-bottom:7px;font:500 11px/1.3 var(--copy-font);text-transform:uppercase;letter-spacing:.09em;color:#273337}
 .table-effect-card>strong{display:block;font:900 24px/1.1 var(--game-type);color:#273337}
 .table-effect-card p{margin:8px 0 0!important;font:500 14px/1.45 var(--copy-font)!important;color:#273337}
-.table-effect-card .table-effect-protection{color:#225a43}
+.table-effect-card .table-effect-protection{color:#273337}
 #briefRule{padding:0 3px;margin:12px 0;color:#e4decd;line-height:1.65}
 #tableBrief .ovpanel{max-width:470px}
 .overlay h1[tabindex="-1"]:focus{outline:none}
@@ -719,9 +718,25 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .test-panel .setOpts .btn{white-space:normal;line-height:1.3}
 #confirmRestart .shopBtns .btn{white-space:normal;line-height:1.2;padding:12px!important;font-size:15px}
 
+/* The compact font picker leaves the current table visible while it is paused. */
+#settingsScreen .font-setting{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;text-align:left}
+#settingsScreen .font-setting .setLbl{font:500 14px/1.3 var(--copy-font);letter-spacing:0;text-transform:none}
+.copy-font-select{display:block;box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:8px 12px;border:1px solid #8193a0;border-radius:4px;background:#46505b;color:#fff7e6;color-scheme:dark;font:500 16px/1.3 var(--copy-font);letter-spacing:0;text-transform:none}
+.copy-font-select option{background:#303840;color:#fff7e6}
+#settingsScreen .font-preview-open{margin:0;min-height:44px;padding:10px!important;white-space:normal;font:500 14px/1.3 var(--copy-font)}
+#fontPreview{z-index:180;align-items:flex-end;padding:12px 10px max(12px,env(safe-area-inset-bottom));background:none;backdrop-filter:none;-webkit-backdrop-filter:none;pointer-events:none}
+#fontPreview .font-toolbar{box-sizing:border-box;pointer-events:auto;width:100%;max-width:510px;padding:10px 12px;background:#303840;color:#fff7e6;box-shadow:0 -5px 24px #0005;border-radius:6px;font:500 14px/1.3 var(--copy-font)}
+.font-toolbar-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:7px}
+#fontPreview .font-toolbar-heading .btn{flex:none;min-height:44px;padding:8px 13px!important;font:500 13px/1.2 var(--copy-font)}
+.font-toolbar-picker{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:8px;align-items:center}
+#fontPreview .font-toolbar-picker .btn{display:grid;place-items:center;min-width:44px;height:44px;min-height:44px;padding:10px!important}
+#fontPreview .font-toolbar-picker .nav-triangle{width:22px;height:22px;object-fit:contain}
+#fontPreview .font-status,#settingsScreen .font-status{margin:7px 0 0;color:#e1d1f2;font:500 12px/1.3 var(--copy-font);text-align:left}
+.font-status[hidden]{display:none!important}
+
 /* Shared illustrated values: one readable amount, one unit, no line break. */
 :root{--value-scale:.66}
-.game-number{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;vertical-align:-.045em;position:relative;top:0;height:.84em;margin-inline:.035em;font:900 calc(1.75em * var(--value-scale))/.84 var(--game-type)!important;color:var(--number-ink,#ffdc75);font-variant-numeric:tabular-nums;letter-spacing:0!important;text-transform:none!important}
+.game-number{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;vertical-align:calc(-.045em - 2px);position:relative;top:0;height:.84em;margin-inline:.035em;font:900 calc(1.75em * var(--value-scale))/.84 var(--game-type)!important;color:var(--number-ink,#ffdc75);font-variant-numeric:tabular-nums;letter-spacing:0!important;text-transform:none!important}
 .game-number[data-value-kind="bonus"]{color:var(--bonus-number-ink,#88e2cf)}
 .game-number .raster-copy,.game-number .raster-ink{display:inline-flex;align-items:center;white-space:nowrap;line-height:1}
 .game-number .raster-ink{column-gap:.16em}
@@ -739,6 +754,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .rep-value .game-number{vertical-align:middle;margin:0}
 .rep-star{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical-align:middle;transform:translateY(-1px);flex:none}
 .rep-value>.rep-star{width:1.25em;height:1.25em;align-self:center}
+.contract-reward .rep-value{position:relative;top:2px}
 :is(.b-gold,.b-teal,.b-red,.chip,.mode-card){--number-ink:#542f55;--bonus-number-ink:#15504d}
 :is(.b-blue,.b-purple){--number-ink:#ffe093;--bonus-number-ink:#a4f3de}
 button:disabled{--number-ink:#ffe093;--bonus-number-ink:#a4f3de}
