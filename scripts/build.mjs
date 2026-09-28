@@ -16,10 +16,13 @@ if(process.argv[2]){
   for(const css of ['modern.css','electric.css','illustrated.css','raster.css','equilibre.css']){
     html=html.replace('<link rel="stylesheet" href="'+css+'">',()=>'<style>\n'+fs.readFileSync(path.join(root,css),'utf8')+'\n</style>');
   }
-  // Keep the reading font available in standalone exports as well.
-  const copyFont=fs.readFileSync(path.join(root,'fonts/barlow-latin-500-normal.woff2')).toString('base64');
-  html=html.replaceAll('url("fonts/barlow-latin-500-normal.woff2")','url("data:font/woff2;base64,'+copyFont+'")');
-  html=html.replace('href="fonts/barlow-latin-500-normal.woff2"','href="data:font/woff2;base64,'+copyFont+'"');
+  // Keep both reading weights available in standalone exports as well.
+  for(const weight of [400,700]){
+    const file='fonts/balsamiq-sans-latin-'+weight+'-normal.woff2';
+    const copyFont=fs.readFileSync(path.join(root,file)).toString('base64');
+    html=html.replaceAll('url("'+file+'")','url("data:font/woff2;base64,'+copyFont+'")');
+    html=html.replace('href="'+file+'"','href="data:font/woff2;base64,'+copyFont+'"');
+  }
   const artDir=path.join(root,'assets/illustrations');
   const artData=Object.fromEntries(fs.readdirSync(artDir).filter(file=>file.endsWith('.webp')).map(file=>[file.slice(0,-5),'data:image/webp;base64,'+fs.readFileSync(path.join(artDir,file)).toString('base64')]));
   const portableBundle=bundle.replace('const image=key=>`assets/illustrations/${key}.webp`;',()=>`const illustrationData=${JSON.stringify(artData)}; const image=key=>illustrationData[key];`);

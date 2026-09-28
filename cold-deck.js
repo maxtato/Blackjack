@@ -4528,7 +4528,7 @@ syncMenuFocus();
     ...[...$('modeMenu').querySelectorAll('img')].map(image=>image.src),
     ...['background-menu','button-yellow','button-teal','card-shape','card-stock','suit-spade'].map(ColdDeckArt.image)
   ]);
-  const resources=[window.ColdDeckRaster?.ready,document.fonts?.ready,document.fonts?.load('500 16px Barlow'),...Array.from(homeAssets,decodeImage)];
+  const resources=[window.ColdDeckRaster?.ready,document.fonts?.ready,document.fonts?.load('400 16px "Balsamiq Sans"'),document.fonts?.load('700 16px "Balsamiq Sans"'),...Array.from(homeAssets,decodeImage)];
   Promise.allSettled(resources).then(()=>{
     window.ColdDeckRaster?.refresh();
     requestAnimationFrame(()=>requestAnimationFrame(()=>window.ColdDeckBoot?.finish()));
