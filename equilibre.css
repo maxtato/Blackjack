@@ -40,24 +40,24 @@
 #menuBestGain::before,#menuBestGain::after{content:"";position:absolute;top:20%;width:14px;height:22px;border-top:2px solid #ffce3a;border-bottom:2px solid #ffce3a;left:-26px;transform:skewY(25deg)}
 #menuBestGain::after{left:auto;right:-26px;transform:skewY(-25deg)}
 /* Header: table/lives/pause, cash/hands/stake/multiplier, then a single objective. */
-#app{--ui-u:min(1vw,5.3px);--base-card-w:calc(24.5 * var(--ui-u));--dock-main:clamp(65px,9.8dvh,88px);--dock-secondary:clamp(42px,5.7dvh,58px);width:100%;max-width:530px;height:100dvh;min-height:620px;padding:max(14px,env(safe-area-inset-top)) calc(3.2 * var(--ui-u)) max(12px,env(safe-area-inset-bottom));display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) calc(var(--dock-main) + var(--dock-secondary) + 10px);gap:clamp(9px,1.35dvh,15px)}
+#app{--ui-u:min(1vw,5.3px);--table-status-height:18px;--base-card-w:calc(27.5 * var(--ui-u));--dock-main:clamp(65px,9.8dvh,88px);--dock-secondary:clamp(42px,5.7dvh,58px);width:100%;max-width:530px;height:100dvh;min-height:620px;padding:max(14px,env(safe-area-inset-top)) calc(3.2 * var(--ui-u)) max(12px,env(safe-area-inset-bottom));display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) calc(var(--dock-main) + var(--dock-secondary) + 10px);gap:clamp(9px,1.35dvh,15px)}
 /* The table stays anchored; card and reward effects animate inside it. */
 #shaker{overflow-y:auto;overflow-x:hidden;transform:none!important}
 #app{translate:none!important;rotate:none!important;scale:none!important}
-#topbar{grid-column:1;grid-row:1;display:grid;grid-template-columns:1fr auto;grid-template-rows:32px auto 23px;align-items:center;gap:clamp(9px,1.4dvh,16px) 0;padding:0;background:none;box-shadow:none;border:0;overflow:visible}
-#topbar .brand-block{grid-column:1;grid-row:1;min-width:0;align-self:center}
+#topbar{grid-column:1;grid-row:1;display:grid;grid-template-columns:1fr auto;grid-template-rows:calc(32px + var(--table-status-height)) auto 23px;align-items:center;gap:clamp(9px,1.4dvh,16px) 0;padding:0;background:none;box-shadow:none;border:0;overflow:visible}
+#topbar .brand-block{grid-column:1;grid-row:1;display:flex;flex-direction:column;align-items:flex-start;width:100%;min-width:0;align-self:start}
 #topbar .table-context{display:block;position:relative;grid-area:auto;justify-self:auto;max-width:100%;z-index:25}
-#topbar .table-number{display:block;list-style:none;cursor:pointer;font:500 calc(5 * var(--ui-u))/1.2 var(--copy-font);letter-spacing:0;margin:0;color:#fff7e6;text-transform:none;width:max-content;padding:3px 4px}
+#topbar .table-number{display:flex;align-items:center;gap:4px;list-style:none;cursor:pointer;font:500 calc(5 * var(--ui-u))/1.2 var(--copy-font);letter-spacing:0;margin:0;color:#fff7e6;text-transform:none;width:max-content;height:32px;padding:0 4px}
 #topbar .table-number::-webkit-details-marker{display:none}
 #topbar .table-number b{font-weight:600}
 #topbar .table-context-body{left:0;transform:none;top:calc(100% + 12px);width:min(430px,90vw);background:#202a32;border-color:#53606d;padding:18px}
 #topbar #tableName{font-size:18px;line-height:1.25;text-align:left;padding:0;margin:0 0 8px}
 #topbar #tableName::after{content:none}
 #topbar .thead-right{display:contents}
-#topbar .lives{grid-column:1 / 3;grid-row:1;justify-self:center;display:flex;flex-wrap:nowrap;align-items:center;gap:7px;max-width:none;color:var(--suitRed);pointer-events:none}
+#topbar .lives{grid-column:1 / 3;grid-row:1;justify-self:center;align-self:start;margin-top:4px;display:flex;flex-wrap:nowrap;align-items:center;gap:7px;max-width:none;color:var(--suitRed);pointer-events:none}
 #topbar .lives .raster-suit{width:21px!important;height:23px!important}
 #topbar .life.off{opacity:.18}
-#topbar #pauseBtn{grid-column:2;grid-row:1;justify-self:end;display:grid;place-items:center;width:35px;height:35px;clip-path:var(--frame-cut);border:1px solid #5b6c78;background:#152229!important;color:#fff7e6!important;box-shadow:inset 0 0 0 2px #33434e!important;border-radius:0;padding:6px}
+#topbar #pauseBtn{grid-column:2;grid-row:1;justify-self:end;align-self:start;display:grid;place-items:center;width:35px;height:35px;clip-path:var(--frame-cut);border:1px solid #5b6c78;background:#152229!important;color:#fff7e6!important;box-shadow:inset 0 0 0 2px #33434e!important;border-radius:0;padding:6px}
 #topbar .tstats{grid-column:1 / 3;grid-row:2;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr) minmax(0,.83fr) minmax(0,.76fr);gap:0;align-items:center;min-height:65px}
 #topbar #scorebox{display:contents}
 #topbar .gainstat,#topbar .seg,#topbar .turnstat{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;min-height:48px;padding:0 6px;border:0;border-left:1px solid #5d71807d;border-radius:0;background:none;box-shadow:none}
@@ -133,15 +133,15 @@
 .card[data-suit="♥"],.card[data-suit="♦"]{color:var(--suitRed)}
 #center{grid-column:1;grid-row:2;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:var(--combo-room);max-height:var(--combo-room);min-height:0;gap:3px;margin:0;padding:0;overflow:visible}
 /* Active combinations form a small overlapping fan of yellow tickets. */
-#comboRow{--combo-count:1;--combo-overlap:clamp(10px,2.8vw,16px);--combo-width:min(120px,calc((100% + (var(--combo-count) - 1)*var(--combo-overlap))/var(--combo-count)));box-sizing:border-box;width:100%;height:72px;min-height:0;max-height:100%;flex:0 1 auto;flex-flow:row nowrap;justify-content:center;align-items:center;gap:0;padding:9px 12px;overflow:visible;scrollbar-width:none;scroll-snap-type:none;isolation:isolate}
+#comboRow{--combo-count:1;--combo-overlap:clamp(8px,2.2vw,12px);--combo-width:min(104px,calc((100% + (var(--combo-count) - 1)*var(--combo-overlap))/var(--combo-count)));box-sizing:border-box;width:100%;height:52px;min-height:0;max-height:100%;flex:0 1 auto;flex-flow:row nowrap;justify-content:center;align-items:center;gap:0;padding:2px 8px;overflow:visible;scrollbar-width:none;scroll-snap-type:none;isolation:isolate}
 #comboRow::-webkit-scrollbar{display:none}
-#comboRow .combo-tile{box-sizing:border-box;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 var(--combo-width);width:var(--combo-width);min-width:0;max-width:120px;height:42px;gap:1px;padding:4px calc(6px + var(--combo-overlap)) 4px 7px;border:0;border-radius:0;background:none;color:#303236;overflow:visible;filter:drop-shadow(0 2px 2px #0004);transform:translateY(var(--combo-lift,0px)) rotate(var(--combo-angle,-3deg));z-index:var(--combo-layer,1)}
+#comboRow .combo-tile{box-sizing:border-box;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 var(--combo-width);width:var(--combo-width);min-width:0;max-width:104px;height:32px;gap:1px;padding:2px calc(5px + var(--combo-overlap)) 2px 6px;border:0;border-radius:0;background:none;color:#303236;overflow:visible;filter:drop-shadow(0 2px 2px #0004);transform:translateY(var(--combo-lift,0px)) rotate(var(--combo-angle,-3deg));z-index:var(--combo-layer,1)}
 /* Clip the paper alone so each overlapping ticket keeps its outer shadow. */
 #comboRow .combo-tile::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;clip-path:var(--frame-cut);background:#ffce3a var(--art-button-yellow) center/100% 100% no-repeat}
 #comboRow .combo-tile+.combo-tile{margin-inline-start:calc(-1*var(--combo-overlap))}
-#comboRow .combo-tile:last-child{padding-inline-end:7px}
-#comboRow .combo-name{display:block;max-width:100%;font:800 10px/1.1 var(--copy-font);font-weight:800!important;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
-#comboRow .combo-tile.compact .combo-name{font-size:9px}
+#comboRow .combo-tile:last-child{padding-inline-end:6px}
+#comboRow .combo-name{display:block;max-width:100%;font:800 9px/1.1 var(--copy-font);font-weight:800!important;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+#comboRow .combo-tile.compact .combo-name{font-size:8.5px}
 #comboRow .combo-detail{display:block;max-width:100%;margin:0;white-space:nowrap;letter-spacing:0}
 #comboRow[data-scroll="true"]{justify-content:flex-start;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain}
 @media(prefers-reduced-motion:reduce){#comboRow .combo-tile{transition:none}}
@@ -189,7 +189,8 @@
  #modeMenu .menuTitle{height:calc(41 * var(--home-u));width:calc(70 * var(--home-u))}
  #modeMenu .home-footer{gap:5px}
  #app{min-height:600px;--dock-main:60px;--dock-secondary:40px;gap:8px;padding-top:9px;padding-bottom:max(9px,env(safe-area-inset-bottom))}
- #topbar{grid-template-rows:28px 56px 20px;row-gap:7px}
+ #topbar{grid-template-rows:calc(28px + var(--table-status-height)) 56px 20px;row-gap:7px}
+ #topbar .table-number{height:28px}
  #topbar .tstats{min-height:0}
  #topbar #gainVal{font-size:44px}
  #topbar .gainstat .lbl,#topbar .seg .k,#topbar .tt{font-size:11px}
@@ -214,11 +215,11 @@
 }
 @media(max-height:600px) and (orientation:landscape){
  #modeMenu .ovpanel{max-width:510px;min-height:720px;height:auto;--home-u:3.9px}
- #app{max-width:960px;min-height:350px;--base-card-w:78px;--dock-main:48px;--dock-secondary:42px;padding:8px 18px;grid-template-rows:76px minmax(0,1fr) 48px;gap:6px}
+ #app{max-width:960px;min-height:350px;--base-card-w:88px;--dock-main:48px;--dock-secondary:42px;padding:8px 18px;grid-template-rows:76px minmax(0,1fr) 48px;gap:6px}
  #topbar{grid-template-columns:130px minmax(0,1fr) 44px;grid-template-rows:46px 23px;gap:3px 15px}
  #topbar .brand-block{grid-column:1;grid-row:1}
- #topbar .table-number{font-size:19px}
- #topbar .lives{grid-column:1;grid-row:2;justify-self:start}
+ #topbar .table-number{font-size:19px;height:28px}
+ #topbar .lives{grid-column:1;grid-row:2;justify-self:start;align-self:center;margin-top:0}
  #topbar #pauseBtn{grid-column:3;grid-row:1 / 3}
  #topbar .tstats{grid-column:2;grid-row:1;min-height:0}
  #topbar #gainVal{font-size:38px}
@@ -240,7 +241,7 @@
  #feltInner .hand-total{width:33px;height:37px;font-size:25px}
  #center{grid-column:1 / 3;grid-row:2;height:30px;max-height:30px}
  #comboRow{height:30px;padding-block:0;overflow:visible}
- #comboRow .combo-tile{height:28px;padding-block:1px}
+ #comboRow .combo-tile{height:24px;padding-block:0}
  #bottombar,#app[data-phase="bet"] #bottombar{flex-direction:row;align-items:stretch;gap:12px}
  #actions{display:grid;grid-template-columns:1.35fr 1fr;grid-template-rows:1fr;height:48px;gap:12px}
  #actions .actMain{grid-column:1;grid-row:1}
@@ -333,11 +334,12 @@
  #shaker{display:grid;place-items:center;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);overflow:hidden}
  #bg{background-size:calc(100 * var(--game-u)) calc(211.111 * var(--game-u))}
  #bg::after{display:none}
- #app{--ui-u:calc(.95 * var(--game-u));--base-card-w:calc(22 * var(--ui-u));--dock-main:var(--dock-secondary);--dock-secondary:max(40px,calc(10.8 * var(--ui-u)));width:calc(100 * var(--game-u));max-width:none;height:calc(211.111 * var(--game-u));min-height:0;margin:0;padding:calc(4.5 * var(--game-u)) calc(6.5 * var(--game-u)) calc(9.5 * var(--game-u));grid-template-rows:calc(31.5 * var(--ui-u)) minmax(0,1fr) calc(var(--dock-main) + var(--dock-secondary) + 2.2 * var(--ui-u));gap:calc(3.4 * var(--game-u))}
+ #app{--ui-u:calc(.95 * var(--game-u));--base-card-w:calc(25 * var(--ui-u));--dock-main:var(--dock-secondary);--dock-secondary:max(40px,calc(10.8 * var(--ui-u)));width:calc(100 * var(--game-u));max-width:none;height:calc(211.111 * var(--game-u));min-height:0;margin:0;padding:calc(4.5 * var(--game-u)) calc(6.5 * var(--game-u)) calc(9.5 * var(--game-u));grid-template-rows:calc(31.5 * var(--ui-u) + var(--table-status-height)) minmax(0,1fr) calc(var(--dock-main) + var(--dock-secondary) + 2.2 * var(--ui-u));gap:calc(3.4 * var(--game-u))}
  /* Reserve the same action space during betting, play and settlement. */
- #topbar{grid-template-rows:calc(8.7 * var(--ui-u)) calc(16.5 * var(--ui-u)) calc(3.6 * var(--ui-u));row-gap:calc(1.35 * var(--ui-u))}
- #topbar .table-number{font-size:calc(5.2 * var(--ui-u));padding:0}
- #topbar .lives{gap:calc(1.9 * var(--ui-u))}
+ #topbar{grid-template-rows:calc(8.7 * var(--ui-u) + var(--table-status-height)) calc(16.5 * var(--ui-u)) calc(3.6 * var(--ui-u));row-gap:calc(1.35 * var(--ui-u))}
+ #topbar .table-number{font-size:calc(5.2 * var(--ui-u));height:calc(8.7 * var(--ui-u));padding:0}
+ #topbar .lives{gap:calc(1.9 * var(--ui-u));margin-top:calc(1.75 * var(--ui-u))}
+ #topbar #circuitStatus{padding-inline:0}
  #topbar .lives .raster-suit{width:calc(4.8 * var(--ui-u))!important;height:calc(5.2 * var(--ui-u))!important}
  #topbar #pauseBtn{width:calc(8.7 * var(--ui-u));height:calc(8.7 * var(--ui-u));padding:calc(1.7 * var(--ui-u))}
  #pauseBtn .pause-mark{width:100%;height:100%}
@@ -356,18 +358,18 @@
  #effects{--inventory-height:max(48px,calc(14.5 * var(--ui-u)));flex-wrap:nowrap;gap:max(4px,calc(1.3 * var(--ui-u)))}
  #pBar{position:relative;inset:auto;width:94%;height:31px;min-height:31px;margin:0;z-index:3}
  #pBar .pmeta,#pBar #pPct{font-size:max(11px,calc(3.15 * var(--ui-u)));line-height:14px}
- #stage{--combo-room:max(52px,calc(14 * var(--ui-u)))}
+ #stage{--combo-room:max(52px,calc(12 * var(--ui-u)))}
  #feltInner .zone{grid-template-rows:calc(3.6 * var(--ui-u)) calc(9 * var(--ui-u)) minmax(0,1fr);gap:calc(.7 * var(--ui-u))}
  #feltInner .zone .zlbl{font-size:calc(3.7 * var(--ui-u));line-height:1}
  #feltInner .zone .hand-total{width:calc(12.6 * var(--ui-u));height:calc(9 * var(--ui-u));font-size:calc(8.9 * var(--ui-u));line-height:1}
  #feltInner .hand{width:100%;gap:0;min-height:0;align-self:center;--card-w:min(calc(var(--base-card-w) - min(4,max(0,var(--hand-count,2) - 2)) * 0.45 * var(--ui-u)),calc((100cqh - var(--combo-room) - 29 * var(--ui-u))/2.96));--card-step:min(calc(1.3 * var(--ui-u)),calc((100cqw - 2 * var(--ui-u) - var(--card-w) * var(--hand-count,2))/max(1,var(--hand-count,2) - 1)))}
  #feltInner .hand>.cardslot+.cardslot{margin-left:var(--card-step)!important}
  #feltInner .card,#feltInner .flipwrap{height:calc(var(--card-w)*1.48)}
- #feltInner .splitwrap{--card-w:min(calc(16 * var(--ui-u)),calc((100cqw - 10 * var(--ui-u))/var(--split-count,4)));gap:calc(2 * var(--ui-u))}
+ #feltInner .splitwrap{--card-w:min(calc(18 * var(--ui-u)),calc((100cqh - var(--combo-room) - 29 * var(--ui-u))/2.96),calc((100cqw - 10 * var(--ui-u))/var(--split-count,4)));gap:calc(2 * var(--ui-u))}
  #feltInner .splithand{gap:calc(.7 * var(--ui-u));padding:calc(.7 * var(--ui-u))}
  #feltInner .splithand .cardslot+.cardslot{margin-left:0!important}
- #comboRow .combo-name{font-size:clamp(9px,calc(2.65 * var(--ui-u)),10.5px)}
- #comboRow .combo-tile.compact .combo-name{font-size:clamp(8.5px,calc(2.4 * var(--ui-u)),9.5px)}
+ #comboRow .combo-name{font-size:clamp(8.5px,calc(2.4 * var(--ui-u)),9px)}
+ #comboRow .combo-tile.compact .combo-name{font-size:8.5px}
  #tip:not(:empty){font-size:calc(2.9 * var(--ui-u));line-height:1.2;max-height:calc(5 * var(--ui-u))}
  #bottombar,#actions{gap:calc(2.2 * var(--ui-u))}
  #actions .actMain,#actions .actWide{width:94%;justify-self:center;gap:calc(2 * var(--ui-u))}
@@ -644,12 +646,11 @@ body:has(#multPop.go) #tip{visibility:hidden}
 @keyframes result-balance{0%{opacity:0;transform:translate(-58%,-50%) scale(.8) rotate(-10deg)}15%{opacity:1;transform:translate(-46%,-50%) scale(1.06) rotate(4deg)}29%{transform:translate(-52%,-50%) scale(.99) rotate(-3deg)}44%,82%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}100%{opacity:0;transform:translate(-50%,-54%) scale(.95) rotate(0)}}
 @media(max-height:500px) and (orientation:landscape){#multPop.central-result{padding:12px;gap:5px}#multPop.central-result .m{font-size:min(var(--victory-type),54px)}#multPop.central-result .t{font-size:28px}.victory-wave{height:145px}}
 
-/* Circuit guidance uses Baraka's mauve paper and the buttons' beveled shape. */
-#circuitStatus{--button-art:var(--art-card-stock);--button-ink:#282a2e;--number-ink:var(--button-ink);--bonus-number-ink:var(--button-ink);flex:none;display:flex;align-items:center;gap:7px;width:100%;height:26px;margin:0;padding:3px 12px;border:0;border-radius:0;clip-path:var(--frame-cut);background-color:#b69bda!important;background-blend-mode:multiply;text-align:left;font:500 12px/18px var(--copy-font);box-shadow:none!important;cursor:pointer}
-.table-rule-summary{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.table-rule-progress{flex:none;font-size:10px;opacity:.8;white-space:nowrap}
-.table-rule-info{flex:none;display:grid;place-items:center;width:16px;height:16px;background:#35224640;border-radius:0;clip-path:var(--frame-cut);font-weight:700;font-size:11px}
-.circuit-status:focus-visible{outline:2px solid #ffce3a;outline-offset:-3px}
+/* A quiet text line sits directly beneath the table number. */
+#circuitStatus{--button-art:none!important;--button-ink:#b69bda!important;--number-ink:currentColor;--bonus-number-ink:currentColor;flex:none;display:block;width:100%;max-width:100%;height:var(--table-status-height);margin:0;padding:0 4px;border:0;border-radius:0;clip-path:none;background:none!important;color:#b69bda!important;text-align:left;font:500 12px/var(--table-status-height) var(--copy-font);box-shadow:none!important;cursor:pointer}
+.table-rule-summary{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#circuitStatus .table-rule-progress,#circuitStatus .table-rule-info{display:none}
+.circuit-status:focus-visible{outline:2px solid #ffce3a;outline-offset:2px}
 .table-effect-card{--number-ink:#60385e;--bonus-number-ink:#195b58;margin:14px 0;padding:16px 18px;background:#c4d0b8;border:0;text-align:left;border-radius:0;clip-path:var(--frame-cut);color:#273337}
 .table-effect-card[data-rule="sec"]{background:#d6b6b4}
 .table-effect-label{display:block;margin-bottom:7px;font:500 11px/1.3 var(--copy-font);text-transform:uppercase;letter-spacing:.09em;color:#435052}
@@ -694,7 +695,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .joker.spent{opacity:.58}
 .card-dust{position:absolute;pointer-events:none;clip-path:polygon(12% 0,79% 7%,100% 63%,60% 100%,0 74%)}
 .card-impact-shadow{position:absolute;height:12px;background:#17252b;border-radius:50%;pointer-events:none}
-@media(max-height:700px){#mid{gap:6px}#circuitStatus{height:24px;font-size:11px;line-height:16px}.draw-readout{font-size:9.5px}}
+@media(max-height:700px){#app{--table-status-height:16px}#mid{gap:6px}#circuitStatus{font-size:11px}.draw-readout{font-size:9.5px}}
 @media(prefers-reduced-motion:reduce){.card-dust,.card-impact-shadow{display:none}}
 :root[data-motion=gentle] :is(.card-dust,.card-impact-shadow){display:none}
 
@@ -762,10 +763,10 @@ button:disabled{--number-ink:#ffe093;--bonus-number-ink:#a4f3de}
 #circuitStatus .game-number{font-size:calc(1.5em * var(--value-scale))!important}
 #comboRow .game-number{font-size:calc(1.55em * var(--value-scale))!important}
 #comboRow .combo-tile.on{--number-ink:#303236;--bonus-number-ink:#303236}
-#comboRow .combo-multiplier.game-number{display:block;flex:none;position:static;top:auto;height:21px;margin:0;color:#303236;font:900 21px/1 var(--game-type)!important;filter:none;text-shadow:none}
+#comboRow .combo-multiplier.game-number{display:block;flex:none;position:static;top:auto;height:17px;margin:0;color:#303236;font:900 17px/1 var(--game-type)!important;filter:none;text-shadow:none}
 #comboRow .combo-multiplier .raster-glyph{--glyph-width:.78em;height:1em;top:0!important}
 #comboRow .combo-multiplier .raster-punctuation{font-size:.7em!important}
-@media(max-height:600px) and (orientation:landscape){#comboRow .combo-name{font-size:8px}#comboRow .combo-multiplier.game-number{font-size:16px!important;height:16px}}
+@media(max-height:600px) and (orientation:landscape){#comboRow .combo-name{font-size:8px}#comboRow .combo-multiplier.game-number{font-size:14px!important;height:14px}}
 #tip .game-number,#drawReadout .game-number{font-size:calc(1.6em * var(--value-scale))!important}
 #recBox>span{white-space:normal!important}
 #recBox .game-number{font-size:calc(1.6em * var(--value-scale))!important}

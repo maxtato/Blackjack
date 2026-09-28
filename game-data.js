@@ -519,7 +519,7 @@ Object.assign(STR.fr,{
  'w.tableTie':'ÉGALITÉ PERDUE','w.tableTieReason':'Le croupier gagne les égalités ici','sp.tableTie':'ÉGALITÉ PERDUE',
  'effect.standard.title':'RÈGLES CLASSIQUES','effect.standard.short':'Égalité : mise rendue',
  'effect.standard.description':'À total égal sans dépasser 21, tu récupères toute ta mise. Aucune pénalité de table sur les égalités.',
- 'effect.sec.title':'LES ÉGALITÉS SONT PERDUES','effect.sec.short':'Égalité = mise perdue',
+ 'effect.sec.title':'LES ÉGALITÉS SONT PERDUES','effect.sec.short':'Égalité = perdu',
  'effect.sec.description':'Ici, le croupier gagne aussi en cas d’égalité. Tu perds ta mise et ta Baraka baisse comme après une défaite. La relique Diplomate peut te protéger.',
  'effect.sec.protected':'Ton Diplomate te protège : une égalité rend ta mise, sans le bonus de 25 %.','effect.sec.protectedShort':'Égalité : protection Diplomate',
  'effect.gros.title':'LE CROUPIER TIRE JUSQU’À 18','effect.gros.short':'Croupier : tire jusqu’à 18',
