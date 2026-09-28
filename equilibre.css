@@ -710,7 +710,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 #confirmRestart .shopBtns .btn{white-space:normal;line-height:1.2;padding:12px!important;font-size:15px}
 
 /* Shared illustrated values: one readable amount, one unit, no line break. */
-:root{--value-scale:.92}
+:root{--value-scale:.736}
 .game-number{display:inline-flex;align-items:center;white-space:nowrap;vertical-align:middle;height:.84em;margin-inline:.035em;font:900 calc(1.75em * var(--value-scale))/.84 var(--game-type)!important;color:var(--number-ink,#ffdc75);font-variant-numeric:tabular-nums;letter-spacing:0!important;text-transform:none!important}
 .game-number[data-value-kind="bonus"]{color:var(--bonus-number-ink,#88e2cf)}
 .game-number .raster-copy,.game-number .raster-ink{white-space:nowrap;line-height:0}
