@@ -638,12 +638,12 @@ body:has(#multPop.go) #tip{visibility:hidden}
 @media(max-height:500px) and (orientation:landscape){#multPop.central-result{padding:12px;gap:5px}#multPop.central-result .m{font-size:min(var(--victory-type),54px)}#multPop.central-result .t{font-size:28px}.victory-wave{height:145px}}
 
 /* Circuit guidance occupies fixed space and uses the existing paper palette. */
-.circuit-status{flex:none;display:flex;align-items:center;gap:7px;width:100%;height:26px;margin:0;padding:3px 8px;border:0;border-radius:3px;background:#c4cda516;text-align:left;font:500 12px/18px var(--copy-font);color:#d8debe;cursor:pointer}
+#circuitStatus{flex:none;display:flex;align-items:center;gap:7px;width:100%;height:26px;margin:0;padding:3px 8px;border:0;border-radius:3px;background:#374141!important;text-align:left;font:500 12px/18px var(--copy-font);color:#d8debe!important;box-shadow:none!important;cursor:pointer}
 .table-rule-summary{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .table-rule-progress{flex:none;font-size:10px;opacity:.8;white-space:nowrap}
 .table-rule-info{flex:none;display:grid;place-items:center;width:16px;height:16px;background:#ffffff12;border-radius:50%;font-weight:600;font-size:11px}
-.circuit-status[data-rule="sec"]{background:#de797724;color:#f4aaa1}
-.circuit-status[data-protected="true"]{background:#8ebf9c21;color:#bcdebd}
+#circuitStatus[data-rule="sec"]{background:#51363c!important;color:#f4aaa1!important}
+#circuitStatus[data-protected="true"]{background:#374c42!important;color:#bcdebd!important}
 .circuit-status:focus-visible{outline:2px solid #ffce3a;outline-offset:2px}
 .table-effect-card{margin:14px 0;padding:14px 16px;background:#bdcda41c;border-left:4px solid #bed19b;text-align:left;border-radius:3px}
 .table-effect-card[data-rule="sec"]{background:#de797721;border-left-color:#ed9c92}
@@ -673,7 +673,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .joker.spent{opacity:.58}
 .card-dust{position:absolute;pointer-events:none;clip-path:polygon(12% 0,79% 7%,100% 63%,60% 100%,0 74%)}
 .card-impact-shadow{position:absolute;height:12px;background:#17252b;border-radius:50%;pointer-events:none}
-@media(max-height:700px){#mid{gap:6px}.circuit-status{height:24px;font-size:11px;line-height:16px}.draw-readout{font-size:10px}}
+@media(max-height:700px){#mid{gap:6px}#circuitStatus{height:24px;font-size:11px;line-height:16px}.draw-readout{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.card-dust,.card-impact-shadow{display:none}}
 :root[data-motion=gentle] :is(.card-dust,.card-impact-shadow){display:none}
 
