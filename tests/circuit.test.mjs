@@ -219,7 +219,7 @@ check('First-card rules grant Gold or Prism without replacing an existing editio
  }finally{h.w.Math.random=random;}
 });
 check('Card tags and accessible descriptions use the two readable edition names',()=>{
- for(const [ed,name] of [['foil','DORÉE'],['poly','PRISME']]){
+ for(const [ed,name] of [['foil','GOLD'],['poly','PRISME']]){
   const node=a.cardEl(card(7,'♠',ed));assert.equal(node.querySelector('.edtag').textContent,name);
   assert(node.getAttribute('aria-label').includes(a.t('ed.'+ed)));
   assert.equal(a.cardEl(card(7,'♠',ed),{dealer:true}).querySelector('.edtag'),null);
