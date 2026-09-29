@@ -889,3 +889,27 @@ button:disabled{--number-ink:#ffe093;--bonus-number-ink:#a4f3de}
  #actions .actMain,#actions .actWide{width:94%}
  #actions .btn,#actions .actWide .btn,#app[data-phase="bet"] #actions .btn{font-size:calc(7.2 * var(--ui-u))!important}
 }
+
+/* Hand notices share the illustrated tickets and stay between the cards. */
+#center{position:relative}
+#center #turnPop{left:50%;top:50%;width:calc(100% - 12px);max-width:350px;transform:translate(-50%,-50%);z-index:12}
+#turnPop.go{animation:turn-notice var(--turn-duration,1700ms) ease-out both}
+#turnPop .tp-evt{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#583876 var(--art-button-purple) center/100% 100% no-repeat;clip-path:var(--frame-cut);border-radius:0;box-shadow:none;text-align:left;color:#fff7e6}
+#turnPop .tp-event-icon{display:grid;place-items:center;flex:none;width:28px;height:32px}
+#turnPop .tp-event-icon>*{display:block;width:100%;height:100%;object-fit:contain}
+#turnPop .tp-event-copy{flex:1;min-width:0}
+#turnPop .tp-event-title{display:block;margin:0 0 5px;font:900 clamp(17px,4.8vw,22px)/1 var(--game-type);color:#fff7e6}
+#turnPop .tp-event-title .raster-glyph{--glyph-width:.76em;animation:none!important;translate:none!important;rotate:none!important}
+#turnPop .tp-evt small{display:block;font:500 12px/1.25 var(--copy-font);color:#fff7e6}
+#turnPop .tp-coin{display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 12px;border-radius:0;clip-path:var(--frame-cut);background:#ffce3a var(--art-button-yellow) center/100% 100% no-repeat}
+#turnPop .tp-coin>b{font-size:18px;line-height:1}
+#turnPop .tp-coin>span{font:600 12px/1.2 var(--copy-font)}
+#turnPop:has(.tp-evt) .tp-coin{gap:6px;padding:3px 10px;margin-bottom:3px}
+#turnPop:has(.tp-evt) .tp-coin>b{font-size:13px;line-height:1}
+#turnPop:has(.tp-evt) .tp-coin>span{font:600 10px/1.2 var(--copy-font)}
+#turnPop:has(.tp-evt):has(.tp-coin) .tp-evt{padding-block:6px}
+#center:has(#turnPop.go) #tip,#center:has(#turnPop.go) #drawReadout,#center:has(#turnPop.go) #comboRow{visibility:hidden}
+@keyframes turn-notice{0%{opacity:0;translate:0 5px;scale:1}8%,89%{opacity:1;translate:0 0;scale:1}100%{opacity:0;translate:0 -3px;scale:1}}
+@keyframes turn-notice-still{0%,99%{opacity:1;translate:none;scale:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){#turnPop.go{animation:turn-notice-still var(--turn-duration,1700ms) step-end both!important}}
+:root[data-motion="gentle"] #turnPop.go{animation:turn-notice-still var(--turn-duration,1700ms) step-end both!important}

@@ -1333,6 +1333,7 @@ function deal(){
   if(checkBankGoal())return;
   audioInit();if(!G.betChosen)return;clampBet();if(G.bank<curTable().min)return;
   window.ColdDeckFX?.clear();
+  $('turnPop').classList.remove('go');
   G.bank-=G.bet;G.stakeMult=1;G.splitActive=false;G.hands=null;G.hi=0;G.splitAces=false;
   // pression PERSISTANTE : reportée de la main précédente, refroidie si on joue posé
   let p0;
@@ -1595,7 +1596,6 @@ function nextHandOrEnd(){
     const cadence=(G.boons&&G.boons.evt3)?3:5;                                   // « Mains spéciales ×2 » resserre le rythme
     G.event=(G.hand%cadence===0)?ENDLESS_EVENTS[rndInt(ENDLESS_EVENTS.length)]:null;   // main spéciale régulière
     clampBet();applyHandIncome();renderAll();renderHands();announceTurn();
-    if(G.event)popText(PXI(G.event.ic)+' '+evtTitle(G.event),evtDesc(G.event));
     return;
   }
   if(G.bank>=G.table.goal&&bossReady()){return finishTable();}  // objectif atteint → table gagnée tout de suite
@@ -2070,17 +2070,22 @@ function quitToMenu(){GameClock.clear();$('pauseScreen').classList.remove('show'
 // annonce du nombre de tours restants, en gros, au début de chaque main
 // le nombre de tours est désormais permanent dans la barre du haut :
 // on ne garde qu'un petit jeton de revenu (pourboire/mécène) au début de la main
+let turnTimer;
 function announceTurn(){
   const el=$('turnPop');if(!el)return;
+  clearGameDelay(turnTimer);el.classList.remove('go');
   let h='';
   if(G._income){
     const lbl=G._income.parts.length===1?G._income.parts[0].replace(/\s*\+.*/,'').toUpperCase():t('msg.income');
     h+=`<div class="tp-coin"><b>+<span class="n">${abbr(G._income.amt)}</span><span class="cur">$</span></b><span>${lbl}</span></div>`;
   }
-  if(G.endless&&G.event)h+=`<div class="tp-evt">${PXI(G.event.ic)} ${evtTitle(G.event)} · <small>${evtDesc(G.event)}</small></div>`;   // main spéciale
+  const event=G.endless&&G.event;
+  if(event)h+=`<div class="tp-evt"><span class="tp-event-icon" aria-hidden="true">${PXI(G.event.ic)}</span><div class="tp-event-copy"><strong class="tp-event-title">${ColdDeckArt.lettering(evtTitle(G.event))}</strong><small>${evtDesc(G.event)}</small></div></div>`;
   el.innerHTML=h;
   if(!h)return;
-  el.classList.remove('go');void el.offsetWidth;el.classList.add('go');
+  el.style.setProperty('--turn-duration',event?'3600ms':'1700ms');
+  void el.offsetWidth;el.classList.add('go');
+  turnTimer=gameDelay(()=>el.classList.remove('go'),event?3600:1700);
 }
 let textTimer;
 function popText(txt,sub){
