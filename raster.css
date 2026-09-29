@@ -119,7 +119,7 @@ button .raster-glyph{--glyph-width:.62em}
 /* Fixed artwork and fallback occupy the same reserved logo space. */
 .brand-image{position:relative;display:grid;place-items:center;width:100%;height:100%;background:none;pointer-events:none;line-height:1}
 .brand-fallback{position:absolute;inset:0;display:grid;place-items:center}
-.brand-art{position:absolute;inset:0;display:block;width:100%;height:100%;min-width:0;min-height:0;object-fit:contain;visibility:hidden;filter:url(#brand-cutout)}
+.brand-art{position:absolute;inset:0;top:-25%;display:block;width:100%;height:150%;min-width:0;min-height:0;object-fit:contain;visibility:hidden;filter:url(#brand-cutout)}
 .raster-brand-ready .brand-art{visibility:visible}
 .raster-brand-ready .brand-fallback{visibility:hidden}
 .brand-image .raster-glyph{--glyph-width:1em;--glyph-gap:.045em;animation:none!important;top:0;translate:none;rotate:none;transform:none}

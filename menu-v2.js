@@ -1,7 +1,7 @@
 /* Presentation only: the blackjack engine and progression are unchanged. */
 Object.assign(STR.fr,{
  'ui.bet':'Mise','ui.mult':'Multi','ui.gain':'Cagnotte','ui.potLbl':'Cagnotte','ui.turnsLeft':'mains<br>restantes','ui.you':'Ta main','ui.dealer':'Croupier','act.double':'DOUBLER','act.force':'FORCER','modern.table':'Table',
- 'modern.club':'Blackjack roguelite','modern.private':'BARAKA','modern.afterhours':'HAUTE TENSION',
+ 'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HAUTE TENSION',
  'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','cb.to21':n=>'21 parfait ×3 · +'+n,'modern.goal':'Objectif','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
  'nav.rules':'Règles','nav.settings':'Réglages','nav.back':'‹ Modes de jeu','nav.reset':'Réinitialiser ce mode',
  'planque.best':'Meilleur parcours','planque.noRecord':'Aucune partie','planque.back':'Dos de carte','planque.backSub':(i,n)=>i+'/'+n,
@@ -18,7 +18,7 @@ Object.assign(STR.fr,{
  'planque.startInf':'Sans limite de mains',
  'planque.startCircuit':n=>'Commencer le circuit',
  'set.title':'RÉGLAGES','set.close':'TERMINÉ','set.dev':'OUTILS DE DÉMONSTRATION',
- 'rules.close':'RETOUR','rules.basic':'Les bases du blackjack','rules.bonuses':'Baraka & combinaisons','rules.modes':'Les modes de jeu',
+ 'rules.close':'RETOUR','rules.basic':'Les bases du blackjack','rules.bonuses':'Chance & combinaisons','rules.modes':'Les modes de jeu',
  'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>',
  'back.cb9':'Éclair','back.cb10':'Chance','back.cb11':'Cœur','back.cb12':'Lune','back.cb13':'Dés','back.cb14':'Couronne','back.cb15':'Œil','back.cb16':'Cerises','back.cb18':'Flamme','back.cb19':'Diamant','back.cb22':'Serpent','back.cb26':'Soleil',
  'set.open':'RÉGLAGES',
@@ -31,7 +31,7 @@ Object.assign(STR.fr,{
 });
 Object.assign(STR.en,{
  'ui.bet':'Bet','ui.mult':'Multi','ui.gain':'Bank','ui.potLbl':'Bank','ui.turnsLeft':'hands<br>left','ui.you':'Your hand','ui.dealer':'Dealer','act.force':'PUSH LUCK','modern.table':'Table',
- 'modern.club':'Blackjack roguelite','modern.private':'BARAKA','modern.afterhours':'HIGH VOLTAGE',
+ 'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HIGH VOLTAGE',
  'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'Target','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'THE HOUSE IS WATCHING.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
  'nav.rules':'Rules','nav.settings':'Settings','nav.back':'‹ Game modes','nav.reset':'Reset this mode',
  'planque.best':'Best run','planque.noRecord':'No games played','planque.back':'Card back','planque.backSub':(i,n)=>i+'/'+n,

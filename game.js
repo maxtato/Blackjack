@@ -225,6 +225,12 @@ function renderTableEffect(box){
   if(!box)return;
   const effect=tableEffectData();box.dataset.rule=effect.rule;
   box.innerHTML='<span class="table-effect-label">'+t('circuit.tableEffect')+'</span><strong>'+effect.title+'</strong><p>'+effect.description+'</p>'+(effect.rule==='sec'&&hasRelic('diplomate')?'<p class="table-effect-protection">'+t('effect.sec.protected')+'</p>':'');
+  if(box.id==='briefEffect'){
+    const art=document.createElement('span');art.className='table-rule-art';art.setAttribute('aria-hidden','true');
+    if(effect.rule==='atelier')art.append(cardEl({r:'A',s:'♠',ed:'foil'}));
+    else art.innerHTML=effectMark(({standard:'jeton',sec:'diable',gros:'compteur',mute:'lunettes',nervous:'baraplus',depart:'baraplus',serein:'net'})[effect.rule]||'jeton','#273337');
+    box.prepend(art);
+  }
 }
 function openTableRules(){
   inspectRef=null;GameClock.pause('inspect',true);
@@ -571,7 +577,7 @@ function showTableBrief(){
   $('briefContracts').replaceChildren();
   G.contractChoices.forEach((c,i)=>{
     const b=document.createElement('button');b.className='btn b-blue contract-choice';
-    b.innerHTML='<span class="contract-copy" data-reading-label>'+contractText(c)+'</span><small class="contract-reward">+'+c.reward+' '+STAR+'<span class="contract-prompt">'+t('circuit.chooseContract')+'</span></small><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
+    b.innerHTML='<span class="contract-copy">'+contractText(c)+'</span><small class="contract-reward"><span class="contract-reward-value">+'+c.reward+' '+STAR+'</span><span class="contract-prompt">'+t('circuit.chooseContract')+'</span></small><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
     b.onclick=()=>chooseContract(i);$('briefContracts').append(b);
   });
   screen.classList.add('show');

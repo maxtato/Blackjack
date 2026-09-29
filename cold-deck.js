@@ -272,7 +272,7 @@ fr:{
 'ui.turnsLeft':'TOURS<br>RESTANTS','ui.hand':(a,b)=>'main '+a+'/'+b,
 'ui.bet':'MISE','ui.mult':'MULT','ui.gain':'GAIN','ui.potLbl':'CAGNOTTE',
 'ui.dealer':'Croupier','ui.you':'Toi','ui.peek':'VOIR','ui.peekTitle':'Lis la prochaine carte du sabot',
-'ui.pause':'Pause','ui.lives':'Vies (secondes chances)','ui.streak':'BARAKA',
+'ui.pause':'Pause','ui.lives':'Vies (secondes chances)','ui.streak':'CHANCE',
 'ui.lvl':(l,m)=>'· NIV '+l+' ×'+m,'ui.relics':'reliques','ui.consumables':'consommables',
 'ui.next':c=>'PROCHAINE : '+c,'ui.bustRisk':p=>'RISQUE DE BUST : '+p+'%',
 'menu.sub':'Choisis ton mode de jeu. Chaque mode a <b>sa Planque</b> et sa <b>réputation</b>.',
@@ -322,7 +322,7 @@ fr:{
 'rules.table':'<span class="rt">LA TABLE</span>Joue <span class="k">toutes les mains imposées</span>, mise dans la <span class="k">limite</span> (min–max fixe), et atteins l\'<span class="k">objectif de gain</span> avant la dernière main. Sous l\'objectif = table perdue.',
 'rules.moves':'<span class="rt">TES COUPS</span><span class="k">TIRER</span> une carte, <span class="k">RESTER</span> sur ta main, ou <span class="k">FORCER LA CHANCE</span> (2 cartes, on garde la meilleure · 1×/table).',
 'rules.stars':'<span class="rt"><i class="pxstar"></i> ÉTOILES</span>Chaque table en donne selon ton résultat : <span class="k">objectif</span> · <span class="k">confort</span> · <span class="k">maîtrise</span>. Plus tu en décroches, plus ta <span class="k">réputation</span> grimpe.',
-'rules.streak':'<span class="rt">BARAKA</span>Ta barre de <span class="k">veine</span> monte à chaque victoire (<span class="k">coup culotté = +2</span>) et débloque des <span class="k">multiplicateurs</span> de plus en plus forts. Perdre une main la <span class="d">remet à zéro</span>.',
+'rules.streak':'<span class="rt">CHANCE</span>Ta barre de <span class="k">veine</span> monte à chaque victoire (<span class="k">coup culotté = +2</span>) et débloque des <span class="k">multiplicateurs</span> de plus en plus forts. Perdre une main la <span class="d">remet à zéro</span>.',
 'rules.combos':'<span class="rt">COMBOS</span>Le vrai jeu : <span class="k">construis</span> tes mains, ne te contente pas de battre le croupier.<br><span class="k">21 PARFAIT ×3</span> · <span class="k">CHARLIE</span> (5 cartes) ×2 · <span class="k">COULEUR</span> (3+ même enseigne) ×2 · <span class="k">SUITE</span> (3+ rangs qui se suivent) ×2 · BLACKJACK ×1.5 · PAIRE DE 7 ×1.5 · ARC-EN-CIEL (4 enseignes) ×1.5.<br>Les pastilles sur le tapis montrent ce qui est acquis et à portée.',
 'rules.bonus':'<span class="rt">PETITS BONUS</span>Des coups de pouce au multiplicateur selon la situation : <span class="k">COUR</span> (2+ figures) ×1.5 · <span class="k">FILOU</span> (gagner avec ≤15) ×1.5 · <span class="k">AU POIL</span> (battre le croupier d\'un point) ×1.5 · <span class="k">CLUTCH</span> (dernière main) ×1.5 · <span class="k">REMONTADA</span> (parti ≤11, fini ≥17) ×1.3.',
 'rules.contracts':'<span class="rt"><i class="pxi pxi-scroll"></i> CONTRATS</span>Chaque table propose un <span class="k">défi optionnel</span> (« gagne une main de 5 cartes »…) qui rapporte des <span class="k">★ bonus</span>. Rempli ou non, la table continue normalement.',
@@ -367,7 +367,7 @@ fr:{
 'msg.forced':'FORCÉ','msg.kept':c=>'gardé '+c,
 'msg.insurance':'ASSURANCE','msg.insuranceSub':'perte remboursée',
 'msg.talisman':'TALISMAN','msg.talismanSub':'première perte remboursée',
-'msg.gutsy':'CULOTTÉ !','msg.gutsySub':n=>'+'+n+' baraka',
+'msg.gutsy':'CULOTTÉ !','msg.gutsySub':n=>'+'+n+' chance',
 'msg.entryFee':'DROIT D\'ENTRÉE','msg.boss':'BOSS','msg.miniboss':'MINI-BOSS',
 'msg.zone':(n,name)=>'ZONE '+n+(name?' — '+name:''),
 'msg.contract':'CONTRAT REMPLI','msg.income':'REVENU',
@@ -375,7 +375,7 @@ fr:{
 'msg.endlessStart':'SANS FIN','msg.endlessStartSub':'monte aussi haut que possible',
 'm.blackjack':'BLACKJACK','m.perfect':'21 PARFAIT','m.charlie':'CHARLIE','m.pair7':'PAIRE DE 7',
 'm.flush':'COULEUR','m.straight':'SUITE','m.rainbow':'ARC-EN-CIEL','m.pushing':'INSISTANCE',
-'m.streak':l=>'BARAKA NIV '+l,'m.burner':'BRÛLEUR','m.foil':'GOLD','m.poly':'PRISME',
+'m.streak':l=>'CHANCE NIV '+l,'m.burner':'BRÛLEUR','m.foil':'GOLD','m.poly':'PRISME',
 'm.foilV':n=>'+'+n+' jet','m.ace':'AS TRUQUÉ','m.cool':'SANG-FROID',
 'm.court':'COUR','m.lowball':'FILOU','m.comeback':'REMONTADA','m.clutch':'CLUTCH','m.byone':'AU POIL',
 'm.zonecap':'PLAFOND ZONE','m.golden':'DORÉE',
@@ -383,7 +383,7 @@ fr:{
 'cb.to21':n=>'21 PARFAIT ×3 · à '+n,'cb.charlie':'CHARLIE ×2 · +1 carte',
 'cb.flush':s=>'COULEUR ×2 · +1 '+s,'cb.rainbow':'ARC-EN-CIEL ×1.5 · +1 carte',
 'cb.pair7':'PAIRE DE 7 · tire un 7','cb.straight':'SUITE ×2 · possible',
-'cb.streak':(l,n)=>'BARAKA NIV '+l+' dans '+n,
+'cb.streak':(l,n)=>'CHANCE NIV '+l+' dans '+n,
 'top.mastery':m=>'maîtrise ≥'+m,'top.betRange':(a,b)=>'mise '+a+'–'+b,
 'top.stars':n=>n+' étoile'+(n>1?'s':''),'top.pot':p=>'cagnotte '+p,
 'top.contractDone':'✓ contrat rempli','top.record':v=>'record '+v,
@@ -426,7 +426,7 @@ fr:{
 'tbl.21':'Suite royale','tbl.22':'Salle des maîtres','tbl.23':'LE PARRAIN',
 'zone.1':'Initiation','zone.2':'La Pression','zone.3':'Casino profond','zone.4':'Cercle rouge',
 'zone.5':'Chambre forte','zone.6':'Les Bas-fonds','zone.7':'Sphère privée','zone.8':'Le Sommet',
-'rule.nervous':'La baraka monte 2× plus vite','rule.mute':'Croupier muet',
+'rule.nervous':'La chance monte 2× plus vite','rule.mute':'Croupier muet',
 'rule.gros':'Le croupier tire jusqu’à 18','rule.depart':'Table déjà chaude (+30 %)',
 'rtx.0':'Initiation','rtx.4':'Salon feutré','rtx.7':'Croupier impitoyable (18)',
 'rtx.boss':r=>'BOSS · '+r,'rtx.bossFinal':'BOSS FINAL','rtx.bossPlain':'affrontement',
@@ -434,22 +434,22 @@ fr:{
 'endless.tier':n=>'Palier '+n,
 'relic.lunettes.n':'Lunettes','relic.lunettes.d':'Relique permanente. Une fois par main, révèle la prochaine carte du sabot avant de décider de tirer.',
 'relic.jeton.n':'Jeton fendu','relic.jeton.d':'Relique permanente. Si tu perds une main avec un total de 20, tu récupères la moitié de ta mise.',
-'relic.clope.n':'Cigarette','relic.clope.d':'Relique permanente. Ta baraka monte 30 % plus vite, tout le temps.',
+'relic.clope.n':'Cigarette','relic.clope.d':'Relique permanente. Ta chance monte 30 % plus vite, tout le temps.',
 'relic.as.n':'As truqué','relic.as.d':'Relique permanente. Quand tu gagnes une main qui contient un As : +1 au multiplicateur.',
-'relic.froid.n':'Sang-froid','relic.froid.d':'Relique permanente. Si tu gagnes une main avec une baraka ≥ 75 % : +1 au multiplicateur.',
+'relic.froid.n':'Sang-froid','relic.froid.d':'Relique permanente. Si tu gagnes une main avec une chance ≥ 75 % : +1 au multiplicateur.',
 'relic.compteur.n':'Compteur','relic.compteur.d':'Relique permanente. Affiche en continu ta probabilité de dépasser 21 au prochain tirage.',
 'relic.mecene.n':'Mécène','relic.mecene.d':'Relique permanente. +4 $ offerts au début de chaque main.',
 'relic.usurier.n':'Usurier','relic.usurier.d':'Relique permanente. Au début de chaque main : +1 $ par tranche de 5 $ en banque (jusqu’à +6).',
 'relic.collector.n':'Collectionneur','relic.collector.d':'Relique permanente. Les éditions spéciales (GOLD/PRISME) apparaissent 3× plus souvent sur tes cartes.',
 'relic.maitresse.n':'Carte maîtresse','relic.maitresse.d':'Relique permanente. Ta 1re carte de chaque main est GOLD : de l’argent bonus quand tu gagnes.',
-'relic.bruleur.n':'Brûleur','relic.bruleur.d':'Relique permanente. Si tu gagnes une main avec une baraka ≥ 50 % : gain de la main ×1,5.',
+'relic.bruleur.n':'Brûleur','relic.bruleur.d':'Relique permanente. Si tu gagnes une main avec une chance ≥ 50 % : gain de la main ×1,5.',
 'relic.portebonheur.n':'Porte-bonheur','relic.portebonheur.d':'Relique permanente. +1 emplacement de jeton Tarot (tu peux garder un jeton de plus).',
 'relic.diplomate.n':'Diplomate','relic.diplomate.d':'Sur une égalité, récupère ta mise et gagne 25 % en plus. Face à « égalité = défaite », récupère seulement ta mise.',
 'relic.talisman.n':'Talisman','relic.talisman.d':'Relique rare. Une fois par table, ta première main perdue est intégralement remboursée.',
 'relic.aimant.n':'Aimant','relic.aimant.d':'Relique rare. +1 $ à chaque carte que tu tires.',
 'relic.phare.n':'Le Phare','relic.phare.d':'Relique rare. CHARLIE (5 cartes sans dépasser) paie ×3 au lieu de ×2.',
-'tarot.etoile.n':'L’Étoile','tarot.etoile.d':'À jouer à tout moment : +2 BARAKA tout de suite (fait monter ta veine).','tarot.etoile.u':'+2 baraka',
-'tarot.jugement.n':'Le Jugement','tarot.jugement.d':'À jouer à tout moment : monte directement d’un niveau de BARAKA.','tarot.jugement.u':'BARAKA +1 niveau',
+'tarot.etoile.n':'L’Étoile','tarot.etoile.d':'À jouer à tout moment : +2 CHANCE tout de suite (fait monter ta veine).','tarot.etoile.u':'+2 chance',
+'tarot.jugement.n':'Le Jugement','tarot.jugement.d':'À jouer à tout moment : monte directement d’un niveau de CHANCE.','tarot.jugement.u':'CHANCE +1 niveau',
 'tarot.soleil.n':'Le Soleil','tarot.soleil.d':'Ajoute aussitôt 18 $ à ta banque, à tout moment.','tarot.soleil.u':'+18 $',
 'tarot.diable.n':'Le Diable','tarot.diable.d':'À jouer sur ta main : transforme une de tes cartes en PRISME, qui multiplie le gain de la main (×1,5).','tarot.diable.u':c=>'Prisme : '+c,
 'tarot.etoileD.n':'L’Étoile filante','tarot.etoileD.d':'À jouer sur ta main : transforme une de tes cartes en GOLD, qui rapporte de l’argent bonus quand la main est gagnée.','tarot.etoileD.u':c=>'Gold : '+c,
@@ -470,7 +470,7 @@ fr:{
 'unlock.plafond.n':'Plafond','unlock.plafond.d':n=>'Plafond de mise de départ +'+(10*(n+1))+' %',
 'unlock.elan.n':'Élan','unlock.elan.d':n=>'Démarre directement au palier '+(1+(n+1)),
 'unlock.cashplus.n':'Blanchisseur','unlock.cashplus.d':n=>'L’encaissement de la cagnotte rapporte +'+(25*(n+1))+' %',
-'unlock.boon2.n':'Pactes','unlock.boon2.d':n=>'Débloque 2 bonus de palier RARES (Baraka dopée, Mains spéciales ×2)',
+'unlock.boon2.n':'Pactes','unlock.boon2.d':n=>'Débloque 2 bonus de palier RARES (Chance dopée, Mains spéciales ×2)',
 'tok.bank':'+$','tok.pourboire':'+$<small class="sym">/main</small>','tok.net':'+1 <small>essai</small>',
 'tok.tarot':'+1 <small>slot</small>','tok.contact':'+1<small>◆</small>','tok.relic2':'+3<small>◆</small>',
 'tok.plafond':'+% <small>mise</small>','tok.elan':'+1 <small>palier</small>','tok.cashplus':'+25<small class="sym">%★</small>',
@@ -478,22 +478,22 @@ fr:{
 'tok.lunettes':'VOIR','tok.jeton':'½ <small>MISE</small>','tok.compteur':'BUST<small class="sym">%</small>',
 'tok.collector':'ÉD<small>×3</small>','tok.aimant':'+1<small class="sym">$/carte</small>',
 'tok.maitresse':'GOLD','tok.etoileD':'GOLD','tok.diable':'PRISME',
-'tok.talisman':'1 <small>VIE</small>','tok.etoile':'+2 <small class="sym">baraka</small>',
+'tok.talisman':'1 <small>VIE</small>','tok.etoile':'+2 <small class="sym">chance</small>',
 'tok.jugement':'+1<small class="sym">niv</small>','tok.pendu':'−1 <small>carte</small>',
 'tok.magicien':'IDÉAL','tok.roue':'ÉD<small>?</small>','tok.assurance':'ASSU<small>R</small>',
 'tok.videur':'+1 <small>essai</small>',
 'boon.mult.t':'+1 PLAFOND MULT','boon.mult.d':'Le multiplicateur peut monter plus haut.',
 'boon.income.t':'+5 $ / MAIN','boon.income.d':'Revenu passif à chaque main.',
 'boon.betmax.t':'MISE MAX +25 %','boon.betmax.d':'Ton plafond de mise grimpe : vise plus gros.',
-'boon.filet.t':'FILET BARAKA','boon.filet.d':'À la défaite, la BARAKA ne retombe pas à zéro : elle perd juste un niveau.',
+'boon.filet.t':'FILET CHANCE','boon.filet.d':'À la défaite, la CHANCE ne retombe pas à zéro : elle perd juste un niveau.',
 'boon.cash.t':'+20 % CAGNOTTE','boon.cash.d':'Injection immédiate dans ta cagnotte.',
-'boon.baraplus.t':'BARAKA DOPÉE','boon.baraplus.d':'Les coups culottés donnent +1 BARAKA de plus.',
+'boon.baraplus.t':'CHANCE DOPÉE','boon.baraplus.d':'Les coups culottés donnent +1 CHANCE de plus.',
 'boon.evt3.t':'MAINS SPÉCIALES ×2','boon.evt3.d':'Une main spéciale toutes les 3 mains (au lieu de 5).',
 'evt.doree.t':'MAIN DORÉE','evt.doree.d':'gains doublés sur cette main',
 'evt.forcee.t':'MISE FORCÉE','evt.forcee.d':'mise max obligatoire',
 'evt.pompette.t':'CROUPIER POMPETTE','evt.pompette.d':'le croupier s’arrête à 16',
 'evt.etoile.t':'CARTE ÉTOILÉE','evt.etoile.d':'ta première carte reçoit Prisme (×1,5), si elle est sans édition',
-'ctr.c5':'gagne une main de 5 cartes','ctr.c21':'gagne avec un 21 parfait','ctr.cpress':'gagne à baraka ≥ 75 %',
+'ctr.c5':'gagne une main de 5 cartes','ctr.c21':'gagne avec un 21 parfait','ctr.cpress':'gagne à chance ≥ 75 %',
 'ctr.cmult':'gagne une main à ×3 ou plus','ctr.cdbl':'gagne une main DOUBLÉE',
 'ctr.csuite':'gagne avec une SUITE','ctr.ccoul':'gagne avec une COULEUR',
 }
@@ -524,20 +524,20 @@ Object.assign(STR.fr,{
  'effect.standard.title':'RÈGLES CLASSIQUES','effect.standard.short':'Égalité : mise rendue',
  'effect.standard.description':'À total égal sans dépasser 21, tu récupères toute ta mise. Aucune pénalité de table sur les égalités.',
  'effect.sec.title':'LES ÉGALITÉS SONT PERDUES','effect.sec.short':'Égalité = perdu',
- 'effect.sec.description':'Ici, le croupier gagne aussi en cas d’égalité. Tu perds ta mise et ta Baraka baisse comme après une défaite. La relique Diplomate peut te protéger.',
+ 'effect.sec.description':'Ici, le croupier gagne aussi en cas d’égalité. Tu perds ta mise et ta Chance baisse comme après une défaite. La relique Diplomate peut te protéger.',
  'effect.sec.protected':'Ton Diplomate te protège : une égalité rend ta mise, sans le bonus de 25 %.','effect.sec.protectedShort':'Égalité : protection Diplomate',
  'effect.gros.title':'LE CROUPIER TIRE JUSQU’À 18','effect.gros.short':'Croupier : tire jusqu’à 18',
  'effect.gros.description':'Le croupier continue de tirer tant que son total est inférieur à 18. Les égalités rendent toujours la mise.',
  'effect.mute.title':'LE CROUPIER CACHE SON JEU','effect.mute.short':'Croupier : cartes cachées',
  'effect.mute.description':'Ses deux cartes et son total restent cachés pendant tes décisions. Ils sont révélés quand vient son tour de jouer.',
- 'effect.nervous.title':'BARAKA GAGNÉE ×2','effect.nervous.short':'Baraka gagnée ×2',
- 'effect.nervous.description':'Les victoires rapportent deux fois plus de Baraka. Les tarots conservent les valeurs indiquées sur leurs cartes.',
- 'effect.depart.title':'TU COMMENCES À BARAKA NIVEAU 1','effect.depart.short':'Départ : Baraka niveau 1',
- 'effect.depart.description':'Tu entres à cette table avec 2 points de Baraka, soit le niveau 1 et un multiplicateur de ×1,15 sur tes victoires.',
+ 'effect.nervous.title':'CHANCE GAGNÉE ×2','effect.nervous.short':'Chance gagnée ×2',
+ 'effect.nervous.description':'Les victoires rapportent deux fois plus de Chance. Les tarots conservent les valeurs indiquées sur leurs cartes.',
+ 'effect.depart.title':'TU COMMENCES À CHANCE NIVEAU 1','effect.depart.short':'Départ : Chance niveau 1',
+ 'effect.depart.description':'Tu entres à cette table avec 2 points de Chance, soit le niveau 1 et un multiplicateur de ×1,15 sur tes victoires.',
  'effect.atelier.title':'UNE PREMIÈRE CARTE GOLD','effect.atelier.short':'GOLD aux mains 1, 4, 7 et 10',
  'effect.atelier.description':'Aux mains 1, 4, 7 et 10, ta première carte reçoit GOLD si elle n’a pas déjà une édition. En cas de victoire, elle ajoute 15 % de la mise avant multiplication.',
- 'effect.serein.title':'TA BARAKA RÉSISTE AUX PERTES','effect.serein.short':'Défaite : 75 % de Baraka gardée',
- 'effect.serein.description':'Après une défaite, tu conserves 75 % de ta Baraka au lieu de 50 %. La mise perdue n’est pas remboursée.',
+ 'effect.serein.title':'TA CHANCE RÉSISTE AUX PERTES','effect.serein.short':'Défaite : 75 % de Chance gardée',
+ 'effect.serein.description':'Après une défaite, tu conserves 75 % de ta Chance au lieu de 50 %. La mise perdue n’est pas remboursée.',
  'circuit.draft':'TON PREMIER ATOUT','circuit.contact':'LE CONTACT','circuit.draftCopy':'Choisis une relique. Elle reste avec toi pendant cette expédition.',
  'circuit.briefGoal':(goal,hands,bet)=>'Objectif '+goal+' · '+hands+' mains · mise conseillée '+bet,
  'circuit.goalLabel':'Objectif','circuit.handsLabel':'Mains','circuit.betLabel':'Mise conseillée',
@@ -552,31 +552,31 @@ Object.assign(STR.fr,{
  'power.compteur':'Écarter la prochaine carte','power.phare':'Préparer une petite carte',
  'shop.reserve':n=>'Réserve après entrée : '+n,'shop.after':n=>'Après achat et entrée : '+n,
  'shop.manage':'Tes atouts · vendre pour libérer une place','shop.sellItem':(name,value)=>name+' · vendre '+value,
- 'rule.depart':'La Baraka commence au niveau 1','rule.atelier':'La première carte est GOLD aux mains 1, 4, 7 et 10','rule.serein':'Une perte conserve 75 % de la Baraka',
+ 'rule.depart':'La Chance commence au niveau 1','rule.atelier':'La première carte est GOLD aux mains 1, 4, 7 et 10','rule.serein':'Une perte conserve 75 % de la Chance',
  'boss.bouncer':'Gagne 2 manches contre le Videur',
  'boss.banker':'Gagne 2 manches, dont une avec au moins 60 % de la mise maximale de base',
  'boss.reaper':'Gagne 2 manches contre la Faucheuse',
  'boss.concierge':'Gagne 2 manches, dont une avec 3 cartes ou un tarot joué',
  'boss.accountant':'Gagne 2 manches avec des totaux différents',
  'boss.gravedigger':'Gagne 2 manches dont une à 4 cartes, ou gagne 3 manches',
- 'boss.croupier':'Gagne 2 manches, dont une à Baraka niveau 1 ou plus',
+ 'boss.croupier':'Gagne 2 manches, dont une à Chance niveau 1 ou plus',
  'boss.godfather':'Gagne 3 manches, dont une à 3 cartes ou plus et ×2 minimum',
  'relic.jeton.d':'Sur une défaite à 19 ou 20, récupère la moitié de la mise.',
- 'relic.froid.d':'Après une défaite, conserve 75 % de ta Baraka au lieu de 50 %.',
+ 'relic.froid.d':'Après une défaite, conserve 75 % de ta Chance au lieu de 50 %.',
  'relic.compteur.d':'Le risque de dépassement est affiché pour tous. Une fois par table, écarte la prochaine carte du sabot et révèle celle qui la suit.',
  'relic.mecene.d':'Si ta banque est sous le capital conseillé, reçois 12 % de la mise maximale de base au début de chaque main.',
  'relic.usurier.d':'Reçois 1 % de ta réserve au début de chaque main, jusqu’à 12 % de la mise maximale de base.',
  'relic.maitresse.d':'La première carte de chaque main est GOLD si elle n’a pas déjà une édition : +15 % de la mise avant multiplication.',
- 'relic.bruleur.d':'À Baraka niveau 2 ou plus, multiplie les gains par 1,3, dans la limite du plafond de zone.',
+ 'relic.bruleur.d':'À Chance niveau 2 ou plus, multiplie les gains par 1,3, dans la limite du plafond de zone.',
  'relic.portebonheur.d':'Un emplacement de tarot supplémentaire et 20 % de réduction sur les tarots en boutique.',
  'relic.diplomate.d':'Sur une égalité, récupère ta mise et gagne 25 % en plus. Face à « égalité = défaite », récupère seulement ta mise.',
  'relic.talisman.d':'Rembourse entièrement la première main perdue de chaque tentative. En séparation, protège une seule des deux mains.',
  'relic.aimant.d':'Chaque tirage sûr depuis un total de 16 ou plus rapporte 10 % de la mise engagée. Fonctionne avec Tirer, Doubler et Forcer.',
  'relic.phare.d':'À 4 cartes : ×1,5. Charlie à 5 cartes : ×3. Une fois par table, prépare le plus petit rang du sabot pour ton prochain tirage.',
- 'tarot.etoile.d':'Ajoute exactement 2 points de Baraka. Sans amplification par Cigarette ou table nerveuse.',
- 'tarot.jugement.d':'Atteins exactement le prochain niveau de Baraka. Inutilisable au niveau maximal.',
- 'tarot.soleil.d':'Échange 2 points de Baraka contre 75 % de la mise maximale de base en banque.',
- 'tarot.soleil.u':amount=>'+'+amount+' · −2 Baraka',
+ 'tarot.etoile.d':'Ajoute exactement 2 points de Chance. Sans amplification par Cigarette ou table nerveuse.',
+ 'tarot.jugement.d':'Atteins exactement le prochain niveau de Chance. Inutilisable au niveau maximal.',
+ 'tarot.soleil.d':'Échange 2 points de Chance contre 75 % de la mise maximale de base en banque.',
+ 'tarot.soleil.u':amount=>'+'+amount+' · −2 Chance',
  'tarot.diable.d':'Choisis une carte sans édition : PRISME multiplie le multiplicateur par 1,5, avant le plafond de zone.',
  'tarot.etoileD.d':'Choisis une carte sans édition : GOLD ajoute 15 % de la mise engagée avant multiplication.',
  'tarot.pendu.d':'Arme-le avant de tirer. Le prochain dépassement de cette main annule automatiquement la carte reçue. Expire à la fin de la main.',
@@ -591,8 +591,8 @@ Object.assign(STR.fr,{
  'unlock.pourboire.d':n=>'Au début de chaque main : '+(2*Math.min(3,n+1))+' % de la mise maximale de base',
  'unlock.contact.d':()=> 'Choisis une deuxième relique parmi 3 offres au départ de chaque expédition',
  'ed.foil':'+15 % de la mise avant multiplication','ed.poly':'Multiplicateur ×1,5, avant plafond',
- 'ctr.cpress':'Gagner à Baraka niveau 2 ou plus',
- 'rules.streak':'<span class="rt">BARAKA</span>Niveaux à <span class="k">2 / 4 / 7 / 10 points</span> : ×1,15 / ×1,3 / ×1,45 / ×1,6. Victoire +1, coup culotté +2. En circuit, une perte conserve la moitié ; jusqu’à 2 points passent à la table suivante. En libre, une perte remet à zéro, sauf bonus Filet.',
+ 'ctr.cpress':'Gagner à Chance niveau 2 ou plus',
+ 'rules.streak':'<span class="rt">CHANCE</span>Niveaux à <span class="k">2 / 4 / 7 / 10 points</span> : ×1,15 / ×1,3 / ×1,45 / ×1,6. Victoire +1, coup culotté +2. En circuit, une perte conserve la moitié ; jusqu’à 2 points passent à la table suivante. En libre, une perte remet à zéro, sauf bonus Filet.',
  'rules.stars':'<span class="rt">ÉTOILES</span>Une étoile pour l’objectif et le défi du boss. Une de plus sans reprise de la table. Une de plus pour le contrat choisi. Le montant du dernier gain ne change pas ces critères.',
  'rules.contracts':'<span class="rt">CONTRATS</span>Choisis parmi deux défis en arrivant à une table. Les plus rares rapportent davantage de réputation. Le contrat accompli reste acquis en cas de reprise.',
  'rules.bonus':'<span class="rt">BONUS</span>Une seule édition par carte. GOLD ajoute 15 % de la mise au gain de base, avant multiplication. PRISME multiplie le multiplicateur par 1,5, dans la limite du plafond de zone. Plusieurs cartes cumulent leurs bonus. Ces bonus sont appliqués en cas de victoire.',
@@ -1042,6 +1042,12 @@ function renderTableEffect(box){
   if(!box)return;
   const effect=tableEffectData();box.dataset.rule=effect.rule;
   box.innerHTML='<span class="table-effect-label">'+t('circuit.tableEffect')+'</span><strong>'+effect.title+'</strong><p>'+effect.description+'</p>'+(effect.rule==='sec'&&hasRelic('diplomate')?'<p class="table-effect-protection">'+t('effect.sec.protected')+'</p>':'');
+  if(box.id==='briefEffect'){
+    const art=document.createElement('span');art.className='table-rule-art';art.setAttribute('aria-hidden','true');
+    if(effect.rule==='atelier')art.append(cardEl({r:'A',s:'♠',ed:'foil'}));
+    else art.innerHTML=effectMark(({standard:'jeton',sec:'diable',gros:'compteur',mute:'lunettes',nervous:'baraplus',depart:'baraplus',serein:'net'})[effect.rule]||'jeton','#273337');
+    box.prepend(art);
+  }
 }
 function openTableRules(){
   inspectRef=null;GameClock.pause('inspect',true);
@@ -1388,7 +1394,7 @@ function showTableBrief(){
   $('briefContracts').replaceChildren();
   G.contractChoices.forEach((c,i)=>{
     const b=document.createElement('button');b.className='btn b-blue contract-choice';
-    b.innerHTML='<span class="contract-copy" data-reading-label>'+contractText(c)+'</span><small class="contract-reward">+'+c.reward+' '+STAR+'<span class="contract-prompt">'+t('circuit.chooseContract')+'</span></small><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
+    b.innerHTML='<span class="contract-copy">'+contractText(c)+'</span><small class="contract-reward"><span class="contract-reward-value">+'+c.reward+' '+STAR+'</span><span class="contract-prompt">'+t('circuit.chooseContract')+'</span></small><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
     b.onclick=()=>chooseContract(i);$('briefContracts').append(b);
   });
   screen.classList.add('show');
@@ -3464,7 +3470,7 @@ freshGame();buildShoe();applyI18n();renderHands();tick();
 /* Presentation only: the blackjack engine and progression are unchanged. */
 Object.assign(STR.fr,{
  'ui.bet':'Mise','ui.mult':'Multi','ui.gain':'Cagnotte','ui.potLbl':'Cagnotte','ui.turnsLeft':'mains<br>restantes','ui.you':'Ta main','ui.dealer':'Croupier','act.double':'DOUBLER','act.force':'FORCER','modern.table':'Table',
- 'modern.club':'Blackjack roguelite','modern.private':'BARAKA','modern.afterhours':'HAUTE TENSION',
+ 'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HAUTE TENSION',
  'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','cb.to21':n=>'21 parfait ×3 · +'+n,'modern.goal':'Objectif','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
  'nav.rules':'Règles','nav.settings':'Réglages','nav.back':'‹ Modes de jeu','nav.reset':'Réinitialiser ce mode',
  'planque.best':'Meilleur parcours','planque.noRecord':'Aucune partie','planque.back':'Dos de carte','planque.backSub':(i,n)=>i+'/'+n,
@@ -3481,7 +3487,7 @@ Object.assign(STR.fr,{
  'planque.startInf':'Sans limite de mains',
  'planque.startCircuit':n=>'Commencer le circuit',
  'set.title':'RÉGLAGES','set.close':'TERMINÉ','set.dev':'OUTILS DE DÉMONSTRATION',
- 'rules.close':'RETOUR','rules.basic':'Les bases du blackjack','rules.bonuses':'Baraka & combinaisons','rules.modes':'Les modes de jeu',
+ 'rules.close':'RETOUR','rules.basic':'Les bases du blackjack','rules.bonuses':'Chance & combinaisons','rules.modes':'Les modes de jeu',
  'tok.bankI':'+$','tok.pourboireI':'+$<small>/main</small>',
  'back.cb9':'Éclair','back.cb10':'Chance','back.cb11':'Cœur','back.cb12':'Lune','back.cb13':'Dés','back.cb14':'Couronne','back.cb15':'Œil','back.cb16':'Cerises','back.cb18':'Flamme','back.cb19':'Diamant','back.cb22':'Serpent','back.cb26':'Soleil',
  'set.open':'RÉGLAGES',
@@ -3494,7 +3500,7 @@ Object.assign(STR.fr,{
 });
 Object.assign(STR.en,{
  'ui.bet':'Bet','ui.mult':'Multi','ui.gain':'Bank','ui.potLbl':'Bank','ui.turnsLeft':'hands<br>left','ui.you':'Your hand','ui.dealer':'Dealer','act.force':'PUSH LUCK','modern.table':'Table',
- 'modern.club':'Blackjack roguelite','modern.private':'BARAKA','modern.afterhours':'HIGH VOLTAGE',
+ 'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HIGH VOLTAGE',
  'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'Target','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'THE HOUSE IS WATCHING.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
  'nav.rules':'Rules','nav.settings':'Settings','nav.back':'‹ Game modes','nav.reset':'Reset this mode',
  'planque.best':'Best run','planque.noRecord':'No games played','planque.back':'Card back','planque.backSub':(i,n)=>i+'/'+n,
@@ -3713,7 +3719,7 @@ syncMenuFocus();
   }
   function brand(el){
     if(el.querySelector('.brand-image'))return;
-    el.innerHTML='<span class="brand-image" role="img" aria-label="Baraka">'+ColdDeckArt.lettering('BARAKA')+'</span>';
+    el.innerHTML='<span class="brand-image" role="img" aria-label="Cold Deck">'+ColdDeckArt.lettering('COLD DECK')+'</span>';
   }
   // Emphasize the exact displayed value, including its sign, decimal, unit and
   // grouped thousands. Only text nodes are replaced: links and controls survive.

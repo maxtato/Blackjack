@@ -64,7 +64,7 @@
   }
   function brand(el){
     if(el.querySelector('.brand-image'))return;
-    el.innerHTML='<span class="brand-image" role="img" aria-label="Baraka">'+ColdDeckArt.lettering('BARAKA')+'</span>';
+    el.innerHTML='<span class="brand-image" role="img" aria-label="Cold Deck">'+ColdDeckArt.lettering('COLD DECK')+'</span>';
   }
   // Emphasize the exact displayed value, including its sign, decimal, unit and
   // grouped thousands. Only text nodes are replaced: links and controls survive.

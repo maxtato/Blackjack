@@ -9,7 +9,7 @@
     }catch{}
   };
   logo.onerror=()=>{};
-  logo.src='assets/illustrations/brand-baraka.webp';
+  logo.src='assets/illustrations/brand-wordmark.webp';
   // The game redraws menu headings when returning home or changing language.
   const install=()=>{
     for(const heading of document.querySelectorAll('.menuTitle,.table-brand,.wordmark')){
@@ -20,11 +20,11 @@
       if(frame)fallback.append(...frame.childNodes);
       else{
         frame=document.createElement('span');frame.className='brand-image';
-        frame.setAttribute('role','img');frame.setAttribute('aria-label','Baraka');
-        fallback.textContent='BARAKA';heading.replaceChildren(frame);
+        frame.setAttribute('role','img');frame.setAttribute('aria-label','Cold Deck');
+        fallback.textContent='COLD DECK';heading.replaceChildren(frame);
       }
       const image=document.createElement('img');
-      image.className='brand-art';image.src=logo.src;image.width=1536;image.height=1024;
+      image.className='brand-art';image.src=logo.src;image.width=1280;image.height=1280;
       image.alt='';image.setAttribute('aria-hidden','true');image.decoding='async';image.draggable=false;
       frame.replaceChildren(fallback,image);
     }

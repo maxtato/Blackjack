@@ -19,7 +19,7 @@ if(process.argv[2]){
   let html=fs.readFileSync(path.join(root,'index.html'),'utf8');
   for(const file of ['boot.js','brand-logo.js']){
     let script=fs.readFileSync(path.join(root,file),'utf8');
-    if(file==='brand-logo.js')script=script.replace("'assets/illustrations/brand-baraka.webp'",()=>JSON.stringify('data:image/webp;base64,'+fs.readFileSync(path.join(root,'assets/illustrations/brand-baraka.webp')).toString('base64')));
+    if(file==='brand-logo.js')script=script.replace("'assets/illustrations/brand-wordmark.webp'",()=>JSON.stringify('data:image/webp;base64,'+fs.readFileSync(path.join(root,'assets/illustrations/brand-wordmark.webp')).toString('base64')));
     html=html.replace('<script src="'+file+'"></script>',()=>'<script>\n'+script.replace(/<\/script/gi,'<\\/script')+'\n</script>');
   }
   for(const css of ['modern.css','electric.css','illustrated.css','raster.css','equilibre.css']){
