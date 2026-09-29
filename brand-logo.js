@@ -24,7 +24,7 @@
         fallback.textContent='BARAKA';heading.replaceChildren(frame);
       }
       const image=document.createElement('img');
-      image.className='brand-art';image.src=logo.src;image.width=2025;image.height=777;
+      image.className='brand-art';image.src=logo.src;image.width=1536;image.height=1024;
       image.alt='';image.setAttribute('aria-hidden','true');image.decoding='async';image.draggable=false;
       frame.replaceChildren(fallback,image);
     }
