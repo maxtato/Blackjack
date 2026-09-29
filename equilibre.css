@@ -535,9 +535,9 @@
 .card:is(.foil,.poly)>.card-surface::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background-image:var(--edition-wash);background-size:100% 100%;animation:none}
 .card.poly>.card-surface::before{background-size:115% 115%;background-position:40% 50%;animation:prism-facets 4.5s ease-in-out infinite alternate}
 /* A narrow white highlight travels over the art; ranks and tags stay above it. */
-.card:is(.foil,.poly)>.card-surface::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:none;background:linear-gradient(112deg,transparent 34%,#fff29720 42%,#fff9c766 46%,#fffefaed 49%,#ffffff 50%,#fff8c499 51%,#ffd00028 55%,transparent 62%) 135% 50%/260% 100% no-repeat;animation:edition-sheen 2.7s ease-in-out infinite}
+.card:is(.foil,.poly)>.card-surface::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:none;background:linear-gradient(112deg,transparent 34%,#fff29720 42%,#fff9c766 46%,#fffefaed 49%,#ffffff 50%,#fff8c499 51%,#ffd00028 55%,transparent 62%) 135% 50%/260% 100% no-repeat;animation:edition-sheen 1.8s ease-in-out infinite}
 .card.foil>.card-surface::after{background-image:linear-gradient(112deg,transparent 32%,#fff9d230 40%,#fffbdc90 46%,#fffffff2 49%,#ffffff 50%,#fffdeab0 53%,#ffec9c30 58%,transparent 66%)}
-.card.poly>.card-surface::after{background:linear-gradient(126deg,transparent 35%,#fff8 36% 41%,transparent 42% 46%,#fff4 47% 51%,transparent 52%) 150% 50%/300% 100% no-repeat;animation:prism-sheen 2.4s ease-in-out -.65s infinite}
+.card.poly>.card-surface::after{background:linear-gradient(126deg,transparent 35%,#fff8 36% 41%,transparent 42% 46%,#fff4 47% 51%,transparent 52%) 150% 50%/300% 100% no-repeat;animation:prism-sheen 1.6s ease-in-out -.45s infinite}
 .card.foil.red{color:#8d2924}
 .card:is(.foil,.poly) .edtag{z-index:4;background:#20333b;color:#fff7e6;border:0;border-radius:2px;font:500 max(7px,calc(var(--card-w)*.075))/1.1 var(--copy-font);padding:2px 4px}
 .card.foil .edtag{color:#ffed9c}

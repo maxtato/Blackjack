@@ -702,5 +702,14 @@
     "generator": "built-in image_gen",
     "direction": "04 · Rois du bluff",
     "source": "court-jack-beige.webp"
+  },
+  {
+    "id": "brand-baraka",
+    "file": "brand-baraka.webp",
+    "width": 2025,
+    "height": 777,
+    "prompt": "User-selected Baraka proposal 1, rearranged into a single horizontal line with separated ivory cut-paper letters, a lightning-shaped counter in the R and a separate small golden-yellow bolt at right. Background extraction and transparent-edge cleanup preserve the approved lettering, spacing, proportions and colors. No added symbols, outlines or shadows.",
+    "generator": "built-in image_gen",
+    "notes": "Approved horizontal logo; transparent PNG encoded losslessly as WebP for the home screen. Fixed layout and a readable fallback remain until the logo is decoded."
   }
 ]

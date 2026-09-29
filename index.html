@@ -26,6 +26,8 @@
 <link rel="stylesheet" href="illustrated.css">
 <link rel="stylesheet" href="raster.css">
 <link rel="stylesheet" href="equilibre.css">
+<link rel="preload" as="image" type="image/webp" href="assets/illustrations/brand-baraka.webp" fetchpriority="high">
+<script src="brand-logo.js"></script>
 <link rel="preload" as="font" type="font/woff2" href="fonts/baloo-2-latin-500-normal.woff2" crossorigin>
 </head>
 <body>
@@ -117,10 +119,11 @@
 
 <!-- MENU PRINCIPAL -->
 <div class="overlay show menu-page" id="modeMenu">
+ <img id="brandLogoSource" src="assets/illustrations/brand-baraka.webp" width="2025" height="777" alt="" aria-hidden="true" hidden style="display:none">
  <div class="ovpanel">
   <main class="home-grid">
     <div class="brand-stage">
-      <h1 class="menuTitle" aria-label="Baraka">BARAKA</h1>
+      <h1 class="menuTitle" aria-label="Baraka"><span class="brand-image" role="img" aria-label="Baraka"><span class="brand-fallback" aria-hidden="true"><span class="raster-copy"><span class="sr-only">BARAKA</span><span class="raster-ink" aria-hidden="true"><span class="raster-word"><i class="raster-glyph live-letter" data-glyph="B" data-font="letters" style="--glyph-start:0.292;--glyph-end:0.239;--glyph-x:20%;--glyph-y:0%;--letter-duration:1.158s;--letter-delay:-0.260s;--glyph-beat:0.000s"></i><i class="raster-glyph live-letter" data-glyph="A" data-font="letters" style="--glyph-start:0.268;--glyph-end:0.234;--glyph-x:0%;--glyph-y:0%;--letter-duration:1.121s;--letter-delay:-0.257s;--glyph-beat:0.085s"></i><i class="raster-glyph live-letter" data-glyph="R" data-font="letters" style="--glyph-start:0.249;--glyph-end:0.244;--glyph-x:100%;--glyph-y:40%;--letter-duration:1.091s;--letter-delay:-0.707s;--glyph-beat:0.170s"></i><i class="raster-glyph live-letter" data-glyph="A" data-font="letters" style="--glyph-start:0.268;--glyph-end:0.234;--glyph-x:0%;--glyph-y:0%;--letter-duration:0.984s;--letter-delay:-0.852s;--glyph-beat:0.255s"></i><i class="raster-glyph live-letter" data-glyph="K" data-font="letters" style="--glyph-start:0.249;--glyph-end:0.249;--glyph-x:80%;--glyph-y:20%;--letter-duration:1.082s;--letter-delay:-0.648s;--glyph-beat:0.340s"></i><i class="raster-glyph live-letter" data-glyph="A" data-font="letters" style="--glyph-start:0.268;--glyph-end:0.234;--glyph-x:0%;--glyph-y:0%;--letter-duration:1.205s;--letter-delay:-1.045s;--glyph-beat:0.425s"></i></span></span></span></span><img class="brand-art" src="assets/illustrations/brand-baraka.webp" width="2025" height="777" alt="" aria-hidden="true" decoding="async" draggable="false"></span></h1>
       <div class="eyebrow" data-i18n="modern.club">Blackjack roguelite</div>
       <p class="hero-copy" data-i18n-html="modern.hero">Une carte de plus.<br>Et tout peut basculer.</p>
     </div>
@@ -147,7 +150,7 @@
 <!-- LA PLANQUE -->
 <div class="overlay menu-page" id="intro">
  <div class="ovpanel">
-  <header class="menu-top"><button class="quiet-btn" data-reading-label data-action="openMenu" data-i18n="nav.back">← MODES DE JEU</button><span class="wordmark">BARAKA</span><button id="rulesBtn" class="quiet-btn" data-reading-label data-action="openRules" data-i18n="nav.rules">RÈGLES</button></header>
+  <header class="menu-top"><button class="quiet-btn" data-reading-label data-action="openMenu" data-i18n="nav.back">← MODES DE JEU</button><span class="wordmark"><span class="brand-image" role="img" aria-label="Baraka"><span class="brand-fallback" aria-hidden="true"><span class="raster-copy"><span class="sr-only">BARAKA</span><span class="raster-ink" aria-hidden="true"><span class="raster-word"><i class="raster-glyph live-letter" data-glyph="B" data-font="letters" style="--glyph-start:0.292;--glyph-end:0.239;--glyph-x:20%;--glyph-y:0%;--letter-duration:1.158s;--letter-delay:-0.260s;--glyph-beat:0.000s"></i><i class="raster-glyph live-letter" data-glyph="A" data-font="letters" style="--glyph-start:0.268;--glyph-end:0.234;--glyph-x:0%;--glyph-y:0%;--letter-duration:1.121s;--letter-delay:-0.257s;--glyph-beat:0.085s"></i><i class="raster-glyph live-letter" data-glyph="R" data-font="letters" style="--glyph-start:0.249;--glyph-end:0.244;--glyph-x:100%;--glyph-y:40%;--letter-duration:1.091s;--letter-delay:-0.707s;--glyph-beat:0.170s"></i><i class="raster-glyph live-letter" data-glyph="A" data-font="letters" style="--glyph-start:0.268;--glyph-end:0.234;--glyph-x:0%;--glyph-y:0%;--letter-duration:0.984s;--letter-delay:-0.852s;--glyph-beat:0.255s"></i><i class="raster-glyph live-letter" data-glyph="K" data-font="letters" style="--glyph-start:0.249;--glyph-end:0.249;--glyph-x:80%;--glyph-y:20%;--letter-duration:1.082s;--letter-delay:-0.648s;--glyph-beat:0.340s"></i><i class="raster-glyph live-letter" data-glyph="A" data-font="letters" style="--glyph-start:0.268;--glyph-end:0.234;--glyph-x:0%;--glyph-y:0%;--letter-duration:1.205s;--letter-delay:-1.045s;--glyph-beat:0.425s"></i></span></span></span></span><img class="brand-art" src="assets/illustrations/brand-baraka.webp" width="2025" height="777" alt="" aria-hidden="true" decoding="async" draggable="false"></span></span><button id="rulesBtn" class="quiet-btn" data-reading-label data-action="openRules" data-i18n="nav.rules">RÈGLES</button></header>
   <div class="hideout-heading"><div class="planqueMode" id="planqueMode"></div><h1 id="planqueTitle">LA PLANQUE</h1><p id="planqueSub"></p></div>
   <main class="hideout-grid">
    <section class="ready-panel"><span class="section-label" data-i18n="menu.nextHand">LA PROCHAINE MAIN T'ATTEND</span><div id="readySuit" class="ready-suit" aria-hidden="true"></div><div id="palierResume" style="display:none"></div><button class="btn b-gold menu" id="planqueLaunch" data-action="launchMode"></button></section>
