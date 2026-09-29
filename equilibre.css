@@ -40,20 +40,21 @@
 #menuBestGain::before,#menuBestGain::after{content:"";position:absolute;top:20%;width:14px;height:22px;border-top:2px solid #ffce3a;border-bottom:2px solid #ffce3a;left:-26px;transform:skewY(25deg)}
 #menuBestGain::after{left:auto;right:-26px;transform:skewY(-25deg)}
 /* Header: table/lives/pause, cash/hands/stake/multiplier, then a single objective. */
-#app{--ui-u:min(1vw,5.3px);--table-status-height:18px;--base-card-w:calc(27.5 * var(--ui-u));--dock-main:clamp(65px,9.8dvh,88px);--dock-secondary:clamp(42px,5.7dvh,58px);width:100%;max-width:530px;height:100dvh;min-height:620px;padding:max(14px,env(safe-area-inset-top)) calc(3.2 * var(--ui-u)) max(12px,env(safe-area-inset-bottom));display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) calc(var(--dock-main) + var(--dock-secondary) + 10px);gap:clamp(9px,1.35dvh,15px)}
+#app{--ui-u:min(1vw,5.3px);--table-status-height:0px;--base-card-w:calc(27.5 * var(--ui-u));--dock-main:clamp(65px,9.8dvh,88px);--dock-secondary:clamp(42px,5.7dvh,58px);width:100%;max-width:530px;height:100dvh;min-height:620px;padding:max(14px,env(safe-area-inset-top)) calc(3.2 * var(--ui-u)) max(12px,env(safe-area-inset-bottom));display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) calc(var(--dock-main) + var(--dock-secondary) + 10px);gap:clamp(9px,1.35dvh,15px)}
 /* The table stays anchored; card and reward effects animate inside it. */
 #shaker{overflow-y:auto;overflow-x:hidden;transform:none!important}
 #app{translate:none!important;rotate:none!important;scale:none!important}
 #topbar{grid-column:1;grid-row:1;display:grid;grid-template-columns:1fr auto;grid-template-rows:calc(32px + var(--table-status-height)) auto 23px;align-items:center;gap:clamp(9px,1.4dvh,16px) 0;padding:0;background:none;box-shadow:none;border:0;overflow:visible}
 #topbar .brand-block{grid-column:1;grid-row:1;display:flex;flex-direction:column;align-items:flex-start;width:100%;min-width:0;align-self:start}
 #topbar .table-context{display:block;position:relative;grid-area:auto;justify-self:auto;width:100%;min-width:0;max-width:100%;z-index:25}
-#topbar .table-number{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;list-style:none;cursor:pointer;font:500 calc(5 * var(--ui-u))/1.2 var(--copy-font);letter-spacing:0;margin:0;color:#fff7e6;text-transform:none;width:100%;height:32px;padding:0 4px}
+#topbar .table-number{--button-art:none!important;--button-ink:#fff7e6!important;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;cursor:pointer;font:500 calc(5 * var(--ui-u))/1.2 var(--copy-font);letter-spacing:0;margin:0;color:#fff7e6!important;text-transform:none;width:100%;min-width:0;height:32px;padding:0 4px;border:0;border-radius:0;clip-path:none;background:none!important;box-shadow:none!important;text-align:left}
+#topbar .table-number:focus-visible{outline:2px solid #ffdc75;outline-offset:4px}
+#topbar .table-number:enabled:active{box-shadow:none!important}
 #topbar .table-number-label{display:flex;align-items:center;gap:.3em;font:500 10px/1 var(--copy-font);color:#cbd4dc;white-space:nowrap}
 #topbar .table-number-label b{display:flex;align-items:center}
-#topbar .table-number::-webkit-details-marker{display:none}
 #topbar .table-number b{font-weight:600}
-#topbar .table-context-body{left:0;transform:none;top:calc(100% + 12px);width:min(430px,90vw);background:#202a32;border-color:#53606d;padding:18px}
-#topbar #tableName{display:block;width:100%;min-width:0;font:500 18px/1.05 var(--copy-font);letter-spacing:0;text-transform:none;text-align:left;padding:0;margin:0;color:#fff7e6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal}
+#topbar #tableName{display:block;width:100%;min-width:0;font:900 18px/1.12 var(--game-type);letter-spacing:0;text-transform:uppercase;text-align:left;padding:0;margin:0;color:#fff7e6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal}
+#topbar #tableName .raster-word{vertical-align:top}
 #topbar #tableName::after{content:none}
 #topbar .thead-right{display:contents}
 #topbar .lives{grid-column:1 / 3;grid-row:1;justify-self:center;align-self:start;margin-top:4px;display:flex;flex-wrap:nowrap;align-items:center;gap:4px;max-width:none;color:var(--suitRed);pointer-events:none}
@@ -682,6 +683,26 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .brief-stat-label{display:block;min-height:28px;font:500 11px/1.25 var(--copy-font);color:#c8d1d3}
 .brief-stat-value{display:block;white-space:nowrap;line-height:1.1}
 .brief-stats .game-number{font-size:30px}
+/* Table details share the game's illustrated graphite panel and mauve rule card. */
+#inspectScreen.table-details-view{padding:calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom))}
+#inspectScreen.table-details-view .ovpanel{width:100%;max-width:460px!important;max-height:calc(100dvh - 40px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;padding:clamp(18px,4.8vw,24px);border:0;border-radius:0;clip-path:var(--frame-cut);text-align:left!important}
+.table-details-view #inspectBody{display:flex;flex-direction:column;gap:16px;min-width:0}
+.table-details-view .table-brief-heading{margin:0;gap:14px}
+.table-details-view .table-brief-kicker{color:#d5dce2;line-height:1.3}
+.table-details-view .table-effect-card{margin:0;padding:16px 18px}
+.table-details-view .table-effect-card p{line-height:1.45!important}
+.table-details-view .brief-stats{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:10px;margin:0;padding:0}
+.table-details-view .brief-stat{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:13px 8px 11px;background:#434d58;clip-path:var(--frame-cut)}
+.table-details-view .brief-stat-value{order:-1;font:700 26px/1.1 var(--copy-font);color:#ffdc75}
+.table-details-view .brief-stat-label{min-height:0;font-size:12px;line-height:1.2;color:#e0e5e7}
+.table-details-view .brief-stats .game-number{font-size:28px!important}
+.table-details-note{padding:0 0 0 12px;border-left:3px solid #b69bda}
+.table-details-note h2{margin:0 0 5px;font:600 15px/1.25 var(--copy-font);color:#ffdc75;letter-spacing:0;text-transform:none}
+.table-details-note p{margin:0!important;font:500 14px/1.4 var(--copy-font)!important;color:#edf0f4}
+.table-details-status{display:block;margin-top:8px;font:500 13px/1.25 var(--copy-font);color:#ffdc75}
+.table-details-totals{display:flex;flex-wrap:wrap;gap:8px 20px;padding-top:12px;border-top:1px solid #ffffff21;font:500 12px/1.35 var(--copy-font);color:#cbd4dc}
+.table-details-view #inspectActions{margin-top:20px}
+.table-details-view #inspectActions .btn{width:100%;margin:0}
 .result-reason{position:absolute;top:calc(100% + 9px);left:50%;transform:translateX(-50%);width:max-content;max-width:100%;padding:5px 9px;background:#322329f5;color:#f4aaa1;font:500 12px/1.3 var(--copy-font);clip-path:var(--frame-cut)}
 .draw-readout{flex:none;margin:0;min-height:14px;max-width:100%;font:500 10.5px/14px var(--copy-font);text-align:center;color:#c7d3cf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .draw-readout[hidden]{display:block!important;visibility:hidden}
@@ -718,7 +739,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .joker.spent{opacity:.58}
 .card-dust{position:absolute;pointer-events:none;clip-path:polygon(12% 0,79% 7%,100% 63%,60% 100%,0 74%)}
 .card-impact-shadow{position:absolute;height:12px;background:#17252b;border-radius:50%;pointer-events:none}
-@media(max-height:700px){#app{--table-status-height:16px}#mid{gap:6px}#circuitStatus{font-size:11px}.draw-readout{font-size:9.5px}}
+@media(max-height:700px){#app{--table-status-height:0px}#mid{gap:6px}#circuitStatus{font-size:11px}.draw-readout{font-size:9.5px}}
 @media(prefers-reduced-motion:reduce){.card-dust,.card-impact-shadow{display:none}}
 :root[data-motion=gentle] :is(.card-dust,.card-impact-shadow){display:none}
 

@@ -228,10 +228,24 @@ function renderTableEffect(box){
 }
 function openTableRules(){
   inspectRef=null;GameClock.pause('inspect',true);
-  const body=$('inspectBody');body.innerHTML='<div class="illustrated-heading table-brief-heading"><img class="dialog-art" src="'+ColdDeckArt.image('table-emblem')+'" width="96" height="96" alt="" decoding="async"><h1>'+tableName(G.table)+'</h1></div><div class="table-effect-card"></div>'+(G.table.challenge?'<p>'+bossProgress()+'</p>':'');
+  const tb=G.table,body=$('inspectBody');
+  const context=G.endless?t('planque.modeInf'):t('planque.tableLabel',G.tableIdx+1)+' · '+zoneName(tb.zone);
+  const stats=[
+    ['circuit.goalLabel',cash(G.endless?palierTarget(G.palier||0):tb.goal)],
+    ['table.detailsHands',Number.isFinite(tb.mains)?Math.max(0,tb.mains-G.hand+1):'∞'],
+    ['table.detailsMin',cash(tb.min)],
+    ['table.detailsMax',cash(tb.max)]
+  ];
+  const challenge=tb.challenge?'<section class="table-details-note"><h2 data-reading-label>'+t('table.detailsChallenge')+'</h2><p>'+bossProgress()+'</p></section>':'';
+  const contract=G.contract&&!G.endless?'<section class="table-details-note"><h2 data-reading-label>'+t('table.detailsContract')+'</h2><p>'+contractText(G.contract)+'</p><span class="table-details-status" data-reading-label>'+(G.contract.done?t('top.contractDone'):'+'+G.contract.reward+STAR)+'</span></section>':'';
+  const totals=G.endless
+    ?[t('top.record',cash(Math.max(G.peak||0,G.bank))),t('top.worth',STAR+abbr(endlessCashRep()))]
+    :[t('top.stars',G.runStars||0),...(G.pot>0?[t('top.pot',cash(G.pot))]:[])];
+  body.innerHTML='<div class="illustrated-heading table-brief-heading"><img class="dialog-art" src="'+ColdDeckArt.image('table-emblem')+'" width="96" height="96" alt="" decoding="async"><div class="table-heading-copy"><span class="table-brief-kicker" data-reading-label>'+context+'</span><h1>'+tableName(tb)+'</h1></div></div><div class="table-effect-card"></div><div class="brief-stats">'+stats.map(([label,value])=>'<div class="brief-stat"><span class="brief-stat-label" data-reading-label>'+t(label)+'</span><strong class="brief-stat-value">'+value+'</strong></div>').join('')+'</div>'+challenge+contract+'<div class="table-details-totals" data-reading-label>'+totals.map(value=>'<span>'+value+'</span>').join('')+'</div>';
   renderTableEffect(body.querySelector('.table-effect-card'));
   const close=document.createElement('button');close.className='btn b-blue';close.textContent=t('insp.close');close.onclick=closeInspect;
-  $('inspectActions').replaceChildren(close);$('inspectScreen').classList.add('show');
+  $('inspectActions').replaceChildren(close);$('inspectScreen').classList.add('table-details-view','show');
+  if(typeof syncMenuFocus==='function')syncMenuFocus();
 }
 
 /* ====== tapis évolutif ====== */
@@ -992,25 +1006,6 @@ function renderTop(){
   const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=Array.from({length:Math.max(3,Math.min(5,n))},(_,i)=>'<span class="life'+(i>=n?' off':'')+'" aria-hidden="true">'+heartSVG(20)+'</span>').join('')+(n>5?'<span class="lvn">+'+(n-5)+'</span>':'');lv.setAttribute('aria-label',t('ui.lives')+' : '+n);lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
   $('tableName').textContent=tableName(tb);                         // nom seul, en gros
   const tableNumber=$('tableNumber');if(tableNumber)tableNumber.textContent=String(G.endless?(G.palier||0)+1:G.tableIdx+1).padStart(2,'0');
-  const tm=$('tableMeta');if(tm)tm.textContent=G.endless
-    ?t('top.metaInf',(G.palier||0)+1,abbr(tb.min),abbr(tb.max))
-    :t('top.metaCircuit',tb.zone,zoneName(tb.zone),G.tableIdx+1,RUN_LEN);
-  const bits=[];
-  const rtx=tableRuleText(tb);
-  if(rtx)bits.push(rtx);
-  if(G.endless){
-    bits.push(t('top.betRange',abbr(tb.min),abbr(tb.max)));
-    bits.push(t('top.worth',STAR+abbr(endlessCashRep())));         // la tension : sécuriser ou replonger
-    bits.push(t('top.record',cash(Math.max(G.peak||0,G.bank))));
-  }else{
-    bits.push(t('circuit.stars'));if(tb.challenge)bits.push(bossProgress());
-    bits.push(t('top.betRange',abbr(tb.min),abbr(tb.max)));
-    bits.push(t('top.stars',G.runStars||0));
-    if(G.pot>0)bits.push(t('top.pot',abbr(G.pot)));
-    if(G.contract)bits.push(G.contract.done?t('top.contractDone'):(PXI('scroll')+' '+contractText(G.contract)+' (+'+G.contract.reward+STAR+')'));
-  }
-  $('ruleText').innerHTML=bits.join('  ·  ');
-  $('ruleText').classList.toggle('boss',!!tb.boss);
   $('shoeCount').textContent=G.shoe.length;
   renderObjective();renderCircuitStatus();
 }
@@ -1174,6 +1169,7 @@ function sellValue(item){
 let inspectRef=null;
 function openInspect(kind,i){
   const item=kind==='tarot'?G.consumables[i]:G.relics[i];if(!item)return;
+  $('inspectScreen').classList.remove('table-details-view');
   inspectRef={kind,i};GameClock.pause('inspect',true);
   const status=kind==='relic'?relicStatus(item):'';
   $('inspectBody').innerHTML='<div class="inspCard tag '+(kind==='tarot'?'tarot':'joker')+'">'+effectMark(item.id,tokFor(item.id).c)+'</div><h1>'+iName(item)+'</h1><p>'+iDesc(item)+'</p>'+(status?'<p class="relic-state">'+status+'</p>':'');
@@ -1200,7 +1196,7 @@ function openInspect(kind,i){
   mk(t('insp.sell',cash(sellValue(item))),sellItem,!['bet','shop'].includes(G.phase)||(kind==='relic'&&item.id==='portebonheur'&&G.consumables.length>=consumableSlots()));
   mk(t('insp.close'),closeInspect);$('inspectScreen').classList.add('show');
 }
-function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show');inspectRef=null;GameClock.pause('inspect',false);if(typeof syncMenuFocus==='function')syncMenuFocus();}
+function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show','table-details-view');inspectRef=null;GameClock.pause('inspect',false);if(typeof syncMenuFocus==='function')syncMenuFocus();}
 function sellItem(){
   if(!inspectRef||!['bet','shop'].includes(G.phase))return;
   const {kind,i}=inspectRef;

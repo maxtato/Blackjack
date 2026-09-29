@@ -16,6 +16,7 @@
     'ad-close': () => Ads.closeNow(),
     'ad-install': el => Ads.fakeClick(el),
     openPause: () => openPause(),
+    openTableRules: () => openTableRules(),
     usePeek: () => usePeek(),
     openRules: () => openRules(),
     openSettings: () => openSettings(),

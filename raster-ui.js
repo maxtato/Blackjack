@@ -40,8 +40,8 @@
     prepareAlphaMask('brand-wordmark','raster-brand-ready')
   ]);
   // Reserve illustrated glyphs for display labels, not reading-sized copy.
-  const labelSelector='button,h1:not(.menuTitle),.table-effect-card>strong,.mode-card strong,.chip-value,#menuBestGain,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum';
-  const copySelector='[data-reading-label],.menu-record-label,.planqueMode,#recBox,small,p,.ds,.mode-description,.mode-topline,.mode-bottom,.hero-copy,.hero-tags,.menu-record-note,.rules .rule-entry,.rules .rt,#tip,#comboRow,#tableName,#tableMeta,#ruleText,#pBar .pmeta,.zlbl>[data-i18n],.tstats .k,.tstats .lbl,.tstats .tt,.tstats .ts,.inventory-label,.objective-label,.section-label,.eyebrow,.setLbl,.back-name,.repLbl,.mrl,.mrv,#slotc,#consumeSlots';
+  const labelSelector='button,h1:not(.menuTitle),#tableName,.table-effect-card>strong,.mode-card strong,.chip-value,#menuBestGain,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum';
+  const copySelector='[data-reading-label],.menu-record-label,.planqueMode,#recBox,small,p,.ds,.mode-description,.mode-topline,.mode-bottom,.hero-copy,.hero-tags,.menu-record-note,.rules .rule-entry,.rules .rt,#tip,#comboRow,#tableMeta,#ruleText,#pBar .pmeta,.zlbl>[data-i18n],.tstats .k,.tstats .lbl,.tstats .tt,.tstats .ts,.inventory-label,.objective-label,.section-label,.eyebrow,.setLbl,.back-name,.repLbl,.mrl,.mrv,#slotc,#consumeSlots';
   function readableCopy(el){
     el.classList.add('readable-copy');
     for(const ink of el.querySelectorAll('.raster-copy,.live-word')){

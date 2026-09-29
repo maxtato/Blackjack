@@ -49,11 +49,9 @@
 <div id="app">
   <header id="topbar">
     <div class="brand-block">
-      <details class="table-context">
-        <summary class="table-number"><span class="table-number-label" data-reading-label><span data-i18n="modern.table">Table</span> <b id="tableNumber">01</b></span><strong id="tableName">Cold Deck</strong></summary>
-        <div class="table-context-body"><span class="tmeta" id="tableMeta"></span><span class="rule" id="ruleText"></span></div>
-      </details>
-      <button id="circuitStatus" class="circuit-status" type="button" data-reading-label aria-live="polite" aria-haspopup="dialog"></button>
+      <div class="table-context">
+        <button type="button" class="table-number" id="tableDetailsButton" data-action="openTableRules" aria-haspopup="dialog" aria-controls="inspectScreen"><span class="table-number-label" data-reading-label><span data-i18n="modern.table">Table</span> <b id="tableNumber">01</b></span><strong id="tableName">Cold Deck</strong></button>
+      </div>
     </div>
     <div class="thead-right"><div id="lives" class="lives" data-i18n-title="ui.lives"></div><button id="pauseBtn" data-action="openPause" data-i18n-title="ui.pause" aria-label="Pause"><span></span><span></span></button></div>
     <div class="tstats">
