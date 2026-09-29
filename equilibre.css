@@ -7,10 +7,10 @@
 #modeMenu::before{background-size:min(100vw,560px) 100%;background-repeat:no-repeat;background-color:#20252a}
 #modeMenu .ovpanel{width:100%;max-width:530px;height:100dvh;min-height:660px;max-height:none;margin:auto;padding:max(env(safe-area-inset-top),calc(7 * var(--home-u))) calc(5 * var(--home-u)) max(env(safe-area-inset-bottom),calc(4 * var(--home-u)));display:flex;flex-direction:column;gap:calc(3 * var(--home-u));border-radius:0;overflow:visible}
 #modeMenu .home-grid{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;align-content:stretch;align-items:stretch;gap:calc(2.2 * var(--home-u));flex:1;min-height:0;padding:0;margin:0}
-#modeMenu .brand-stage{grid-column:1;grid-row:1;align-self:start;text-align:center;display:flex;flex-direction:column;align-items:center}
-#modeMenu .menuTitle{position:relative;width:calc(77 * var(--home-u));height:calc(32 * var(--home-u));max-width:100%;margin:0!important;padding:0;font-size:calc(21 * var(--home-u))!important;line-height:1!important;transform:none}
+#modeMenu .brand-stage{grid-column:1;grid-row:1;align-self:start;text-align:center;display:flex;flex-direction:column;align-items:center;gap:calc(1.5 * var(--home-u))}
+#modeMenu .menuTitle{position:relative;flex:none;width:calc(77 * var(--home-u));height:calc(32 * var(--home-u));max-width:100%;margin:0!important;padding:0;font-size:calc(21 * var(--home-u))!important;line-height:1!important;transform:none}
 #modeMenu .menuTitle .raster-word{transform:rotate(-3deg) scaleY(1.15);filter:drop-shadow(0 .035em 0 #583876)}
-#modeMenu .eyebrow{font:500 calc(3.8 * var(--home-u))/1.3 var(--copy-font);letter-spacing:.08em!important;text-transform:none;margin:calc(1.6 * var(--home-u)) 0 calc(3.2 * var(--home-u));color:#d0d8df;display:block}
+#modeMenu .eyebrow{font:500 calc(3.8 * var(--home-u))/1.3 var(--copy-font);letter-spacing:.08em!important;text-transform:none;margin:0;color:#d0d8df;display:block}
 #modeMenu .hero-copy{max-width:none;margin:0!important;color:#dce0e5;font:500 calc(4.15 * var(--home-u))/1.27 var(--copy-font);letter-spacing:.025em!important}
 #modeMenu .hero-art{position:relative;inset:auto;grid-column:1;grid-row:2;width:100%;height:100%;min-height:calc(44 * var(--home-u));max-height:none;align-self:center;margin:0;overflow:visible}
 #modeMenu .hero-burst,#modeMenu .hero-art::before,#modeMenu .hero-art::after{display:none}
@@ -408,9 +408,9 @@
  #modeMenu{--home-u:var(--home-frame-u);align-items:center;justify-content:center;overflow:auto;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
  #modeMenu::before{background-size:calc(100 * var(--home-u)) calc(205.3 * var(--home-u))}
  #modeMenu .ovpanel{width:calc(100 * var(--home-u));max-width:none;height:calc(205.3 * var(--home-u));min-height:0;flex:none;margin:0;padding:calc(10 * var(--home-u)) calc(5 * var(--home-u)) calc(4 * var(--home-u));gap:calc(3 * var(--home-u))}
- #modeMenu .home-grid{grid-template-rows:calc(49 * var(--home-u)) minmax(0,1fr) calc(45 * var(--home-u));gap:calc(2 * var(--home-u));flex:1}
+ #modeMenu .home-grid{grid-template-rows:calc(55 * var(--home-u)) minmax(0,1fr) calc(45 * var(--home-u));gap:calc(2 * var(--home-u));flex:1}
  #modeMenu .menuTitle{width:calc(72 * var(--home-u));height:calc(32 * var(--home-u));transform:none;outline:none;color:#fff7e6}
- #modeMenu .eyebrow{font-size:calc(3.8 * var(--home-u));margin:calc(1.7 * var(--home-u)) 0 calc(2.6 * var(--home-u))}
+ #modeMenu .eyebrow{font-size:calc(3.8 * var(--home-u));margin:0}
  #modeMenu .hero-copy{font-size:calc(4.3 * var(--home-u));line-height:1.16}
  #modeMenu .hero-art,#modeMenu .menu-hand{min-height:0}
  #modeMenu .menu-hand{--card-w:calc(31 * var(--home-u))}
@@ -566,7 +566,7 @@
 :root{--playing-card-ratio:1.42}
 @media (min-height:601px), (orientation:portrait){:root{--playing-card-ratio:1.48}}
 #modeMenu .menu-hand .card,#feltInner .card,#feltInner .flipwrap{height:calc(var(--card-w)*var(--playing-card-ratio))}
-#modeMenu .menu-hand,#modeMenu .menu-hand .card:nth-child(3){--card-w:calc(29 * var(--home-u))}
+#modeMenu .menu-hand,#modeMenu .menu-hand .card:nth-child(3){--card-w:calc(26 * var(--home-u))}
 #modeMenu .menu-hand .card:nth-child(1){transform:translate(-140%,-48%) rotate(-10deg)}
 #modeMenu .menu-hand .card:nth-child(2){transform:translate(-50%,-53%);z-index:3}
 #modeMenu .menu-hand .card:nth-child(3){transform:translate(40%,-48%) rotate(10deg)}
