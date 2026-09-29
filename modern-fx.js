@@ -260,6 +260,12 @@
           {scale:'1.05',filter:'brightness(1.05)',offset:.72},
           {scale:'1',filter:'brightness(1)'}
         ],{duration:500});
+        // The objective reacts when the arriving payout updates its real width.
+        animate($('objFill'),[
+          {filter:'brightness(1)'},
+          {filter:'brightness(1.45)',offset:.24},
+          {filter:'brightness(1)'}
+        ],{duration:650,easing:'ease-out'});
         graphicRays(bank,4,graphic.yellow,20+tier*4);
         haptic(true);
       };flight.oncancel=()=>{cancel?.();settle(false);};}

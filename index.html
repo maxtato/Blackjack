@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Cold Deck</title>
+<title>Baraka</title>
 <meta name="description" content="Une carte de plus, et tout peut basculer. Un blackjack roguelite de combos, de culot et de belles mains.">
 <meta name="theme-color" content="#20252a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Cold Deck">
+<meta name="apple-mobile-web-app-title" content="Baraka">
 <script src="boot.js"></script>
 <style>
 #bootSplash{display:none}
@@ -26,7 +26,6 @@
 <link rel="stylesheet" href="illustrated.css">
 <link rel="stylesheet" href="raster.css">
 <link rel="stylesheet" href="equilibre.css">
-<link rel="preload" as="image" type="image/webp" href="assets/illustrations/brand-wordmark.webp">
 <link rel="preload" as="font" type="font/woff2" href="fonts/baloo-2-latin-500-normal.woff2" crossorigin>
 </head>
 <body>
@@ -48,7 +47,7 @@
   <header id="topbar">
     <div class="brand-block">
       <div class="table-context">
-        <button type="button" class="table-number" id="tableDetailsButton" data-action="openTableRules" aria-haspopup="dialog" aria-controls="inspectScreen"><span class="table-number-label" data-reading-label><span data-i18n="modern.table">Table</span> <b id="tableNumber">01</b><svg class="table-info-icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="4.6" r=".8" fill="currentColor"/><path d="M8 7.2v4.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span><strong id="tableName">Cold Deck</strong></button>
+        <button type="button" class="table-number" id="tableDetailsButton" data-action="openTableRules" aria-haspopup="dialog" aria-controls="inspectScreen"><span class="table-number-label" data-reading-label><span data-i18n="modern.table">Table</span> <b id="tableNumber">01</b><svg class="table-info-icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="4.6" r=".8" fill="currentColor"/><path d="M8 7.2v4.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span><strong id="tableName">Baraka</strong></button>
       </div>
     </div>
     <div class="thead-right"><div id="lives" class="lives" data-i18n-title="ui.lives"></div><button id="pauseBtn" data-action="openPause" data-i18n-title="ui.pause" aria-label="Pause"><span></span><span></span></button></div>
@@ -121,7 +120,7 @@
  <div class="ovpanel">
   <main class="home-grid">
     <div class="brand-stage">
-      <h1 class="menuTitle" aria-label="Cold Deck">COLD<span class="title-accent">DECK</span></h1>
+      <h1 class="menuTitle" aria-label="Baraka">BARAKA</h1>
       <div class="eyebrow" data-i18n="modern.club">Blackjack roguelite</div>
       <p class="hero-copy" data-i18n-html="modern.hero">Une carte de plus.<br>Et tout peut basculer.</p>
     </div>
@@ -148,7 +147,7 @@
 <!-- LA PLANQUE -->
 <div class="overlay menu-page" id="intro">
  <div class="ovpanel">
-  <header class="menu-top"><button class="quiet-btn" data-reading-label data-action="openMenu" data-i18n="nav.back">← MODES DE JEU</button><span class="wordmark">COLD DECK</span><button id="rulesBtn" class="quiet-btn" data-reading-label data-action="openRules" data-i18n="nav.rules">RÈGLES</button></header>
+  <header class="menu-top"><button class="quiet-btn" data-reading-label data-action="openMenu" data-i18n="nav.back">← MODES DE JEU</button><span class="wordmark">BARAKA</span><button id="rulesBtn" class="quiet-btn" data-reading-label data-action="openRules" data-i18n="nav.rules">RÈGLES</button></header>
   <div class="hideout-heading"><div class="planqueMode" id="planqueMode"></div><h1 id="planqueTitle">LA PLANQUE</h1><p id="planqueSub"></p></div>
   <main class="hideout-grid">
    <section class="ready-panel"><span class="section-label" data-i18n="menu.nextHand">LA PROCHAINE MAIN T'ATTEND</span><div id="readySuit" class="ready-suit" aria-hidden="true"></div><div id="palierResume" style="display:none"></div><button class="btn b-gold menu" id="planqueLaunch" data-action="launchMode"></button></section>
@@ -287,7 +286,7 @@
 
 <!-- PARAMÈTRES / SETTINGS -->
 <div class="overlay" id="settingsScreen"><div class="ovpanel">
- <div class="dialog-kicker">COLD DECK / <span data-i18n="nav.settings">RÉGLAGES</span></div><h1 data-i18n="set.title">RÉGLAGES</h1>
+ <div class="dialog-kicker">BARAKA / <span data-i18n="nav.settings">RÉGLAGES</span></div><h1 data-i18n="set.title">RÉGLAGES</h1>
  <div class="setRow"><span class="setLbl" data-i18n="set.lang">LANGUE</span><div class="setOpts" id="langOpts"></div></div>
  <div class="setRow"><span class="setLbl" data-i18n="modern.motion">ANIMATIONS</span><div class="setOpts" id="motionOpts"></div></div>
  <button class="btn b-purple test-entry" data-action="openTestTools"><span data-i18n="test.title">MODE TEST</span><small id="testModeStatus"></small></button>

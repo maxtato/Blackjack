@@ -3464,7 +3464,7 @@ freshGame();buildShoe();applyI18n();renderHands();tick();
 /* Presentation only: the blackjack engine and progression are unchanged. */
 Object.assign(STR.fr,{
  'ui.bet':'Mise','ui.mult':'Multi','ui.gain':'Cagnotte','ui.potLbl':'Cagnotte','ui.turnsLeft':'mains<br>restantes','ui.you':'Ta main','ui.dealer':'Croupier','act.double':'DOUBLER','act.force':'FORCER','modern.table':'Table',
- 'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HAUTE TENSION',
+ 'modern.club':'Blackjack roguelite','modern.private':'BARAKA','modern.afterhours':'HAUTE TENSION',
  'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','cb.to21':n=>'21 parfait ×3 · +'+n,'modern.goal':'Objectif','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
  'nav.rules':'Règles','nav.settings':'Réglages','nav.back':'‹ Modes de jeu','nav.reset':'Réinitialiser ce mode',
  'planque.best':'Meilleur parcours','planque.noRecord':'Aucune partie','planque.back':'Dos de carte','planque.backSub':(i,n)=>i+'/'+n,
@@ -3494,7 +3494,7 @@ Object.assign(STR.fr,{
 });
 Object.assign(STR.en,{
  'ui.bet':'Bet','ui.mult':'Multi','ui.gain':'Bank','ui.potLbl':'Bank','ui.turnsLeft':'hands<br>left','ui.you':'Your hand','ui.dealer':'Dealer','act.force':'PUSH LUCK','modern.table':'Table',
- 'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HIGH VOLTAGE',
+ 'modern.club':'Blackjack roguelite','modern.private':'BARAKA','modern.afterhours':'HIGH VOLTAGE',
  'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'Target','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'THE HOUSE IS WATCHING.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
  'nav.rules':'Rules','nav.settings':'Settings','nav.back':'‹ Game modes','nav.reset':'Reset this mode',
  'planque.best':'Best run','planque.noRecord':'No games played','planque.back':'Card back','planque.backSub':(i,n)=>i+'/'+n,
@@ -3649,7 +3649,7 @@ syncMenuFocus();
 /* raster-ui.js */
 /* Generated surfaces and bitmap lettering. Text remains available to assistive tools. */
 (() => {
-  const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','card-shape','background-table','background-menu','nav-arrow','nav-pause','brand-wordmark'];
+  const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','card-shape','background-table','background-menu','nav-arrow','nav-pause'];
   for(const key of assets)document.documentElement.style.setProperty('--art-'+key,`url("${ColdDeckArt.image(key)}")`);
   // WebKit can ignore luminance masks for large/animated artwork. Decode each
   // mask to alpha once; its text fallback stays visible until decoding succeeds.
@@ -3687,7 +3687,7 @@ syncMenuFocus();
     prepareAlphaMask('type-letters','raster-letters-ready'),
     prepareAlphaMask('type-numbers','raster-numbers-ready')
   ]);
-  const ready=Promise.all([cardsReady,prepareAlphaMask('brand-wordmark','raster-brand-ready')]);
+  const ready=cardsReady;
   // Reserve illustrated glyphs for display labels, not reading-sized copy.
   const labelSelector='button,h1:not(.menuTitle),#tableName,.table-effect-card>strong,.mode-card strong,.chip-value,#menuBestGain,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum';
   const copySelector='[data-reading-label],.menu-record-label,.planqueMode,#recBox,small,p,.ds,.mode-description,.mode-topline,.mode-bottom,.hero-copy,.hero-tags,.menu-record-note,.rules .rule-entry,.rules .rt,#tip,#comboRow,#tableMeta,#ruleText,#pBar .pmeta,.zlbl>[data-i18n],.tstats .k,.tstats .lbl,.tstats .tt,.tstats .ts,.inventory-label,.objective-label,.section-label,.eyebrow,.setLbl,.back-name,.repLbl,.mrl,.mrv,#slotc,#consumeSlots';
@@ -3713,7 +3713,7 @@ syncMenuFocus();
   }
   function brand(el){
     if(el.querySelector('.brand-image'))return;
-    el.innerHTML='<span class="brand-image" role="img" aria-label="Cold Deck"><span class="brand-fallback" aria-hidden="true"><span>COLD</span><span>DECK</span></span></span>';
+    el.innerHTML='<span class="brand-image" role="img" aria-label="Baraka">'+ColdDeckArt.lettering('BARAKA')+'</span>';
   }
   // Emphasize the exact displayed value, including its sign, decimal, unit and
   // grouped thousands. Only text nodes are replaced: links and controls survive.
@@ -4043,6 +4043,12 @@ syncMenuFocus();
           {scale:'1.05',filter:'brightness(1.05)',offset:.72},
           {scale:'1',filter:'brightness(1)'}
         ],{duration:500});
+        // The objective reacts when the arriving payout updates its real width.
+        animate($('objFill'),[
+          {filter:'brightness(1)'},
+          {filter:'brightness(1.45)',offset:.24},
+          {filter:'brightness(1)'}
+        ],{duration:650,easing:'ease-out'});
         graphicRays(bank,4,graphic.yellow,20+tier*4);
         haptic(true);
       };flight.oncancel=()=>{cancel?.();settle(false);};}

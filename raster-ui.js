@@ -1,6 +1,6 @@
 /* Generated surfaces and bitmap lettering. Text remains available to assistive tools. */
 (() => {
-  const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','card-shape','background-table','background-menu','nav-arrow','nav-pause','brand-wordmark'];
+  const assets=['type-letters','type-numbers','suit-spade','suit-heart','suit-diamond','suit-club','button-yellow','button-blue','button-teal','button-purple','button-coral','button-graphite','card-stock','card-shape','background-table','background-menu','nav-arrow','nav-pause'];
   for(const key of assets)document.documentElement.style.setProperty('--art-'+key,`url("${ColdDeckArt.image(key)}")`);
   // WebKit can ignore luminance masks for large/animated artwork. Decode each
   // mask to alpha once; its text fallback stays visible until decoding succeeds.
@@ -38,7 +38,7 @@
     prepareAlphaMask('type-letters','raster-letters-ready'),
     prepareAlphaMask('type-numbers','raster-numbers-ready')
   ]);
-  const ready=Promise.all([cardsReady,prepareAlphaMask('brand-wordmark','raster-brand-ready')]);
+  const ready=cardsReady;
   // Reserve illustrated glyphs for display labels, not reading-sized copy.
   const labelSelector='button,h1:not(.menuTitle),#tableName,.table-effect-card>strong,.mode-card strong,.chip-value,#menuBestGain,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum';
   const copySelector='[data-reading-label],.menu-record-label,.planqueMode,#recBox,small,p,.ds,.mode-description,.mode-topline,.mode-bottom,.hero-copy,.hero-tags,.menu-record-note,.rules .rule-entry,.rules .rt,#tip,#comboRow,#tableMeta,#ruleText,#pBar .pmeta,.zlbl>[data-i18n],.tstats .k,.tstats .lbl,.tstats .tt,.tstats .ts,.inventory-label,.objective-label,.section-label,.eyebrow,.setLbl,.back-name,.repLbl,.mrl,.mrv,#slotc,#consumeSlots';
@@ -64,7 +64,7 @@
   }
   function brand(el){
     if(el.querySelector('.brand-image'))return;
-    el.innerHTML='<span class="brand-image" role="img" aria-label="Cold Deck"><span class="brand-fallback" aria-hidden="true"><span>COLD</span><span>DECK</span></span></span>';
+    el.innerHTML='<span class="brand-image" role="img" aria-label="Baraka">'+ColdDeckArt.lettering('BARAKA')+'</span>';
   }
   // Emphasize the exact displayed value, including its sign, decimal, unit and
   // grouped thousands. Only text nodes are replaced: links and controls survive.
