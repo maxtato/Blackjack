@@ -672,6 +672,35 @@
     "generator": "built-in image_gen",
     "direction": "04 · Rois du bluff",
     "source": "court-jack.webp"
+  },
+  {
+    "id": "court-king-beige-light",
+    "file": "court-king-beige-light.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Use case: precise-object-edit. Image 1 is the edit target: the existing king playing-card portrait.\nMake ONE very small color adjustment only: lighten the warm beige skin of the face, ear and neck by approximately 12 percent toward warm ivory #FFF7E6. Aim near #EFC797 for the main skin tone, while preserving all existing shadow shapes in a slightly lighter matching beige. It must remain clearly beige, just one subtle shade lighter than now. Do not turn the skin cream, white or yellow.\nKeep the exact same character drawing, identity, face, expression, silhouette, outlines, pose, crown or hat, hair, features, eyes, lips, clothes, red yellow blue and black colors, composition, scale and margins. Keep the rounded bottom of the bust exactly unchanged. Do not add, remove, redraw, move or resize any part. Retain the current flat opaque cut-paper illustration style.\nSame 1024x1536 canvas and true transparent alpha background. No glow, no halo, no shadow outside the silhouette, no background, no text. This is a precise skin-color-only edit, not a redesign.",
+    "generator": "built-in image_gen",
+    "direction": "04 · Rois du bluff",
+    "source": "court-king-beige.webp"
+  },
+  {
+    "id": "court-queen-beige-light",
+    "file": "court-queen-beige-light.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Precise color edit of this existing cartoon playing-card queen. Keep this exact fully clothed adult character, her high closed red collar, costume, crown, hair, expression, face shapes, rounded bust outline, pose and framing unchanged. Lighten only the flat beige fill of her face, ear and neck by one small shade, about 12 percent toward warm ivory. The new main beige should be close to #E8BC8D. Preserve the existing geometric shadow shapes, slightly lightened to match. Keep all other colors unchanged. Same opaque flat cut-paper drawing, same 1024x1536 transparent canvas, crisp edges. Output only the isolated transparent portrait.",
+    "generator": "built-in image_gen",
+    "direction": "04 · Rois du bluff",
+    "source": "court-queen-beige.webp"
+  },
+  {
+    "id": "court-jack-beige-light",
+    "file": "court-jack-beige-light.webp",
+    "width": 1024,
+    "height": 1536,
+    "prompt": "Use case: precise-object-edit. Image 1 is the edit target: the existing jack playing-card portrait.\nMake ONE very small color adjustment only: lighten the warm beige skin of the face, ear and neck by approximately 12 percent toward warm ivory #FFF7E6. Aim near #E4C094 for the main skin tone, while preserving all existing shadow shapes in a slightly lighter matching beige. It must remain clearly beige, just one subtle shade lighter than now. Do not turn the skin cream, white or yellow.\nKeep the exact same character drawing, identity, face, expression, silhouette, outlines, pose, crown or hat, hair, features, eyes, lips, clothes, red yellow blue and black colors, composition, scale and margins. Keep the rounded bottom of the bust exactly unchanged. Do not add, remove, redraw, move or resize any part. Retain the current flat opaque cut-paper illustration style.\nSame 1024x1536 canvas and true transparent alpha background. No glow, no halo, no shadow outside the silhouette, no background, no text. This is a precise skin-color-only edit, not a redesign.",
+    "generator": "built-in image_gen",
+    "direction": "04 · Rois du bluff",
+    "source": "court-jack-beige.webp"
   }
 ]
-
