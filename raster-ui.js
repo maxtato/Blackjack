@@ -34,11 +34,11 @@
       source.src=ColdDeckArt.image(key);
     });
   }
-  const ready=Promise.all([
+  const cardsReady=Promise.all([
     prepareAlphaMask('type-letters','raster-letters-ready'),
-    prepareAlphaMask('type-numbers','raster-numbers-ready'),
-    prepareAlphaMask('brand-wordmark','raster-brand-ready')
+    prepareAlphaMask('type-numbers','raster-numbers-ready')
   ]);
+  const ready=Promise.all([cardsReady,prepareAlphaMask('brand-wordmark','raster-brand-ready')]);
   // Reserve illustrated glyphs for display labels, not reading-sized copy.
   const labelSelector='button,h1:not(.menuTitle),#tableName,.table-effect-card>strong,.mode-card strong,.chip-value,#menuBestGain,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum';
   const copySelector='[data-reading-label],.menu-record-label,.planqueMode,#recBox,small,p,.ds,.mode-description,.mode-topline,.mode-bottom,.hero-copy,.hero-tags,.menu-record-note,.rules .rule-entry,.rules .rt,#tip,#comboRow,#tableMeta,#ruleText,#pBar .pmeta,.zlbl>[data-i18n],.tstats .k,.tstats .lbl,.tstats .tt,.tstats .ts,.inventory-label,.objective-label,.section-label,.eyebrow,.setLbl,.back-name,.repLbl,.mrl,.mrv,#slotc,#consumeSlots';
@@ -127,5 +127,5 @@
   const observer=new MutationObserver(decorate);
   decorate();
   // Deterministic entry point for renders and tests, without any game-state writes.
-  window.ColdDeckRaster={refresh:decorate,ready};
+  window.ColdDeckRaster={refresh:decorate,ready,cardsReady};
 })();

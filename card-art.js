@@ -1,6 +1,10 @@
 /* Generated bitmap artwork with exact game-controlled ranks and pip counts. */
 const ColdDeckArt = (() => {
+  // The build replaces this with the card drawings themselves, as data URLs.
+  // Creating a card in the shipped game never needs an image request.
+  const embeddedCardImages=null;
   const suitKeys={'♠':'spade','♥':'heart','♦':'diamond','♣':'club'};
+  const courts={K:'king-beige-light',Q:'queen-beige-light',J:'jack-beige-light'};
   const letterCells=Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZÉÈÀÇÙÊÔÛÎÏ');
   // Visible ink bounds in the generated 6 × 6 atlas, excluding its empty side margins.
   const letterBounds=[
@@ -52,10 +56,9 @@ const ColdDeckArt = (() => {
     10:[[33,39],[67,39],[33,55],[67,55],[33,71],[67,71],[33,87],[67,87],[33,103],[67,103]]
   };
   function face(rank,s){
-    const courts={K:'king-beige-light',Q:'queen-beige-light',J:'jack-beige-light'};
     // Keep the traditional count inside a tighter central area, clear of both indices.
     const art=courts[rank]
-      ?`<img class="court-image" data-court="${rank}" src="${image('court-'+courts[rank])}" width="1024" height="1536" alt="" decoding="async" draggable="false">`
+      ?`<img class="court-image" data-court="${rank}" src="${image('court-'+courts[rank])}" width="1024" height="1536" alt="" decoding="sync" draggable="false">`
       :rank==='A'?pip(s,50,71,41):(layouts[Number(rank)]||[]).map(([x,y])=>pip(s,50+(x-50)*.88,71+(y-71)*.84,Number(rank)===10?13:Number(rank)>8?15:17,y>71?180:0)).join('');
     return `<div class="card-art raster-card-art" aria-hidden="true">${art}</div>`;
   }
@@ -63,19 +66,48 @@ const ColdDeckArt = (() => {
   const illustrationKeys=new Set(["lunettes", "jeton", "clope", "as", "froid", "compteur", "mecene", "usurier", "collector", "maitresse", "bruleur", "portebonheur", "diplomate", "talisman", "aimant", "phare", "etoile", "jugement", "soleil", "diable", "lune", "etoileD", "pendu", "magicien", "roue", "soin", "assurance", "videur", "bank", "pourboire", "net", "tarot", "contact", "relic2", "plafond", "elan", "cashplus", "boon2", "mult", "baraplus", "evt3"]);
   const effectAliases={bankI:'bank',pourboireI:'pourboire',income:'pourboire',betmax:'plafond',filet:'net',cash:'soin'};
   const interfaceArt={flag:'phare',trophy:'ui-trophy',scroll:'boon2',forcee:'baraplus',glass:'baraplus',arc:'lune',suite:'elan',couleur:'tarot',doree:'etoile',diamond:'relic2'};
-  const image=key=>`assets/illustrations/${key}.webp`;
+  const image=key=>embeddedCardImages?.[key]||`assets/illustrations/${key}.webp`;
   const backKeys={cb9:'back-lightning',cb10:'back-luck',cb11:'back-heart',cb12:'back-moon',cb13:'back-dice',cb14:'back-crown',cb15:'back-eye',cb16:'back-cherry',cb18:'back-flame',cb19:'back-diamond',cb22:'back-snake',cb26:'back-sun'};
   const backKey=id=>backKeys[id]||backKeys.cb9;
+  const faceImageKeys=[...Object.values(courts).map(key=>'court-'+key),'card-stock','card-shape',...Object.values(suitKeys).map(key=>'suit-'+key)];
+  const cardImageKeys=Object.freeze([...faceImageKeys,...Object.values(backKeys),'type-letters','type-numbers']);
+  // Keep the decoded figures and current back alive before any card is dealt.
+  // Other backs stay embedded without holding twelve full-size decoded images.
+  const preparedImages=new Map();
+  function prepareImage(key){
+    if(preparedImages.has(key))return preparedImages.get(key).ready;
+    const picture=new Image();picture.decoding='sync';
+    const ready=new Promise((resolve,reject)=>{
+      let finished=false;
+      const finish=error=>{
+        if(finished)return;finished=true;clearTimeout(timeout);
+        picture.onload=null;picture.onerror=null;
+        if(error)reject(error);else resolve();
+      };
+      const timeout=setTimeout(()=>finish(new Error('Card image preparation timed out: '+key)),10000);
+      picture.onerror=()=>finish(new Error('Card image unavailable: '+key));
+      picture.onload=async()=>{try{if(picture.decode)await picture.decode();finish();}catch(error){finish(error);}};
+      picture.src=image(key);
+    });
+    preparedImages.set(key,{picture,ready});
+    ready.catch(()=>{if(preparedImages.get(key)?.picture===picture)preparedImages.delete(key);});
+    return ready;
+  }
+  function prepareCards(id='cb9'){
+    const selected=backKey(id);
+    for(const key of Object.values(backKeys))if(key!==selected)preparedImages.delete(key);
+    return Promise.all([...faceImageKeys,selected].map(prepareImage));
+  }
   const surface=content=>`<div class="card-surface">${content}</div>`;
   const illustration=(key,className='scene-art',lazy=false)=>`<img class="${className}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false">`;
   // The frame follows the bevel inside the shared cut-paper silhouette.
   // The bitmap supplies the original motif; its old edge is cropped by CSS.
-  const back=(id,lazy=false)=>surface(`<img class="card-back-image" src="${image(backKey(id))}" width="1024" height="1536" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="async" draggable="false"><svg class="card-back-frame" viewBox="0 0 100 142" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M14 5 L86 5 L96 15 L96 127 L86 137 L14 137 L4 127 L4 15 Z"/></svg>`);
+  const back=(id,lazy=false)=>surface(`<img class="card-back-image" src="${image(backKey(id))}" width="1024" height="1536" alt="" aria-hidden="true" ${lazy?'loading="lazy" ':''}decoding="${lazy?'async':'sync'}" draggable="false"><svg class="card-back-frame" viewBox="0 0 100 142" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M14 5 L86 5 L96 15 L96 127 L86 137 L14 137 L4 127 L4 15 Z"/></svg>`);
   function effect(id){
     const requested=effectAliases[id]||id;
     const key=illustrationKeys.has(requested)?requested:'etoile';
     return `<img class="effect-symbol effect-illustration" data-effect-symbol="${key}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">`;
   }
   const icon=n=>`<img class="pxi raster-icon" src="${image(interfaceArt[n]||'etoile')}" width="1024" height="1024" alt="" aria-hidden="true" decoding="async" draggable="false">`;
-  return {suit,face,icon,effect,image,illustration,back,backKey,surface,lettering};
+  return {suit,face,icon,effect,image,illustration,back,backKey,surface,lettering,cardImageKeys,prepareCards};
 })();

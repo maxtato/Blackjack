@@ -1,10 +1,34 @@
 /* Keep actions in the application's closure, including in embedded previews.
    No inline handlers, eval, or dependency on functions attached to window. */
 (() => {
+  let preparingCards=false;
+  async function launchPreparedGame(){
+    if(preparingCards)return;
+    audioInit();
+    preparingCards=true;
+    const launch=$('planqueLaunch'),label=launch.innerHTML;
+    launch.disabled=true;launch.setAttribute('aria-busy','true');launch.textContent=t('cards.preparing');
+    try{
+      // All of these drawings are already inside the bundle. Finish decoding
+      // them, including the illustrated ranks, before showing the first hand.
+      let preparedBack;
+      do{
+        preparedBack=cardBack;
+        await Promise.all([ColdDeckArt.prepareCards(preparedBack),window.ColdDeckRaster?.cardsReady]);
+      }while(preparedBack!==cardBack);
+      launch.innerHTML=label;
+      if($('intro').classList.contains('show'))launchMode();
+    }catch{
+      launch.textContent=t('cards.retry');
+    }finally{
+      preparingCards=false;launch.disabled=false;launch.removeAttribute('aria-busy');
+    }
+  }
+  ColdDeckArt.prepareCards(cardBack).catch(()=>{});
   const actions = {
     'select-circuit': () => chooseMode('nuit'),
     'select-free': () => chooseMode('infini'),
-    launchMode: () => launchMode(),
+    launchMode: () => launchPreparedGame(),
     'back-previous': () => stepBack(-1),
     'back-next': () => stepBack(1),
     'resume-previous': () => stepResume(-1),
