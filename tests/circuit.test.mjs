@@ -226,4 +226,39 @@ check('Card tags and accessible descriptions use the two readable edition names'
  }
  assert.equal(a.STR.en['m.foil'],'GOLD');assert.equal(a.STR.en['m.poly'],'PRISM');
 });
+check('Free Play starts and resumes with a usable free relic and Tarot',()=>{
+ for(const palier of [0,4]){
+  a.reset();a.META.infini.record.palier=palier+1;a.startEndless();
+  assert.equal(a.G.palier,palier);assert.equal(a.G.relics.length,1);assert.equal(a.G.relics[0].id,'jeton');
+  assert.equal(a.G.consumables.length,1);assert.equal(a.G.consumables[0].id,'etoile');
+  assert.equal(a.G.relics[0]._paid,0);assert.equal(a.G.consumables[0]._paid,0);
+  const bank=a.G.bank;a.useConsumable(0);assert.equal(a.G.consumables.length,0);
+  assert(a.G.baraka>0);assert.equal(a.G.bank,bank);
+ }
+});
+check('Free Play tiers offer real cards, grant the selected card once and keep existing inventory',()=>{
+ for(const kind of ['relic','tarot']){
+  a.reset();a.startEndless();a.G.counterUsed=true;a.G.phareUsed=true;a.G._talismanUsed=true;
+  a.reachPalier();assert.equal(a.G.boonChoices.length,3);
+  const relicChoice=a.G.boonChoices.find(b=>b.kind==='relic'),tarotChoice=a.G.boonChoices.find(b=>b.kind==='tarot');
+  assert(relicChoice);assert(tarotChoice);assert(!a.hasRelic(relicChoice.card.id));assert(!relicChoice.card.lock);
+  const choice=kind==='relic'?relicChoice:tarotChoice,items=kind==='relic'?a.G.relics:a.G.consumables;
+  const old=items[0],bank=a.G.bank,hand=a.G.hand;a.applyBoon(choice.id);
+  assert.equal(items.length,2);assert.equal(items[0],old);assert.equal(items[1].id,choice.card.id);assert.equal(items[1]._paid,0);
+  if(kind==='tarot')assert.equal(typeof items[1].use,'function');
+  assert.equal(a.G.bank,bank);assert.equal(a.G.hand,hand+1);assert.equal(a.G.phase,'bet');
+  assert(!a.G.counterUsed);assert(!a.G.phareUsed);assert(!a.G._talismanUsed);
+  a.applyBoon(choice.id);assert.equal(items.length,2);assert.equal(a.G.hand,hand+1);
+ }
+});
+check('Full Free Play inventories receive perks and rerolls cannot award unselected cards',()=>{
+ a.reset();a.startEndless();a.G.relics=a.RELIC_POOL.filter(r=>!r.lock).slice(0,a.relicMax()).map(r=>({...r,_paid:0}));
+ a.G.consumables=Array.from({length:a.consumableSlots()},()=>tarot('etoile'));
+ a.reachPalier();assert.equal(a.G.boonChoices.length,3);assert(a.G.boonChoices.every(b=>!b.kind));
+ const relics=a.G.relics.length,tarots=a.G.consumables.length,hand=a.G.hand;
+ a.reachPalier(true);assert.equal(a.G.relics.length,relics);assert.equal(a.G.consumables.length,tarots);
+ a.applyBoon('relic:phare');assert.equal(a.G.hand,hand);assert.equal(a.G.relics.length,relics);
+ a.applyBoon(a.G.boonChoices[0].id);assert.equal(a.G.hand,hand+1);
+ assert.equal(a.G.relics.length,relics);assert.equal(a.G.consumables.length,tarots);
+});
 console.log(JSON.stringify({passed:results.length,checks:results},null,2));h.close();

@@ -1123,7 +1123,7 @@ function endlessTier(tier){
 function tableFor(idx){return G.endless?endlessTier(idx):RUN[Math.min(idx,RUN_LEN-1)];}
 function curTable(){return tableFor(G.tableIdx);}
 function relicMax(){return 5+((G.boons&&G.boons.relic)||0);}
-/* bonus de palier (mode infini cagnotte) — pas de relique/tarot, pas de vie */
+/* Bonus de palier du mode Libre, proposés avec les cartes disponibles. */
 /* titres/descriptions : clés boon.<id>.t / .d */
 const BOONS=[
   {id:'mult'},{id:'income'},{id:'betmax'},{id:'filet'},{id:'cash'},
@@ -3370,7 +3370,7 @@ function startGame(fromTable){
   G.bank=Math.round(G.table.cap*(1+.05*uLvl('bank')))+G.table.entry;
   G.rewardDraftPending=1+uLvl('contact');enterTable(0);
 }
-/* MODE INFINI « CAGNOTTE » : blackjack pur, on accumule tant qu'on peut miser */
+/* MODE INFINI « CAGNOTTE » : on accumule tant qu'on peut miser. */
 function startEndless(){
   audioInit();MODE='infini';
   $('intro').classList.remove('show');$('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');
@@ -3380,7 +3380,8 @@ function startEndless(){
   const maxIdx=Math.max(elan,Math.max(1,metaCur().record.palier||1)-1);
   const si=Math.min(Math.max((startPalierIdx==null?maxIdx:startPalierIdx),elan),maxIdx);
   G.endless=true;G.palier=si;G.tableIdx=si;
-  G.relics=[];G.consumables=[];G.tokens=0;                  // pas de relique/tarot/vie en infini
+  G.relics=[{...RELIC_POOL.find(r=>r.id==='jeton'),_paid:0}];
+  G.consumables=[{...TAROT_POOL.find(c=>c.id==='etoile'),_paid:0}];G.tokens=0;
   G.boons={relic:0,tarot:0,mult:0,income:0,betmax:plaf*0.1,calm:0};
   G.table=endlessTier(G.tableIdx);
   if(si>0)G.bank=palierTarget(si-1);                        // reprise : on repart au seuil du palier atteint
@@ -3405,10 +3406,18 @@ function reachPalier(again){
   }
   const pool=BOONS.filter(b=>(!b.lock||uLvl(b.lock))&&!(b.id==='evt3'&&G.boons&&G.boons.evt3)&&!(b.id==='filet'&&G.boons&&G.boons.filet)&&!(b.id==='baraplus'&&G.boons&&G.boons.baraplus));
   for(let i=pool.length-1;i>0;i--){const j=rndInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
-  const pick=pool.slice(0,3);
+  const pick=[];
+  if(G.relics.length<relicMax()){
+    const cards=RELIC_POOL.filter(r=>!hasRelic(r.id)&&(!r.lock||uLvl(r.lock)));
+    if(cards.length){const card=cards[rndInt(cards.length)];pick.push({id:'relic:'+card.id,kind:'relic',card});}
+  }
+  if(G.consumables.length<consumableSlots()){
+    const card=TAROT_POOL[rndInt(TAROT_POOL.length)];pick.push({id:'tarot:'+card.id,kind:'tarot',card});
+  }
+  pick.push(...pool.slice(0,3-pick.length));G.boonChoices=pick;
   $('palierNum').textContent=G.palier;
   $('palierBoons').innerHTML=pick.map(b=>
-    `<button class="btn b-purple menu boon-choice" data-action="apply-boon" data-boon="${b.id}" style="width:100%">${effectMark(b.id,'#eadbff')}<span class="boon-copy">${t('boon.'+b.id+'.t')}<small>${t('boon.'+b.id+'.d')}</small></span></button>`
+    `<button class="btn b-purple menu boon-choice" data-action="apply-boon" data-boon="${b.id}" style="width:100%">${effectMark(b.card?b.card.id:b.id,'#eadbff')}<span class="boon-copy">${b.card?iName(b.card):t('boon.'+b.id+'.t')}<small>${b.card?iDesc(b.card):t('boon.'+b.id+'.d')}</small></span></button>`
   ).join('')+
     // le dilemme : replonger avec un bonus, ou sécuriser AVEC prime de palier
     `<button class="btn b-gold menu" data-action="cash-out-endless-bonus" style="width:100%;margin-top:6px">${t('pal.cash',STAR+abbr(Math.round(endlessCashRep()*1.2)))}<small>${t('pal.cashSub')}</small></button>`+
@@ -3422,6 +3431,16 @@ function cashOutEndless(fromPalier){
   endRun(true);
 }
 function applyBoon(id){
+  if(!G.endless||!$('palierScreen').classList.contains('show'))return;
+  const choice=G.boonChoices?.find(b=>b.id===id);if(!choice)return;
+  if(choice.kind==='relic'){
+    if(G.relics.length>=relicMax()||hasRelic(choice.card.id))return;
+    G.relics.push({...choice.card,_paid:0});
+  }else if(choice.kind==='tarot'){
+    if(G.consumables.length>=consumableSlots())return;
+    G.consumables.push({...choice.card,_paid:0});
+  }
+  G.boonChoices=[];
   if(!G.boons)G.boons={relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0};
   if(id==='mult')G.boons.mult++;
   else if(id==='income')G.boons.income+=5;
@@ -3433,7 +3452,7 @@ function applyBoon(id){
   sfx.buy&&sfx.buy();coinBurst(8);
   $('palierScreen').classList.remove('show');
   G.table=endlessTier(G.tableIdx);                        // reflète le bonus (ex. mise max)
-  G.event=null;G.forcedUsed=false;                         // fresh power charge at each Free Play tier
+  G.event=null;G.forcedUsed=false;G.counterUsed=false;G.phareUsed=false;G._talismanUsed=false;
   G.hand++;G.phase='bet';G._settling=false;G.dHand=[];G.pHand=[];
   clampBet();applyHandIncome();renderAll();renderHands();announceTurn();
 }

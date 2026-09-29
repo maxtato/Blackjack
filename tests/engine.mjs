@@ -16,6 +16,7 @@ export function engine({realAds=false,persist=false,storage={}}={}){
   let code=['game-data.js','card-art.js','game.js'].map(f=>fs.readFileSync(root+'/'+f,'utf8')).join('\n');
   expose.push('openSettings','closeSettings','pauseSettings','openTestTools','closeTestTools','requestCircuitReset','closeRestart','doRestart','restartAll','startEndless');
   expose.push('maybeEdition','grantZoneTarot','cardEl');
+  expose.push('reachPalier','applyBoon','palierTarget');
   code=code.replace('freshGame();buildShoe();applyI18n();renderHands();tick();','');
   code+='\n'+noops.filter(n=>!persist||!['saveMeta','saveRecs'].includes(n)).map(n=>n+'=()=>{};').join('\n');
   code+=`\nLANG='fr';
