@@ -49,7 +49,7 @@ await check('Circuit reset clears its saves and pending actions, keeps Free Play
  assert.equal(a.MODE,'nuit');assert.equal(a.META.nuit.rep,0);assert.equal(Object.keys(a.META.nuit.unlocks).length,0);
  assert.equal(a.META.nuit.record.depth,0);assert.equal(a.META.nuit.record.reached,1);
  assert.equal(JSON.stringify(a.META.infini),free);assert.equal(a.RECS.nuit,undefined);assert.equal(a.RECS.infini.gain,1800);
- assert.equal(a.G.tableIdx,0);assert.equal(a.G.bank,80);assert.equal(a.G.hand,1);assert.equal(a.G.draftLeft,0);
+ assert.equal(a.G.tableIdx,0);assert.equal(a.G.bank,80);assert.equal(a.G.hand,1);
  assert.equal(a.Ads.testDisabled(),true);assert.equal(h.w.localStorage.getItem('t21back'),'cb14');
  assert.equal(a.GameClock.reasons.has('manual'),false);assert.equal(h.w.document.querySelectorAll('#settingsScreen.show,#testScreen.show,#confirmRestart.show,#pauseScreen.show').length,0);
  h.clock.tick(1000);assert.equal(a.G.bank,80);

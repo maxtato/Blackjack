@@ -7,25 +7,54 @@ const tarot=id=>({...a.TAROT_POOL.find(r=>r.id===id),_paid:10});
 check('Circuit starts with a contract and no unearned bonus cards',()=>{
  for(const from of [0,8]){
   a.startGame(from);assert.equal(a.G.phase,'bet');assert.equal(a.G.tableIdx,from);
-  assert.equal(a.G.draftLeft,0);assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
-  assert.equal(a.G.giftZones.length,0);assert.equal(a.G.contractChoices.length,2);
+  assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
+  assert.equal(a.G.contractChoices.length,2);
   a.chooseContract(1);assert.equal(a.G.contract,a.G.contractChoices[1]);
  }
 });
-check('First cleared table awards cards once, including the Contact upgrade',()=>{
+check('Every cleared Circuit table goes straight to shopping without granting cards',()=>{
  for(const contact of [0,1]){
-  h.reset(123,{contact});a.G.bank=a.G.table.goal;assert(a.checkBankGoal());
-  assert.equal(a.G.phase,'victory');a.continueTableVictory();
-  assert.equal(a.G.phase,'draft');assert.equal(a.G.draftLeft,1+contact);assert.equal(a.G.consumables.length,1);
-  const bank=a.G.bank,pot=a.G.pot,table=a.G.tableIdx;
-  for(let i=0;i<=contact;i++)a.chooseStarter(0);
-  assert.equal(a.G.phase,'shop');assert.equal(a.G.relics.length,1+contact);
-  assert.equal(a.G.bank,bank);assert.equal(a.G.pot,pot);assert.equal(a.G.tableIdx,table);
-  a.chooseStarter(0);assert.equal(a.G.relics.length,1+contact);
-  a.setTable(1);a.enterTable(1);assert.equal(a.G.consumables.length,1);
-  a.G.bank=a.G.table.goal;assert(a.checkBankGoal());assert.equal(a.G.phase,'victory');a.continueTableVictory();assert.equal(a.G.phase,'shop');
-  assert.equal(a.G.consumables.length,1);assert.equal(a.G.relics.length,1+contact);
+  h.reset(123,{contact});
+  for(let i=0;i<a.RUN_LEN;i++){
+   a.startGame(i);a.chooseContract(0);a.G.bank=a.G.table.goal;
+   a.G.bossState={wins:3,qualified:1,totals:[20,21]};
+   assert(a.checkBankGoal());assert.equal(a.G.phase,'victory');
+   assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
+   const bank=a.G.bank,pot=a.G.pot;a.continueTableVictory();
+   assert.equal(a.G.phase,i===a.RUN_LEN-1?'ended':'shop');
+   assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
+   assert.equal(a.G.bank,bank);assert.equal(a.G.pot,pot);
+   a.continueTableVictory();assert.equal(a.G.pot,pot);
+  }
  }
+});
+check('Relics and Tarots require paid shop purchases and never refill themselves',()=>{
+ a.G.phase='shop';a.G.bank=300;
+ const items=[{type:'relic',data:a.RELIC_POOL.find(r=>r.id==='lunettes')},{type:'tarot',data:a.TAROT_POOL.find(r=>r.id==='etoile')}];
+ a.setOffers(items);
+ for(let i=0;i<items.length;i++){
+  const before=a.G.bank,cost=a.itemCost(items[i].data);a.buyShopItem(i);
+  assert.equal(a.G.bank,before-cost);
+  assert.equal((i?a.G.consumables:a.G.relics)[0]._paid,cost);
+  a.buyShopItem(i);assert.equal(a.G.bank,before-cost);
+ }
+ assert.equal(a.G.relics.length,1);assert.equal(a.G.consumables.length,1);
+ a.setTable(3);a.enterTable(1);a.G.bank=a.G.table.goal;a.finishTable();a.continueTableVictory();
+ assert.equal(a.G.relics.length,1);assert.equal(a.G.consumables.length,1);
+ a.openInspect('tarot',0);a.sellItem();assert.equal(a.G.consumables.length,0);
+ a.G.phase='bet';a.G.consumables=[tarot('etoile')];a.useConsumable(0);assert.equal(a.G.consumables.length,0);
+});
+check('Purchased Contact discounts relics while Tarot prices and resale stay accurate',()=>{
+ const item=a.RELIC_POOL.find(r=>r.id==='lunettes'),card=a.TAROT_POOL.find(r=>r.id==='etoile');
+ const standard=a.itemCost(item),tarotCost=a.itemCost(card);
+ a.META.nuit.rep=90;a.buyUnlock('contact');assert.equal(a.META.nuit.rep,0);
+ assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
+ const discounted=a.itemCost(item);assert(discounted<standard);assert.equal(discounted,Math.round(standard*.9));
+ assert.equal(a.itemCost(card),tarotCost);
+ a.G.phase='shop';a.G.bank=300;a.setOffers([{type:'relic',data:item}]);a.buyShopItem(0);
+ assert.equal(a.G.bank,300-discounted);assert.equal(a.G.relics[0]._paid,discounted);
+ assert.equal(a.sellValue(a.G.relics[0]),Math.floor(discounted*.5));
+ assert(a.t('unlock.contact.d').includes('10 %'));
 });
 check('Soft Aces and remaining-shoe odds',()=>{
  a.G.shoe=['A','2','3','4','5','6','7','8','9','10','J','Q','K'].map(card);
@@ -128,8 +157,8 @@ check('Pause and inspection suspend the remaining engine time',()=>{
 check('Sun can complete an ordinary table between hands',()=>{
  a.G.bank=a.G.table.goal-5;a.G.baraka=2;a.G.consumables=[tarot('soleil')];a.useConsumable(0);
  a.continueTableVictory();
- assert.equal(a.G.phase,'draft');assert.equal(a.G.baraka,0);
- a.chooseStarter(0);assert.equal(a.G.phase,'shop');
+ assert.equal(a.G.phase,'shop');assert.equal(a.G.baraka,0);
+ assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
 });
 check('Gift resale is fixed and editions never overwrite',()=>{
  const free=relic('lunettes'),early=a.sellValue(free);a.setTable(23);assert.equal(a.sellValue(free),early);assert.equal(early,0);
@@ -199,14 +228,6 @@ check('Edition Tarots target an unedited card, and the Wheel grants only the two
  }
  assert.deepEqual([...finishes].sort(),['foil','poly']);
  a.G.pHand=[card(8)];assert.equal(a.addEditionToHand('unknown'),false);assert.equal(a.G.pHand[0].ed,undefined);
-});
-check('Every zone gift resolves to a playable Tarot after removing the third edition',()=>{
- for(let zone=1;zone<=8;zone++){
-  a.reset();a.setTable(a.RUN.find(t=>t.zone===zone).i);a.grantZoneTarot();
-  assert.equal(a.G.consumables.length,1);assert.equal(typeof a.G.consumables[0].use,'function');
-  if(zone===4)assert.equal(a.G.consumables[0].id,'soleil');
-  a.grantZoneTarot();assert.equal(a.G.consumables.length,1);
- }
 });
 check('First-card rules grant Gold or Prism without replacing an existing edition',()=>{
  const random=h.w.Math.random;h.w.Math.random=()=>.9;

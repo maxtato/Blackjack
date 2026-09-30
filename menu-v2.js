@@ -24,9 +24,7 @@ Object.assign(STR.fr,{
  'set.open':'RÉGLAGES',
  'planque.avail':n=>n+' amélioration'+(n>1?'s disponibles':' disponible'),
  'circuit.contractTitle':'Choisir un contrat','circuit.contractHint':'Un objectif bonus pour cette table. Choisis-en un.',
- 'circuit.draft':'CHOISIR UNE CARTE BONUS','circuit.contact':'CHOISIR UNE DEUXIÈME CARTE',
- 'circuit.draftCopy':'Table remportée ! Cette relique reste avec toi jusqu’à la fin de la partie.',
- 'unlock.contact.d':()=> 'Après ta première table remportée, choisis une deuxième relique offerte',
+ 'unlock.contact.d':()=> 'Remise de 10 % sur les reliques achetées en boutique',
  'test.resetConfirmCopy':'La <b>réputation</b>, les <b>améliorations</b> et les <b>records du circuit</b> seront effacés. La partie en cours sera arrêtée.<br><br>Tu recommences à la <b>table 1</b>, en choisissant ton contrat.<br><br>La progression du mode Libre et tes réglages sont conservés.'
 });
 Object.assign(STR.en,{
@@ -53,9 +51,7 @@ Object.assign(STR.en,{
  'set.open':'SETTINGS',
  'planque.avail':n=>n+' upgrade'+(n>1?'s':'')+' available',
  'circuit.contractTitle':'Choose a contract','circuit.contractHint':'A bonus goal for this table. Pick one.',
- 'circuit.draft':'CHOOSE A BONUS CARD','circuit.contact':'CHOOSE A SECOND CARD',
- 'circuit.draftCopy':'Table cleared! Keep this relic until the end of your run.',
- 'unlock.contact.d':()=> 'After your first cleared table, choose a second free relic',
+ 'unlock.contact.d':()=> '10% off relic purchases in the shop',
  'test.resetConfirmCopy':'Circuit <b>reputation</b>, <b>upgrades</b> and <b>records</b> will be erased. Your current game will end.<br><br>You restart at <b>table 1</b> by choosing a contract.<br><br>Free Play progress and your settings are kept.'
 });
 for(const key of Object.keys(STR.fr))if(typeof STR.fr[key]==='string')STR.fr[key]=STR.fr[key].replaceAll('SANS FIN','LIBRE').replaceAll('LA TOURNÉE','CIRCUIT');

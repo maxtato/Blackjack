@@ -58,7 +58,6 @@ function playHand(profile,stats){
   if(g.tableMaxBaraka>=a.BARAKA_STEPS[2])stats.baraka3++;
   if(g.tableMaxBaraka>=a.BARAKA_STEPS[3])stats.baraka4++;
   if(g.phase==='victory')a.continueTableVictory();
-  while(g.phase==='draft')a.chooseStarter(0);
   return h.w.__screen;
 }
 function tableAttempt(profile,stats){
@@ -123,7 +122,7 @@ for(const build of [[],['as','lunettes','collector','clope','talisman']]){
   const stats=zero();
   for(let n=0;n<N;n++){
    h.reset(751403+ti*99991+n*53,build.length?{pourboire:3}:{});a.setTable(ti);
-   a.G.bank=a.G.table.cap+a.G.table.entry;a.G.consumables=[];a.G.giftZones=[1,2,3,4,5,6,7,8];a.G.zoneGift=null;a.G.relics=build.map(id=>({...a.RELIC_POOL.find(r=>r.id===id)}));
+   a.G.bank=a.G.table.cap+a.G.table.entry;a.G.consumables=[];a.G.relics=build.map(id=>({...a.RELIC_POOL.find(r=>r.id===id)}));
    a.enterTable(0);h.flush();h.w.__screen='';a.G.tokens=0;
    tableAttempt({stake:'max',items:true},stats);
   }

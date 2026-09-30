@@ -225,12 +225,9 @@ function renderTableEffect(box){
   if(!box)return;
   const effect=tableEffectData();box.dataset.rule=effect.rule;
   box.innerHTML='<span class="table-effect-label">'+t('circuit.tableEffect')+'</span><strong>'+effect.title+'</strong><p>'+effect.description+'</p>'+(effect.rule==='sec'&&hasRelic('diplomate')?'<p class="table-effect-protection">'+t('effect.sec.protected')+'</p>':'');
-  if(box.id==='briefEffect'){
-    const art=document.createElement('span');art.className='table-rule-art';art.setAttribute('aria-hidden','true');
-    if(effect.rule==='atelier')art.append(cardEl({r:'A',s:'♠',ed:'foil'}));
-    else art.innerHTML=effectMark(({standard:'jeton',sec:'diable',gros:'compteur',mute:'lunettes',nervous:'baraplus',depart:'baraplus',serein:'net'})[effect.rule]||'jeton','#273337');
-    box.prepend(art);
-  }
+  const art=document.createElement('span');art.className='table-rule-art';art.setAttribute('aria-hidden','true');
+  art.innerHTML=ColdDeckArt.effect(({standard:'jeton',sec:'diable',gros:'compteur',mute:'lunettes',nervous:'baraplus',depart:'elan',atelier:'etoileD',serein:'net'})[effect.rule]||'jeton');
+  box.prepend(art);
 }
 function openTableRules(){
   inspectRef=null;GameClock.pause('inspect',true);
@@ -516,7 +513,7 @@ function bossProgress(){
   return t('circuit.seals',Math.min(bossReady()?need:need-1,b.wins),need)+(bossReady()?' · '+t('circuit.ready'):' · '+t('boss.'+G.table.challenge));
 }
 function checkBankGoal(){
-  if(G.endless||G.phase!=='bet'||G.draftLeft>0)return false;
+  if(G.endless||G.phase!=='bet')return false;
   if(G.bank>=G.table.goal&&bossReady()){finishTable();return true;}return false;
 }
 function recommendedBet(){
@@ -527,39 +524,6 @@ function resetTableState(retry){
   const carry=retry?0:Math.min(2,Math.floor((G.baraka||0)/2));
   Object.assign(G,{hand:1,phase:'bet',pressure:0,baraka:G.table.rule==='depart'?2:carry,tableMaxBaraka:0,dHand:[],pHand:[],forcedUsed:false,tableMaxPressure:0,objHit:false,_talismanUsed:false,_dealing:false,_settling:false,penduArmed:false,magicNext:false,smallNext:false,counterUsed:false,phareUsed:false,knownCard:null,splitActive:false,hands:null,hi:0,stakeMult:1,tarotThisHand:false,bossState:{wins:0,qualified:0,totals:[]}});
   if(!retry)G.tableRetried=false;
-}
-function grantZoneTarot(){
-  if(G.endless||G.giftZones.includes(G.table.zone))return;
-  const gifts=['pendu','etoileD','etoile','soleil','roue','magicien','jugement','diable'];
-  G.zoneGift=gifts[G.table.zone-1];G.giftZones.push(G.table.zone);claimZoneGift();
-}
-function claimZoneGift(){
-  if(!G.zoneGift||G.consumables.length>=consumableSlots())return;
-  G.consumables.push({...TAROT_POOL.find(c=>c.id===G.zoneGift),_paid:0});G.zoneGift=null;
-}
-function showStarterDraft(){
-  const first=G.relics.length===0;
-  const pool=first?['jeton','maitresse','lunettes'].map(id=>RELIC_POOL.find(r=>r.id===id)):
-    RELIC_POOL.filter(r=>!hasRelic(r.id)&&(!r.lock||uLvl(r.lock)));
-  if(!first)for(let i=pool.length-1;i>0;i--){const j=rndInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
-  G.draftChoices=pool.slice(0,3);
-  const screen=$('draftScreen');if(!screen)return;
-  $('draftTitle').textContent=t(first?'circuit.draft':'circuit.contact');
-  $('draftCopy').textContent=t('circuit.draftCopy');
-  $('draftChoices').replaceChildren();
-  G.draftChoices.forEach((r,i)=>{
-    const b=document.createElement('button');b.className='btn draft-choice b-blue';
-    b.innerHTML=effectMark(r.id,tokFor(r.id).c)+'<span>'+iName(r)+'<small>'+iDesc(r)+'</small></span>';
-    b.onclick=()=>chooseStarter(i);$('draftChoices').append(b);
-  });
-  screen.classList.add('show');
-}
-function chooseStarter(i){
-  if(G.phase!=='draft')return;const r=G.draftChoices[i];if(!r)return;
-  G.relics.push({...r,_paid:0});G.draftLeft--;
-  if(G.draftLeft>0){showStarterDraft();return;}
-  $('draftScreen')?.classList.remove('show');
-  G.phase='shop';renderTop();renderRelics();renderConsumables();openShop();
 }
 function showTableBrief(){
   const screen=$('tableBrief');if(!screen)return;
@@ -631,8 +595,8 @@ let G={};
 function freshGame(){
   GameClock.clear();window.ColdDeckFX?.clear();
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
-     peekUsed:false,knownCard:null,penduArmed:false,smallNext:false,counterUsed:false,phareUsed:false,tableRetried:false,bossState:{wins:0,qualified:0,totals:[]},giftZones:[],relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,baraka:0,barakaMax:0,insurance:false,objHit:false,
-     phase:'bet',draftLeft:0,rewardDraftPending:0,pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1,splitActive:false,hands:null,hi:0,
+     peekUsed:false,knownCard:null,penduArmed:false,smallNext:false,counterUsed:false,phareUsed:false,tableRetried:false,bossState:{wins:0,qualified:0,totals:[]},relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,baraka:0,barakaMax:0,insurance:false,objHit:false,
+     phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1,splitActive:false,hands:null,hi:0,
      endless:false,palier:0,peak:0,boons:{relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0},streak:0,event:null,contract:null,_talismanUsed:false,_palierCash:false,
      stats:{won:0,played:0,bestGain:0,bestMult:1}};
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // valeur interne par défaut
@@ -1168,7 +1132,7 @@ function useConsumable(i,el,target){
   const res=card.use();delete G.editionTarget;
   if(res===false){popText(t('msg.cant'),'');return;}
   if(el)el.classList.add('flash');
-  G.consumables.splice(i,1);G.tarotThisHand=true;sfx.buy();popText(iName(card),res);claimZoneGift();
+  G.consumables.splice(i,1);G.tarotThisHand=true;sfx.buy();popText(iName(card),res);
   renderConsumables();renderRelics();renderTop();renderActions();renderMult();checkBankGoal();
 }
 /* prix de revente : la moitié de ce qu'on a payé (jamais plus cher que l'achat) */
@@ -1216,7 +1180,7 @@ function sellItem(){
   G.bank+=val;arr.splice(i,1);sfx.buy();
   closeInspect();
   popText(t('msg.sold'),iName(item)+' · +'+cash(val));
-  claimZoneGift();renderRelics();renderConsumables();renderTop();renderChips();renderActions();
+  renderRelics();renderConsumables();renderTop();renderChips();renderActions();
   if(G.phase==='shop'){renderShopHead();renderShop();}else checkBankGoal();
 }
 function applyHandIncome(){
@@ -1487,7 +1451,7 @@ function dealerPlay(natural){
 
 /* ---------- résolution ---------- */
 function resolve(mode){
-  if(['done','victory','shop','draft','transition','lost','ended'].includes(G.phase))return;
+  if(['done','victory','shop','transition','lost','ended'].includes(G.phase))return;
   if(G.splitActive)return resolveSplit();
   G.phase='done';
   if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
@@ -1542,7 +1506,7 @@ function resolve(mode){
 
 /* résolution en mode SÉPARÉ : chaque main est comparée au croupier, gains cumulés */
 function resolveSplit(){
-  if(['done','victory','shop','draft','transition','lost','ended'].includes(G.phase))return;
+  if(['done','victory','shop','transition','lost','ended'].includes(G.phase))return;
   G.phase='done';
   window.ColdDeckFX?.holdBank();
   if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
@@ -1592,7 +1556,7 @@ function resolveSplit(){
 /* dès que l'objectif est atteint, la table est validée : pas besoin de finir
    toutes les mains. Sinon on joue les mains restantes. À sec en chemin = table perdue. */
 function nextHandOrEnd(){
-  if(['victory','shop','draft','transition','lost','ended'].includes(G.phase))return;
+  if(['victory','shop','transition','lost','ended'].includes(G.phase))return;
   if(G.endless){                                    // mode cagnotte : pas d'objectif ni de limite de mains
     G.peak=Math.max(G.peak||0,G.bank);
     if(G.bank<G.table.min)return endlessBust();     // banqueroute = fin
@@ -1615,7 +1579,7 @@ function nextHandOrEnd(){
 }
 /* fin de table : 0★ = perdue · 1★ survie · 2★ objectif · 3★ maîtrise */
 function finishTable(){
-  if(['victory','shop','draft','transition','lost','ended'].includes(G.phase))return;
+  if(['victory','shop','transition','lost','ended'].includes(G.phase))return;
   const tb=G.table;
   const stars=starsFor(tb,G.bank);
   if(stars===0){onTableLost('lost.goal',G.bank>=tb.goal?'circuit.bossUnfinished':{k:'lost.goalTxt',miss:tb.goal-G.bank});return;}
@@ -1625,8 +1589,6 @@ function finishTable(){
   const reward=tableRep(tb,stars,G.tableMaxBaraka||0);
   G.pot+=reward;G.lastReward=reward;G.lastStars=stars;
   updateRecord(G.tableIdx+1);
-  // Bonus cards are earned after a cleared table, never before the first hand.
-  grantZoneTarot();
   renderTop();renderRelics();renderConsumables();
   window.ColdDeckJourney?.showVictory();
 }
@@ -1634,10 +1596,6 @@ function continueTableVictory(){
   if(G.phase!=='victory')return;
   G.phase='shop';$('tableVictory').classList.remove('show');
   if(G.tableIdx>=RUN_LEN-1){cashOut();return;}
-  if(G.rewardDraftPending>0){
-    G.draftLeft=G.rewardDraftPending;G.rewardDraftPending=0;
-    G.phase='draft';showStarterDraft();return;
-  }
   openShop();
 }
 /* table perdue : seconde chance (jeton) ou fin de descente.
@@ -1710,7 +1668,8 @@ function itemCost(r){
     return priceRound(unit*(rates[r.id]||.5)*(hasRelic('portebonheur')?.8:1));
   }
   const remaining=RUN_LEN-G.tableIdx-1;
-  return priceRound(unit*(r.cost||12)/10*Math.max(.5,Math.min(1,remaining/5)));
+  const cost=priceRound(unit*(r.cost||12)/10*Math.max(.5,Math.min(1,remaining/5)));
+  return !G.endless&&uLvl('contact')?Math.max(1,Math.round(cost*.9)):cost;
 }
 function advanceAmount(bank=G.bank){return Math.max(0,Math.min(shopTable().max*2,Math.round(shopTable().cap*.7)+shopTable().entry-bank));}
 function serviceAvailable(r){
@@ -2082,6 +2041,7 @@ function applyI18n(){
   window.ColdDeckBackgrounds?.refresh();
   if($('tableBrief').classList.contains('show'))showTableBrief();
   window.ColdDeckJourney?.refresh();
+  window.ColdDeckFonts?.refresh();
 }
 function pauseRules(){$('pauseScreen').classList.remove('show');pauseReturn=true;openRules();}   // à la fermeture des règles on revient à la pause
 function quitToMenu(){GameClock.clear();$('pauseScreen').classList.remove('show');endRun(false);}                   // abandonne : encaisse la réputation puis écran de fin → La Planque
@@ -2464,7 +2424,7 @@ function openMenu(){
   GameClock.clear();
   startPalierIdx=null;   // au retour menu, la reprise se remet par défaut sur le plus loin atteint
   document.body.classList.remove('inf');
-  ['intro','endScreen','loseScreen','shop','pauseScreen','palierScreen','confirmRestart','draftScreen','tableBrief','tableVictory'].forEach(id=>$(id).classList.remove('show'));
+  ['intro','endScreen','loseScreen','shop','pauseScreen','palierScreen','confirmRestart','tableBrief','tableVictory'].forEach(id=>$(id).classList.remove('show'));
   renderMenu();
   $('modeMenu').classList.add('show');
 }
@@ -2564,17 +2524,17 @@ function toPlanque(){
 
 function startGame(fromTable){
   audioInit();MODE='nuit';document.body.classList.remove('inf');
-  ['intro','modeMenu','endScreen','loseScreen','shop','draftScreen','tableBrief','tableVictory','palierScreen','pauseScreen'].forEach(id=>$(id)?.classList.remove('show'));
+  ['intro','modeMenu','endScreen','loseScreen','shop','tableBrief','tableVictory','palierScreen','pauseScreen'].forEach(id=>$(id)?.classList.remove('show'));
   freshGame();buildShoe();
   fromTable=Math.max(0,Math.min(fromTable|0,RUN_LEN-1));
   G.recordAtStart={...META.nuit.record};G.tableIdx=fromTable;G.table=RUN[fromTable];
   G.bank=Math.round(G.table.cap*(1+.05*uLvl('bank')))+G.table.entry;
-  G.rewardDraftPending=1+uLvl('contact');enterTable(0);
+  enterTable(0);
 }
 /* MODE INFINI « CAGNOTTE » : on accumule tant qu'on peut miser. */
 function startEndless(){
   audioInit();MODE='infini';
-  ['intro','modeMenu','endScreen','loseScreen','shop','draftScreen','tableBrief','tableVictory','pauseScreen'].forEach(id=>$(id)?.classList.remove('show'));
+  ['intro','modeMenu','endScreen','loseScreen','shop','tableBrief','tableVictory','pauseScreen'].forEach(id=>$(id)?.classList.remove('show'));
   freshGame();
   const elan=uLvl('elan'),plaf=uLvl('plafond');             // déblocages permanents de l'infini
   // palier de reprise : celui choisi dans la Planque (≥ élan), borné au plus loin atteint

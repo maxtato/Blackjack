@@ -2,24 +2,23 @@ import assert from 'node:assert/strict';
 import {engine,card} from './engine.mjs';
 const h=engine({journeyUI:true}),a=h.api,d=h.w.document,passed=[];
 const check=(name,fn)=>{h.reset(432);fn();passed.push(name);};
-const visible=id=>d.getElementById(id).classList.contains('show');
+const visible=id=>!!d.getElementById(id)?.classList.contains('show');
 
-check('Victory precedes earned cards and shopping; repeated callbacks cannot pay twice',()=>{
+check('Victory goes directly to shopping without cards; repeated callbacks cannot pay twice',()=>{
  a.chooseContract(0);a.G.bank=a.G.table.goal;a.finishTable();
  assert.equal(a.G.phase,'victory');assert(visible('tableVictory'));assert(!visible('shop'));assert(!visible('draftScreen'));
- assert.equal(a.G.draftLeft,0);assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,1);
+ assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
  const bank=a.G.bank,pot=a.G.pot,stars=a.G.runStars;
  a.finishTable();a.nextHandOrEnd();a.resolve('stand');a.resolveSplit();a.deal();a.playerHit();a.playerStand();
  assert.equal(a.G.bank,bank);assert.equal(a.G.pot,pot);assert.equal(a.G.runStars,stars);
  assert.equal(a.G.phase,'victory');
- a.continueTableVictory();assert.equal(a.G.phase,'draft');assert(!visible('tableVictory'));
- a.continueTableVictory();assert.equal(a.G.draftLeft,1);a.chooseStarter(0);
- assert.equal(a.G.phase,'shop');assert(visible('shop'));
+ a.continueTableVictory();assert(!visible('tableVictory'));assert(!visible('draftScreen'));
+ assert.equal(a.G.phase,'shop');assert(visible('shop'));assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
  a.G.bank--;a.nextHandOrEnd();assert.equal(a.G.phase,'shop');a.G.bank++;
- a.continueTableVictory();assert.equal(a.G.relics.length,1);assert.equal(a.G.pot,pot);
+ a.continueTableVictory();assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);assert.equal(a.G.pot,pot);
  a.leaveShop();assert.equal(a.G.tableIdx,1);assert(visible('tableBrief'));assert.equal(a.G.phase,'bet');
  a.chooseContract(0);a.G.bank=a.G.table.goal;a.finishTable();assert.equal(a.G.phase,'victory');
- a.continueTableVictory();assert.equal(a.G.phase,'shop');assert.equal(a.G.relics.length,1);
+ a.continueTableVictory();assert.equal(a.G.phase,'shop');assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
 });
 check('The final boss celebrates before ending and banks reputation exactly once',()=>{
  a.startGame(23);a.chooseContract(0);a.G.bossState={wins:3,qualified:1,totals:[21]};a.G.bank=a.G.table.goal;

@@ -253,7 +253,6 @@
 </div>
 
 <!-- SHOP -->
-<div class="overlay" id="draftScreen"><div class="ovpanel circuit-panel"><h1 id="draftTitle"></h1><p id="draftCopy"></p><div id="draftChoices" class="circuit-choices"></div></div></div>
 <div class="overlay" id="tableBrief"><div class="ovpanel circuit-panel">
  <div id="briefRoute" class="journey-route"></div>
  <div class="illustrated-heading table-brief-heading"><img class="dialog-art" src="assets/illustrations/table-emblem.webp" width="96" height="96" alt="" decoding="async"><div class="table-heading-copy"><span id="briefTableLabel" class="table-brief-kicker" data-reading-label></span><h1 id="briefTitle"></h1></div></div>
@@ -318,6 +317,14 @@
  <div class="dialog-kicker">COLD DECK / <span data-i18n="nav.settings">RÉGLAGES</span></div><h1 data-i18n="set.title">RÉGLAGES</h1>
  <div class="setRow"><span class="setLbl" data-i18n="set.lang">LANGUE</span><div class="setOpts" id="langOpts"></div></div>
  <div class="setRow"><span class="setLbl" data-i18n="modern.motion">ANIMATIONS</span><div class="setOpts" id="motionOpts"></div></div>
+ <section class="font-settings" aria-labelledby="fontTitle">
+  <label class="setLbl" id="fontTitle" for="fontChoice">POLICE DU JEU</label><select id="fontChoice" aria-describedby="fontStatus"></select>
+  <label id="fontScopeLabel" for="fontScope">Appliquer à</label><select id="fontScope"><option value="display">Titres, boutons et chiffres</option><option value="all">Tout le texte</option></select>
+  <div class="font-sample"><strong id="fontSampleTitle"></strong><p id="fontSampleCopy"></p></div>
+  <p id="fontStatus" role="status" aria-live="polite"></p>
+  <button class="btn b-blue" type="button" id="fontImport" hidden>Importer le fichier</button><input id="fontFile" type="file" accept=".otf,.ttf,.woff,.woff2" hidden>
+  <a id="fontSource" target="_blank" rel="noopener noreferrer" hidden>Voir sur DaFont</a><small id="fontDemo"></small>
+ </section>
  <button class="btn b-purple test-entry" data-action="openTestTools"><span data-i18n="test.title">MODE TEST</span><small id="testModeStatus"></small></button>
  <button class="btn b-gold menu" data-action="closeSettings" data-i18n="set.close">TERMINÉ</button>
 </div></div>
