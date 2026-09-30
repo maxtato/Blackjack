@@ -2,14 +2,15 @@ import assert from 'node:assert/strict';
 import {engine,card} from './engine.mjs';
 
 const h=engine(),a=h.api,backgrounds=a.ColdDeckBackgrounds,passed=[];
+const removedIds=['fleches','tours','remparts'];
 const check=(name,fn)=>{fn();passed.push(name);};
 h.reset(987);
 
-check('Sixty-five backgrounds and the original can all be selected; removed choices are ignored',()=>{
- assert.equal(backgrounds.themes.filter(theme=>!theme.classic).length,65);
- assert(!backgrounds.themes.some(theme=>theme.id==='fleches'));
+check('Sixty-three backgrounds and the original can all be selected; removed choices are ignored',()=>{
+ assert.equal(backgrounds.themes.filter(theme=>!theme.classic).length,63);
+ assert(!backgrounds.themes.some(theme=>removedIds.includes(theme.id)));
  const grid=h.w.document.getElementById('backgroundGrid'),scenes=new Set();
- assert.equal(grid.children.length,66);
+ assert.equal(grid.children.length,64);
  for(const theme of backgrounds.themes){
   assert(backgrounds.select(theme.id));assert.equal(backgrounds.selected,theme.id);
   assert.equal(h.w.document.getElementById('bg').dataset.background,theme.id);
@@ -17,10 +18,10 @@ check('Sixty-five backgrounds and the original can all be selected; removed choi
   assert.equal(grid.querySelector('[aria-pressed="true"]').dataset.backgroundId,theme.id);
   if(!theme.classic)scenes.add(h.w.document.getElementById('tableBackdrop').innerHTML);
  }
- assert.equal(scenes.size,65);
+ assert.equal(scenes.size,63);
  const before=h.w.document.getElementById('tableBackdrop').innerHTML;
  assert.equal(backgrounds.select('missing'),false);assert.equal(h.w.document.getElementById('tableBackdrop').innerHTML,before);
- assert.equal(backgrounds.select('fleches'),false);assert.equal(h.w.document.getElementById('tableBackdrop').innerHTML,before);
+ for(const id of removedIds){assert.equal(backgrounds.select(id),false);assert.equal(h.w.document.getElementById('tableBackdrop').innerHTML,before);}
  assert(backgrounds.select('classic'));assert.equal(h.w.document.getElementById('tableBackdrop').children.length,0);
 });
 
@@ -39,15 +40,17 @@ check('The additional motifs have distinct shapes, with a clear center for the c
    assert(coords.every(([,x])=>Number(x)<=18)||coords.every(([,x])=>Number(x)>=82));
   }
  }
- assert.equal(shapes.size,45);
+ assert.equal(shapes.size,43);
 });
 
 check('Background selection survives reloads and game mode changes without changing progress',()=>{
  backgrounds.select('cuivre-decoupe');const selected=h.w.localStorage.getItem('colddeck-background');
  const reload=engine({storage:{'colddeck-background':selected}});
  try{assert.equal(reload.api.ColdDeckBackgrounds.selected,'cuivre-decoupe');}finally{reload.close();}
- const removed=engine({storage:{'colddeck-background':'fleches'}});
- try{assert.equal(removed.api.ColdDeckBackgrounds.selected,'classic');}finally{removed.close();}
+ for(const id of removedIds){
+  const removed=engine({storage:{'colddeck-background':id}});
+  try{assert.equal(removed.api.ColdDeckBackgrounds.selected,'classic');}finally{removed.close();}
+ }
  const invalid=engine({storage:{'colddeck-background':'missing'}});
  try{assert.equal(invalid.api.ColdDeckBackgrounds.selected,'classic');}finally{invalid.close();}
  a.startEndless();assert.equal(backgrounds.selected,'cuivre-decoupe');a.startGame(0);assert.equal(backgrounds.selected,'cuivre-decoupe');
