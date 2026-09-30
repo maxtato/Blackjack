@@ -439,11 +439,13 @@ const ColdDeckBackgrounds=(() => {
     ['#29271e','#59513a','#3e392b','#bca777','#817653'],
     ['#24202d','#51435f','#382e43','#b7a0cb','#776287']
   ];
-  const shade=(color,amount)=>'#'+color.slice(1).match(/../g).map(part=>Math.min(255,Math.round(parseInt(part,16)*amount)).toString(16).padStart(2,'0')).join('');
   function circuitTheme(table){
-    const index=Math.max(0,Math.min(23,table.i|0)),step=index%3;
-    const [base,edge,fold,accent,second]=circuitPalettes[Math.max(0,Math.min(7,(table.zone||1)-1))];
-    return {id:'circuit-'+index,base:shade(base,1-step*.055),edge:shade(edge,1+step*.08),fold,accent:shade(accent,table.boss?1.12:1),second,seed:81023+(index+1)*104729,boss:!!table.boss};
+    const index=Math.max(0,Math.min(23,table.i|0));
+    const zone=Math.max(0,Math.min(7,(table.zone||1)-1));
+    const [base,edge,fold,accent,second]=table.boss
+      ?['#351d25','#873c4b','#592c39','#ef938b','#ae5867']
+      :circuitPalettes[zone];
+    return {id:'circuit-'+index,base,edge,fold,accent,second,seed:81023+(index+1)*104729,boss:!!table.boss};
   }
   function name(theme){return LANG==='fr'?theme.fr:theme.en;}
   function scenery(theme){

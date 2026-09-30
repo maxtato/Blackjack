@@ -15,7 +15,9 @@ const ColdDeckJourney=(()=>{
     return {table,bank,profit:Math.max(0,table.goal-bank),reserve:base.entry+base.min};
   }
   function renderRoute(node,tb){
-    node.replaceChildren();
+    node.replaceChildren();node.dataset.boss=String(!!tb.boss);
+    const theme=ColdDeckBackgrounds.circuitTheme(tb);
+    node.style.setProperty('--route-color',theme.accent);
     const label=document.createElement('p');label.className='journey-zone';
     const zone=document.createElement('span');zone.textContent=t('journey.zone',tb.zone,zoneName(tb.zone));label.append(zone);
     const notice=document.createElement('span');notice.className='journey-boss-notice';notice.textContent=bossNotice(tb);label.append(notice);

@@ -226,7 +226,7 @@ function renderTableEffect(box){
   const effect=tableEffectData();box.dataset.rule=effect.rule;
   box.innerHTML='<span class="table-effect-label">'+t('circuit.tableEffect')+'</span><strong>'+effect.title+'</strong><p>'+effect.description+'</p>'+(effect.rule==='sec'&&hasRelic('diplomate')?'<p class="table-effect-protection">'+t('effect.sec.protected')+'</p>':'');
   const art=document.createElement('span');art.className='table-rule-art';art.setAttribute('aria-hidden','true');
-  art.innerHTML=ColdDeckArt.effect(({standard:'jeton',sec:'diable',gros:'compteur',mute:'lunettes',nervous:'baraplus',depart:'elan',atelier:'etoileD',serein:'net'})[effect.rule]||'jeton');
+  art.innerHTML=ColdDeckArt.tableRule(effect.rule);
   box.prepend(art);
 }
 function openTableRules(){

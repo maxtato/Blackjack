@@ -108,6 +108,7 @@ const ColdDeckArt = (() => {
     const key=illustrationKeys.has(requested)?requested:'etoile';
     return `<img class="effect-symbol effect-illustration" data-effect-symbol="${key}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">`;
   }
+  const tableRule=rule=>illustration('rule-'+(['standard','sec','gros','mute','nervous','depart','atelier','serein'].includes(rule)?rule:'standard'),'effect-illustration table-rule-illustration');
   const icon=n=>`<img class="pxi raster-icon" src="${image(interfaceArt[n]||'etoile')}" width="1024" height="1024" alt="" aria-hidden="true" decoding="async" draggable="false">`;
-  return {suit,face,icon,effect,image,illustration,back,backKey,surface,lettering,cardImageKeys,prepareCards};
+  return {suit,face,icon,effect,tableRule,image,illustration,back,backKey,surface,lettering,cardImageKeys,prepareCards};
 })();

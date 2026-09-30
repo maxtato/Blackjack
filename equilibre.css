@@ -834,7 +834,7 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .rep-star{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical-align:middle;transform:translateY(-1px);flex:none}
 .rep-value>.rep-star{width:1.25em;height:1.25em;align-self:center}
 .contract-reward .rep-value{position:relative;top:2px}
-:is(.b-gold,.b-teal,.b-red,.chip,.mode-card){--number-ink:#542f55;--bonus-number-ink:#15504d}
+:is(.b-gold,.b-teal,.b-red,.chip,.mode-card){--number-ink:#282a2e;--bonus-number-ink:#183434}
 :is(.b-blue,.b-purple){--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
 button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
 /* Keep illustrated amounts legible on the yellow income and resale surfaces. */
@@ -956,21 +956,23 @@ button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
 .background-auto[hidden],.journey-hud[hidden],#shopStars[hidden]{display:none!important}
 .table-context{position:relative}
 .journey-hud{position:absolute;right:5px;top:3px;max-width:92px;padding:4px 6px;color:#dfd7e7;background:#24272c;clip-path:var(--frame-cut);font:700 9px/1.2 var(--copy-font);text-transform:uppercase;pointer-events:none}
-.journey-hud[data-boss="true"]{background:#623743;color:#ffda74}
+.journey-hud{--number-ink:currentColor;--bonus-number-ink:currentColor}
+.journey-hud[data-boss="true"]{background:#b63b4b;color:#fff7e6;font-weight:900;padding:5px 8px}
 .journey-route{margin-bottom:12px;text-align:left}
 .journey-zone{display:flex;justify-content:space-between;gap:10px;margin:0 0 8px!important;color:#c1c3ca;font:600 11px/1.3 var(--copy-font)!important}
-.journey-zone>.journey-boss-notice{color:#f5d66f;text-align:right}
+.journey-zone>.journey-boss-notice{--number-ink:currentColor;--bonus-number-ink:currentColor;color:#fff7e6;text-align:right;padding:4px 8px;background:#353b44;clip-path:var(--frame-cut)}
+.journey-route[data-boss="true"] .journey-boss-notice{background:#b63b4b}
 .journey-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:0;padding:0;list-style:none}
 .journey-step{padding:8px 4px;background:#242830;clip-path:var(--frame-cut);color:#8c929b;text-align:center;font:700 10px/1.2 var(--copy-font)}
 .journey-step.past{color:#ced1d7;background:#414751}
-.journey-step.current{color:#252730;background:var(--circuit-color,#b99ed7)}
-.journey-step.boss{box-shadow:inset 0 0 0 1px #b59555;color:#f8d673}
-.journey-step.boss.current{background:#f1c954;color:#382527}
+.journey-step.current{--number-ink:currentColor;--bonus-number-ink:currentColor;color:#252730;background:var(--route-color,var(--circuit-color,#b99ed7))}
+.journey-step.boss{--number-ink:currentColor;--bonus-number-ink:currentColor;box-shadow:none;background:#602c37;color:#fff7e6}
+.journey-step.boss.current{background:#b63b4b;color:#fff7e6}
 .journey-pressure{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;margin:10px 0;color:#f8eacf;text-align:left}
 .journey-pressure>div{padding:12px;background:#252930;clip-path:var(--frame-cut)}
 .journey-pressure>div>span,.journey-pressure>div>small{display:block;color:#c5c9d0;font:500 12px/1.3 var(--copy-font)}
 .journey-pressure>div>strong{display:block;margin:5px 0;color:#ffe17c;font-size:26px;line-height:1.1}
-#tableBrief[data-boss="true"] .circuit-panel{border-color:#ba815a}
+#tableBrief[data-boss="true"] .circuit-panel{background:#3d2630;border-color:#713846}
 #tableBrief.show .circuit-panel{animation:journey-arrival .36s ease-out both}
 .victory-panel{max-width:430px;max-height:calc(100dvh - 32px);overflow-y:auto;text-align:center;padding:24px 22px!important}
 .victory-art{display:block;width:112px;height:112px;object-fit:contain;margin:0 auto 6px;filter:drop-shadow(0 7px 0 #161b2466)}
@@ -989,7 +991,7 @@ button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
 .victory-rewards .rep-star{width:25px;height:25px;color:#272e34}
 .victory-next{color:#c4c9d1;font:500 13px/1.45 var(--copy-font)!important;margin:18px 0!important}
 #victoryContinue{width:100%}
-#tableVictory[data-boss="true"] .victory-panel{background-color:#39313e;border-color:#d4ad62}
+#tableVictory[data-boss="true"] .victory-panel{background-color:#3d2630;border-color:#713846}
 #shopNextObj{padding:14px!important;text-align:left!important;background:#242930!important;--number-ink:#f6d36b}
 .journey-next-label{display:block;color:var(--next-zone-color,#c1a1e4);font:700 11px/1.3 var(--copy-font)}
 #shopNextObj h2{margin:6px 0 12px;font-size:25px;line-height:1.12;color:var(--cream)}
@@ -998,8 +1000,18 @@ button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
 .journey-next-stats>div>strong{display:block;margin:5px 0;color:#f6d36b;font-size:21px}
 #shopNextObj .journey-next-rule{margin:9px 0 6px!important;color:#d5d1dc;font:500 12px/1.4 var(--copy-font)!important}
 #shopNextObj .journey-next-goal{margin:0!important;color:#a6aeb9;font:500 11px/1.3 var(--copy-font)!important}
-#shopNextObj[data-boss="true"]{background:#3a2933!important}
+#shopNextObj[data-boss="true"]{background:#462530!important}
 @keyframes journey-arrival{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
 @keyframes journey-star{from{opacity:0;scale:.6;translate:0 8px}to{opacity:1;scale:1;translate:0 0}}
 @media(prefers-reduced-motion:reduce){#tableBrief.show .circuit-panel,#tableVictory.show .victory-star.earned{animation:none!important}}
 :root[data-motion="gentle"] :is(#tableBrief.show .circuit-panel,#tableVictory.show .victory-star.earned){animation:none!important}
+
+/* Dark reputation marks stay visible on every light reward surface. */
+:is(.contract-reward-value,.victory-rewards,.tp-coin,.background-check) .rep-star{filter:brightness(.16) saturate(0)}
+#briefContracts .contract-reward-value .rep-star{width:18px;height:18px;transform:none}
+#briefContracts .contract-reward .rep-value{gap:5px;top:0}
+.background-check{--number-ink:currentColor;--bonus-number-ink:currentColor}
+/* Unavailable stakes use neutral chips while their amount remains readable. */
+.chip:is(:disabled,.locked){opacity:1;cursor:not-allowed;box-shadow:none}
+.chip:is(:disabled,.locked)>.chip-art{filter:grayscale(1) brightness(.82)!important;opacity:1}
+.chip:is(:disabled,.locked)>.chip-value{color:#23272b!important}
