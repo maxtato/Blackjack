@@ -45,18 +45,31 @@ check('Shop projections use actual fees, purchases and capital without changing 
  assert.equal(nx.table.goal,a.RUN[1].goal+Math.max(0,a.G.bank-a.RUN[1].cap));
 });
 check('All 24 automatic scenes are distinct, stable and do not consume game randomness',()=>{
- const b=a.ColdDeckBackgrounds;b.setAutomatic(true);const scenes=new Set();let calls=0;
+ const b=a.ColdDeckBackgrounds;b.setAutomatic(true);const scenes=new Set(),shapes=new Set(),motifs=new Set();let calls=0;
  const random=h.w.Math.random;h.w.Math.random=()=>{calls++;return random();};
  try{
   for(const tb of a.RUN){
    b.applyTable(tb,false);const scene=d.getElementById('tableBackdrop').innerHTML;
    scenes.add(scene);b.applyTable(tb,false);assert.equal(d.getElementById('tableBackdrop').innerHTML,scene);
+   motifs.add(b.circuitTheme(tb).motif);
+   const shards=[...d.querySelectorAll('#tableBackdrop .background-shard')];
+   shapes.add(shards.map(shard=>shard.style.clipPath).join('|'));
+   for(const shard of shards){
+    const x=[...shard.style.clipPath.matchAll(/(\d+(?:\.\d+)?)% \d+(?:\.\d+)?%/g)].map(match=>Number(match[1]));
+    assert(x.length>=3);assert(x.every(v=>v<=18)||x.every(v=>v>=82));
+   }
    assert.equal(d.getElementById('bg').dataset.background,'circuit-'+tb.i);
    assert.equal(d.getElementById('bg').dataset.circuitBoss,String(tb.boss));
    assert.equal(a.ColdDeckJourney.bossDistance(tb),2-tb.i%3);
   }
  }finally{h.w.Math.random=random;}
- assert.equal(scenes.size,24);assert.equal(calls,0);assert.equal(h.w.localStorage.getItem('colddeck-background'),null);
+ assert.equal(scenes.size,24);assert.equal(shapes.size,24);assert.equal(motifs.size,24);assert(!motifs.has(undefined));
+ for(let i=0;i<24;i+=3){
+  const [first,second,boss]=a.RUN.slice(i,i+3).map(tb=>b.circuitTheme(tb));
+  assert.equal(first.accent,second.accent);assert.notEqual(first.base,second.base);
+  assert.equal(boss.edge,'#873c4b');assert.notEqual(boss.base,second.base);
+ }
+ assert.equal(calls,0);assert.equal(h.w.localStorage.getItem('colddeck-background'),null);
  b.select('minuit');assert.equal(b.automaticCircuit,false);b.setAutomatic(true);
  a.startEndless();assert.equal(d.getElementById('bg').dataset.background,'minuit');assert(d.getElementById('circuitProgress').hidden);
  a.startGame(4);assert.equal(d.getElementById('bg').dataset.background,'circuit-4');assert.equal(b.selected,'minuit');
