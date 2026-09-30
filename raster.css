@@ -35,8 +35,15 @@
 }
 .card:not(.back):not(.menu-card-image)>.card-surface{background:#fff7e6 var(--art-card-stock) center/100% 100% no-repeat}
 .card-back-image,.raster-card-art{border-radius:0}
-/* Crop only the obsolete printed edge, then draw a complete inset bevel. */
-.card.back>.card-surface>.card-back-image{position:absolute;left:-4.5%;top:-4.5%;width:109%;height:109%;max-width:none;object-fit:fill}
+/* Crop the old printed edge and shrink the complete motif within the white bevel. */
+.card.back{--back-paper:#15232a}
+.card.back.cb10{--back-paper:#9a4afc}.card.back.cb11{--back-paper:#ea455f}.card.back.cb12{--back-paper:#6a3cc9}
+.card.back.cb13{--back-paper:#0cc1bd}.card.back.cb14{--back-paper:#fccf31}.card.back.cb15{--back-paper:#1f252a}
+.card.back.cb16{--back-paper:#db415c}.card.back.cb18{--back-paper:#0c5457}.card.back.cb19{--back-paper:#fcf6e4}
+.card.back.cb22{--back-paper:#11c8bd}.card.back.cb26{--back-paper:#9745fb}
+.card.back>.card-surface{background:var(--back-paper) var(--art-card-stock,none) center/100% 100%;background-blend-mode:multiply}
+/* The clipped print occupies x=10..90% and y=8..92%, safely inside all eight bevel edges. */
+.card.back>.card-surface>.card-back-image{position:absolute;left:6.4%;top:4.22%;width:87.2%;height:91.56%;max-width:none;object-fit:fill;clip-path:polygon(13.303% 4.128%,86.697% 4.128%,95.872% 10.55%,95.872% 89.45%,86.697% 95.872%,13.303% 95.872%,4.128% 89.45%,4.128% 10.55%)}
 .card-back-frame{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;fill:none;stroke:#fff7e6;stroke-width:1.1;stroke-linejoin:bevel}
 .card:not(.back)::after{display:none}
 .raster-card-art{position:relative;width:100%;height:100%;transform:none;overflow:hidden;border-radius:inherit}
