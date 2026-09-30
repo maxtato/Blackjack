@@ -2064,6 +2064,7 @@ function applyI18n(){
   if($('loseScreen').classList.contains('show'))openLose();
   if($('endScreen').classList.contains('show'))renderEndScreen();
   if($('pauseScreen').classList.contains('show'))openPause();
+  window.ColdDeckBackgrounds?.refresh();
 }
 function pauseRules(){$('pauseScreen').classList.remove('show');pauseReturn=true;openRules();}   // à la fermeture des règles on revient à la pause
 function quitToMenu(){GameClock.clear();$('pauseScreen').classList.remove('show');endRun(false);}                   // abandonne : encaisse la réputation puis écran de fin → La Planque

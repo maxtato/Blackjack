@@ -33,6 +33,7 @@
 <body>
 <p id="bootSplash" role="status">Chargement…</p>
 <div id="bg">
+  <div id="tableBackdrop" aria-hidden="true"></div>
   <div id="pattern"></div>
   <div id="sparks"></div>
   <div id="heat"></div>
@@ -224,9 +225,19 @@
       <button class="btn b-teal menu" data-action="resumeGame" style="width:100%" data-i18n="pause.resume">RESUME</button>
       <button class="btn b-gold menu" id="pauseCash" data-action="cash-out-endless" style="width:100%;display:none"></button>
       <button class="btn b-purple menu" data-action="pauseRules" style="width:100%" data-i18n="pause.rules">RULES</button>
+      <button class="btn b-purple menu" data-action="openBackgrounds" style="width:100%" data-i18n="pause.backgrounds">BACKGROUNDS</button>
       <button class="btn b-teal menu" data-action="pauseSettings" style="width:100%" data-i18n="set.open">⚙ SETTINGS</button>
       <button class="btn b-blue menu" data-action="quitToMenu" style="width:100%"><span data-i18n="pause.menu">BACK TO MENU</span><small data-i18n="pause.menuSub"></small></button>
     </div>
+  </div>
+</div>
+
+<div class="overlay" id="backgroundScreen">
+  <div class="ovpanel background-panel">
+    <h1 data-i18n="background.title">BACKGROUNDS</h1>
+    <p data-i18n="background.hint">Choose your table's background.</p>
+    <div id="backgroundGrid" class="background-grid" role="group" data-i18n-label="background.title"></div>
+    <button class="btn b-teal menu" data-action="closeBackgrounds" data-i18n="background.back">BACK TO PAUSE</button>
   </div>
 </div>
 

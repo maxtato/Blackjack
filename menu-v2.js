@@ -169,7 +169,7 @@ overlays.forEach(el=>menuObserver.observe(el,{attributes:true,attributeFilter:['
 document.addEventListener('keydown',e=>{
  const top=activeMenu();if(!top)return;
  if(e.key==='Escape'){
-   const close={rulesScreen:closeRules,settingsScreen:closeSettings,testScreen:closeTestTools,upgradesScreen:closeUpgrades,backPickScreen:closeBacks,inspectScreen:closeInspect,confirmRestart:closeRestart,pauseScreen:resumeGame,intro:openMenu,adOverlay:()=>{if($('adX').classList.contains('on'))Ads.closeNow();}}[top.id];
+   const close={rulesScreen:closeRules,settingsScreen:closeSettings,testScreen:closeTestTools,upgradesScreen:closeUpgrades,backPickScreen:closeBacks,backgroundScreen:()=>ColdDeckBackgrounds.close(),inspectScreen:closeInspect,confirmRestart:closeRestart,pauseScreen:resumeGame,intro:openMenu,adOverlay:()=>{if($('adX').classList.contains('on'))Ads.closeNow();}}[top.id];
   if(close){e.preventDefault();close();}return;
  }
  if(e.key==='Tab'){

@@ -14,6 +14,7 @@ en:{
 'ui.bet':'BET','ui.mult':'MULT','ui.gain':'CASH','ui.potLbl':'POT',
 'ui.dealer':'Dealer','ui.you':'You','ui.peek':'PEEK','ui.peekTitle':'Read the next card in the shoe',
 'ui.pause':'Pause','ui.lives':'Lives (second chances)','ui.streak':'STREAK',
+'pause.backgrounds':'BACKGROUNDS','background.title':'BACKGROUNDS','background.hint':"Choose your table’s background. Your choice is saved.",'background.back':'BACK TO PAUSE',
 'ui.lvl':(l,m)=>'· LV '+l+' ×'+m,'ui.relics':'relics','ui.consumables':'consumables',
 'ui.next':c=>'NEXT: '+c,'ui.bustRisk':p=>'BUST RISK: '+p+'%',
 /* --- menu principal --- */
@@ -478,6 +479,7 @@ fr:{
 'tok.jugement':'+1<small class="sym">niv</small>','tok.pendu':'−1 <small>carte</small>',
 'tok.magicien':'IDÉAL','tok.roue':'ÉD<small>?</small>','tok.assurance':'ASSU<small>R</small>',
 'tok.videur':'+1 <small>essai</small>',
+'pause.backgrounds':'ARRIÈRE-PLANS','background.title':'ARRIÈRE-PLANS','background.hint':'Choisis le fond de ta table. Ton choix est mémorisé.','background.back':'RETOUR À LA PAUSE',
 'boon.mult.t':'+1 PLAFOND MULT','boon.mult.d':'Le multiplicateur peut monter plus haut.',
 'boon.income.t':'+5 $ / MAIN','boon.income.d':'Revenu passif à chaque main.',
 'boon.betmax.t':'MISE MAX +25 %','boon.betmax.d':'Ton plafond de mise grimpe : vise plus gros.',
