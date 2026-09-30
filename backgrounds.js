@@ -45,7 +45,6 @@ const ColdDeckBackgrounds=(() => {
     ['vagues','Vagues','Waves','#1e2a30','#3b5463','#2b3e49','#8faebc','#a9a2be'],
     ['ailes','Ailes','Wings','#28282e','#4e4d5b','#393943','#b2abca','#b8a37b'],
     ['facettes','Facettes','Facets','#242b30','#475660','#33414a','#a1b9c3','#b6a882'],
-    ['fleches','Flèches','Arrows','#272b24','#4d5643','#394032','#a6b985','#baa173'],
     ['losanges','Losanges','Diamonds','#2b2330','#57425e','#403148','#b7a0c9','#b7a47c'],
     ['diagonales','Diagonales','Diagonals','#292527','#52474d','#3c3439','#bba2b1','#b5aa86'],
     ['portiques','Portiques','Gateways','#242a2e','#46535b','#333e45','#a5b6bd','#b7a589'],
@@ -64,6 +63,14 @@ const ColdDeckBackgrounds=(() => {
     ['tresses','Tresses','Braids','#252b26','#48564b','#354038','#a5b59e','#bbaa81'],
     ['cascades','Cascades','Cascades','#222b30','#425761','#30404a','#9cb8c0','#aca6c3'],
     ['remparts','Remparts','Ramparts','#2c2825','#574f46','#403a33','#baa88c','#9fa7b4']
+  ];
+  const collagePalettes=[
+    ['eclats-bleus','Éclats bleus','Blue fragments','#1d2732','#425976','#2e3d50','#829dc1','#5c7b9f',12467],
+    ['papier-prune','Papier prune','Plum paper','#292130','#554163','#3a2c44','#9881af','#725889',58237],
+    ['strates-sauge','Strates sauge','Sage layers','#202b27','#41574d','#2d3d35','#92ab9a','#5d7d6b',39981],
+    ['cuivre-decoupe','Cuivre découpé','Cut copper','#2b241f','#624838','#3f3027','#bd9377','#8b6550',74073],
+    ['ardoise-brute','Ardoise brute','Rough slate','#252931','#4d5564','#353b46','#a0aab8','#737f91',92615],
+    ['grenat-froisse','Grenat froissé','Crumpled garnet','#2d2028','#624152','#422d39','#bb93a9','#875b72',61829]
   ];
   // Each new motif has its own silhouette. Coordinates occupy the margins;
   // the opposite edge is a half-turn of the same hand-cut paper layers.
@@ -265,15 +272,6 @@ const ColdDeckBackgrounds=(() => {
       ['accent',[[11,3],[15,0],[12,7]]],
       ['second',[[11,88],[14,100],[11,100]]]
     ],
-    fleches:[
-      ['edge',[[0,0],[5,0],[5,10],[11,10],[11,4],[17,18],[11,32],[11,26],[0,26]]],
-      ['fold',[[0,16],[11,16],[11,11],[14,18],[11,25],[11,21],[0,21]]],
-      ['edge',[[0,44],[9,44],[9,36],[16,52],[9,68],[9,60],[0,60]]],
-      ['fold',[[0,48],[9,48],[9,44],[12,52],[9,60],[9,56],[0,56]]],
-      ['edge',[[0,80],[11,80],[11,74],[17,88],[12,100],[0,100],[0,96],[11,96],[11,91],[0,91]]],
-      ['accent',[[12,7],[17,18],[15,20],[12,13]]],
-      ['second',[[11,79],[15,88],[13,91],[11,87]]]
-    ],
     losanges:[
       ['edge',[[0,0],[8,0],[15,12],[8,24],[0,11]]],
       ['fold',[[0,21],[9,36],[0,51]]],
@@ -445,7 +443,8 @@ const ColdDeckBackgrounds=(() => {
   };
   const themes=[{id:'classic',fr:'Classique',en:'Classic',base:'#20252a',classic:true},
     ...palettes.map(([id,fr,en,base,edge,fold,accent,second],index)=>({id,fr,en,base,edge,fold,accent,second,index})),
-    ...extraPalettes.map(([id,fr,en,base,edge,fold,accent,second])=>({id,fr,en,base,edge,fold,accent,second,motif:id}))];
+    ...extraPalettes.map(([id,fr,en,base,edge,fold,accent,second])=>({id,fr,en,base,edge,fold,accent,second,motif:id})),
+    ...collagePalettes.map(([id,fr,en,base,edge,fold,accent,second,seed])=>({id,fr,en,base,edge,fold,accent,second,seed}))];
   let selected='classic';
   function name(theme){return LANG==='fr'?theme.fr:theme.en;}
   function scenery(theme){
@@ -459,6 +458,31 @@ const ColdDeckBackgrounds=(() => {
       paper.style.clipPath='polygon('+points.map(([x,y])=>`${right?100-x:x}% ${reverse?100-y:y}%`).join(',')+')';
       scene.append(paper);
     };
+    if(theme.seed){
+      // A private fixed seed keeps the irregular collage identical in its
+      // preview and at the table, without consuming any gameplay randomness.
+      let seed=theme.seed;
+      const between=(min,max)=>{
+        seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;
+        return Number((min+(max-min)*(seed>>>0)/4294967296).toFixed(2));
+      };
+      for(const right of [false,true]){
+        shard([[0,0],[between(9,16),0],[between(8,17),between(19,29)],[between(7,14),between(41,51)],[between(9,17),between(65,78)],[between(7,15),100],[0,100]],'fold',right);
+        const upper=between(18,32),middle=between(43,61),lower=between(62,74),tip=between(81,94);
+        shard([[0,0],[between(3,9),0],[between(9,17),upper],[between(2,6),upper-9],[between(7,14),middle],[0,middle-9]],'edge',right);
+        shard([[0,lower],[between(3,7),lower-10],[between(9,17),tip],[between(3,7),tip-10],[between(6,13),100],[0,100]],'edge',right);
+        shard([[0,between(3,10)],[between(3,7),between(19,26)],[between(1,4),between(33,40)],[0,between(28,32)]],'fold',right);
+        for(const [start,end] of [[4,18],[35,51],[72,87]]){
+          const y=between(start,end),height=between(9,20),width=between(5,14);
+          shard([[0,y],[width,y+height],[width*.38,y+height*.43],[0,y+height*.73]],'second',right);
+          shard([[0,y+height*.2],[width*.48,y+height*.8],[width*.19,y+height*.48]],'edge',right);
+        }
+        const corner=right?between(79,84):between(0,5),length=between(11,16);
+        shard([[0,corner],[between(2,4),corner+2],[between(6,10),corner+length],[between(2,4),corner+length-4]],'accent',right);
+        shard([[0,corner+4],[between(2,4),corner+length-4],[0,corner+length]],'fold',right);
+      }
+      return scene;
+    }
     if(theme.motif){
       for(const right of [false,true])for(const [tone,points] of motifs[theme.motif])shard(points,tone,right,right);
       return scene;

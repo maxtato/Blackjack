@@ -5,10 +5,11 @@ const h=engine(),a=h.api,backgrounds=a.ColdDeckBackgrounds,passed=[];
 const check=(name,fn)=>{fn();passed.push(name);};
 h.reset(987);
 
-check('Sixty backgrounds and the original can all be selected; unknown choices are ignored',()=>{
- assert.equal(backgrounds.themes.filter(theme=>!theme.classic).length,60);
+check('Sixty-five backgrounds and the original can all be selected; removed choices are ignored',()=>{
+ assert.equal(backgrounds.themes.filter(theme=>!theme.classic).length,65);
+ assert(!backgrounds.themes.some(theme=>theme.id==='fleches'));
  const grid=h.w.document.getElementById('backgroundGrid'),scenes=new Set();
- assert.equal(grid.children.length,61);
+ assert.equal(grid.children.length,66);
  for(const theme of backgrounds.themes){
   assert(backgrounds.select(theme.id));assert.equal(backgrounds.selected,theme.id);
   assert.equal(h.w.document.getElementById('bg').dataset.background,theme.id);
@@ -16,19 +17,20 @@ check('Sixty backgrounds and the original can all be selected; unknown choices a
   assert.equal(grid.querySelector('[aria-pressed="true"]').dataset.backgroundId,theme.id);
   if(!theme.classic)scenes.add(h.w.document.getElementById('tableBackdrop').innerHTML);
  }
- assert.equal(scenes.size,60);
+ assert.equal(scenes.size,65);
  const before=h.w.document.getElementById('tableBackdrop').innerHTML;
  assert.equal(backgrounds.select('missing'),false);assert.equal(h.w.document.getElementById('tableBackdrop').innerHTML,before);
+ assert.equal(backgrounds.select('fleches'),false);assert.equal(h.w.document.getElementById('tableBackdrop').innerHTML,before);
  assert(backgrounds.select('classic'));assert.equal(h.w.document.getElementById('tableBackdrop').children.length,0);
 });
 
-check('The forty additional motifs have distinct shapes, with a clear center for the cards',()=>{
+check('The additional motifs have distinct shapes, with a clear center for the cards',()=>{
  const shapes=new Set(),legacyShapes=new Set();
  for(const theme of backgrounds.themes.filter(theme=>!theme.classic)){
   backgrounds.select(theme.id);
   const shards=[...h.w.document.querySelectorAll('#tableBackdrop .background-shard')];
   const shape=shards.map(shard=>shard.style.clipPath).join('|');
-  if(!theme.motif){legacyShapes.add(shape);continue;}
+  if(!theme.motif&&!theme.seed){legacyShapes.add(shape);continue;}
   assert(!legacyShapes.has(shape));shapes.add(shape);
   for(const shard of shards){
    const coords=[...shard.style.clipPath.matchAll(/(\d+(?:\.\d+)?)% (\d+(?:\.\d+)?)%/g)];
@@ -37,16 +39,18 @@ check('The forty additional motifs have distinct shapes, with a clear center for
    assert(coords.every(([,x])=>Number(x)<=18)||coords.every(([,x])=>Number(x)>=82));
   }
  }
- assert.equal(shapes.size,40);
+ assert.equal(shapes.size,45);
 });
 
 check('Background selection survives reloads and game mode changes without changing progress',()=>{
- backgrounds.select('remparts');const selected=h.w.localStorage.getItem('colddeck-background');
+ backgrounds.select('cuivre-decoupe');const selected=h.w.localStorage.getItem('colddeck-background');
  const reload=engine({storage:{'colddeck-background':selected}});
- try{assert.equal(reload.api.ColdDeckBackgrounds.selected,'remparts');}finally{reload.close();}
+ try{assert.equal(reload.api.ColdDeckBackgrounds.selected,'cuivre-decoupe');}finally{reload.close();}
+ const removed=engine({storage:{'colddeck-background':'fleches'}});
+ try{assert.equal(removed.api.ColdDeckBackgrounds.selected,'classic');}finally{removed.close();}
  const invalid=engine({storage:{'colddeck-background':'missing'}});
  try{assert.equal(invalid.api.ColdDeckBackgrounds.selected,'classic');}finally{invalid.close();}
- a.startEndless();assert.equal(backgrounds.selected,'remparts');a.startGame(0);assert.equal(backgrounds.selected,'remparts');
+ a.startEndless();assert.equal(backgrounds.selected,'cuivre-decoupe');a.startGame(0);assert.equal(backgrounds.selected,'cuivre-decoupe');
 });
 
 check('Selecting scenery leaves the hand and random stream untouched and keeps all game time paused',()=>{
@@ -55,7 +59,7 @@ check('Selecting scenery leaves the hand and random stream untouched and keeps a
  const before=state();let fired=false,calls=0;
  a.GameClock.delay(()=>{fired=true;},250);a.openPause();assert(backgrounds.open());
  const random=h.w.Math.random;h.w.Math.random=()=>{calls++;return random();};
- try{backgrounds.select('eventail');}finally{h.w.Math.random=random;}
+ try{backgrounds.select('eclats-bleus');}finally{h.w.Math.random=random;}
  assert.equal(calls,0);assert.equal(state(),before);h.clock.tick(1000);assert.equal(fired,false);
  backgrounds.close();assert(h.w.document.getElementById('pauseScreen').classList.contains('show'));
  h.clock.tick(1000);assert.equal(fired,false);a.resumeGame();h.clock.tick(249);assert.equal(fired,false);h.clock.tick(1);assert(fired);
