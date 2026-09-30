@@ -705,18 +705,16 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .table-effect-card .table-rule-art{float:right;display:block;width:64px;height:64px;margin:0 0 8px 12px;pointer-events:none}
 .table-rule-art>.effect-illustration{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;filter:none}
 .font-settings{display:grid;gap:8px;text-align:left;margin:14px 0;padding:14px 0;border-top:1px solid #61707c;border-bottom:1px solid #61707c}
-.font-settings label,.font-settings select,.font-settings a,.font-settings small,#fontStatus{font:500 13px/1.35 "Barlow",Arial,sans-serif!important;color:#e5e9ec}
-.font-settings select{width:100%;min-height:42px;padding:8px 10px;background:#434d58;border:1px solid #687883;border-radius:0;color:#fff}
-.font-settings a{color:#ffdc75;text-decoration:underline}
-.font-settings small{font-size:11px!important;color:#c6d0d8}
+.font-settings .setLbl,#fontScopeNote,#fontStatus{font:500 13px/1.35 var(--reading-font,var(--copy-font))!important;color:#e5e9ec}
+#fontScopeNote{margin:0!important;color:#c6d0d8}
+#fontImport{width:100%;font-size:18px}
+#fontReset{justify-self:start;min-height:36px;padding:6px 0;color:#ffdc75;text-decoration:underline}
 .font-sample{padding:13px;background:#333e49;color:#fff7e6}
-.font-sample strong{display:block;font:400 24px/1.15 var(--preview-font,var(--game-type))}
-.font-sample p{margin:8px 0 0!important;font:400 14px/1.35 var(--preview-font,var(--copy-font))!important}
+.font-sample strong{display:block;font:400 24px/1.15 var(--game-type)}
+.font-sample p{margin:8px 0 0!important;font:400 14px/1.35 var(--reading-font,var(--copy-font))!important}
 #fontStatus{margin:0!important;min-height:18px}
 .font-settings [hidden]{display:none!important}
-:root[data-font-preview] .raster-copy:not(.card .raster-copy):not(.brand-image .raster-copy){display:inline!important;height:auto!important;min-height:0!important;line-height:1!important;font-family:var(--preview-font)!important;font-weight:400!important}
-:root[data-font-preview] .raster-copy:not(.card .raster-copy):not(.brand-image .raster-copy)>.raster-ink{display:none!important}
-:root[data-font-preview] .raster-copy:not(.card .raster-copy):not(.brand-image .raster-copy)>.sr-only{position:static!important;display:inline!important;width:auto!important;height:auto!important;padding:0!important;margin:0!important;overflow:visible!important;clip:auto!important;clip-path:none!important;white-space:inherit!important;font-family:var(--preview-font)!important;font-weight:400!important;line-height:1!important}
+:root[data-font-preview] .readable-copy:not(.game-number),:root[data-font-preview] .readable-copy :where(span,b,strong,em,small):not(:is(.raster-copy,.raster-copy *,.game-number,.game-number *)),:root[data-font-preview] .dialog-kicker{font-family:var(--reading-font)!important}
 #tableBrief #briefRule{border-left:3px solid #ffdc75;padding:2px 0 2px 10px;margin:12px 0 16px;font-size:14px}
 .overlay h1[tabindex="-1"]:focus{outline:none}
 .brief-stats{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.55fr) minmax(0,1fr);gap:10px;align-items:end;margin:16px 0 12px;padding:0 2px}
