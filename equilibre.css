@@ -755,13 +755,13 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .contract-choice{white-space:normal;padding:14px!important;font:600 17px/1.3 var(--copy-font)}
 .contract-choice small.contract-reward{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;column-gap:12px;row-gap:3px;margin-top:8px;color:#e4edf3}
 .contract-prompt{font:500 12px/1.2 var(--copy-font)}
-.circuit-panel .choice-heading{margin:20px 0 4px;font:600 20px/1.2 var(--copy-font);color:#ffdc70}
+.circuit-panel .choice-heading{margin:20px 0 4px;font:600 20px/1.2 var(--copy-font);color:#ffce3a}
 .circuit-panel .choice-hint{margin:0 0 12px;font-size:13px;color:#d1d9dc}
 #briefContracts{margin-top:14px;gap:10px}
 #briefContracts .contract-choice{display:grid;grid-template-columns:minmax(0,1fr) 18px;gap:7px 12px;align-items:center;text-align:left;padding:14px 16px!important;border-radius:0;clip-path:var(--frame-cut);box-shadow:none!important}
 #briefContracts .contract-copy{grid-column:1;grid-row:1;font:900 22px/1.15 var(--game-type);color:#fff7e6}
 #briefContracts .contract-reward{grid-column:1;grid-row:2;justify-content:flex-start;margin:0;column-gap:10px;row-gap:3px}
-#briefContracts .contract-reward-value{--number-ink:#282a2e;--bonus-number-ink:#282a2e;display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:5px 9px;background:#ffce3a var(--art-button-yellow) center/100% 100% no-repeat;clip-path:var(--frame-cut);color:#282a2e;font-size:11px;line-height:1.15}
+#briefContracts .contract-reward-value{--number-ink:#ffce3a;--bonus-number-ink:#ffce3a;display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:5px 9px;background:#242a31;clip-path:var(--frame-cut);color:#ffce3a;font-size:11px;line-height:1.15}
 #briefContracts .contract-prompt{font-size:11px;color:#e1ecff}
 #briefContracts .contract-choice>.nav-triangle{grid-column:2;grid-row:1 / 3;width:18px;height:18px}
 .shop-reserve{display:block;margin-top:6px;font:500 11px/1.3 var(--copy-font);opacity:.75}
@@ -840,7 +840,6 @@ button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
 /* Keep illustrated amounts legible on the yellow income and resale surfaces. */
 .tp-coin{--number-ink:#303236;--bonus-number-ink:#303236;color:#303236}
 .shop-inventory .shop-sell:enabled{--number-ink:#303236;--bonus-number-ink:#303236;--button-ink:#303236!important}
-:is(.b-gold,.b-teal,.b-red):enabled .rep-star{filter:brightness(.32) saturate(.55)}
 .overlay .btn small{font-size:13px;line-height:1.5;opacity:1}
 #app #actions .actMain .btn small{display:flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap}
 #actions .btn small .game-number{font-size:calc(1.5em * var(--value-scale))!important;height:.72em}
@@ -984,29 +983,31 @@ button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
 .victory-star.earned{color:var(--gold);opacity:1}
 .victory-star:not(.earned) .rep-star{filter:grayscale(1);opacity:.45}
 #tableVictory.show .victory-star.earned{animation:journey-star .42s ease-out var(--star-delay) both}
-.victory-rewards{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;background:#f0ce69;clip-path:var(--frame-cut);--number-ink:#272e34;--bonus-number-ink:#272e34;color:#272e34}
+.victory-rewards{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;background:#242a31;clip-path:var(--frame-cut);--number-ink:#ffce3a;--bonus-number-ink:#ffce3a;color:#fff7e6}
 .victory-rewards>div>span{display:block;font:600 12px/1.35 var(--copy-font)}
-.victory-rewards strong{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:6px;font-size:28px;color:#272e34}
-.victory-rewards .rep-star{width:25px;height:25px;color:#272e34}
+.victory-rewards strong{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:6px;font-size:28px;color:#ffce3a}
+.victory-rewards .rep-star{width:25px;height:25px}
 .victory-next{color:#c4c9d1;font:500 13px/1.45 var(--copy-font)!important;margin:18px 0!important}
 #victoryContinue{width:100%}
 #tableVictory[data-boss="true"] .victory-panel{background-color:#3d2630;border-color:#713846}
-#shopNextObj{padding:14px!important;text-align:left!important;background:#242930!important;--number-ink:#f6d36b}
+#shopNextObj{padding:14px!important;text-align:left!important;background:#242a31!important;border-radius:0;clip-path:var(--frame-cut)!important;--number-ink:#ffce3a}
 .journey-next-label{display:block;color:var(--next-zone-color,#c1a1e4);font:700 11px/1.3 var(--copy-font)}
 #shopNextObj h2{margin:6px 0 12px;font-size:25px;line-height:1.12;color:var(--cream)}
 .journey-next-stats{display:grid;grid-template-columns:1.4fr .6fr 1fr;gap:8px}
 .journey-next-stats>div>span{display:block;color:#c1c7d1;font:500 11px/1.3 var(--copy-font)}
-.journey-next-stats>div>strong{display:block;margin:5px 0;color:#f6d36b;font-size:21px}
+.journey-next-stats>div>strong{display:block;margin:5px 0;color:#ffce3a;font-size:21px}
 #shopNextObj .journey-next-rule{margin:9px 0 6px!important;color:#d5d1dc;font:500 12px/1.4 var(--copy-font)!important}
-#shopNextObj .journey-next-goal{margin:0!important;color:#a6aeb9;font:500 11px/1.3 var(--copy-font)!important}
+#shopNextObj .journey-next-goal{margin:0!important;color:#cbd4dc;font:500 11px/1.3 var(--copy-font)!important}
 #shopNextObj[data-boss="true"]{background:#462530!important}
 @keyframes journey-arrival{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
 @keyframes journey-star{from{opacity:0;scale:.6;translate:0 8px}to{opacity:1;scale:1;translate:0 0}}
 @media(prefers-reduced-motion:reduce){#tableBrief.show .circuit-panel,#tableVictory.show .victory-star.earned{animation:none!important}}
 :root[data-motion="gentle"] :is(#tableBrief.show .circuit-panel,#tableVictory.show .victory-star.earned){animation:none!important}
 
-/* Dark reputation marks stay visible on every light reward surface. */
-:is(.contract-reward-value,.victory-rewards,.tp-coin,.background-check) .rep-star{filter:brightness(.16) saturate(0)}
+/* Reputation keeps its original yellow illustration on dark reward surfaces. */
+:is(.contract-reward-value,.victory-rewards,.tp-coin,button:enabled) .rep-star{filter:none}
+button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-button-graphite)!important;--button-ink:#fff7e6!important;--number-ink:#ffce3a;--bonus-number-ink:#ffce3a}
+#turnPop .tp-coin:has(.rep-star){background:#242a31;--number-ink:#ffce3a;--bonus-number-ink:#ffce3a;color:#ffce3a}
 #briefContracts .contract-reward-value .rep-star{width:18px;height:18px;transform:none}
 #briefContracts .contract-reward .rep-value{gap:5px;top:0}
 .background-check{--number-ink:currentColor;--bonus-number-ink:currentColor}
@@ -1014,3 +1015,15 @@ button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
 .chip:is(:disabled,.locked){opacity:1;cursor:not-allowed;box-shadow:none}
 .chip:is(:disabled,.locked)>.chip-art{filter:grayscale(1) brightness(.82)!important;opacity:1}
 .chip:is(:disabled,.locked)>.chip-value{color:#23272b!important}
+
+/* Shared hierarchy: dark rewards, blue choices, mauve rules, red bosses. */
+#briefContracts .contract-reward-value{min-height:28px;padding:5px 10px;font-size:12px}
+#briefContracts .contract-reward-value .game-number{font-size:16px!important}
+#briefContracts .contract-prompt{color:#fff7e6}
+#shop{--grape:#d1b5ef;--teal:#88e2cf;--yellow:#ffce3a}
+#shop .shopItem{border-radius:0;clip-path:var(--frame-cut)}
+#shop .shopItem .sInfo{min-width:0}
+#shop .shopItem .nm{font-size:13px;line-height:1.3}
+#shop .shopItem .ds{font-size:12px;line-height:1.4}
+#shop .shopItem .shop-reserve{color:#cbd4dc;font-size:11px;line-height:1.35}
+.overlay button:disabled:not(.chip){--button-art:var(--art-button-graphite)!important;--button-ink:#cbd4dc!important;--number-ink:#cbd4dc;--bonus-number-ink:#cbd4dc;opacity:.7!important;cursor:not-allowed}
