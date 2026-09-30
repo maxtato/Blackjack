@@ -51,6 +51,7 @@
     <div class="brand-block">
       <div class="table-context">
         <button type="button" class="table-number" id="tableDetailsButton" data-action="openTableRules" aria-haspopup="dialog" aria-controls="inspectScreen"><span class="table-number-label" data-reading-label><span data-i18n="modern.table">Table</span> <b id="tableNumber">01</b><svg class="table-info-icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="4.6" r=".8" fill="currentColor"/><path d="M8 7.2v4.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span><strong id="tableName">Cold Deck</strong></button>
+        <span id="circuitProgress" class="journey-hud" data-reading-label hidden></span>
       </div>
     </div>
     <div class="thead-right"><div id="lives" class="lives" data-i18n-title="ui.lives"></div><button id="pauseBtn" data-action="openPause" data-i18n-title="ui.pause" aria-label="Pause"><span></span><span></span></button></div>
@@ -235,7 +236,8 @@
 <div class="overlay" id="backgroundScreen">
   <div class="ovpanel background-panel">
     <h1 data-i18n="background.title">BACKGROUNDS</h1>
-    <p data-i18n="background.hint">Choose your table's background.</p>
+    <p id="backgroundHint" data-i18n="background.hint">Choose your table's background.</p>
+    <label id="circuitBackgroundOption" class="background-auto"><input id="circuitBackgrounds" type="checkbox" data-action="circuit-backgrounds-auto"><span data-i18n="background.automatic">Circuit: a new scene for each table</span></label>
     <div id="backgroundGrid" class="background-grid" role="group" data-i18n-label="background.title"></div>
     <button class="btn b-teal menu" data-action="closeBackgrounds" data-i18n="background.back">BACK TO PAUSE</button>
   </div>
@@ -253,12 +255,24 @@
 <!-- SHOP -->
 <div class="overlay" id="draftScreen"><div class="ovpanel circuit-panel"><h1 id="draftTitle"></h1><p id="draftCopy"></p><div id="draftChoices" class="circuit-choices"></div></div></div>
 <div class="overlay" id="tableBrief"><div class="ovpanel circuit-panel">
+ <div id="briefRoute" class="journey-route"></div>
  <div class="illustrated-heading table-brief-heading"><img class="dialog-art" src="assets/illustrations/table-emblem.webp" width="96" height="96" alt="" decoding="async"><div class="table-heading-copy"><span id="briefTableLabel" class="table-brief-kicker" data-reading-label></span><h1 id="briefTitle"></h1></div></div>
+ <div id="briefPressure" class="journey-pressure"></div>
  <div id="briefGoal" class="brief-stats"></div>
  <div id="briefEffect" class="table-effect-card"></div><p id="briefRule"></p>
  <h2 class="choice-heading" id="briefContractTitle" data-reading-label data-i18n="circuit.contractTitle">Choisir un contrat</h2><p class="choice-hint" data-i18n="circuit.contractHint">Un objectif bonus pour cette table. Choisis-en un.</p>
  <div id="briefContracts" class="circuit-choices" role="group" aria-labelledby="briefContractTitle"></div>
 </div></div>
+<div class="overlay" id="tableVictory">
+ <div class="ovpanel victory-panel">
+  <img class="victory-art" src="assets/illustrations/ui-trophy.webp" width="128" height="128" alt="" decoding="async">
+  <h1 id="victoryTitle"></h1><p id="victoryLabel" class="victory-kicker"></p>
+  <h2 id="victoryTable"></h2><div id="victoryStars" class="victory-stars"></div>
+  <div id="victoryRewards" class="victory-rewards"></div>
+  <p id="victoryNext" class="victory-next"></p>
+  <button class="btn b-gold menu" id="victoryContinue" data-action="continueTableVictory"></button>
+ </div>
+</div>
 <div class="overlay" id="shop">
   <div class="ovpanel">
     <h1 class="win" id="shopTitle" style="font-size:23px">TABLE CLEARED</h1>

@@ -57,6 +57,8 @@ function playHand(profile,stats){
   stats.hands+=g.stats.played-beforePlayed;stats.wins+=g.stats.won-beforeWon;
   if(g.tableMaxBaraka>=a.BARAKA_STEPS[2])stats.baraka3++;
   if(g.tableMaxBaraka>=a.BARAKA_STEPS[3])stats.baraka4++;
+  if(g.phase==='victory')a.continueTableVictory();
+  while(g.phase==='draft')a.chooseStarter(0);
   return h.w.__screen;
 }
 function tableAttempt(profile,stats){

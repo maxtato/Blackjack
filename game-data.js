@@ -694,3 +694,34 @@ Object.assign(STR.en,{
 
 STR.fr['rules.table']='<span class="rt">TABLES DU CIRCUIT</span>Chaque table demande un bénéfice propre. Une réserve supérieure au capital conseillé augmente aussi l’objectif du même montant : elle protège tes mises sans supprimer le défi. Les boss ont des sceaux à briser. Dix mains maximum.';
 STR.en['rules.table']='<span class="rt">CIRCUIT TABLES</span>Each table requires its own profit. Cash above the recommended capital raises the target by the same amount: the extra reserve protects your bets without removing the challenge. Bosses also have seals. Up to ten hands.';
+
+Object.assign(STR.fr,{
+ 'background.automatic':'Circuit : un décor pour chaque table',
+ 'background.hintCircuit':'Le décor suit la progression du Circuit. Choisis un fond ci-dessous pour utiliser ton propre décor.',
+ 'journey.bravo':'BRAVO !','journey.tableWon':'TABLE REMPORTÉE',
+ 'journey.table':(n,total)=>'TABLE '+n+'/'+total,'journey.zone':(n,name)=>'ZONE '+n+' · '+name,
+ 'journey.bossNow':'TABLE BOSS','journey.bossIn':n=>'Boss dans '+n+' table'+(n>1?'s':''),
+ 'journey.hudBossIn':n=>'Boss dans '+n,'journey.bossStep':n=>'BOSS '+n,'journey.tableStep':n=>'TABLE '+n,
+ 'journey.toWin':'À gagner','journey.within':n=>'en '+n+' mains','journey.minBet':'Mise mini.',
+ 'journey.prepare':'Prépare la prochaine table','journey.shopFunds':(bank,pot)=>bank+' disponibles · '+pot+' ★ de réputation',
+ 'journey.profitTarget':'Bénéfice requis','journey.totalGoal':goal=>'Objectif total : '+goal,'journey.enter':n=>'ENTRER À LA TABLE '+n,
+ 'journey.reserve':amount=>'À garder pour l’entrée et la première mise : '+amount,
+ 'journey.rating':n=>n+' étoiles sur 3','journey.tableReward':'Récompense de table','journey.inPocket':'En poche',
+ 'journey.circuitDone':'Circuit terminé. Le casino est à toi.','journey.nextUp':name=>'À suivre : '+name,
+ 'journey.bankRun':'Encaisser la réputation','journey.prepareNext':'Préparer la suite'
+});
+Object.assign(STR.en,{
+ 'background.automatic':'Circuit: a new scene for each table',
+ 'background.hintCircuit':'The scene follows your Circuit progress. Pick a background below to use your own scene.',
+ 'journey.bravo':'WELL DONE!','journey.tableWon':'TABLE CLEARED',
+ 'journey.table':(n,total)=>'TABLE '+n+'/'+total,'journey.zone':(n,name)=>'ZONE '+n+' · '+name,
+ 'journey.bossNow':'BOSS TABLE','journey.bossIn':n=>'Boss in '+n+' table'+(n>1?'s':''),
+ 'journey.hudBossIn':n=>'Boss in '+n,'journey.bossStep':n=>'BOSS '+n,'journey.tableStep':n=>'TABLE '+n,
+ 'journey.toWin':'To earn','journey.within':n=>'within '+n+' hands','journey.minBet':'Min. bet',
+ 'journey.prepare':'Prepare for the next table','journey.shopFunds':(bank,pot)=>bank+' available · '+pot+' ★ reputation',
+ 'journey.profitTarget':'Profit required','journey.totalGoal':goal=>'Total target: '+goal,'journey.enter':n=>'ENTER TABLE '+n,
+ 'journey.reserve':amount=>'Keep for entry and your first bet: '+amount,
+ 'journey.rating':n=>n+' stars out of 3','journey.tableReward':'Table reward','journey.inPocket':'In your pocket',
+ 'journey.circuitDone':'Circuit complete. The casino is yours.','journey.nextUp':name=>'Up next: '+name,
+ 'journey.bankRun':'Bank your reputation','journey.prepareNext':'Prepare for the next table'
+});

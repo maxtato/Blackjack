@@ -699,6 +699,37 @@ Object.assign(STR.en,{
 STR.fr['rules.table']='<span class="rt">TABLES DU CIRCUIT</span>Chaque table demande un bénéfice propre. Une réserve supérieure au capital conseillé augmente aussi l’objectif du même montant : elle protège tes mises sans supprimer le défi. Les boss ont des sceaux à briser. Dix mains maximum.';
 STR.en['rules.table']='<span class="rt">CIRCUIT TABLES</span>Each table requires its own profit. Cash above the recommended capital raises the target by the same amount: the extra reserve protects your bets without removing the challenge. Bosses also have seals. Up to ten hands.';
 
+Object.assign(STR.fr,{
+ 'background.automatic':'Circuit : un décor pour chaque table',
+ 'background.hintCircuit':'Le décor suit la progression du Circuit. Choisis un fond ci-dessous pour utiliser ton propre décor.',
+ 'journey.bravo':'BRAVO !','journey.tableWon':'TABLE REMPORTÉE',
+ 'journey.table':(n,total)=>'TABLE '+n+'/'+total,'journey.zone':(n,name)=>'ZONE '+n+' · '+name,
+ 'journey.bossNow':'TABLE BOSS','journey.bossIn':n=>'Boss dans '+n+' table'+(n>1?'s':''),
+ 'journey.hudBossIn':n=>'Boss dans '+n,'journey.bossStep':n=>'BOSS '+n,'journey.tableStep':n=>'TABLE '+n,
+ 'journey.toWin':'À gagner','journey.within':n=>'en '+n+' mains','journey.minBet':'Mise mini.',
+ 'journey.prepare':'Prépare la prochaine table','journey.shopFunds':(bank,pot)=>bank+' disponibles · '+pot+' ★ de réputation',
+ 'journey.profitTarget':'Bénéfice requis','journey.totalGoal':goal=>'Objectif total : '+goal,'journey.enter':n=>'ENTRER À LA TABLE '+n,
+ 'journey.reserve':amount=>'À garder pour l’entrée et la première mise : '+amount,
+ 'journey.rating':n=>n+' étoiles sur 3','journey.tableReward':'Récompense de table','journey.inPocket':'En poche',
+ 'journey.circuitDone':'Circuit terminé. Le casino est à toi.','journey.nextUp':name=>'À suivre : '+name,
+ 'journey.bankRun':'Encaisser la réputation','journey.prepareNext':'Préparer la suite'
+});
+Object.assign(STR.en,{
+ 'background.automatic':'Circuit: a new scene for each table',
+ 'background.hintCircuit':'The scene follows your Circuit progress. Pick a background below to use your own scene.',
+ 'journey.bravo':'WELL DONE!','journey.tableWon':'TABLE CLEARED',
+ 'journey.table':(n,total)=>'TABLE '+n+'/'+total,'journey.zone':(n,name)=>'ZONE '+n+' · '+name,
+ 'journey.bossNow':'BOSS TABLE','journey.bossIn':n=>'Boss in '+n+' table'+(n>1?'s':''),
+ 'journey.hudBossIn':n=>'Boss in '+n,'journey.bossStep':n=>'BOSS '+n,'journey.tableStep':n=>'TABLE '+n,
+ 'journey.toWin':'To earn','journey.within':n=>'within '+n+' hands','journey.minBet':'Min. bet',
+ 'journey.prepare':'Prepare for the next table','journey.shopFunds':(bank,pot)=>bank+' available · '+pot+' ★ reputation',
+ 'journey.profitTarget':'Profit required','journey.totalGoal':goal=>'Total target: '+goal,'journey.enter':n=>'ENTER TABLE '+n,
+ 'journey.reserve':amount=>'Keep for entry and your first bet: '+amount,
+ 'journey.rating':n=>n+' stars out of 3','journey.tableReward':'Table reward','journey.inPocket':'In your pocket',
+ 'journey.circuitDone':'Circuit complete. The casino is yours.','journey.nextUp':name=>'Up next: '+name,
+ 'journey.bankRun':'Bank your reputation','journey.prepareNext':'Prepare for the next table'
+});
+
 
 /* card-art.js */
 /* Generated bitmap artwork with exact game-controlled ranks and pip counts. */
@@ -1080,6 +1111,7 @@ function applyFelt(){
   document.documentElement.style.setProperty('--felt',FELT_COLORS[zone%FELT_COLORS.length]);
   $('feltDeco').replaceChildren();
   $('felt').classList.toggle('bossfelt',!!(G.table&&G.table.boss));
+  window.ColdDeckBackgrounds?.applyTable(G.table,G.endless);
 }
 /* annonce de BOSS : gros pop rouge au centre du tapis */
 function showBoss(){
@@ -1400,11 +1432,12 @@ function showTableBrief(){
     b.onclick=()=>chooseContract(i);$('briefContracts').append(b);
   });
   screen.classList.add('show');
+  window.ColdDeckJourney?.renderBrief();
 }
 function chooseContract(i){
   if(G.phase!=='bet'||!G.contractChoices?.[i])return;
   G.contract=G.contractChoices[i];$('tableBrief')?.classList.remove('show');
-  renderTop();checkBankGoal();
+  renderTop();window.ColdDeckJourney?.renderHud();checkBankGoal();
 }
 function renderCircuitStatus(){
   const el=$('circuitStatus');if(!el)return;
@@ -1831,6 +1864,7 @@ function renderTop(){
   const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=Array.from({length:Math.max(3,Math.min(5,n))},(_,i)=>'<span class="life'+(i>=n?' off':'')+'" aria-hidden="true">'+heartSVG(20)+'</span>').join('')+(n>5?'<span class="lvn">+'+(n-5)+'</span>':'');lv.setAttribute('aria-label',t('ui.lives')+' : '+n);lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
   $('tableName').textContent=tableName(tb);                         // nom seul, en gros
   const tableNumber=$('tableNumber');if(tableNumber)tableNumber.textContent=String(G.endless?(G.palier||0)+1:G.tableIdx+1).padStart(2,'0');
+  window.ColdDeckJourney?.renderHud();
   $('shoeCount').textContent=G.shoe.length;
   renderObjective();renderCircuitStatus();
 }
@@ -2303,7 +2337,7 @@ function dealerPlay(natural){
 
 /* ---------- résolution ---------- */
 function resolve(mode){
-  if(G.phase==='done'||G.phase==='shop'||G.phase==='lost'||G.phase==='ended')return;
+  if(['done','victory','shop','draft','transition','lost','ended'].includes(G.phase))return;
   if(G.splitActive)return resolveSplit();
   G.phase='done';
   if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
@@ -2358,6 +2392,7 @@ function resolve(mode){
 
 /* résolution en mode SÉPARÉ : chaque main est comparée au croupier, gains cumulés */
 function resolveSplit(){
+  if(['done','victory','shop','draft','transition','lost','ended'].includes(G.phase))return;
   G.phase='done';
   window.ColdDeckFX?.holdBank();
   if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
@@ -2407,6 +2442,7 @@ function resolveSplit(){
 /* dès que l'objectif est atteint, la table est validée : pas besoin de finir
    toutes les mains. Sinon on joue les mains restantes. À sec en chemin = table perdue. */
 function nextHandOrEnd(){
+  if(['victory','shop','draft','transition','lost','ended'].includes(G.phase))return;
   if(G.endless){                                    // mode cagnotte : pas d'objectif ni de limite de mains
     G.peak=Math.max(G.peak||0,G.bank);
     if(G.bank<G.table.min)return endlessBust();     // banqueroute = fin
@@ -2429,11 +2465,11 @@ function nextHandOrEnd(){
 }
 /* fin de table : 0★ = perdue · 1★ survie · 2★ objectif · 3★ maîtrise */
 function finishTable(){
-  if(['shop','draft','lost','ended'].includes(G.phase))return;
+  if(['victory','shop','draft','transition','lost','ended'].includes(G.phase))return;
   const tb=G.table;
   const stars=starsFor(tb,G.bank);
   if(stars===0){onTableLost('lost.goal',G.bank>=tb.goal?'circuit.bossUnfinished':{k:'lost.goalTxt',miss:tb.goal-G.bank});return;}
-  G.phase='shop';
+  G.phase='victory';
   G.tableStars[G.tableIdx]=stars;
   G.runStars=G.tableStars.reduce((a,b)=>a+(b||0),0);
   const reward=tableRep(tb,stars,G.tableMaxBaraka||0);
@@ -2441,6 +2477,13 @@ function finishTable(){
   updateRecord(G.tableIdx+1);
   // Bonus cards are earned after a cleared table, never before the first hand.
   grantZoneTarot();
+  renderTop();renderRelics();renderConsumables();
+  window.ColdDeckJourney?.showVictory();
+}
+function continueTableVictory(){
+  if(G.phase!=='victory')return;
+  G.phase='shop';$('tableVictory').classList.remove('show');
+  if(G.tableIdx>=RUN_LEN-1){cashOut();return;}
   if(G.rewardDraftPending>0){
     G.draftLeft=G.rewardDraftPending;G.rewardDraftPending=0;
     G.phase='draft';showStarterDraft();return;
@@ -2562,6 +2605,7 @@ function renderShopHead(){
     }
     $('shopGate').textContent=t('shop.reserve',cash(Math.max(0,G.bank-nx.entry)))+' · '+t('circuit.stars');
   }
+  window.ColdDeckJourney?.renderShop();
 }
 function rollShop(){
   const owned=new Set(G.relics.map(r=>r.id));
@@ -2658,6 +2702,7 @@ function enterTable(prevZone){
   G.bet=recommendedBet();G.betChosen=true;clampBet();G.tableStartBank=G.bank;
   applyHandIncome();updateRecord(0);
   if(G.bank<G.table.min){onTableLost('lost.broke','lost.brokeTxt');return;}
+  window.ColdDeckBackgrounds?.applyTable(G.table,false);
   renderAll();renderHands();renderPressure();announceTurn();
   showTableBrief();
 }
@@ -2722,6 +2767,7 @@ function endRun(cashout){
   if(G.phase==='ended')return;
   GameClock.clear();
   $('shop').classList.remove('show');$('loseScreen').classList.remove('show');
+  $('tableVictory').classList.remove('show');
   document.body.classList.remove('inf');
   const baseGain=repOnEnd(cashout);
   const coffre=(cashout&&!G.endless)?coffreBonus(G.bank):0;   // coffre : mode nuit seulement (l'infini a sa conversion)
@@ -2884,6 +2930,8 @@ function applyI18n(){
   if($('endScreen').classList.contains('show'))renderEndScreen();
   if($('pauseScreen').classList.contains('show'))openPause();
   window.ColdDeckBackgrounds?.refresh();
+  if($('tableBrief').classList.contains('show'))showTableBrief();
+  window.ColdDeckJourney?.refresh();
 }
 function pauseRules(){$('pauseScreen').classList.remove('show');pauseReturn=true;openRules();}   // à la fermeture des règles on revient à la pause
 function quitToMenu(){GameClock.clear();$('pauseScreen').classList.remove('show');endRun(false);}                   // abandonne : encaisse la réputation puis écran de fin → La Planque
@@ -3266,7 +3314,7 @@ function openMenu(){
   GameClock.clear();
   startPalierIdx=null;   // au retour menu, la reprise se remet par défaut sur le plus loin atteint
   document.body.classList.remove('inf');
-  ['intro','endScreen','loseScreen','shop','pauseScreen','palierScreen','confirmRestart','draftScreen','tableBrief'].forEach(id=>$(id).classList.remove('show'));
+  ['intro','endScreen','loseScreen','shop','pauseScreen','palierScreen','confirmRestart','draftScreen','tableBrief','tableVictory'].forEach(id=>$(id).classList.remove('show'));
   renderMenu();
   $('modeMenu').classList.add('show');
 }
@@ -3366,7 +3414,7 @@ function toPlanque(){
 
 function startGame(fromTable){
   audioInit();MODE='nuit';document.body.classList.remove('inf');
-  ['intro','endScreen','loseScreen','shop','draftScreen','tableBrief'].forEach(id=>$(id)?.classList.remove('show'));
+  ['intro','modeMenu','endScreen','loseScreen','shop','draftScreen','tableBrief','tableVictory','palierScreen','pauseScreen'].forEach(id=>$(id)?.classList.remove('show'));
   freshGame();buildShoe();
   fromTable=Math.max(0,Math.min(fromTable|0,RUN_LEN-1));
   G.recordAtStart={...META.nuit.record};G.tableIdx=fromTable;G.table=RUN[fromTable];
@@ -3376,7 +3424,7 @@ function startGame(fromTable){
 /* MODE INFINI « CAGNOTTE » : on accumule tant qu'on peut miser. */
 function startEndless(){
   audioInit();MODE='infini';
-  $('intro').classList.remove('show');$('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');
+  ['intro','modeMenu','endScreen','loseScreen','shop','draftScreen','tableBrief','tableVictory','pauseScreen'].forEach(id=>$(id)?.classList.remove('show'));
   freshGame();
   const elan=uLvl('elan'),plaf=uLvl('plafond');             // déblocages permanents de l'infini
   // palier de reprise : celui choisi dans la Planque (≥ élan), borné au plus loin atteint
@@ -3393,6 +3441,7 @@ function startEndless(){
   document.body.classList.add('inf');
   buildShoe();
   applyHandIncome();renderAll();renderHands();
+  window.ColdDeckBackgrounds?.applyTable(G.table,true);window.ColdDeckJourney?.renderHud();
   announceTurn();
   popText(t('msg.endlessStart'),t('msg.endlessStartSub'));
 }
@@ -3922,6 +3971,25 @@ const ColdDeckBackgrounds=(() => {
     ...extraPalettes.map(([id,fr,en,base,edge,fold,accent,second])=>({id,fr,en,base,edge,fold,accent,second,motif:id})),
     ...collagePalettes.map(([id,fr,en,base,edge,fold,accent,second,seed])=>({id,fr,en,base,edge,fold,accent,second,seed}))];
   let selected='classic';
+  const automaticKey='colddeck-circuit-backgrounds';
+  let automaticCircuit=true,lastPaint='';
+  try{automaticCircuit=localStorage.getItem(automaticKey)!=='0';}catch(e){}
+  const circuitPalettes=[
+    ['#24282b','#444d53','#323b40','#8d9a9f','#65717a'],
+    ['#292130','#554163','#3a2c44','#9881af','#725889'],
+    ['#1d2a31','#405868','#2c3e48','#8caab9','#607f92'],
+    ['#2d2028','#624152','#422d39','#bb93a9','#875b72'],
+    ['#252931','#4d5564','#353b46','#a0aab8','#737f91'],
+    ['#2b241f','#624838','#3f3027','#bd9377','#8b6550'],
+    ['#29271e','#59513a','#3e392b','#bca777','#817653'],
+    ['#24202d','#51435f','#382e43','#b7a0cb','#776287']
+  ];
+  const shade=(color,amount)=>'#'+color.slice(1).match(/../g).map(part=>Math.min(255,Math.round(parseInt(part,16)*amount)).toString(16).padStart(2,'0')).join('');
+  function circuitTheme(table){
+    const index=Math.max(0,Math.min(23,table.i|0)),step=index%3;
+    const [base,edge,fold,accent,second]=circuitPalettes[Math.max(0,Math.min(7,(table.zone||1)-1))];
+    return {id:'circuit-'+index,base:shade(base,1-step*.055),edge:shade(edge,1+step*.08),fold,accent:shade(accent,table.boss?1.12:1),second,seed:81023+(index+1)*104729,boss:!!table.boss};
+  }
   function name(theme){return LANG==='fr'?theme.fr:theme.en;}
   function scenery(theme){
     const scene=document.createElement('span');scene.className='table-background';
@@ -3949,13 +4017,14 @@ const ColdDeckBackgrounds=(() => {
         shard([[0,lower],[between(3,7),lower-10],[between(9,17),tip],[between(3,7),tip-10],[between(6,13),100],[0,100]],'edge',right);
         shard([[0,between(3,10)],[between(3,7),between(19,26)],[between(1,4),between(33,40)],[0,between(28,32)]],'fold',right);
         for(const [start,end] of [[4,18],[35,51],[72,87]]){
-          const y=between(start,end),height=between(9,20),width=between(5,14);
+          const y=between(start,end),height=between(9,Math.min(20,100-y)),width=between(5,14);
           shard([[0,y],[width,y+height],[width*.38,y+height*.43],[0,y+height*.73]],'second',right);
           shard([[0,y+height*.2],[width*.48,y+height*.8],[width*.19,y+height*.48]],'edge',right);
         }
         const corner=right?between(79,84):between(0,5),length=between(11,16);
         shard([[0,corner],[between(2,4),corner+2],[between(6,10),corner+length],[between(2,4),corner+length-4]],'accent',right);
         shard([[0,corner+4],[between(2,4),corner+length-4],[0,corner+length]],'fold',right);
+        if(theme.boss)shard([[0,0],[2,0],[between(5,8),between(19,28)],[1,12]],'accent',right,!right);
       }
       return scene;
     }
@@ -3996,9 +4065,34 @@ const ColdDeckBackgrounds=(() => {
   }
   function syncSelection(){
     for(const button of $('backgroundGrid').children){
-      const active=button.dataset.backgroundId===selected;
+      const active=(!automaticCircuit||G.endless||!G.table)&&button.dataset.backgroundId===selected;
       button.classList.toggle('selected',active);button.setAttribute('aria-pressed',String(active));
     }
+    const option=$('circuitBackgrounds');if(option)option.checked=automaticCircuit;
+    const row=$('circuitBackgroundOption');if(row)row.hidden=!!G.endless;
+    const hint=$('backgroundHint');if(hint)hint.textContent=t(automaticCircuit&&!G.endless?'background.hintCircuit':'background.hint');
+  }
+  function paint(theme,id){
+    if(lastPaint===id)return;
+    lastPaint=id;
+    const bg=$('bg');bg.dataset.background=id;bg.style.setProperty('--selected-bg-base',theme.base);
+    bg.dataset.circuitBoss=String(!!theme.boss);
+    $('tableBackdrop').replaceChildren(...(theme.classic?[]:[scenery(theme)]));
+    document.documentElement.style.setProperty('--circuit-color',theme.accent||'#d1b5ef');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme.base);
+  }
+  function applyTable(table=G.table,endless=G.endless){
+    if(automaticCircuit&&!endless&&table&&Number.isInteger(table.i)){
+      const theme=circuitTheme(table);paint(theme,theme.id);
+    }else{
+      const theme=themes.find(theme=>theme.id===selected);paint(theme,theme.id);
+    }
+    syncSelection();
+  }
+  function setAutomatic(value,persist=true){
+    automaticCircuit=!!value;
+    if(persist)try{localStorage.setItem(automaticKey,automaticCircuit?'1':'0');}catch(e){}
+    applyTable();
   }
   function refresh(){
     const grid=$('backgroundGrid');if(!grid)return;
@@ -4017,11 +4111,9 @@ const ColdDeckBackgrounds=(() => {
   function select(id,persist=true){
     const theme=themes.find(theme=>theme.id===id);if(!theme)return false;
     selected=id;
-    const bg=$('bg');bg.dataset.background=id;bg.style.setProperty('--selected-bg-base',theme.base);
-    $('tableBackdrop').replaceChildren(...(theme.classic?[]:[scenery(theme)]));
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme.base);
+    if(persist&&!G.endless){automaticCircuit=false;try{localStorage.setItem(automaticKey,'0');}catch(e){}}
     if(persist)try{localStorage.setItem(key,id);}catch(e){}
-    syncSelection();return true;
+    applyTable();return true;
   }
   function open(){
     if(!$('pauseScreen').classList.contains('show'))return false;
@@ -4031,11 +4123,117 @@ const ColdDeckBackgrounds=(() => {
     if(!$('backgroundScreen').classList.contains('show'))return;
     $('backgroundScreen').classList.remove('show');$('pauseScreen').classList.add('show');
   }
-  const api={themes,open,close,select,refresh,get selected(){return selected;}};
+  const api={themes,open,close,select,refresh,applyTable,setAutomatic,circuitTheme,get selected(){return selected;},get automaticCircuit(){return automaticCircuit;}};
   window.ColdDeckBackgrounds=api;
   let saved;try{saved=localStorage.getItem(key);}catch(e){}
   select(themes.some(theme=>theme.id===saved)?saved:'classic',false);
   refresh();return api;
+})();
+
+
+/* circuit-journey.js */
+/* Circuit milestones share the live rules and bankroll; no separate difficulty curve. */
+const ColdDeckJourney=(()=>{
+  function bossDistance(table){
+    const boss=RUN.find(candidate=>candidate.i>=table.i&&candidate.boss);
+    return boss?boss.i-table.i:null;
+  }
+  function bossNotice(table){
+    const distance=bossDistance(table);
+    return t(distance===0?'journey.bossNow':'journey.bossIn',distance);
+  }
+  function previewNext(){
+    if(G.endless||G.tableIdx>=RUN_LEN-1)return null;
+    const base=RUN[G.tableIdx+1],bank=Math.max(0,G.bank-base.entry);
+    const table={...base,goal:base.goal+Math.max(0,bank-base.cap)};
+    return {table,bank,profit:Math.max(0,table.goal-bank),reserve:base.entry+base.min};
+  }
+  function renderRoute(node,tb){
+    node.replaceChildren();
+    const label=document.createElement('p');label.className='journey-zone';
+    const zone=document.createElement('span');zone.textContent=t('journey.zone',tb.zone,zoneName(tb.zone));label.append(zone);
+    const notice=document.createElement('span');notice.className='journey-boss-notice';notice.textContent=bossNotice(tb);label.append(notice);
+    const steps=document.createElement('ol');steps.className='journey-steps';
+    RUN.filter(table=>table.zone===tb.zone).forEach(table=>{
+      const step=document.createElement('li');step.className='journey-step';
+      step.classList.toggle('past',table.i<tb.i);step.classList.toggle('current',table.i===tb.i);
+      step.classList.toggle('boss',table.boss);
+      if(table.i===tb.i)step.setAttribute('aria-current','step');
+      step.textContent=t(table.boss?'journey.bossStep':'journey.tableStep',String(table.i+1).padStart(2,'0'));
+      steps.append(step);
+    });
+    node.append(label,steps);
+  }
+  function renderHud(){
+    const node=$('circuitProgress');if(!node)return;
+    node.hidden=!!G.endless||!G.table;if(node.hidden)return;
+    const distance=bossDistance(G.table);node.dataset.boss=String(distance===0);
+    node.textContent=t(distance===0?'journey.bossNow':'journey.hudBossIn',distance);
+  }
+  function stat(label,value){
+    const node=document.createElement('div');
+    const title=document.createElement('span');title.dataset.readingLabel='';title.textContent=label;
+    const amount=document.createElement('strong');amount.textContent=value;
+    node.append(title,amount);return node;
+  }
+  function renderBrief(){
+    if(G.endless||!G.table)return;
+    const tb=G.table;$('tableBrief').dataset.boss=String(tb.boss);
+    $('briefTableLabel').textContent=t('journey.table',String(tb.i+1).padStart(2,'0'),RUN_LEN);
+    renderRoute($('briefRoute'),tb);
+    const target=stat(t('journey.toWin'),cash(Math.max(0,tb.goal-G.bank)));
+    const hands=document.createElement('small');hands.textContent=t('journey.within',tb.mains);target.append(hands);
+    $('briefPressure').replaceChildren(target,stat(t('journey.minBet'),cash(tb.min)));
+    renderHud();
+  }
+  function renderShop(){
+    const next=previewNext();if(!next)return;
+    const tb=next.table,node=$('shopNextObj');
+    $('shopTitle').textContent=t('journey.prepare');$('shopStars').hidden=true;
+    $('shopSub').textContent=t('journey.shopFunds',cash(G.bank),abbr(G.pot));
+    $('shopGate').textContent=t('journey.reserve',cash(next.reserve));
+    node.dataset.boss=String(tb.boss);
+    node.style.setProperty('--next-zone-color',ColdDeckBackgrounds.circuitTheme(tb).accent);
+    node.replaceChildren();
+    const label=document.createElement('span');label.className='journey-next-label';
+    label.dataset.readingLabel='';label.textContent=t('journey.table',String(tb.i+1).padStart(2,'0'),RUN_LEN)+' · '+bossNotice(tb);
+    const title=document.createElement('h2');title.textContent=tableName(tb);
+    const stats=document.createElement('div');stats.className='journey-next-stats';
+    stats.append(stat(t('journey.profitTarget'),cash(next.profit)),stat(t('circuit.handsLabel'),tb.mains),stat(t('journey.minBet'),cash(tb.min)));
+    const rule=document.createElement('p');rule.className='journey-next-rule';rule.textContent=tableRuleText(tb);
+    const goal=document.createElement('p');goal.className='journey-next-goal';goal.textContent=t('journey.totalGoal',cash(tb.goal));
+    node.append(label,title,stats,rule,goal);
+    $('shopNextBtn').innerHTML=t('journey.enter',tb.i+1)+'<small>'+tableName(tb)+'</small>';
+  }
+  function renderVictory(){
+    const tb=G.table,last=G.tableIdx===RUN_LEN-1;
+    $('tableVictory').dataset.boss=String(tb.boss);
+    $('victoryTitle').textContent=t('journey.bravo');
+    $('victoryLabel').textContent=t(last?'shop.titleLast':tb.boss?'shop.titleBoss':'journey.tableWon');
+    $('victoryTable').textContent=tableName(tb);
+    const stars=$('victoryStars');stars.replaceChildren();stars.setAttribute('role','img');
+    stars.setAttribute('aria-label',t('journey.rating',G.lastStars));
+    for(let i=0;i<3;i++){
+      const star=document.createElement('span');star.className='victory-star'+(i<G.lastStars?' earned':'');
+      star.style.setProperty('--star-delay',i*90+'ms');star.setAttribute('aria-hidden','true');
+      star.innerHTML=STAR;stars.append(star);
+    }
+    const reward=stat(t('journey.tableReward'),'+'+abbr(G.lastReward));
+    const mark=document.createElement('span');mark.innerHTML=STAR;reward.querySelector('strong').append(mark);
+    $('victoryRewards').replaceChildren(reward,stat(t('journey.inPocket'),cash(G.bank)));
+    const next=previewNext();
+    $('victoryNext').textContent=last?t('journey.circuitDone'):t('journey.nextUp',tableName(next.table))+' · '+bossNotice(next.table);
+    $('victoryContinue').textContent=t(last?'journey.bankRun':'journey.prepareNext');
+  }
+  function showVictory(){renderVictory();$('tableVictory').classList.add('show');sfx.win(G.table.boss?3:2);}
+  function refresh(){
+    renderHud();
+    if($('tableBrief').classList.contains('show'))renderBrief();
+    if($('tableVictory').classList.contains('show'))renderVictory();
+    if($('shop').classList.contains('show'))renderShop();
+  }
+  const api={bossDistance,previewNext,renderBrief,renderShop,renderHud,showVictory,refresh};
+  window.ColdDeckJourney=api;refresh();return api;
 })();
 
 
@@ -5142,11 +5340,13 @@ syncMenuFocus();
     openBackgrounds: () => ColdDeckBackgrounds.open(),
     closeBackgrounds: () => ColdDeckBackgrounds.close(),
     'select-background': el => ColdDeckBackgrounds.select(el.dataset.backgroundId),
+    'circuit-backgrounds-auto': el => ColdDeckBackgrounds.setAutomatic(el.checked),
     quitToMenu: () => quitToMenu(),
     rerollShop: () => rerollShop(),
     adFreeReroll: () => adFreeReroll(),
     cashOut: () => cashOut(),
     leaveShop: () => leaveShop(),
+    continueTableVictory: () => continueTableVictory(),
     adRetryTable: () => adRetryTable(),
     extraLife: () => extraLife(),
     giveUp: () => giveUp(),

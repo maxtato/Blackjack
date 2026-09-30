@@ -4,7 +4,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const files=['game-data.js','card-art.js','game.js','backgrounds.js','menu-v2.js','raster-ui.js','modern-fx.js','controls.js'];
+const files=['game-data.js','card-art.js','game.js','backgrounds.js','circuit-journey.js','menu-v2.js','raster-ui.js','modern-fx.js','controls.js'];
 const artSource=fs.readFileSync(path.join(root,'card-art.js'),'utf8');
 const cardImageKeys=vm.runInNewContext(artSource+'\nColdDeckArt.cardImageKeys;',{}, {timeout:1000});
 const cardImages=Object.fromEntries(cardImageKeys.map(key=>[key,'data:image/webp;base64,'+fs.readFileSync(path.join(root,'assets/illustrations',key+'.webp')).toString('base64')]));

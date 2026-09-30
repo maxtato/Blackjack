@@ -15,6 +15,7 @@ check('Circuit starts with a contract and no unearned bonus cards',()=>{
 check('First cleared table awards cards once, including the Contact upgrade',()=>{
  for(const contact of [0,1]){
   h.reset(123,{contact});a.G.bank=a.G.table.goal;assert(a.checkBankGoal());
+  assert.equal(a.G.phase,'victory');a.continueTableVictory();
   assert.equal(a.G.phase,'draft');assert.equal(a.G.draftLeft,1+contact);assert.equal(a.G.consumables.length,1);
   const bank=a.G.bank,pot=a.G.pot,table=a.G.tableIdx;
   for(let i=0;i<=contact;i++)a.chooseStarter(0);
@@ -22,7 +23,7 @@ check('First cleared table awards cards once, including the Contact upgrade',()=
   assert.equal(a.G.bank,bank);assert.equal(a.G.pot,pot);assert.equal(a.G.tableIdx,table);
   a.chooseStarter(0);assert.equal(a.G.relics.length,1+contact);
   a.setTable(1);a.enterTable(1);assert.equal(a.G.consumables.length,1);
-  a.G.bank=a.G.table.goal;assert(a.checkBankGoal());assert.equal(a.G.phase,'shop');
+  a.G.bank=a.G.table.goal;assert(a.checkBankGoal());assert.equal(a.G.phase,'victory');a.continueTableVictory();assert.equal(a.G.phase,'shop');
   assert.equal(a.G.consumables.length,1);assert.equal(a.G.relics.length,1+contact);
  }
 });
@@ -126,6 +127,7 @@ check('Pause and inspection suspend the remaining engine time',()=>{
 });
 check('Sun can complete an ordinary table between hands',()=>{
  a.G.bank=a.G.table.goal-5;a.G.baraka=2;a.G.consumables=[tarot('soleil')];a.useConsumable(0);
+ a.continueTableVictory();
  assert.equal(a.G.phase,'draft');assert.equal(a.G.baraka,0);
  a.chooseStarter(0);assert.equal(a.G.phase,'shop');
 });

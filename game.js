@@ -261,6 +261,7 @@ function applyFelt(){
   document.documentElement.style.setProperty('--felt',FELT_COLORS[zone%FELT_COLORS.length]);
   $('feltDeco').replaceChildren();
   $('felt').classList.toggle('bossfelt',!!(G.table&&G.table.boss));
+  window.ColdDeckBackgrounds?.applyTable(G.table,G.endless);
 }
 /* annonce de BOSS : gros pop rouge au centre du tapis */
 function showBoss(){
@@ -581,11 +582,12 @@ function showTableBrief(){
     b.onclick=()=>chooseContract(i);$('briefContracts').append(b);
   });
   screen.classList.add('show');
+  window.ColdDeckJourney?.renderBrief();
 }
 function chooseContract(i){
   if(G.phase!=='bet'||!G.contractChoices?.[i])return;
   G.contract=G.contractChoices[i];$('tableBrief')?.classList.remove('show');
-  renderTop();checkBankGoal();
+  renderTop();window.ColdDeckJourney?.renderHud();checkBankGoal();
 }
 function renderCircuitStatus(){
   const el=$('circuitStatus');if(!el)return;
@@ -1012,6 +1014,7 @@ function renderTop(){
   const lv=$('lives');if(lv){const n=G.tokens||0;lv.innerHTML=Array.from({length:Math.max(3,Math.min(5,n))},(_,i)=>'<span class="life'+(i>=n?' off':'')+'" aria-hidden="true">'+heartSVG(20)+'</span>').join('')+(n>5?'<span class="lvn">+'+(n-5)+'</span>':'');lv.setAttribute('aria-label',t('ui.lives')+' : '+n);lv.classList.toggle('empty',n<=0);}  // vies / secondes chances
   $('tableName').textContent=tableName(tb);                         // nom seul, en gros
   const tableNumber=$('tableNumber');if(tableNumber)tableNumber.textContent=String(G.endless?(G.palier||0)+1:G.tableIdx+1).padStart(2,'0');
+  window.ColdDeckJourney?.renderHud();
   $('shoeCount').textContent=G.shoe.length;
   renderObjective();renderCircuitStatus();
 }
@@ -1484,7 +1487,7 @@ function dealerPlay(natural){
 
 /* ---------- résolution ---------- */
 function resolve(mode){
-  if(G.phase==='done'||G.phase==='shop'||G.phase==='lost'||G.phase==='ended')return;
+  if(['done','victory','shop','draft','transition','lost','ended'].includes(G.phase))return;
   if(G.splitActive)return resolveSplit();
   G.phase='done';
   if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
@@ -1539,6 +1542,7 @@ function resolve(mode){
 
 /* résolution en mode SÉPARÉ : chaque main est comparée au croupier, gains cumulés */
 function resolveSplit(){
+  if(['done','victory','shop','draft','transition','lost','ended'].includes(G.phase))return;
   G.phase='done';
   window.ColdDeckFX?.holdBank();
   if(!G.revealed){G.revealed=true;G.doFlip=true;if(!window.ColdDeckFX)sfx.flip();}
@@ -1588,6 +1592,7 @@ function resolveSplit(){
 /* dès que l'objectif est atteint, la table est validée : pas besoin de finir
    toutes les mains. Sinon on joue les mains restantes. À sec en chemin = table perdue. */
 function nextHandOrEnd(){
+  if(['victory','shop','draft','transition','lost','ended'].includes(G.phase))return;
   if(G.endless){                                    // mode cagnotte : pas d'objectif ni de limite de mains
     G.peak=Math.max(G.peak||0,G.bank);
     if(G.bank<G.table.min)return endlessBust();     // banqueroute = fin
@@ -1610,11 +1615,11 @@ function nextHandOrEnd(){
 }
 /* fin de table : 0★ = perdue · 1★ survie · 2★ objectif · 3★ maîtrise */
 function finishTable(){
-  if(['shop','draft','lost','ended'].includes(G.phase))return;
+  if(['victory','shop','draft','transition','lost','ended'].includes(G.phase))return;
   const tb=G.table;
   const stars=starsFor(tb,G.bank);
   if(stars===0){onTableLost('lost.goal',G.bank>=tb.goal?'circuit.bossUnfinished':{k:'lost.goalTxt',miss:tb.goal-G.bank});return;}
-  G.phase='shop';
+  G.phase='victory';
   G.tableStars[G.tableIdx]=stars;
   G.runStars=G.tableStars.reduce((a,b)=>a+(b||0),0);
   const reward=tableRep(tb,stars,G.tableMaxBaraka||0);
@@ -1622,6 +1627,13 @@ function finishTable(){
   updateRecord(G.tableIdx+1);
   // Bonus cards are earned after a cleared table, never before the first hand.
   grantZoneTarot();
+  renderTop();renderRelics();renderConsumables();
+  window.ColdDeckJourney?.showVictory();
+}
+function continueTableVictory(){
+  if(G.phase!=='victory')return;
+  G.phase='shop';$('tableVictory').classList.remove('show');
+  if(G.tableIdx>=RUN_LEN-1){cashOut();return;}
   if(G.rewardDraftPending>0){
     G.draftLeft=G.rewardDraftPending;G.rewardDraftPending=0;
     G.phase='draft';showStarterDraft();return;
@@ -1743,6 +1755,7 @@ function renderShopHead(){
     }
     $('shopGate').textContent=t('shop.reserve',cash(Math.max(0,G.bank-nx.entry)))+' · '+t('circuit.stars');
   }
+  window.ColdDeckJourney?.renderShop();
 }
 function rollShop(){
   const owned=new Set(G.relics.map(r=>r.id));
@@ -1839,6 +1852,7 @@ function enterTable(prevZone){
   G.bet=recommendedBet();G.betChosen=true;clampBet();G.tableStartBank=G.bank;
   applyHandIncome();updateRecord(0);
   if(G.bank<G.table.min){onTableLost('lost.broke','lost.brokeTxt');return;}
+  window.ColdDeckBackgrounds?.applyTable(G.table,false);
   renderAll();renderHands();renderPressure();announceTurn();
   showTableBrief();
 }
@@ -1903,6 +1917,7 @@ function endRun(cashout){
   if(G.phase==='ended')return;
   GameClock.clear();
   $('shop').classList.remove('show');$('loseScreen').classList.remove('show');
+  $('tableVictory').classList.remove('show');
   document.body.classList.remove('inf');
   const baseGain=repOnEnd(cashout);
   const coffre=(cashout&&!G.endless)?coffreBonus(G.bank):0;   // coffre : mode nuit seulement (l'infini a sa conversion)
@@ -2065,6 +2080,8 @@ function applyI18n(){
   if($('endScreen').classList.contains('show'))renderEndScreen();
   if($('pauseScreen').classList.contains('show'))openPause();
   window.ColdDeckBackgrounds?.refresh();
+  if($('tableBrief').classList.contains('show'))showTableBrief();
+  window.ColdDeckJourney?.refresh();
 }
 function pauseRules(){$('pauseScreen').classList.remove('show');pauseReturn=true;openRules();}   // à la fermeture des règles on revient à la pause
 function quitToMenu(){GameClock.clear();$('pauseScreen').classList.remove('show');endRun(false);}                   // abandonne : encaisse la réputation puis écran de fin → La Planque
@@ -2447,7 +2464,7 @@ function openMenu(){
   GameClock.clear();
   startPalierIdx=null;   // au retour menu, la reprise se remet par défaut sur le plus loin atteint
   document.body.classList.remove('inf');
-  ['intro','endScreen','loseScreen','shop','pauseScreen','palierScreen','confirmRestart','draftScreen','tableBrief'].forEach(id=>$(id).classList.remove('show'));
+  ['intro','endScreen','loseScreen','shop','pauseScreen','palierScreen','confirmRestart','draftScreen','tableBrief','tableVictory'].forEach(id=>$(id).classList.remove('show'));
   renderMenu();
   $('modeMenu').classList.add('show');
 }
@@ -2547,7 +2564,7 @@ function toPlanque(){
 
 function startGame(fromTable){
   audioInit();MODE='nuit';document.body.classList.remove('inf');
-  ['intro','endScreen','loseScreen','shop','draftScreen','tableBrief'].forEach(id=>$(id)?.classList.remove('show'));
+  ['intro','modeMenu','endScreen','loseScreen','shop','draftScreen','tableBrief','tableVictory','palierScreen','pauseScreen'].forEach(id=>$(id)?.classList.remove('show'));
   freshGame();buildShoe();
   fromTable=Math.max(0,Math.min(fromTable|0,RUN_LEN-1));
   G.recordAtStart={...META.nuit.record};G.tableIdx=fromTable;G.table=RUN[fromTable];
@@ -2557,7 +2574,7 @@ function startGame(fromTable){
 /* MODE INFINI « CAGNOTTE » : on accumule tant qu'on peut miser. */
 function startEndless(){
   audioInit();MODE='infini';
-  $('intro').classList.remove('show');$('endScreen').classList.remove('show');$('loseScreen').classList.remove('show');
+  ['intro','modeMenu','endScreen','loseScreen','shop','draftScreen','tableBrief','tableVictory','pauseScreen'].forEach(id=>$(id)?.classList.remove('show'));
   freshGame();
   const elan=uLvl('elan'),plaf=uLvl('plafond');             // déblocages permanents de l'infini
   // palier de reprise : celui choisi dans la Planque (≥ élan), borné au plus loin atteint
@@ -2574,6 +2591,7 @@ function startEndless(){
   document.body.classList.add('inf');
   buildShoe();
   applyHandIncome();renderAll();renderHands();
+  window.ColdDeckBackgrounds?.applyTable(G.table,true);window.ColdDeckJourney?.renderHud();
   announceTurn();
   popText(t('msg.endlessStart'),t('msg.endlessStartSub'));
 }

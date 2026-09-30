@@ -426,6 +426,25 @@ const ColdDeckBackgrounds=(() => {
     ...extraPalettes.map(([id,fr,en,base,edge,fold,accent,second])=>({id,fr,en,base,edge,fold,accent,second,motif:id})),
     ...collagePalettes.map(([id,fr,en,base,edge,fold,accent,second,seed])=>({id,fr,en,base,edge,fold,accent,second,seed}))];
   let selected='classic';
+  const automaticKey='colddeck-circuit-backgrounds';
+  let automaticCircuit=true,lastPaint='';
+  try{automaticCircuit=localStorage.getItem(automaticKey)!=='0';}catch(e){}
+  const circuitPalettes=[
+    ['#24282b','#444d53','#323b40','#8d9a9f','#65717a'],
+    ['#292130','#554163','#3a2c44','#9881af','#725889'],
+    ['#1d2a31','#405868','#2c3e48','#8caab9','#607f92'],
+    ['#2d2028','#624152','#422d39','#bb93a9','#875b72'],
+    ['#252931','#4d5564','#353b46','#a0aab8','#737f91'],
+    ['#2b241f','#624838','#3f3027','#bd9377','#8b6550'],
+    ['#29271e','#59513a','#3e392b','#bca777','#817653'],
+    ['#24202d','#51435f','#382e43','#b7a0cb','#776287']
+  ];
+  const shade=(color,amount)=>'#'+color.slice(1).match(/../g).map(part=>Math.min(255,Math.round(parseInt(part,16)*amount)).toString(16).padStart(2,'0')).join('');
+  function circuitTheme(table){
+    const index=Math.max(0,Math.min(23,table.i|0)),step=index%3;
+    const [base,edge,fold,accent,second]=circuitPalettes[Math.max(0,Math.min(7,(table.zone||1)-1))];
+    return {id:'circuit-'+index,base:shade(base,1-step*.055),edge:shade(edge,1+step*.08),fold,accent:shade(accent,table.boss?1.12:1),second,seed:81023+(index+1)*104729,boss:!!table.boss};
+  }
   function name(theme){return LANG==='fr'?theme.fr:theme.en;}
   function scenery(theme){
     const scene=document.createElement('span');scene.className='table-background';
@@ -453,13 +472,14 @@ const ColdDeckBackgrounds=(() => {
         shard([[0,lower],[between(3,7),lower-10],[between(9,17),tip],[between(3,7),tip-10],[between(6,13),100],[0,100]],'edge',right);
         shard([[0,between(3,10)],[between(3,7),between(19,26)],[between(1,4),between(33,40)],[0,between(28,32)]],'fold',right);
         for(const [start,end] of [[4,18],[35,51],[72,87]]){
-          const y=between(start,end),height=between(9,20),width=between(5,14);
+          const y=between(start,end),height=between(9,Math.min(20,100-y)),width=between(5,14);
           shard([[0,y],[width,y+height],[width*.38,y+height*.43],[0,y+height*.73]],'second',right);
           shard([[0,y+height*.2],[width*.48,y+height*.8],[width*.19,y+height*.48]],'edge',right);
         }
         const corner=right?between(79,84):between(0,5),length=between(11,16);
         shard([[0,corner],[between(2,4),corner+2],[between(6,10),corner+length],[between(2,4),corner+length-4]],'accent',right);
         shard([[0,corner+4],[between(2,4),corner+length-4],[0,corner+length]],'fold',right);
+        if(theme.boss)shard([[0,0],[2,0],[between(5,8),between(19,28)],[1,12]],'accent',right,!right);
       }
       return scene;
     }
@@ -500,9 +520,34 @@ const ColdDeckBackgrounds=(() => {
   }
   function syncSelection(){
     for(const button of $('backgroundGrid').children){
-      const active=button.dataset.backgroundId===selected;
+      const active=(!automaticCircuit||G.endless||!G.table)&&button.dataset.backgroundId===selected;
       button.classList.toggle('selected',active);button.setAttribute('aria-pressed',String(active));
     }
+    const option=$('circuitBackgrounds');if(option)option.checked=automaticCircuit;
+    const row=$('circuitBackgroundOption');if(row)row.hidden=!!G.endless;
+    const hint=$('backgroundHint');if(hint)hint.textContent=t(automaticCircuit&&!G.endless?'background.hintCircuit':'background.hint');
+  }
+  function paint(theme,id){
+    if(lastPaint===id)return;
+    lastPaint=id;
+    const bg=$('bg');bg.dataset.background=id;bg.style.setProperty('--selected-bg-base',theme.base);
+    bg.dataset.circuitBoss=String(!!theme.boss);
+    $('tableBackdrop').replaceChildren(...(theme.classic?[]:[scenery(theme)]));
+    document.documentElement.style.setProperty('--circuit-color',theme.accent||'#d1b5ef');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme.base);
+  }
+  function applyTable(table=G.table,endless=G.endless){
+    if(automaticCircuit&&!endless&&table&&Number.isInteger(table.i)){
+      const theme=circuitTheme(table);paint(theme,theme.id);
+    }else{
+      const theme=themes.find(theme=>theme.id===selected);paint(theme,theme.id);
+    }
+    syncSelection();
+  }
+  function setAutomatic(value,persist=true){
+    automaticCircuit=!!value;
+    if(persist)try{localStorage.setItem(automaticKey,automaticCircuit?'1':'0');}catch(e){}
+    applyTable();
   }
   function refresh(){
     const grid=$('backgroundGrid');if(!grid)return;
@@ -521,11 +566,9 @@ const ColdDeckBackgrounds=(() => {
   function select(id,persist=true){
     const theme=themes.find(theme=>theme.id===id);if(!theme)return false;
     selected=id;
-    const bg=$('bg');bg.dataset.background=id;bg.style.setProperty('--selected-bg-base',theme.base);
-    $('tableBackdrop').replaceChildren(...(theme.classic?[]:[scenery(theme)]));
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme.base);
+    if(persist&&!G.endless){automaticCircuit=false;try{localStorage.setItem(automaticKey,'0');}catch(e){}}
     if(persist)try{localStorage.setItem(key,id);}catch(e){}
-    syncSelection();return true;
+    applyTable();return true;
   }
   function open(){
     if(!$('pauseScreen').classList.contains('show'))return false;
@@ -535,7 +578,7 @@ const ColdDeckBackgrounds=(() => {
     if(!$('backgroundScreen').classList.contains('show'))return;
     $('backgroundScreen').classList.remove('show');$('pauseScreen').classList.add('show');
   }
-  const api={themes,open,close,select,refresh,get selected(){return selected;}};
+  const api={themes,open,close,select,refresh,applyTable,setAutomatic,circuitTheme,get selected(){return selected;},get automaticCircuit(){return automaticCircuit;}};
   window.ColdDeckBackgrounds=api;
   let saved;try{saved=localStorage.getItem(key);}catch(e){}
   select(themes.some(theme=>theme.id===saved)?saved:'classic',false);
