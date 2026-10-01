@@ -5,7 +5,7 @@ import {Window} from 'happy-dom';
 import FakeTimers from '@sinonjs/fake-timers';
 
 export const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-export function engine({realAds=false,persist=false,storage={},journeyUI=false,shopUI=false,eventUI=false}={}){
+export function engine({realAds=false,persist=false,storage={},journeyUI=false,shopUI=false,eventUI=false,endUI=false}={}){
   const w=new Window({url:'http://localhost:8000',settings:{disableJavaScriptFileLoading:true,disableCSSFileLoading:true,enableJavaScriptEvaluation:true,suppressInsecureJavaScriptEnvironmentWarning:true}});
   for(const [key,value] of Object.entries(storage))w.localStorage.setItem(key,value);
   w.document.write(fs.readFileSync(root+'/index.html','utf8').replace(/<script[\s\S]*?<\/script>/g,''));
@@ -18,14 +18,14 @@ export function engine({realAds=false,persist=false,storage={},journeyUI=false,s
   expose.push('maybeEdition','cardEl');
   expose.push('reachPalier','applyBoon','palierTarget');
   expose.push('ColdDeckBackgrounds','setLang');
-  expose.push('ColdDeckJourney','continueTableVictory','finishTable','nextHandOrEnd','showTableBrief','renderShopHead','cash');
+  expose.push('ColdDeckJourney','continueTableVictory','finishTable','nextHandOrEnd','showTableBrief','renderShopHead','cash','renderEndScreen','adDoubleRep');
   expose.push('openShopSale','renderShopInventory','setLang','openShop','rerollShop','tablePreparation');
   code=code.replace('freshGame();buildShoe();applyI18n();renderHands();tick();','');
   code+='\n'+noops.filter(n=>(!eventUI||n!=='announceTurn')&&(!persist||!['saveMeta','saveRecs'].includes(n))&&(!journeyUI||!['showTableBrief','renderShopHead'].includes(n))&&(!shopUI||n!=='renderShopInventory')).map(n=>n+'=()=>{};').join('\n');
   code+=`\nLANG='fr';
     renderChips=()=>clampBet();renderAll=()=>clampBet();
     showWord=(kind,gain,mult,natural,bust,record,reason='')=>{window.__result={kind,gain,mult,natural,bust,record,reason};};
-    ${shopUI?'const auditRenderShop=renderShop;renderShop=()=>{window.__screen="shop";auditRenderShop();};':'renderShop=()=>{window.__screen="shop";};'}openLose=()=>{window.__screen='lose';};renderEndScreen=()=>{window.__screen='end';};
+    ${shopUI?'const auditRenderShop=renderShop;renderShop=()=>{window.__screen="shop";auditRenderShop();};':'renderShop=()=>{window.__screen="shop";};'}openLose=()=>{window.__screen='lose';};${endUI?'const auditRenderEnd=renderEndScreen;renderEndScreen=()=>{window.__screen="end";auditRenderEnd();};':"renderEndScreen=()=>{window.__screen='end';};"}
     animateScoreTally=(mode,lines,finish)=>{finish();return 0;};
     ${realAds?'':'Ads.canRewarded=()=>false;Ads.interstitial=()=>({then(fn){fn();}});Ads.countTable=()=>{};'}
     for(const key of Object.keys(sfx))sfx[key]=()=>{};

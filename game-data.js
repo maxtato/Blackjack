@@ -736,3 +736,20 @@ Object.assign(STR.fr,{
 Object.assign(STR.en,{
  'rules.events':'<span class="rt">SPECIAL HANDS</span>Every <span class="k">3 hands in Circuit</span> (5 in Free Play), a random effect is announced before betting: doubled winnings, your highest affordable bet required, dealer standing on 16, or Prism on your first card if unedited. It lasts one hand. No extra choice.'
 });
+
+Object.assign(STR.fr,{
+ 'end.headline':'FIN DE|CIRCUIT','end.headlineCash':'TU|ENCAISSES','end.headlineComplete':'CIRCUIT|TERMINÉ',
+ 'end.tablesCleared':'tables validées','end.reputationEarned':'RÉPUTATION GAGNÉE','end.totalAvailable':'Total disponible',
+ 'end.summaryMissing':amount=>'Il manquait '+amount+' pour atteindre l’objectif.',
+ 'end.summaryComplete':'Les 24 tables sont remportées.','end.summaryCash':'Ta réputation est encaissée à la Planque.',
+ 'end.summaryStopped':'Le défi de la table reste à accomplir.',
+ 'end.summaryWon':'Mains gagnées','end.remainingCash':'Argent restant','end.summaryBestGain':'Meilleur gain','end.summaryBestMult':'Meilleur multi'
+});
+Object.assign(STR.en,{
+ 'end.headline':'END OF|CIRCUIT','end.headlineCash':'CASH|OUT','end.headlineComplete':'CIRCUIT|CLEARED',
+ 'end.tablesCleared':'tables cleared','end.reputationEarned':'REPUTATION EARNED','end.totalAvailable':'Total available',
+ 'end.summaryMissing':amount=>'You needed '+amount+' more to reach the goal.',
+ 'end.summaryComplete':'All 24 tables cleared.','end.summaryCash':'Your reputation is banked at the Hideout.',
+ 'end.summaryStopped':'The table challenge remains unfinished.',
+ 'end.summaryWon':'Hands won','end.remainingCash':'Cash remaining','end.summaryBestGain':'Best win','end.summaryBestMult':'Best multi'
+});

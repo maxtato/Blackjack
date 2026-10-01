@@ -307,7 +307,17 @@
   <div class="ovpanel">
     <h1 id="endTitle"></h1>
     <p id="endText"></p>
+    <div id="endCircuitSummary" hidden>
+      <div id="endProgress" class="end-progress"></div>
+      <p id="endMessage" class="end-message" data-reading-label></p>
+      <section class="end-reputation" aria-labelledby="endRepLabel">
+        <h2 id="endRepLabel"></h2>
+        <div id="endRepEarned" class="end-earned"></div>
+        <div class="end-rep-total"><span data-i18n="end.totalAvailable" data-reading-label>Total disponible</span><strong id="endRepTotal"></strong></div>
+      </section>
+    </div>
     <div class="runstats" id="endStats"></div>
+    <p id="endRecord" class="end-record" data-reading-label hidden></p>
     <button class="btn b-teal menu" id="endAdBtn" data-action="adDoubleRep" style="width:100%;margin-bottom:9px;display:none"></button>
     <button class="btn b-gold menu" data-action="toPlanque" data-i18n="end.back">BACK TO THE HIDEOUT</button>
   </div>

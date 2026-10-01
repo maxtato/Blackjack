@@ -180,13 +180,13 @@ syncMenuFocus();
 
 // Fit complete panels after their content, fonts or available viewport changes.
 (()=>{
- const screens=['upgradesScreen','tableBrief','shop','inspectScreen'].map(id=>$(id));
+ const screens=['upgradesScreen','tableBrief','shop','inspectScreen','endScreen'].map(id=>$(id));
  let pending=0;
  function fit(){
   pending=0;
   for(const screen of screens){
    if(!screen.classList.contains('show'))continue;
-   if(screen.id==='inspectScreen'&&!screen.classList.contains('table-details-view')){screen.querySelector('.ovpanel').style.removeProperty('--dialog-fit');continue;}
+   if((screen.id==='inspectScreen'&&!screen.classList.contains('table-details-view'))||(screen.id==='endScreen'&&!screen.classList.contains('circuit-end'))){screen.querySelector('.ovpanel').style.removeProperty('--dialog-fit');continue;}
    const panel=screen.querySelector('.ovpanel'),style=getComputedStyle(screen);
    if(screen.id==='tableBrief'){
     const title=$('briefTitle'),ink=title.querySelector('.raster-ink');
@@ -196,6 +196,20 @@ syncMenuFocus();
      const ratio=Math.min(1,(title.clientWidth-2)/Math.max(1,ink.scrollWidth));
      title.style.setProperty('--table-title-size',(size*ratio)+'px');
     }
+   }
+   if(screen.id==='tableBrief'){
+    const label=screen.querySelector('.brief-shop-label'),ink=label?.querySelector('.raster-ink');
+    if(label&&ink&&label.clientWidth){
+     label.style.removeProperty('--shop-label-size');
+     const size=parseFloat(getComputedStyle(label).fontSize);
+     label.style.setProperty('--shop-label-size',(size*Math.min(1,(label.clientWidth-2)/Math.max(1,ink.scrollWidth)))+'px');
+    }
+   }
+   if(screen.id==='endScreen'){
+    const title=$('endTitle');title.style.removeProperty('--end-title-size');
+    const inks=[...title.querySelectorAll('.raster-ink')];
+    const widest=Math.max(1,...inks.map(ink=>ink.scrollWidth));
+    title.style.setProperty('--end-title-size',(parseFloat(getComputedStyle(title).fontSize)*Math.min(1,(title.clientWidth-2)/widest))+'px');
    }
    const height=screen.clientHeight-parseFloat(style.paddingTop)-parseFloat(style.paddingBottom)-4;
    const width=screen.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight);

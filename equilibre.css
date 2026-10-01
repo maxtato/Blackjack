@@ -1276,9 +1276,10 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 /* One preparation page, optional shopping, one entry action. */
 #tableBrief .brief-tools{display:flex;flex-direction:column;gap:4px;margin:0 0 calc(3.5 * var(--brief-u))}
 #tableBrief .brief-tools[hidden],#tableBrief #briefCashBtn[hidden]{display:none}
-#tableBrief #briefShopBtn{display:flex;align-items:center;justify-content:space-between;gap:9px;width:100%;min-height:44px;margin:0;padding:8px 12px;font-size:calc(4 * var(--brief-u));background:#45646a!important;color:#fff7e6!important;box-shadow:none!important;clip-path:var(--frame-cut);transform-origin:center}
+#tableBrief #briefShopBtn{--button-art:var(--art-button-blue)!important;--button-ink:#fff7e6!important;display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:48px;margin:0;padding:9px 12px;font-size:calc(4 * var(--brief-u));background:#245da8 var(--art-button-blue) center/100% 100%!important;color:#fff7e6!important;box-shadow:none!important;clip-path:var(--frame-cut);transform-origin:center}
 #tableBrief #briefShopBtn .brief-shop-icon{display:block;flex:none;width:28px;height:28px;object-fit:contain;transform-origin:50% 80%}
-#tableBrief #briefShopBtn .brief-shop-label{flex:1;min-width:0;text-align:left}
+#tableBrief #briefShopBtn .brief-shop-label{flex:1;min-width:0;text-align:left;font-size:var(--shop-label-size,clamp(14px,4vw,18px));white-space:nowrap}
+#tableBrief #briefShopBtn .brief-shop-label .raster-ink{display:inline-block;white-space:nowrap}
 #tableBrief #briefShopBtn .nav-triangle{flex:none;width:16px;height:16px}
 #tableBrief.show #briefShopBtn{animation:shop-invite 4.8s ease-in-out infinite}
 #tableBrief.show #briefShopBtn .brief-shop-icon{animation:shop-cards-tilt 4.8s ease-in-out infinite}
@@ -1313,3 +1314,37 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 #tableBrief #briefEnterBtn:disabled{background:#515963!important;color:#c3cbd2!important;opacity:.65}
 /* The special-hand announcement stays readable until the player places a bet. */
 #turnPop.go.event-ready{animation:none!important;opacity:1;translate:none;scale:1}
+
+/* End-of-Circuit summary: the accepted mockup, with live reputation and stats. */
+#endScreen.circuit-end{height:var(--viewport-height);overflow:hidden;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
+#endScreen.circuit-end .ovpanel{--end-u:min(1vw,4.8px);--end-accent:#ff667d;flex-shrink:0;width:100%;max-width:480px;height:auto;max-height:none;overflow:visible;padding:calc(5 * var(--end-u)) calc(4.5 * var(--end-u));border:0;border-radius:0;clip-path:polygon(3% 0,97% 0,100% 2%,100% 98%,97% 100%,3% 100%,0 98%,0 2%);background:#343d47;background-image:linear-gradient(65deg,#414c571f,transparent 48%);box-shadow:none;scale:var(--dialog-fit,1);transform-origin:center;text-align:left}
+#endScreen.circuit-end[data-cashout="true"] .ovpanel{--end-accent:#ffce3a}
+#endScreen.circuit-end .illustrated-heading{display:grid;grid-template-columns:minmax(0,1fr) calc(26 * var(--end-u));align-items:center;gap:calc(3 * var(--end-u));margin:0 0 calc(3 * var(--end-u))}
+#endScreen.circuit-end .dialog-art{grid-column:2;grid-row:1;width:100%;height:calc(28 * var(--end-u));object-fit:contain;transform:none;filter:none}
+#endScreen.circuit-end #endTitle{grid-column:1;grid-row:1;margin:0;font-size:var(--end-title-size,calc(15 * var(--end-u)))!important;line-height:1.04;letter-spacing:0;color:#fff7e6;text-shadow:none}
+#endScreen.circuit-end .end-title-line{display:block;white-space:nowrap}
+#endScreen.circuit-end .end-title-line:last-child{color:var(--end-accent)}
+#endScreen.circuit-end .end-title-line .raster-ink{display:inline-block;white-space:nowrap}
+#endScreen.circuit-end .end-progress{display:flex;align-items:center;gap:12px;margin:0 0 8px;font:600 16px/1.2 var(--copy-font);color:#e0e5e9}
+#endScreen.circuit-end .end-progress-value{color:#ffce3a;font:900 calc(6.5 * var(--end-u))/1 var(--game-type);white-space:nowrap}
+#endScreen.circuit-end #endMessage{margin:0 0 calc(3.5 * var(--end-u));font:500 14px/1.4 var(--copy-font);color:#d3dbe3}
+#endScreen.circuit-end #endMessage .game-number{font-size:1.16em!important}
+#endScreen.circuit-end .end-reputation{background:#222a30;padding:calc(3.5 * var(--end-u)) calc(4 * var(--end-u));clip-path:polygon(3% 0,97% 0,100% 8%,100% 92%,97% 100%,3% 100%,0 92%,0 8%)}
+#endScreen.circuit-end #endRepLabel{margin:0;color:#fff7e6;font:900 calc(4.7 * var(--end-u))/1.15 var(--game-type)}
+#endScreen.circuit-end .end-earned{display:flex;align-items:center;justify-content:center;gap:12px;padding:calc(3 * var(--end-u)) 0;color:#ffce3a;font:900 calc(13 * var(--end-u))/1 var(--game-type);white-space:nowrap}
+#endScreen.circuit-end .end-earned .rep-star{width:1em;height:1em;filter:none;transform:none}
+#endScreen.circuit-end .end-rep-total{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:10px;border-top:1px solid #626e78;font:500 14px/1.2 var(--copy-font);color:#cbd3dc}
+#endScreen.circuit-end #endRepTotal{display:flex;align-items:center;gap:6px;color:#ffce3a;font:900 calc(5 * var(--end-u))/1 var(--game-type)}
+#endScreen.circuit-end #endRepTotal .rep-star{width:1em;height:1em;filter:none;transform:none}
+#endScreen.circuit-end #endStats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+#endScreen.circuit-end #endStats .rs{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-width:0;padding:12px 6px;border-radius:0;background:#29343e;clip-path:polygon(5% 0,95% 0,100% 14%,100% 86%,95% 100%,5% 100%,0 86%,0 14%)}
+#endScreen.circuit-end #endStats .v{display:block;margin:0;color:#ffce3a;font:900 calc(7 * var(--end-u))/1 var(--game-type);white-space:nowrap}
+#endScreen.circuit-end #endStats .end-stat-mult .v{color:#88e2cf}
+#endScreen.circuit-end #endStats .l{color:#cbd3dc;font:500 14px/1.2 var(--copy-font);text-transform:none;letter-spacing:0}
+#endScreen.circuit-end #endRecord{margin:12px 0;color:#bfc9d2;text-align:center;font:500 14px/1.35 var(--copy-font)}
+#endScreen.circuit-end #endRecord .game-number{font-size:1.1em!important}
+#endScreen.circuit-end .ovpanel>.btn{width:100%;margin:0;min-height:52px;padding:12px 10px!important;border-radius:0;clip-path:var(--frame-cut);font-size:calc(6 * var(--end-u))!important}
+#endScreen.circuit-end #endAdBtn{min-height:40px;font-size:15px!important;padding:8px 10px!important}
+#endScreen.circuit-end #endAdBtn small{font-size:12px}
+#endScreen.circuit-end .raster-glyph{animation:none!important;translate:none!important;rotate:none!important}
+#endScreen [hidden]{display:none!important}

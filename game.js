@@ -531,7 +531,7 @@ function showTableBrief(){
   enter.disabled=bank<tb.min;
   enter.onclick=startPreparedTable;
   $('briefTools').hidden=!G.preparingNext;
-  $('briefShopBtn').innerHTML=ColdDeckArt.illustration('tarot','brief-shop-icon')+'<span class="brief-shop-label">'+ColdDeckArt.lettering(t('shop.open'))+'</span><img class="nav-triangle" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
+  $('briefShopBtn').innerHTML=ColdDeckArt.illustration('tarot','brief-shop-icon')+'<span class="brief-shop-label">'+ColdDeckArt.lettering(t('shop.open'))+'</span><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
   const cashBtn=$('briefCashBtn');cashBtn.hidden=!G.preparingNext||!G.table.boss;
   cashBtn.textContent=t('shop.cash')+' · '+abbr(repOnEnd(true))+' ★';
   screen.classList.add('show');
@@ -1910,10 +1910,33 @@ function endRun(cashout){
   if(G.endless)G._palierCash=false;
   G.phase='ended';renderEndScreen();
 }
+/* The Circuit result follows the illustrated summary, using the final ledger. */
+function renderCircuitEnd(e){
+  const completed=e.depth>=RUN_LEN;
+  const headline=t(completed?'end.headlineComplete':e.cashout?'end.headlineCash':'end.headline');
+  const title=$('endTitle');title.className=e.cashout?'win':'dead';
+  title.innerHTML=headline.split('|').map(line=>'<span class="end-title-line">'+ColdDeckArt.lettering(line)+'</span>').join(' ');
+  $('endScreen').dataset.cashout=String(e.cashout);
+  $('endProgress').innerHTML='<strong class="end-progress-value">'+ColdDeckArt.lettering(e.depth+' / '+RUN_LEN)+'</strong><span data-reading-label>'+t('end.tablesCleared')+'</span>';
+  const missing=!e.cashout&&e.goal>e.bank?e.goal-e.bank:0;
+  const message=missing?t('end.summaryMissing',cash(missing)):completed?t('end.summaryComplete'):e.cashout?t('end.summaryCash'):t('end.summaryStopped');
+  $('endMessage').textContent=message;
+  $('endRepLabel').innerHTML=ColdDeckArt.lettering(t('end.reputationEarned'));
+  const reward=e.baseGain+e.coffre;
+  $('endRepEarned').innerHTML=ColdDeckArt.lettering('+ '+abbr(reward))+STAR;
+  $('endRepTotal').innerHTML=ColdDeckArt.lettering(abbr(e.rep))+STAR;
+  const stats=[['end.summaryWon',e.stats.won+' / '+e.stats.played,''],['end.remainingCash',cash(e.bank),''],['end.summaryBestGain',cash(e.stats.bestGain),''],['end.summaryBestMult',fmtMult(e.stats.bestMult),' end-stat-mult']];
+  $('endStats').innerHTML=stats.map(([label,value,extra])=>'<div class="rs'+extra+'"><span class="v">'+ColdDeckArt.lettering(value)+'</span><span class="l" data-reading-label>'+t(label)+'</span></div>').join('');
+  $('endRecord').textContent=(e.newRec?t('end.newRecord')+' · ':'')+t('end.recordCircuit',e.rec.depth||0,cash(e.rec.chips||0));
+}
 /* écran de fin : reconstruit depuis G.endInfo (donc retraduisible à chaud) */
 function renderEndScreen(){
   const e=G.endInfo;if(!e)return;
   const rec=e.rec,st=e.stats;
+  $('endScreen').classList.toggle('circuit-end',!e.endless);
+  $('endText').hidden=!e.endless;
+  $('endCircuitSummary').hidden=e.endless;
+  $('endRecord').hidden=e.endless;
   const recLine=e.newRec?`<br><b style="color:var(--gold)">${PXI('trophy')} ${t('end.newRecord')}</b> `:'<br>';
   if(e.endless){
     $('endTitle').textContent=t(e.cashout?'end.cash':'end.potGone');
@@ -1923,23 +1946,14 @@ function renderEndScreen(){
       '<br><br>'+t('end.infStats',cash(e.peak),e.palier)+
       '<br>'+t('end.rep',STAR+abbr(e.baseGain))+t('end.repTotal',STAR+abbr(e.rep))+
       recLine+'<span style="color:var(--muted)">'+t('end.recordInf',rec.palier||0,cash(rec.peak||0))+'</span>';
-  }else{
-    const manque=(!e.cashout&&e.goal&&e.bank<e.goal)?t('end.missing',cash(e.goal-e.bank),e.prox?STAR+e.prox:0):'';
-    $('endTitle').textContent=t(e.cashout?'end.cash':'end.circuitOver');
-    $('endTitle').className=e.cashout?'win':'dead';
-    $('endText').innerHTML=
-      t(e.cashout?'end.cashTxt':'end.halfTxt')+manque+
-      '<br><br>'+t('end.stats',e.depth,cash(e.bank))+
-      '<br>'+t('end.rep',STAR+abbr(e.baseGain))+(e.coffre?t('end.vault',STAR+abbr(e.coffre)):'')+t('end.repTotal',STAR+abbr(e.rep))+
-      recLine+'<span style="color:var(--muted)">'+t('end.recordCircuit',rec.depth||0,cash(rec.chips||0))+'</span>';
-  }
+  }else renderCircuitEnd(e);
   const eb=$('endAdBtn');
   if(eb){
     const show=!e.doubled&&Ads.canRewarded()&&(e.baseGain+e.coffre)>0;
     eb.style.display=show?'':'none';
     if(show)eb.innerHTML=t('ad.repBtn')+'<small>'+t('ad.repSub',STAR+abbr(e.baseGain+e.coffre))+'</small>';
   }
-  $('endStats').innerHTML=
+  if(e.endless)$('endStats').innerHTML=
     `<div class="rs"><span class="l">${t('end.won')}</span><span class="v">${st.won}/${st.played}</span></div>`+
     `<div class="rs"><span class="l">${t('end.bestGain')}</span><span class="v">${cash(st.bestGain)}</span></div>`+
     `<div class="rs"><span class="l">${t('end.bestMult')}</span><span class="v">${fmtMult(st.bestMult)}</span></div>`;
