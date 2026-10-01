@@ -580,7 +580,7 @@ function showTableBrief(){
     b.onclick=()=>chooseContract(i);row.append(b,label,reward,arrow);$('briefContracts').append(row);
   });
   $('briefTools').hidden=!G.preparingNext;
-  $('briefShopBtn').innerHTML=ColdDeckArt.lettering(t('shop.open'))+'<img class="nav-triangle" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
+  $('briefShopBtn').innerHTML=ColdDeckArt.illustration('tarot','brief-shop-icon')+'<span class="brief-shop-label">'+ColdDeckArt.lettering(t('shop.open'))+'</span><img class="nav-triangle" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
   const cashBtn=$('briefCashBtn');cashBtn.hidden=!G.preparingNext||!G.table.boss;
   cashBtn.textContent=t('shop.cash')+' · '+abbr(repOnEnd(true))+' ★';
   screen.classList.add('show');

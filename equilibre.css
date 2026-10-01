@@ -1312,8 +1312,17 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 /* One preparation page; the optional shop returns to these same contracts. */
 #tableBrief .brief-tools{display:flex;flex-direction:column;gap:4px;margin:0 0 calc(3.5 * var(--brief-u))}
 #tableBrief .brief-tools[hidden],#tableBrief #briefCashBtn[hidden]{display:none}
-#tableBrief #briefShopBtn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:42px;margin:0;padding:11px 13px;font-size:calc(4 * var(--brief-u));background:#45646a!important;color:#fff7e6!important;box-shadow:none!important;clip-path:var(--frame-cut)}
+#tableBrief #briefShopBtn{display:flex;align-items:center;justify-content:space-between;gap:9px;width:100%;min-height:44px;margin:0;padding:8px 12px;font-size:calc(4 * var(--brief-u));background:#45646a!important;color:#fff7e6!important;box-shadow:none!important;clip-path:var(--frame-cut);transform-origin:center}
+#tableBrief #briefShopBtn .brief-shop-icon{display:block;flex:none;width:28px;height:28px;object-fit:contain;transform-origin:50% 80%}
+#tableBrief #briefShopBtn .brief-shop-label{flex:1;min-width:0;text-align:left}
 #tableBrief #briefShopBtn .nav-triangle{flex:none;width:16px;height:16px}
+#tableBrief.show #briefShopBtn{animation:shop-invite 4.8s ease-in-out infinite}
+#tableBrief.show #briefShopBtn .brief-shop-icon{animation:shop-cards-tilt 4.8s ease-in-out infinite}
+@keyframes shop-invite{0%,70%,100%{transform:translateY(0) scale(1)}80%{transform:translateY(-1px) scale(1.012)}90%{transform:translateY(0) scale(1)}}
+@keyframes shop-cards-tilt{0%,70%,100%{transform:rotate(0)}79%{transform:rotate(-7deg)}88%{transform:rotate(5deg)}95%{transform:rotate(0)}}
+:root[data-page-hidden="true"] #tableBrief #briefShopBtn,:root[data-page-hidden="true"] #tableBrief #briefShopBtn .brief-shop-icon{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){#tableBrief #briefShopBtn,#tableBrief #briefShopBtn .brief-shop-icon{animation:none!important}}
+:root[data-motion="gentle"] #tableBrief #briefShopBtn,:root[data-motion="gentle"] #tableBrief #briefShopBtn .brief-shop-icon{animation:none!important}
 #tableBrief #briefCashBtn{align-self:center;min-height:30px;padding:5px 10px;color:#ffce3a;font:600 calc(3 * var(--brief-u))/1.2 var(--copy-font)}
 #tableBrief .contract-option:has(.contract-choice:disabled){background:#515963;opacity:.6}
 #shop #shopNextBtn{background:#45646a!important;color:#fff7e6!important;box-shadow:none!important}
