@@ -231,6 +231,7 @@ function renderTableEffect(box){
 }
 function openTableRules(){
   inspectRef=null;GameClock.pause('inspect',true);
+  $('inspectScreen').classList.remove('shop-sale-view');
   const tb=G.table,body=$('inspectBody');
   const context=G.endless?t('planque.modeInf'):t('planque.tableLabel',G.tableIdx+1)+' · '+zoneName(tb.zone);
   const stats=[
@@ -574,14 +575,29 @@ function renderCircuitStatus(){
 }
 function renderShopInventory(){
   const el=$('shopInventory');if(!el)return;el.replaceChildren();
-  if(G.tableIdx>=RUN_LEN-1)return;
-  if(G.relics.length||G.consumables.length){const label=document.createElement('p');label.textContent=t('shop.manage');el.append(label);}
+  if((!G.endless&&G.tableIdx>=RUN_LEN-1)||!(G.relics.length||G.consumables.length))return;
+  const button=document.createElement('button');button.className='btn b-teal shop-sell';
+  button.textContent=t('shop.sellCard');button.setAttribute('aria-haspopup','dialog');
+  button.setAttribute('aria-controls','inspectScreen');button.onclick=openShopSale;el.append(button);
+}
+function openShopSale(){
+  if(G.phase!=='shop')return;
+  const screen=$('inspectScreen'),body=$('inspectBody');
+  screen.classList.remove('table-details-view');screen.classList.add('shop-sale-view');
+  inspectRef=null;GameClock.pause('inspect',true);body.replaceChildren();
+  const title=document.createElement('h1');title.textContent=t('shop.sellCard');body.append(title);
+  const cards=document.createElement('div');cards.className='shop-sale-cards';body.append(cards);
   for(const [kind,items] of [['relic',G.relics],['tarot',G.consumables]])items.forEach((item,i)=>{
-    const b=document.createElement('button');b.className='btn shop-sell';
-    b.textContent=t('shop.sellItem',iName(item),cash(sellValue(item)));
+    const b=document.createElement('button');b.className='btn b-blue shop-sale-card';
+    b.innerHTML='<span class="inspCard tag '+(kind==='tarot'?'tarot':'joker')+'" aria-hidden="true">'+effectMark(item.id,tokFor(item.id).c)+'</span><span class="shop-sale-copy"><span class="shop-sale-name" data-reading-label></span><span class="shop-sale-value"></span></span>';
+    b.querySelector('.shop-sale-name').textContent=iName(item);
+    b.querySelector('.shop-sale-value').textContent=t('insp.sell',cash(sellValue(item)));
     b.disabled=kind==='relic'&&item.id==='portebonheur'&&G.consumables.length>=consumableSlots();
-    b.onclick=()=>{if(G.phase!=='shop')return;inspectRef={kind,i};sellItem();};el.append(b);
+    b.onclick=()=>{if(G.phase!=='shop')return;inspectRef={kind,i};sellItem();};cards.append(b);
   });
+  const close=document.createElement('button');close.className='btn b-teal';close.textContent=t('insp.close');close.onclick=closeInspect;
+  $('inspectActions').replaceChildren(close);screen.classList.add('show');
+  if(typeof syncMenuFocus==='function')syncMenuFocus();
 }
 function relicStatus(item){
   const used=item.id==='talisman'?G._talismanUsed:item.id==='compteur'?G.counterUsed:item.id==='phare'?G.phareUsed:null;
@@ -1148,7 +1164,7 @@ function sellValue(item){
 let inspectRef=null;
 function openInspect(kind,i){
   const item=kind==='tarot'?G.consumables[i]:G.relics[i];if(!item)return;
-  $('inspectScreen').classList.remove('table-details-view');
+  $('inspectScreen').classList.remove('table-details-view','shop-sale-view');
   inspectRef={kind,i};GameClock.pause('inspect',true);
   const status=kind==='relic'?relicStatus(item):'';
   $('inspectBody').innerHTML='<div class="inspCard tag '+(kind==='tarot'?'tarot':'joker')+'">'+effectMark(item.id,tokFor(item.id).c)+'</div><h1>'+iName(item)+'</h1><p>'+iDesc(item)+'</p>'+(status?'<p class="relic-state">'+status+'</p>':'');
@@ -1175,7 +1191,7 @@ function openInspect(kind,i){
   mk(t('insp.sell',cash(sellValue(item))),sellItem,!['bet','shop'].includes(G.phase)||(kind==='relic'&&item.id==='portebonheur'&&G.consumables.length>=consumableSlots()));
   mk(t('insp.close'),closeInspect);$('inspectScreen').classList.add('show');
 }
-function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show','table-details-view');inspectRef=null;GameClock.pause('inspect',false);if(typeof syncMenuFocus==='function')syncMenuFocus();}
+function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show','table-details-view','shop-sale-view');inspectRef=null;GameClock.pause('inspect',false);if(typeof syncMenuFocus==='function')syncMenuFocus();}
 function sellItem(){
   if(!inspectRef||!['bet','shop'].includes(G.phase))return;
   const {kind,i}=inspectRef;
@@ -1696,6 +1712,7 @@ function openShop(){
 /* en-tête de boutique : reconstruit à chaque achat ET à chaque changement de langue */
 function renderShopHead(){
   const depth=G.endless?('∞ '+(G.tableIdx+1)):((G.tableIdx+1)+'/'+RUN_LEN);
+  $('shopFunds').innerHTML='<span data-reading-label>'+t('shop.available')+'</span><strong>'+ColdDeckArt.lettering(cash(G.bank))+'</strong>';
   $('shopSub').innerHTML=t('shop.sub',depth,cash(G.bank),STAR+abbr(G.pot),abbr(G.lastReward)+' '+STAR);
   $('shopStars').innerHTML=STAR.repeat(G.lastStars||0)+STARE.repeat(3-(G.lastStars||0))+'  ·  '+t('shop.total')+' '+STAR+(G.runStars||0);
   const isBoss=!!G.table.boss, last=(!G.endless&&G.tableIdx>=RUN_LEN-1);
@@ -2041,6 +2058,7 @@ function applyI18n(){
   renderLangOpts();renderTestOptions();renderAdOpts();renderRules();
   renderAll();renderMenu();renderPlanque();renderBackPicker();
   if($('shop').classList.contains('show')){renderShopHead();renderShop();}
+  if($('inspectScreen').classList.contains('shop-sale-view'))openShopSale();
   if($('loseScreen').classList.contains('show'))openLose();
   if($('endScreen').classList.contains('show'))renderEndScreen();
   if($('pauseScreen').classList.contains('show'))openPause();

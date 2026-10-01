@@ -5,7 +5,7 @@ import {Window} from 'happy-dom';
 import FakeTimers from '@sinonjs/fake-timers';
 
 export const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-export function engine({realAds=false,persist=false,storage={},journeyUI=false}={}){
+export function engine({realAds=false,persist=false,storage={},journeyUI=false,shopUI=false}={}){
   const w=new Window({url:'http://localhost:8000',settings:{disableJavaScriptFileLoading:true,disableCSSFileLoading:true,enableJavaScriptEvaluation:true,suppressInsecureJavaScriptEnvironmentWarning:true}});
   for(const [key,value] of Object.entries(storage))w.localStorage.setItem(key,value);
   w.document.write(fs.readFileSync(root+'/index.html','utf8').replace(/<script[\s\S]*?<\/script>/g,''));
@@ -19,12 +19,13 @@ export function engine({realAds=false,persist=false,storage={},journeyUI=false}=
   expose.push('reachPalier','applyBoon','palierTarget');
   expose.push('ColdDeckBackgrounds','setLang');
   expose.push('ColdDeckJourney','continueTableVictory','finishTable','nextHandOrEnd','showTableBrief','renderShopHead','cash');
+  expose.push('openShopSale','renderShopInventory','setLang');
   code=code.replace('freshGame();buildShoe();applyI18n();renderHands();tick();','');
-  code+='\n'+noops.filter(n=>(!persist||!['saveMeta','saveRecs'].includes(n))&&(!journeyUI||!['showTableBrief','renderShopHead'].includes(n))).map(n=>n+'=()=>{};').join('\n');
+  code+='\n'+noops.filter(n=>(!persist||!['saveMeta','saveRecs'].includes(n))&&(!journeyUI||!['showTableBrief','renderShopHead'].includes(n))&&(!shopUI||n!=='renderShopInventory')).map(n=>n+'=()=>{};').join('\n');
   code+=`\nLANG='fr';
     renderChips=()=>clampBet();renderAll=()=>clampBet();
     showWord=(kind,gain,mult,natural,bust,record,reason='')=>{window.__result={kind,gain,mult,natural,bust,record,reason};};
-    renderShop=()=>{window.__screen='shop';};openLose=()=>{window.__screen='lose';};renderEndScreen=()=>{window.__screen='end';};
+    renderShop=()=>{window.__screen='shop';${shopUI?'renderShopInventory();':''}};openLose=()=>{window.__screen='lose';};renderEndScreen=()=>{window.__screen='end';};
     animateScoreTally=(mode,lines,finish)=>{finish();return 0;};
     ${realAds?'':'Ads.canRewarded=()=>false;Ads.interstitial=()=>({then(fn){fn();}});Ads.countTable=()=>{};'}
     for(const key of Object.keys(sfx))sfx[key]=()=>{};

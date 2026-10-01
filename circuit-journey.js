@@ -64,7 +64,7 @@ const ColdDeckJourney=(()=>{
     const next=previewNext();if(!next)return;
     const tb=next.table,node=$('shopNextObj');
     $('shopTitle').textContent=t('journey.prepare');$('shopStars').hidden=true;
-    $('shopSub').textContent=t('journey.shopFunds',cash(G.bank),abbr(G.pot));
+    $('shopSub').textContent=t('journey.shopReputation',abbr(G.pot));
     $('shopGate').textContent=t('journey.reserve',cash(next.reserve));
     node.dataset.boss=String(tb.boss);
     node.style.setProperty('--next-zone-color',ColdDeckBackgrounds.circuitTheme(tb).accent);

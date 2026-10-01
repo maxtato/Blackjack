@@ -1,0 +1,37 @@
+import assert from 'node:assert/strict';
+import {engine} from './engine.mjs';
+const h=engine({journeyUI:true,shopUI:true}),a=h.api,d=h.w.document;
+const inventory=d.getElementById('shopInventory'),screen=d.getElementById('inspectScreen');
+try{
+ h.reset();a.G.phase='shop';a.G.bank=100;d.getElementById('shop').classList.add('show');
+ const relic={...a.RELIC_POOL.find(item=>item.id==='compteur'),_paid:80};
+ const tarot={...a.TAROT_POOL.find(item=>item.id==='etoile'),_paid:60};
+ a.G.relics=[relic];a.G.consumables=[tarot,{...tarot,_paid:100}];
+ a.renderShopInventory();a.renderShopHead();
+ assert.equal(inventory.querySelectorAll('button').length,1);
+ assert.equal(inventory.textContent,'Vendre une carte');
+ inventory.querySelector('button').click();
+ assert(screen.classList.contains('shop-sale-view'));
+ assert.equal(d.querySelectorAll('.shop-sale-card').length,3);
+ a.closeInspect();assert.equal(a.G.bank,100);assert.equal(a.G.consumables.length,2);
+ inventory.querySelector('button').click();
+ d.querySelectorAll('.shop-sale-card')[2].click();
+ assert.equal(a.G.bank,150);assert.equal(a.G.consumables.length,1);
+ assert.equal(a.G.consumables[0]._paid,60);assert.equal(a.G.relics[0],relic);
+ assert(!screen.classList.contains('show'));
+ assert(d.getElementById('shopFunds').textContent.includes(a.cash(150)));
+ assert.equal(inventory.querySelectorAll('button').length,1);
+ inventory.querySelector('button').click();d.querySelector('.shop-sale-card').click();
+ assert.equal(a.G.bank,190);assert.equal(a.G.relics.length,0);
+ inventory.querySelector('button').click();d.querySelector('.shop-sale-card').click();
+ assert.equal(a.G.bank,220);assert.equal(inventory.children.length,0);
+ a.G.relics=[{...a.RELIC_POOL.find(item=>item.id==='portebonheur'),_paid:80}];
+ a.G.consumables=Array.from({length:a.consumableSlots()},()=>({...tarot}));
+ a.renderShopInventory();inventory.querySelector('button').click();
+ const blocked=d.querySelector('.shop-sale-card');assert(blocked.disabled);blocked.click();
+ assert.equal(a.G.bank,220);assert.equal(a.G.relics.length,1);
+ a.setLang('en');assert.equal(inventory.textContent,'Sell a card');
+ assert.equal(d.querySelector('#inspectBody h1').textContent,'Sell a card');
+ a.closeInspect();a.G.phase='play';a.openShopSale();assert(!screen.classList.contains('show'));
+ console.log('Shop sale selection, cancellation, exact duplicate selection, bankroll refresh, empty inventory, slot protection and translation passed.');
+}finally{h.close();}
