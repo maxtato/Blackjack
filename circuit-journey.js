@@ -44,6 +44,8 @@ const ColdDeckJourney=(()=>{
     if(node.parentElement!==$('topbar'))$('topbar').append(node);
     node.hidden=!!G.endless||!G.table;if(node.hidden)return;
     const distance=bossDistance(G.table);node.dataset.boss=String(distance===0);
+    node.toggleAttribute('data-reading-label',distance!==0);
+    node.classList.toggle('readable-copy',distance!==0);
     const label=distance===0?t('journey.bossStep','').trim():t('journey.hudBossIn',distance);
     if(distance===0)node.innerHTML=ColdDeckArt.lettering(label);else node.textContent=label;
   }
