@@ -1330,5 +1330,5 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 #topbar .table-context>.journey-hud,#topbar .table-context>.journey-hud[data-boss="true"]{position:static;left:auto;right:auto;top:auto;translate:none;max-width:none;white-space:nowrap;margin:0;padding:3px 6px;font-size:10px;line-height:1.1}
 #topbar .table-context>.journey-hud[data-boss="true"]{color:#fff7e6;background:#242a30 var(--art-button-graphite) center/100% 100%;font-family:var(--game-type)}
 #topbar .thead-right,#topbar .lives,#topbar #pauseBtn{grid-row:2}
-#topbar .tstats{grid-row:3}
+#topbar .tstats{grid-row:3;min-height:calc(16.5 * var(--ui-u));height:auto}
 #topbar #objWrap{grid-row:4}
