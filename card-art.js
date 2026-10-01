@@ -65,7 +65,7 @@ const ColdDeckArt = (() => {
   // HD raster illustrations shared by inventory, shops, effects and menus.
   const illustrationKeys=new Set(["lunettes", "jeton", "clope", "as", "froid", "compteur", "mecene", "usurier", "collector", "maitresse", "bruleur", "portebonheur", "diplomate", "talisman", "aimant", "phare", "etoile", "jugement", "soleil", "diable", "lune", "etoileD", "pendu", "magicien", "roue", "soin", "assurance", "videur", "bank", "pourboire", "net", "tarot", "contact", "relic2", "plafond", "elan", "cashplus", "boon2", "mult", "baraplus", "evt3"]);
   const effectAliases={bankI:'bank',pourboireI:'pourboire',income:'pourboire',betmax:'plafond',filet:'net',cash:'soin'};
-  const interfaceArt={flag:'phare',trophy:'ui-trophy',scroll:'boon2',forcee:'event-forcee',glass:'event-pompette',arc:'lune',suite:'elan',couleur:'tarot',doree:'event-doree',diamond:'relic2'};
+  const interfaceArt={star:'etoile',flag:'phare',trophy:'ui-trophy',scroll:'boon2',forcee:'event-forcee',glass:'event-pompette',arc:'lune',suite:'elan',couleur:'tarot',doree:'event-doree',diamond:'relic2'};
   // Temporary hand events have their own drawings, separate from cards and upgrades.
   const handEventArt={doree:'event-doree',forcee:'event-forcee',pompette:'event-pompette',etoile:'event-etoile'};
   const image=key=>embeddedCardImages?.[key]||`assets/illustrations/${key}.webp`;

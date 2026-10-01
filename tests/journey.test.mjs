@@ -11,6 +11,7 @@ check('Victory explains each earned star independently, including an early win a
   const stars=[...d.querySelectorAll('#victoryStars .victory-star')];
   assert.deepEqual(stars.map(star=>star.classList.contains('earned')),earned);
   assert.equal(earned.filter(Boolean).length,a.G.lastStars);
+  for(const star of stars)assert.equal(star.querySelector('.rep-star').getAttribute('src'),'assets/illustrations/etoile.webp');
   assert.deepEqual(stars.map(star=>star.querySelector('.victory-star-label').textContent),['Objectif\natteint','Sans\nreprise','2 mains\nd’avance']);
   assert.equal(d.getElementById('victoryStars').getAttribute('role'),'list');
  }
@@ -21,6 +22,7 @@ check('Victory uses the live table, bank and reputation without awarding again o
  assert.equal(content(d.getElementById('victoryTitle')),'BRAVO !');
  assert.equal(content(d.getElementById('victoryTable')),'Arrière-salle');
  assert.deepEqual([...d.querySelectorAll('#victoryRewards strong')].map(content),['+ '+a.G.lastReward,'146 $']);
+ assert.equal(d.querySelector('#victoryRewards .rep-star').getAttribute('src'),'assets/illustrations/etoile.webp');
  assert(d.querySelector('.victory-heading .victory-art'));assert(d.getElementById('victoryNext').hidden);
  const pot=a.G.pot;a.setLang('en');
  assert.equal(d.getElementById('victoryLabel').textContent,'TABLE 01 CLEARED');
@@ -66,6 +68,7 @@ check('Optional shop keeps offers, purchases, reroll cost across returns',()=>{
  a.setOffers([{type:'tarot',data:a.TAROT_POOL.find(item=>item.id==='etoile')}]);
  a.leaveShop();assert.equal(a.G.phase,'prepare');assert.equal(a.G.tableIdx,2);assert.equal(a.G.bank,before);
  a.openShop();const offers=a.offers,cost=a.itemCost(offers[0].data);
+ assert.equal(d.querySelector('#shopItems .shop-kind .rep-star').getAttribute('src'),'assets/illustrations/etoile.webp');
  d.querySelector('.shop-offer-info').click();assert(visible('inspectScreen'));assert.equal(a.G.bank,before);a.closeInspect();
  d.querySelector('.shop-purchase button').click();assert.equal(a.G.bank,before-cost);assert.equal(a.G.consumables.length,1);
  a.G._advanceUsed=true;a.G._adReroll=true;

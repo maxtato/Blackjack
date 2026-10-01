@@ -20,7 +20,7 @@ const GameClock={
 function gameDelay(fn,ms){return GameClock.delay(fn,ms);}
 function clearGameDelay(id){GameClock.cancel(id);}
 document.addEventListener('visibilitychange',()=>GameClock.pause('hidden',document.hidden));
-const STAR=ColdDeckArt.icon('doree').replace('class="','class="rep-star '),STARE='<span class="empty-star">'+STAR+'</span>';
+const STAR=ColdDeckArt.icon('star').replace('class="','class="rep-star '),STARE='<span class="empty-star">'+STAR+'</span>';
 const PXI=n=>ColdDeckArt.icon(n);
 const rndInt=n=>Math.floor(Math.random()*n);
 /* abrège les grands nombres : 1 500 → 1.5K, 2 000 000 → 2M, etc. */
