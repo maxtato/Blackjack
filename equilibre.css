@@ -1308,3 +1308,13 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 #inspectScreen.shop-offer-info-view h1{color:#fff7e6;font-size:25px!important;line-height:1.15}
 #inspectScreen.shop-offer-info-view p{font:500 15px/1.4 var(--copy-font);color:#e0e7ee;text-align:left}
 #inspectScreen.shop-offer-info-view #inspectActions .btn{width:100%}
+
+/* One preparation page; the optional shop returns to these same contracts. */
+#tableBrief .brief-tools{display:flex;flex-direction:column;gap:4px;margin:0 0 calc(3.5 * var(--brief-u))}
+#tableBrief .brief-tools[hidden],#tableBrief #briefCashBtn[hidden]{display:none}
+#tableBrief #briefShopBtn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:42px;margin:0;padding:11px 13px;font-size:calc(4 * var(--brief-u));background:#45646a!important;color:#fff7e6!important;box-shadow:none!important;clip-path:var(--frame-cut)}
+#tableBrief #briefShopBtn .nav-triangle{flex:none;width:16px;height:16px}
+#tableBrief #briefCashBtn{align-self:center;min-height:30px;padding:5px 10px;color:#ffce3a;font:600 calc(3 * var(--brief-u))/1.2 var(--copy-font)}
+#tableBrief .contract-option:has(.contract-choice:disabled){background:#515963;opacity:.6}
+#shop #shopNextBtn{background:#45646a!important;color:#fff7e6!important;box-shadow:none!important}
+#shop .shop-offers-heading{margin-top:14px}

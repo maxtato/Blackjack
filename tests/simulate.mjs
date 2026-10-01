@@ -57,15 +57,16 @@ function playHand(profile,stats){
   stats.hands+=g.stats.played-beforePlayed;stats.wins+=g.stats.won-beforeWon;
   if(g.tableMaxBaraka>=a.BARAKA_STEPS[2])stats.baraka3++;
   if(g.tableMaxBaraka>=a.BARAKA_STEPS[3])stats.baraka4++;
-  if(g.phase==='victory')a.continueTableVictory();
   return h.w.__screen;
 }
 function tableAttempt(profile,stats){
   stats.attempts++;
-  while(!h.w.__screen)playHand(profile,stats);
+  if(a.G.contractPending)a.chooseContract(0);
+  while(!h.w.__screen&&a.G.phase!=='victory')playHand(profile,stats);
   const g=a.G;
-  if(h.w.__screen==='shop'){
+  if(g.phase==='victory'){
     stats.clears++;stats.stars[g.lastStars]++;if(g.hand<g.table.mains)stats.early++;if(g.contract?.done)stats.contracts++;
+    a.continueTableVictory();
     return true;
   }
   stats.failures++;return false;
@@ -73,6 +74,7 @@ function tableAttempt(profile,stats){
 const priority={as:10,lunettes:10,talisman:9,collector:8,clope:7,diplomate:6,bruleur:5,mecene:8,usurier:9,maitresse:6,froid:2,phare:2};
 function shop(profile,history){
   if(!profile.shop)return;
+  a.openShop();
   const g=a.G,nx=a.RUN[g.tableIdx+1];if(!nx)return;
   const reserve=Math.max(nx.min*3+nx.entry,g.bank*.68);
   const ranked=a.offers.map((it,i)=>({it,i,priority:it.type==='relic'?(priority[it.data.id]||0):it.type==='tarot'&&it.data.id==='magicien'?4:0})).sort((x,y)=>y.priority-x.priority);
@@ -103,7 +105,7 @@ for(const p of profiles){
       const passed=tableAttempt(p,stats[idx]);trace.push({table:idx+1,passed,hands:g.hand,bank:g.bank,relics:g.relics.map(r=>r.id),lives:g.tokens});
       if(passed){
         if(idx===23){completions++;a.cashOut();break;}
-        shop(p,hist);h.w.__screen='';a.leaveShop();h.flush();
+        shop(p,hist);h.w.__screen='';a.leaveShop();a.chooseContract(0);h.flush();
       }else if(g.tokens>0){h.w.__screen='';a.retryTable();h.flush();}
       else break;
     }

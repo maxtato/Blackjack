@@ -19,13 +19,13 @@ export function engine({realAds=false,persist=false,storage={},journeyUI=false,s
   expose.push('reachPalier','applyBoon','palierTarget');
   expose.push('ColdDeckBackgrounds','setLang');
   expose.push('ColdDeckJourney','continueTableVictory','finishTable','nextHandOrEnd','showTableBrief','renderShopHead','cash');
-  expose.push('openShopSale','renderShopInventory','setLang');
+  expose.push('openShopSale','renderShopInventory','setLang','openShop','rerollShop','tablePreparation');
   code=code.replace('freshGame();buildShoe();applyI18n();renderHands();tick();','');
   code+='\n'+noops.filter(n=>(!persist||!['saveMeta','saveRecs'].includes(n))&&(!journeyUI||!['showTableBrief','renderShopHead'].includes(n))&&(!shopUI||n!=='renderShopInventory')).map(n=>n+'=()=>{};').join('\n');
   code+=`\nLANG='fr';
     renderChips=()=>clampBet();renderAll=()=>clampBet();
     showWord=(kind,gain,mult,natural,bust,record,reason='')=>{window.__result={kind,gain,mult,natural,bust,record,reason};};
-    renderShop=()=>{window.__screen='shop';${shopUI?'renderShopInventory();':''}};openLose=()=>{window.__screen='lose';};renderEndScreen=()=>{window.__screen='end';};
+    ${shopUI?'const auditRenderShop=renderShop;renderShop=()=>{window.__screen="shop";auditRenderShop();};':'renderShop=()=>{window.__screen="shop";};'}openLose=()=>{window.__screen='lose';};renderEndScreen=()=>{window.__screen='end';};
     animateScoreTally=(mode,lines,finish)=>{finish();return 0;};
     ${realAds?'':'Ads.canRewarded=()=>false;Ads.interstitial=()=>({then(fn){fn();}});Ads.countTable=()=>{};'}
     for(const key of Object.keys(sfx))sfx[key]=()=>{};
@@ -33,7 +33,7 @@ export function engine({realAds=false,persist=false,storage={},journeyUI=false,s
     const originalAuditMult=computeMult;
     computeMult=function(mode){const value=originalAuditMult(mode);if(G.phase==='done')window.__onScore?.({mult:value.mult,lines:value.lines,n:G.pHand.length,pv:handValue(G.pHand).total,baraka:barakaLevel(),cap:ZONE_MULTCAP[G.table.zone],table:G.tableIdx+1});return value;};
     window.__audit={${expose.join(',')},buyUnlock,
-      get G(){return G},get META(){return META},get RECS(){return RECS},get MODE(){return MODE},get offers(){return shopOffer},
+      get G(){return G},get META(){return META},get RECS(){return RECS},get MODE(){return MODE},get offers(){return shopOffer},get rerollCost(){return rerollCost},
       reset(unlocks={}){META=blankMeta();META.nuit.unlocks={...unlocks};RECS={};window.__screen='';startGame(0);},
       setup(hand,dealer,opts={}){freshGame();window.__result=null;G.pHand=hand;G.dHand=dealer;Object.assign(G,{phase:'play',revealed:false,bet:10,betChosen:true,bank:100},opts);},
       setTable(i){G.tableIdx=i;G.table=RUN[i];},

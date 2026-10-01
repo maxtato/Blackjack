@@ -8,12 +8,7 @@ const ColdDeckJourney=(()=>{
     const distance=bossDistance(table);
     return t(distance===0?'journey.bossNow':'journey.bossIn',distance);
   }
-  function previewNext(){
-    if(G.endless||G.tableIdx>=RUN_LEN-1)return null;
-    const base=RUN[G.tableIdx+1],bank=Math.max(0,G.bank-base.entry);
-    const table={...base,goal:base.goal+Math.max(0,bank-base.cap)};
-    return {table,bank,profit:Math.max(0,table.goal-bank),reserve:base.entry+base.min};
-  }
+  const previewNext=nextTablePreview;
   function renderRoute(node,tb){
     node.replaceChildren();node.dataset.boss=String(!!tb.boss);node.dataset.distance=String(bossDistance(tb));
     const theme=ColdDeckBackgrounds.circuitTheme(tb);
@@ -57,39 +52,20 @@ const ColdDeckJourney=(()=>{
   }
   function renderBrief(){
     if(G.endless||!G.table)return;
-    const tb=G.table;$('tableBrief').dataset.boss=String(tb.boss);
+    const {table:tb,bank}=tablePreparation();$('tableBrief').dataset.boss=String(tb.boss);
     const badge=$('briefBossBadge');badge.hidden=!tb.boss;badge.innerHTML=tb.boss?ColdDeckArt.lettering(t('journey.bossStep','').trim()):'';
     $('briefTableLabel').textContent=t('journey.table',String(tb.i+1).padStart(2,'0'),RUN_LEN);
     renderRoute($('briefRoute'),tb);
-    const current=stat(t('journey.currentAmount'),cash(G.bank));
+    const current=stat(t(G.preparingNext&&tb.entry?'journey.afterEntry':'journey.currentAmount'),cash(bank));
     const goal=stat(t('journey.targetAmount'),cash(tb.goal));
     for(const node of [current,goal])node.querySelector('strong').innerHTML=ColdDeckArt.lettering(node.querySelector('strong').textContent);
     const arrow=document.createElement('span');arrow.className='brief-money-arrow';arrow.setAttribute('aria-hidden','true');
     arrow.innerHTML='<svg viewBox="0 0 100 46" focusable="false"><path fill="#55b7ae" d="M0 17 7 10H67V0L100 23 67 46V35H7L0 29Z"/><path fill="#3e9894" d="M0 29 7 35H67L77 23H0Z"/><path fill="#74c9bf" d="M67 0 77 23 100 23Z"/></svg>';
     $('briefBalance').replaceChildren(current,arrow,goal);
-    const target=stat(t('journey.toWin'),cash(Math.max(0,tb.goal-G.bank)));
+    const target=stat(t('journey.toWin'),cash(Math.max(0,tb.goal-bank)));
     const hands=document.createElement('small');hands.textContent=t('journey.within',tb.mains);target.append(hands);
     $('briefPressure').replaceChildren(target);
     renderHud();
-  }
-  function renderShop(){
-    const next=previewNext();if(!next)return;
-    const tb=next.table,node=$('shopNextObj');
-    $('shopTitle').textContent=t('journey.prepare');$('shopStars').hidden=true;
-    $('shopSub').textContent=t('journey.shopReputation',abbr(G.pot));
-    $('shopGate').textContent=t('journey.reserve',cash(next.reserve));
-    node.dataset.boss=String(tb.boss);
-    node.style.setProperty('--next-zone-color',ColdDeckBackgrounds.circuitTheme(tb).accent);
-    node.replaceChildren();
-    const label=document.createElement('span');label.className='journey-next-label';
-    label.dataset.readingLabel='';label.textContent=t('journey.table',String(tb.i+1).padStart(2,'0'),RUN_LEN)+' · '+bossNotice(tb);
-    const title=document.createElement('h2');title.textContent=tableName(tb);
-    const stats=document.createElement('div');stats.className='journey-next-stats';
-    stats.append(stat(t('journey.toEarn'),cash(next.profit)),stat(t('circuit.handsLabel'),tb.mains),stat(t('journey.minBet'),cash(tb.min)));
-    const rule=document.createElement('p');rule.className='journey-next-rule';rule.textContent=tableRuleText(tb);
-    const goal=document.createElement('p');goal.className='journey-next-goal';goal.textContent=t('journey.totalGoal',cash(tb.goal));
-    node.append(label,title,stats,rule,goal);
-    $('shopNextBtn').innerHTML=ColdDeckArt.lettering(t('journey.enter',String(tb.i+1).padStart(2,'0')))+'<img class="nav-triangle" src="icons/nav-triangle.svg" width="20" height="20" alt="">';
   }
   function renderVictory(){
     const tb=G.table,last=G.tableIdx===RUN_LEN-1;
@@ -107,17 +83,16 @@ const ColdDeckJourney=(()=>{
     const reward=stat(t('journey.tableReward'),'+'+abbr(G.lastReward));
     const mark=document.createElement('span');mark.innerHTML=STAR;reward.querySelector('strong').append(mark);
     $('victoryRewards').replaceChildren(reward,stat(t('journey.inPocket'),cash(G.bank)));
-    const next=previewNext();
-    $('victoryNext').textContent=last?t('journey.circuitDone'):t('journey.nextUp',tableName(next.table))+' · '+bossNotice(next.table);
-    $('victoryContinue').textContent=t(last?'journey.bankRun':'journey.prepareNext');
+    $('victoryNext').hidden=!last;
+    $('victoryNext').textContent=last?t('journey.circuitDone'):'';
+    $('victoryContinue').textContent=t(last?'journey.bankRun':'journey.continue');
   }
   function showVictory(){renderVictory();$('tableVictory').classList.add('show');sfx.win(G.table.boss?3:2);}
   function refresh(){
     renderHud();
     if($('tableBrief').classList.contains('show'))renderBrief();
     if($('tableVictory').classList.contains('show'))renderVictory();
-    if($('shop').classList.contains('show'))renderShop();
   }
-  const api={bossDistance,previewNext,renderRoute,renderBrief,renderShop,renderHud,showVictory,refresh};
+  const api={bossDistance,previewNext,renderRoute,renderBrief,renderHud,showVictory,refresh};
   window.ColdDeckJourney=api;refresh();return api;
 })();

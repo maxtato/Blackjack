@@ -707,7 +707,10 @@ Object.assign(STR.fr,{
  'journey.reserve':amount=>'À garder pour l’entrée et la première mise : '+amount,
  'journey.rating':n=>n+' étoiles sur 3','journey.tableReward':'Récompense de table','journey.inPocket':'En poche',
  'journey.circuitDone':'Circuit terminé. Le casino est à toi.','journey.nextUp':name=>'À suivre : '+name,
- 'journey.bankRun':'Encaisser la réputation','journey.prepareNext':'Préparer la suite'
+ 'journey.bankRun':'Encaisser la réputation','journey.prepareNext':'Préparer la suite',
+ 'journey.continue':'Continuer','journey.afterEntry':'Après droit d’entrée',
+ 'shop.open':'Acheter / vendre des cartes','shop.browseTitle':'Boutique',
+ 'shop.backToPreparation':'Retour à la préparation'
 });
 Object.assign(STR.en,{
  'background.automatic':'Circuit: a new scene for each table',
@@ -723,7 +726,10 @@ Object.assign(STR.en,{
  'journey.reserve':amount=>'Keep for entry and your first bet: '+amount,
  'journey.rating':n=>n+' stars out of 3','journey.tableReward':'Table reward','journey.inPocket':'In your pocket',
  'journey.circuitDone':'Circuit complete. The casino is yours.','journey.nextUp':name=>'Up next: '+name,
- 'journey.bankRun':'Bank your reputation','journey.prepareNext':'Prepare for the next table'
+ 'journey.bankRun':'Bank your reputation','journey.prepareNext':'Prepare for the next table',
+ 'journey.continue':'Continue','journey.afterEntry':'After entry fee',
+ 'shop.open':'Buy / sell cards','shop.browseTitle':'Shop',
+ 'shop.backToPreparation':'Back to preparation'
 });
 
 Object.assign(STR.fr,{

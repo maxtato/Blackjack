@@ -12,7 +12,7 @@ check('Circuit starts with a contract and no unearned bonus cards',()=>{
   a.chooseContract(1);assert.equal(a.G.contract,a.G.contractChoices[1]);
  }
 });
-check('Every cleared Circuit table goes straight to shopping without granting cards',()=>{
+check('Every cleared Circuit table goes to preparation without granting cards',()=>{
  for(const contact of [0,1]){
   h.reset(123,{contact});
   for(let i=0;i<a.RUN_LEN;i++){
@@ -21,7 +21,7 @@ check('Every cleared Circuit table goes straight to shopping without granting ca
    assert(a.checkBankGoal());assert.equal(a.G.phase,'victory');
    assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
    const bank=a.G.bank,pot=a.G.pot;a.continueTableVictory();
-   assert.equal(a.G.phase,i===a.RUN_LEN-1?'ended':'shop');
+   assert.equal(a.G.phase,i===a.RUN_LEN-1?'ended':'prepare');
    assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
    assert.equal(a.G.bank,bank);assert.equal(a.G.pot,pot);
    a.continueTableVictory();assert.equal(a.G.pot,pot);
@@ -41,7 +41,7 @@ check('Relics and Tarots require paid shop purchases and never refill themselves
  assert.equal(a.G.relics.length,1);assert.equal(a.G.consumables.length,1);
  a.setTable(3);a.enterTable(1);a.G.bank=a.G.table.goal;a.finishTable();a.continueTableVictory();
  assert.equal(a.G.relics.length,1);assert.equal(a.G.consumables.length,1);
- a.openInspect('tarot',0);a.sellItem();assert.equal(a.G.consumables.length,0);
+ a.openShop();a.openInspect('tarot',0);a.sellItem();assert.equal(a.G.consumables.length,0);
  a.G.phase='bet';a.G.consumables=[tarot('etoile')];a.useConsumable(0);assert.equal(a.G.consumables.length,0);
 });
 check('Purchased Contact discounts relics while Tarot prices and resale stay accurate',()=>{
@@ -157,7 +157,7 @@ check('Pause and inspection suspend the remaining engine time',()=>{
 check('Sun can complete an ordinary table between hands',()=>{
  a.G.bank=a.G.table.goal-5;a.G.baraka=2;a.G.consumables=[tarot('soleil')];a.useConsumable(0);
  a.continueTableVictory();
- assert.equal(a.G.phase,'shop');assert.equal(a.G.baraka,0);
+ assert.equal(a.G.phase,'prepare');assert.equal(a.G.baraka,0);
  assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
 });
 check('Gift resale is fixed and editions never overwrite',()=>{

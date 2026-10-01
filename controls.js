@@ -65,6 +65,7 @@
     'select-background': el => ColdDeckBackgrounds.select(el.dataset.backgroundId),
     'circuit-backgrounds-auto': el => ColdDeckBackgrounds.setAutomatic(el.checked),
     quitToMenu: () => quitToMenu(),
+    openShop: () => openShop(),
     rerollShop: () => rerollShop(),
     adFreeReroll: () => adFreeReroll(),
     cashOut: () => cashOut(),
