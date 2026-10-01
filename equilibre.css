@@ -445,7 +445,7 @@ html,body{height:var(--viewport-height);min-height:var(--viewport-height)}
 /* Preparation pages fit the available screen; the card preview absorbs spare height. */
 #intro{--prep-height:calc(var(--viewport-height) - env(safe-area-inset-top) - env(safe-area-inset-bottom));--prep-u:min(1vw,calc(var(--prep-height)/200),5.3px);align-items:flex-start;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
 #intro::before{background-size:calc(100 * var(--prep-u)) 100%;background-position:center}
-#intro .ovpanel{width:calc(100 * var(--prep-u));max-width:none;height:var(--prep-height);min-height:calc(200 * var(--prep-u));margin:0 auto;padding:calc(3 * var(--prep-u)) calc(5 * var(--prep-u));gap:0;flex:none}
+#intro .ovpanel{width:calc(100 * var(--prep-u));max-width:none;height:var(--prep-height);min-height:calc(200 * var(--prep-u));margin:0 auto;padding:calc(7 * var(--prep-u)) calc(5 * var(--prep-u)) 0;gap:0;flex:none}
 #intro .menu-top{height:calc(9 * var(--prep-u));min-height:0;flex:none}
 #intro .menu-top .quiet-btn{min-height:32px;padding:0;font-size:max(12px,calc(4 * var(--prep-u)));line-height:1.2}
 #intro .hideout-heading{height:calc(34 * var(--prep-u));padding:0;margin:calc(2 * var(--prep-u)) 0 0;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:space-between}
