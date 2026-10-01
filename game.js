@@ -797,8 +797,9 @@ function fannedCard(c,idx,total,opts){
   if(!slot){slot=document.createElement('div');slot.className='cardslot';renderedCardSlots.set(c,slot);}
   const density=window.devicePixelRatio||1;
   const snapPixel=value=>Math.round(value*density)/density;
-  const mid=(total-1)/2;
-  const step=total>1?Math.min(2.6,9/(total-1)):0;
+  const spread=Math.max(2,total);               // garde la première carte sur sa place dans la paire
+  const mid=(spread-1)/2;
+  const step=Math.min(2.6,9/(spread-1));
   const baseRot=(idx-mid)*step;                 // éventail régulier
   const arc=Math.abs(idx-mid)*1.8;              // cartes extérieures un peu plus basses
   const seed=c.r+c.s+idx;
