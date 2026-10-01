@@ -321,10 +321,10 @@ const BOONS=[
 ];
 /* Special hands: one temporary effect, announced before placing the bet. */
 const HAND_EVENTS=[
-  {id:'doree',   ic:'doree'},
-  {id:'forcee',  ic:'forcee'},
-  {id:'pompette',ic:'glass'},
-  {id:'etoile',  ic:'diamond'},
+  {id:'doree'},
+  {id:'forcee'},
+  {id:'pompette'},
+  {id:'etoile'},
 ];
 function evtTitle(e){return t('evt.'+e.id+'.t');}
 function evtDesc(e){return t('evt.'+e.id+'.d');}
@@ -2083,7 +2083,7 @@ function announceTurn(){
     h+=`<div class="tp-coin"><b>+<span class="n">${abbr(G._income.amt)}</span><span class="cur">$</span></b><span>${lbl}</span></div>`;
   }
   const event=G.event;
-  if(event)h+=`<div class="tp-evt"><span class="tp-event-icon" aria-hidden="true">${PXI(G.event.ic)}</span><div class="tp-event-copy"><strong class="tp-event-title">${ColdDeckArt.lettering(evtTitle(G.event))}</strong><small>${evtDesc(G.event)}</small></div></div>`;
+  if(event)h+=`<div class="tp-evt"><span class="tp-event-icon" aria-hidden="true">${ColdDeckArt.handEvent(event.id)}</span><div class="tp-event-copy"><strong class="tp-event-title">${ColdDeckArt.lettering(evtTitle(event))}</strong><small>${evtDesc(event)}</small></div></div>`;
   el.innerHTML=h;
   if(!h)return;
   el.style.setProperty('--turn-duration',event?'3600ms':'1700ms');

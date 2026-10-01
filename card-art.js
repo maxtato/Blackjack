@@ -65,7 +65,9 @@ const ColdDeckArt = (() => {
   // HD raster illustrations shared by inventory, shops, effects and menus.
   const illustrationKeys=new Set(["lunettes", "jeton", "clope", "as", "froid", "compteur", "mecene", "usurier", "collector", "maitresse", "bruleur", "portebonheur", "diplomate", "talisman", "aimant", "phare", "etoile", "jugement", "soleil", "diable", "lune", "etoileD", "pendu", "magicien", "roue", "soin", "assurance", "videur", "bank", "pourboire", "net", "tarot", "contact", "relic2", "plafond", "elan", "cashplus", "boon2", "mult", "baraplus", "evt3"]);
   const effectAliases={bankI:'bank',pourboireI:'pourboire',income:'pourboire',betmax:'plafond',filet:'net',cash:'soin'};
-  const interfaceArt={flag:'phare',trophy:'ui-trophy',scroll:'boon2',forcee:'baraplus',glass:'baraplus',arc:'lune',suite:'elan',couleur:'tarot',doree:'etoile',diamond:'relic2'};
+  const interfaceArt={flag:'phare',trophy:'ui-trophy',scroll:'boon2',forcee:'event-forcee',glass:'event-pompette',arc:'lune',suite:'elan',couleur:'tarot',doree:'event-doree',diamond:'relic2'};
+  // Temporary hand events have their own drawings, separate from cards and upgrades.
+  const handEventArt={doree:'event-doree',forcee:'event-forcee',pompette:'event-pompette',etoile:'event-etoile'};
   const image=key=>embeddedCardImages?.[key]||`assets/illustrations/${key}.webp`;
   const backKeys={cb9:'back-lightning',cb10:'back-luck',cb11:'back-heart',cb12:'back-moon',cb13:'back-dice',cb14:'back-crown',cb15:'back-eye',cb16:'back-cherry',cb18:'back-flame',cb19:'back-diamond',cb22:'back-snake',cb26:'back-sun'};
   const backKey=id=>backKeys[id]||backKeys.cb9;
@@ -109,6 +111,7 @@ const ColdDeckArt = (() => {
     return `<img class="effect-symbol effect-illustration" data-effect-symbol="${key}" src="${image(key)}" width="1024" height="1024" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">`;
   }
   const tableRule=rule=>illustration('rule-'+(['standard','sec','gros','mute','nervous','depart','atelier','serein'].includes(rule)?rule:'standard'),'effect-illustration table-rule-illustration');
+  const handEvent=id=>handEventArt[id]?illustration(handEventArt[id],'hand-event-illustration'):'';
   const icon=n=>`<img class="pxi raster-icon" src="${image(interfaceArt[n]||'etoile')}" width="1024" height="1024" alt="" aria-hidden="true" decoding="async" draggable="false">`;
-  return {suit,face,icon,effect,tableRule,image,illustration,back,backKey,surface,lettering,cardImageKeys,prepareCards};
+  return {suit,face,icon,effect,tableRule,handEvent,image,illustration,back,backKey,surface,lettering,cardImageKeys,prepareCards};
 })();

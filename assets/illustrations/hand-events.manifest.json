@@ -1,0 +1,39 @@
+{
+  "generator": "built-in image_gen",
+  "transparent_background": true,
+  "finish": "Original matte cut-paper illustrations dedicated to special hand events",
+  "style_references": [
+    "assets/illustrations/elan.webp",
+    "assets/illustrations/jeton.webp"
+  ],
+  "assets": [
+    {
+      "event": "doree",
+      "path": "assets/illustrations/event-doree.webp",
+      "width": 512,
+      "height": 512,
+      "prompt": "Use case: stylized-concept.\nAsset type: an original compact raster illustration for a special-hand notification in the Cold Deck game, legible at approximately 30 pixels.\nCreate a genuinely new drawing. Square 1024x1024 canvas. Isolated subject on a genuinely transparent alpha background; all space around the object is transparent, including every corner.\nStyle: minimal flat cut-paper polygon graphic with lightly irregular, chamfered angular edges and flat painted color planes. Quiet matte ink colors, faint printed-paper grain only. Maximum three or four flat inks. Large clear shapes, no outline, no surrounding shadow, no glow, no specular highlights, no metallic or glass reflections, no gradients. Do not paint checkerboard transparency.\nComposition: centered, large compact silhouette occupying 80–85% of the canvas. Simple enough to read instantly at tiny size on a violet notification panel. Use only the requested one or two elements. No decorative background, framing or extra objects.\nConstraints: no text, letters, numbers, marks, badges, frames, UI, watermark, cards, playing cards, coin piles, potion bottles, jewelry boxes, boots, wings, broken chips, or five-point stars.\nSubject: Exactly TWO chunky GOLD BULLION BARS, one offset above the other so both are clearly visible. A compact paired shape; the two bars communicate doubled winnings. Three simple broad planes per bar at most. Colors are warm muted golden yellow #E6BD4E, quiet ochre, and light warm cream #F3E7CC. They should feel made of flat matte painted paper, not polished metal. No printed marks, no coins, no stars, no extra element."
+    },
+    {
+      "event": "forcee",
+      "path": "assets/illustrations/event-forcee.webp",
+      "width": 512,
+      "height": 512,
+      "prompt": "Use case: stylized-concept.\nAsset type: an original compact raster illustration for a special-hand notification in the Cold Deck game, legible at approximately 30 pixels.\nCreate a genuinely new drawing. Square 1024x1024 canvas. Isolated subject on a genuinely transparent alpha background; all space around the object is transparent, including every corner.\nStyle: minimal flat cut-paper polygon graphic with lightly irregular, chamfered angular edges and flat painted color planes. Quiet matte ink colors, faint printed-paper grain only. Maximum three or four flat inks. Large clear shapes, no outline, no surrounding shadow, no glow, no specular highlights, no metallic or glass reflections, no gradients. Do not paint checkerboard transparency.\nComposition: centered, large compact silhouette occupying 80–85% of the canvas. Simple enough to read instantly at tiny size on a violet notification panel. Use only the requested one or two elements. No decorative background, framing or extra objects.\nConstraints: no text, letters, numbers, marks, badges, frames, UI, watermark, cards, playing cards, coin piles, potion bottles, jewelry boxes, boots, wings, broken chips, or five-point stars.\nSubject: A bold angular dusty-coral C-CLAMP pressing a SINGLE intact golden betting chip. Two elements only: one very chunky simple C-clamp silhouette and one chip trapped between its jaws. Make the clamp recognizably C-shaped, with a broad simple lower screw shaft or pressing jaw but absolutely no tiny screw detail; do not resemble a gavel or hand. The single thick chip has only four broad cream rim notches. Palette: dusty coral #D7797C for clamp, muted gold #E6BD4E for chip, charcoal #282D33 for one clamp plane, cream #F3E7CC for chip notches. No additional shapes or objects."
+    },
+    {
+      "event": "pompette",
+      "path": "assets/illustrations/event-pompette.webp",
+      "width": 512,
+      "height": 512,
+      "prompt": "Use case: stylized-concept.\nAsset type: an original compact raster illustration for a special-hand notification in the Cold Deck game, legible at approximately 30 pixels.\nCreate a genuinely new drawing. Square 1024x1024 canvas. Isolated subject on a genuinely transparent alpha background; all space around the object is transparent, including every corner.\nStyle: minimal flat cut-paper polygon graphic with lightly irregular, chamfered angular edges and flat painted color planes. Quiet matte ink colors, faint printed-paper grain only. Maximum three or four flat inks. Large clear shapes, no outline, no surrounding shadow, no glow, no specular highlights, no metallic or glass reflections, no gradients. Do not paint checkerboard transparency.\nComposition: centered, large compact silhouette occupying 80–85% of the canvas. Simple enough to read instantly at tiny size on a violet notification panel. Use only the requested one or two elements. No decorative background, framing or extra objects.\nConstraints: no text, letters, numbers, marks, badges, frames, UI, watermark, cards, playing cards, coin piles, potion bottles, jewelry boxes, boots, wings, broken chips, or five-point stars.\nSubject: A crooked cream-and-teal DEALER BOW TIE with exactly ONE little coral dizzy spiral floating immediately above it. Two elements only. The bow tie is a thick broad angular cut-paper shape at a playful lopsided angle, cream #F3E7CC and subdued teal #70BEB4, with a small simple center knot as part of the bow tie. The single dusty coral #D7797C dizzy spiral is thick and easy to read, one and a half turns only. The overall silhouette is compact. No person, bottle, drinking glass, hat, playing cards, numbers, stars or extra decoration."
+    },
+    {
+      "event": "etoile",
+      "path": "assets/illustrations/event-etoile.webp",
+      "width": 512,
+      "height": 512,
+      "prompt": "Use case: stylized-concept.\nAsset type: an original compact raster illustration for a special-hand notification in the Cold Deck game, legible at approximately 30 pixels.\nCreate a genuinely new drawing. Square 1024x1024 canvas. Isolated subject on a genuinely transparent alpha background; all space around the object is transparent, including every corner.\nStyle: minimal flat cut-paper polygon graphic with lightly irregular, chamfered angular edges and flat painted color planes. Quiet matte ink colors, faint printed-paper grain only. Maximum three or four flat inks. Large clear shapes, no outline, no surrounding shadow, no glow, no specular highlights, no metallic or glass reflections, no gradients. Do not paint checkerboard transparency.\nComposition: centered, large compact silhouette occupying 80–85% of the canvas. Simple enough to read instantly at tiny size on a violet notification panel. Use only the requested one or two elements. No decorative background, framing or extra objects.\nConstraints: no text, letters, numbers, marks, badges, frames, UI, watermark, cards, playing cards, coin piles, potion bottles, jewelry boxes, boots, wings, broken chips, or five-point stars.\nSubject: A SINGLE thick angular FOUR-POINT PRISM STAR, with exactly four substantial tapering points in the cardinal directions (top, right, bottom, left), cut into only THREE large matte colored facets: warm cream #F3E7CC, subdued teal #70BEB4, dusty coral #D7797C. The four-point star itself is one compact geometric object and the whole icon. Make the concave corners between the four broad points unambiguous, not a diamond or gemstone. It is NOT a five-point reputation star, not a jewel, not a jewelry box, not an actual playing card. NO separate sparkles, rays, halo, surrounding points, or extra object."
+    }
+  ]
+}
