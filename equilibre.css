@@ -1261,7 +1261,7 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 #shop #shopNextObj,#shop #shopNextObj[data-boss="true"]{background:#242a31!important;padding:12px!important;margin-bottom:10px!important;clip-path:polygon(3% 0,97% 0,100% 8%,100% 92%,97% 100%,3% 100%,0 92%,0 8%)!important}
 #shop #shopNextObj h2{font-size:30px;line-height:1.05;margin:6px 0 10px}
 #shop #shopNextObj[data-boss="true"] h2{color:#ff667d}
-#tableBrief[data-boss="true"] #briefTitle,.table-details-view[data-boss="true"] .table-brief-heading h1{color:#ff667d}
+#tableBrief[data-boss="true"] #briefTitle,.table-details-view[data-boss="true"] .table-brief-heading h1{color:#fff7e6}
 #shop .journey-next-label{font-size:11px;color:#d4dce3}
 #shop .journey-next-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:0;text-align:center}
 #shop .journey-next-stats>div{display:flex;flex-direction:column;gap:4px}
