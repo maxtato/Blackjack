@@ -341,6 +341,16 @@ const CONTRACTS=[
   {id:'ccoul',weight:2,chk:o=>o.coul},
 ];
 function contractText(c){return c?t('ctr.'+c.id):'';}
+function openContractInfo(i){
+  const c=G.contractChoices?.[i];if(!c)return;
+  inspectRef=null;GameClock.pause('inspect',true);
+  const screen=$('inspectScreen');screen.classList.remove('table-details-view','shop-sale-view');
+  screen.classList.add('contract-info-view');
+  $('inspectBody').innerHTML='<h1>'+ColdDeckArt.lettering(contractText(c))+'</h1><p data-reading-label>'+t('ctr.help.'+c.id)+'</p><p data-reading-label>'+t('ctr.help.common')+'</p><div class="contract-info-reward">+'+c.reward+' '+STAR+'</div>';
+  const close=document.createElement('button');close.className='btn b-blue';close.textContent=t('insp.close');close.onclick=closeInspect;
+  $('inspectActions').replaceChildren(close);screen.classList.add('show');
+  if(typeof syncMenuFocus==='function')syncMenuFocus();
+}
 function rollContract(){
   if(G.endless)return null;
   const controlled=hasRelic('lunettes')||hasRelic('phare')||G.consumables.some(c=>c.id==='magicien');
@@ -549,9 +559,11 @@ function showTableBrief(){
   }
   $('briefContracts').replaceChildren();
   G.contractChoices.forEach((c,i)=>{
+    const row=document.createElement('div');row.className='contract-option';
     const b=document.createElement('button');b.className='btn b-blue contract-choice';
     b.innerHTML='<span class="contract-copy">'+contractText(c)+'</span><small class="contract-reward"><span class="contract-reward-value">+'+c.reward+' '+STAR+'</span></small><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
-    b.onclick=()=>chooseContract(i);$('briefContracts').append(b);
+    const info=document.createElement('button');info.type='button';info.className='contract-info';info.textContent='i';info.setAttribute('aria-label',t('ctr.help.label')+' : '+contractText(c));info.setAttribute('aria-haspopup','dialog');info.onclick=()=>openContractInfo(i);
+    b.onclick=()=>chooseContract(i);row.append(b,info);$('briefContracts').append(row);
   });
   screen.classList.add('show');
   window.ColdDeckJourney?.renderBrief();
@@ -1193,7 +1205,7 @@ function openInspect(kind,i){
   mk(t('insp.sell',cash(sellValue(item))),sellItem,!['bet','shop'].includes(G.phase)||(kind==='relic'&&item.id==='portebonheur'&&G.consumables.length>=consumableSlots()));
   mk(t('insp.close'),closeInspect);$('inspectScreen').classList.add('show');
 }
-function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show','table-details-view','shop-sale-view');inspectRef=null;GameClock.pause('inspect',false);if(typeof syncMenuFocus==='function')syncMenuFocus();}
+function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show','table-details-view','shop-sale-view','contract-info-view');inspectRef=null;GameClock.pause('inspect',false);if(typeof syncMenuFocus==='function')syncMenuFocus();}
 function sellItem(){
   if(!inspectRef||!['bet','shop'].includes(G.phase))return;
   const {kind,i}=inspectRef;

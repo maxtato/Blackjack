@@ -725,3 +725,26 @@ Object.assign(STR.en,{
  'journey.circuitDone':'Circuit complete. The casino is yours.','journey.nextUp':name=>'Up next: '+name,
  'journey.bankRun':'Bank your reputation','journey.prepareNext':'Prepare for the next table'
 });
+
+Object.assign(STR.fr,{
+ 'ctr.help.label':'Détails du contrat',
+ 'ctr.help.c5':'Remporte une main avec au moins 5 cartes, sans dépasser 21.',
+ 'ctr.help.c21':'Remporte une main à exactement 21 avec au moins 3 cartes. Un blackjack en 2 cartes ne valide pas ce contrat.',
+ 'ctr.help.cpress':'Remporte une main lorsque ta Chance est au niveau 2 ou plus.',
+ 'ctr.help.cmult':'Remporte une main dont le multiplicateur de gain final atteint ×3 ou plus.',
+ 'ctr.help.cdbl':'Utilise Doubler, puis remporte cette main. Doubler la mise sans gagner ne suffit pas.',
+ 'ctr.help.csuite':'Remporte une main avec au moins 3 cartes de valeurs consécutives, sans doublon. Les enseignes peuvent être différentes.',
+ 'ctr.help.ccoul':'Remporte une main avec au moins 3 cartes de la même enseigne : toutes cœur, toutes carreau, toutes trèfle ou toutes pique.',
+ 'ctr.help.common':'Le défi est facultatif. Il suffit de le réussir une fois pendant cette table pour gagner la réputation indiquée. Consulter ces détails ne sélectionne pas le contrat.'
+});
+Object.assign(STR.en,{
+ 'ctr.help.label':'Contract details',
+ 'ctr.help.c5':'Win a hand with at least 5 cards without exceeding 21.',
+ 'ctr.help.c21':'Win with exactly 21 and at least 3 cards. A two-card blackjack does not complete this contract.',
+ 'ctr.help.cpress':'Win a hand at Chance level 2 or higher.',
+ 'ctr.help.cmult':'Win a hand with a final payout multiplier of ×3 or higher.',
+ 'ctr.help.cdbl':'Use Double, then win that hand. Doubling without winning is not enough.',
+ 'ctr.help.csuite':'Win with at least 3 consecutive ranks and no duplicates. Suits may differ.',
+ 'ctr.help.ccoul':'Win with at least 3 cards of the same suit: all hearts, diamonds, clubs or spades.',
+ 'ctr.help.common':'This challenge is optional. Complete it once during this table to earn the displayed reputation. Viewing these details does not select the contract.'
+});

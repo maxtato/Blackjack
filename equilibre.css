@@ -1214,3 +1214,21 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 #tableBrief #briefContracts .contract-copy{font-size:calc(3.6 * var(--brief-u))}
 #tableBrief #briefContracts .contract-reward-value{padding:calc(1.5 * var(--brief-u)) calc(2 * var(--brief-u));font-size:calc(3.8 * var(--brief-u))}
 #tableBrief #briefContracts .contract-reward-value .game-number{font-size:inherit!important}
+
+/* Cleaner briefing sheet and clearly separated route milestones. */
+#tableBrief .circuit-panel{clip-path:polygon(2% 0,98% 0,100% 2%,100% 98%,98% 100%,2% 100%,0 98%,0 2%);background-image:linear-gradient(125deg,var(--table-tint,transparent),transparent 65%);background-color:#343d47}
+#tableBrief .journey-step:not(.current):not(.boss){background:#224345;color:#9de0d3}
+#tableBrief .journey-step.past{background:#1b3d3e;color:#9de0d3}
+#tableBrief #briefContracts .contract-reward-value{background:#596674;color:#ffce3a}
+#tableBrief #briefContracts .contract-option{display:grid;grid-template-columns:minmax(0,1fr) 22px calc(16 * var(--brief-u)) calc(3 * var(--brief-u));gap:calc(2 * var(--brief-u));align-items:center;padding:calc(2.6 * var(--brief-u));background:#205dcc var(--art-button-blue) center/100% 100%;clip-path:var(--frame-cut)}
+#tableBrief #briefContracts .contract-choice{grid-column:1/-1;grid-row:1;display:grid;grid-template-columns:subgrid;background:none!important;box-shadow:none!important;clip-path:none;padding:0!important;width:100%;margin:0;min-height:calc(7 * var(--brief-u))}
+#tableBrief #briefContracts .contract-reward{grid-column:3}
+#tableBrief #briefContracts .nav-triangle{grid-column:4}
+#tableBrief #briefContracts .contract-reward-value{justify-content:center;width:100%;box-sizing:border-box}
+#tableBrief #briefContracts .contract-info{grid-column:2;grid-row:1;z-index:1;display:grid;place-items:center;width:22px;height:22px;border:1px solid #fff7e6!important;border-radius:50%;padding:0;background:none!important;color:#fff7e6!important;box-shadow:none!important;font:700 14px/1 var(--copy-font);cursor:pointer}
+#tableBrief #briefContracts .contract-info:focus-visible{outline:2px solid #ffce3a;outline-offset:3px}
+#inspectScreen.contract-info-view .ovpanel{background:#343d47;max-width:380px!important;padding:22px;clip-path:polygon(2% 0,98% 0,100% 2%,100% 98%,98% 100%,2% 100%,0 98%,0 2%)}
+#inspectScreen.contract-info-view h1{color:#fff7e6;font-size:24px!important;line-height:1.2}
+#inspectScreen.contract-info-view p{color:#e1e6ec;font:500 15px/1.45 var(--copy-font);text-align:left}
+#inspectScreen.contract-info-view .contract-info-reward{background:#596674;color:#ffce3a;padding:10px;margin:16px 0;clip-path:var(--frame-cut)}
+#inspectScreen.contract-info-view #inspectActions .btn{width:100%}
