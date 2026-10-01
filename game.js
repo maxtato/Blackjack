@@ -562,7 +562,7 @@ function showTableBrief(){
     const row=document.createElement('div');row.className='contract-option';
     const b=document.createElement('button');b.className='btn b-blue contract-choice';
     b.innerHTML='<span class="contract-copy">'+contractText(c)+'</span><small class="contract-reward"><span class="contract-reward-value">+'+c.reward+' '+STAR+'</span></small><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
-    const info=document.createElement('button');info.type='button';info.className='contract-info';info.textContent='i';info.setAttribute('aria-label',t('ctr.help.label')+' : '+contractText(c));info.setAttribute('aria-haspopup','dialog');info.onclick=()=>openContractInfo(i);
+    const info=document.createElement('button');info.type='button';info.className='contract-info';info.dataset.readingLabel='';info.textContent='i';info.setAttribute('aria-label',t('ctr.help.label')+' : '+contractText(c));info.setAttribute('aria-haspopup','dialog');info.onclick=()=>openContractInfo(i);
     const copy=b.querySelector('.contract-copy'),reward=b.querySelector('.contract-reward'),arrow=b.querySelector('.nav-triangle');
     copy.id='contractName'+i;reward.id='contractReward'+i;copy.innerHTML=ColdDeckArt.lettering(contractText(c));
     const label=document.createElement('span');label.className='contract-label-group';label.append(copy,info);
