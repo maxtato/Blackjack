@@ -15,19 +15,25 @@ const ColdDeckJourney=(()=>{
     return {table,bank,profit:Math.max(0,table.goal-bank),reserve:base.entry+base.min};
   }
   function renderRoute(node,tb){
-    node.replaceChildren();node.dataset.boss=String(!!tb.boss);
+    node.replaceChildren();node.dataset.boss=String(!!tb.boss);node.dataset.distance=String(bossDistance(tb));
     const theme=ColdDeckBackgrounds.circuitTheme(tb);
     node.style.setProperty('--route-color',theme.accent);
+    const panel=node.closest('.ovpanel');
+    panel?.style.setProperty('--table-accent',tb.boss?'#ed8b7b':theme.accent);
+    panel?.style.setProperty('--table-tint',tb.boss?'#ed8b7b20':theme.fold+'70');
     const label=document.createElement('p');label.className='journey-zone';
     const zone=document.createElement('span');zone.textContent=t('journey.zone',tb.zone,zoneName(tb.zone));label.append(zone);
-    const notice=document.createElement('span');notice.className='journey-boss-notice';notice.textContent=bossNotice(tb);label.append(notice);
+    const notice=document.createElement('span');notice.className='journey-boss-notice';
+    if(tb.boss)notice.innerHTML=ColdDeckArt.lettering(bossNotice(tb));else notice.textContent=bossNotice(tb);
+    label.append(notice);
     const steps=document.createElement('ol');steps.className='journey-steps';
     RUN.filter(table=>table.zone===tb.zone).forEach(table=>{
       const step=document.createElement('li');step.className='journey-step';
       step.classList.toggle('past',table.i<tb.i);step.classList.toggle('current',table.i===tb.i);
       step.classList.toggle('boss',table.boss);
       if(table.i===tb.i)step.setAttribute('aria-current','step');
-      step.textContent=t(table.boss?'journey.bossStep':'journey.tableStep',String(table.i+1).padStart(2,'0'));
+      const title=t(table.boss?'journey.bossStep':'journey.tableStep','').trim();
+      step.innerHTML='<span class="journey-step-label">'+ColdDeckArt.lettering(title)+'</span> <strong class="journey-step-number">'+ColdDeckArt.lettering(String(table.i+1).padStart(2,'0'))+'</strong>';
       steps.append(step);
     });
     node.append(label,steps);
@@ -100,6 +106,6 @@ const ColdDeckJourney=(()=>{
     if($('tableVictory').classList.contains('show'))renderVictory();
     if($('shop').classList.contains('show'))renderShop();
   }
-  const api={bossDistance,previewNext,renderBrief,renderShop,renderHud,showVictory,refresh};
+  const api={bossDistance,previewNext,renderRoute,renderBrief,renderShop,renderHud,showVictory,refresh};
   window.ColdDeckJourney=api;refresh();return api;
 })();

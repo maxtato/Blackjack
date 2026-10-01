@@ -239,13 +239,19 @@ function openTableRules(){
     ['table.detailsMin',cash(tb.min)],
     ['table.detailsMax',cash(tb.max)]
   ];
-  const challenge=tb.challenge?'<section class="table-details-note"><h2 data-reading-label>'+t('table.detailsChallenge')+'</h2><p>'+bossProgress()+'</p></section>':'';
+  const challenge=tb.challenge?'<section class="table-details-note table-boss-challenge"><h2 data-reading-label>'+t('table.detailsChallenge')+'</h2><p>'+bossProgress()+'</p></section>':'';
   const contract=G.contract&&!G.endless?'<section class="table-details-note"><h2 data-reading-label>'+t('table.detailsContract')+'</h2><p>'+contractText(G.contract)+'</p><span class="table-details-status" data-reading-label>'+(G.contract.done?t('top.contractDone'):'+'+G.contract.reward+STAR)+'</span></section>':'';
   const totals=G.endless
     ?[t('top.record',cash(Math.max(G.peak||0,G.bank))),t('top.worth',STAR+abbr(endlessCashRep()))]
     :[t('top.stars',G.runStars||0),...(G.pot>0?[t('top.pot',cash(G.pot))]:[])];
   body.innerHTML='<div class="illustrated-heading table-brief-heading"><div class="table-heading-copy"><span class="table-brief-kicker" data-reading-label>'+context+'</span><h1>'+tableName(tb)+'</h1></div></div><div class="table-effect-card"></div><div class="brief-stats">'+stats.map(([label,value])=>'<div class="brief-stat"><span class="brief-stat-label" data-reading-label>'+t(label)+'</span><strong class="brief-stat-value">'+value+'</strong></div>').join('')+'</div>'+challenge+contract+'<div class="table-details-totals" data-reading-label>'+totals.map(value=>'<span>'+value+'</span>').join('')+'</div>';
   renderTableEffect(body.querySelector('.table-effect-card'));
+  $('inspectScreen').dataset.boss=String(!G.endless&&!!tb.boss);
+  if(G.endless)for(const key of ['--table-accent','--table-tint'])body.closest('.ovpanel').style.removeProperty(key);
+  if(!G.endless&&window.ColdDeckJourney){
+    const route=document.createElement('div');route.className='journey-route';body.prepend(route);
+    ColdDeckJourney.renderRoute(route,tb);
+  }
   const close=document.createElement('button');close.className='btn b-blue';close.textContent=t('insp.close');close.onclick=closeInspect;
   $('inspectActions').replaceChildren(close);$('inspectScreen').classList.add('table-details-view','show');
   if(typeof syncMenuFocus==='function')syncMenuFocus();
