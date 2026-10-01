@@ -1249,3 +1249,16 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 #tableBrief .brief-stat{flex-direction:row;justify-content:center;align-items:center;gap:calc(2 * var(--brief-u))}
 #tableBrief .brief-stat-value{order:0;font-size:calc(4.2 * var(--brief-u))}
 #tableBrief .brief-stat-label{font-size:calc(2.9 * var(--brief-u));white-space:normal}
+
+/* Contract details sit beside their name; the full blue row advances. */
+#tableBrief .choice-hint{display:block;color:#d8e0e6;font-size:calc(3 * var(--brief-u));line-height:1.3;margin:calc(-1 * var(--brief-u)) 0 calc(2.5 * var(--brief-u))}
+#tableBrief #briefContracts .contract-option{position:relative;grid-template-columns:minmax(0,1fr) calc(16 * var(--brief-u)) calc(4.5 * var(--brief-u));min-height:calc(12 * var(--brief-u));box-sizing:border-box}
+#tableBrief #briefContracts .contract-choice{position:absolute;inset:0;display:block;height:100%;width:100%;min-height:0;z-index:0}
+#tableBrief #briefContracts .contract-label-group{grid-column:1;display:flex;align-items:center;gap:6px;min-width:0;pointer-events:none;z-index:1}
+#tableBrief #briefContracts .contract-copy{flex:0 1 auto;min-width:0;line-height:1.2}
+#tableBrief #briefContracts .contract-info{flex:none;pointer-events:auto;font:700 14px/1 var(--copy-font)}
+#tableBrief #briefContracts .contract-reward{grid-column:2;z-index:1;pointer-events:none}
+#tableBrief #briefContracts .nav-triangle{grid-column:3;z-index:1;pointer-events:none;width:calc(4.5 * var(--brief-u));height:calc(4.5 * var(--brief-u));opacity:1;filter:none}
+#tableBrief #briefContracts .contract-option:has(.contract-choice:focus-visible){outline:2px solid #ffce3a;outline-offset:-3px}
+/* Upcoming boss text shares the centered boss label position. */
+#topbar>.journey-hud{left:50%;right:auto;top:0;translate:-50% 0;max-width:none;white-space:nowrap}
