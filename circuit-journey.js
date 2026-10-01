@@ -59,6 +59,12 @@ const ColdDeckJourney=(()=>{
     const badge=$('briefBossBadge');badge.hidden=!tb.boss;badge.innerHTML=tb.boss?ColdDeckArt.lettering(t('journey.bossStep','').trim()):'';
     $('briefTableLabel').textContent=t('journey.table',String(tb.i+1).padStart(2,'0'),RUN_LEN);
     renderRoute($('briefRoute'),tb);
+    const current=stat(t('journey.currentAmount'),cash(G.bank));
+    const goal=stat(t('journey.targetAmount'),cash(tb.goal));
+    for(const node of [current,goal])node.querySelector('strong').innerHTML=ColdDeckArt.lettering(node.querySelector('strong').textContent);
+    const arrow=document.createElement('span');arrow.className='brief-money-arrow';arrow.setAttribute('aria-hidden','true');
+    arrow.innerHTML='<svg viewBox="0 0 100 46" focusable="false"><path fill="#55b7ae" d="M0 17 7 10H67V0L100 23 67 46V35H7L0 29Z"/><path fill="#3e9894" d="M0 29 7 35H67L77 23H0Z"/><path fill="#74c9bf" d="M67 0 77 23 100 23Z"/></svg>';
+    $('briefBalance').replaceChildren(current,arrow,goal);
     const target=stat(t('journey.toWin'),cash(Math.max(0,tb.goal-G.bank)));
     const hands=document.createElement('small');hands.textContent=t('journey.within',tb.mains);target.append(hands);
     $('briefPressure').replaceChildren(target);

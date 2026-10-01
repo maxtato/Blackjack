@@ -551,7 +551,7 @@ function showTableBrief(){
   $('briefRule').textContent=[G.table.challenge?t('boss.'+G.table.challenge):'',G.table.entry?t('rtx.entry',cash(G.table.entry)):''].filter(Boolean).join(' · ');
   $('briefRule').hidden=!$('briefRule').textContent;
   $('briefGoal').replaceChildren();
-  for(const [key,value] of [['journey.totalGoalLabel',cash(G.table.goal)],['journey.minBet',cash(G.table.min)],['circuit.betLabel',cash(recommendedBet())]]){
+  for(const [key,value] of [['journey.minBet',cash(G.table.min)],['circuit.betLabel',cash(recommendedBet())]]){
     const stat=document.createElement('div');stat.className='brief-stat';
     const label=document.createElement('span');label.className='brief-stat-label';label.textContent=t(key);
     const amount=document.createElement('span');amount.className='brief-stat-value';amount.textContent=value;
