@@ -41,9 +41,11 @@ const ColdDeckJourney=(()=>{
   }
   function renderHud(){
     const node=$('circuitProgress');if(!node)return;
+    if(node.parentElement!==$('topbar'))$('topbar').append(node);
     node.hidden=!!G.endless||!G.table;if(node.hidden)return;
     const distance=bossDistance(G.table);node.dataset.boss=String(distance===0);
-    node.textContent=t(distance===0?'journey.bossNow':'journey.hudBossIn',distance);
+    const label=t(distance===0?'journey.bossNow':'journey.hudBossIn',distance);
+    if(distance===0)node.innerHTML=ColdDeckArt.lettering(label);else node.textContent=label;
   }
   function stat(label,value){
     const node=document.createElement('div');

@@ -1,5 +1,6 @@
 /* Presentation only: the blackjack engine and progression are unchanged. */
 Object.assign(STR.fr,{
+ 'upg.subtitle':'Renforce tes atouts',
  'ui.bet':'Mise','ui.mult':'Multi','ui.gain':'Cagnotte','ui.potLbl':'Cagnotte','ui.turnsLeft':'mains<br>restantes','ui.you':'Ta main','ui.dealer':'Croupier','act.double':'DOUBLER','act.force':'FORCER','modern.table':'Table',
  'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HAUTE TENSION',
  'modern.hero':'Une carte de plus.<br>Et tout peut basculer.','modern.tag1':'DES COMBOS','modern.tag2':'DU CULOT','cb.to21':n=>'21 parfait ×3 · +'+n,'modern.goal':'Objectif','modern.loadout':'TES ATOUTS','modern.empty':'Ta prochaine belle main commence ici.','modern.artCaption':'LA MAISON OBSERVE.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Douces',
@@ -28,6 +29,7 @@ Object.assign(STR.fr,{
  'test.resetConfirmCopy':'La <b>réputation</b>, les <b>améliorations</b> et les <b>records du circuit</b> seront effacés. La partie en cours sera arrêtée.<br><br>Tu recommences à la <b>table 1</b>, en choisissant ton contrat.<br><br>La progression du mode Libre et tes réglages sont conservés.'
 });
 Object.assign(STR.en,{
+ 'upg.subtitle':'Strengthen your perks',
  'ui.bet':'Bet','ui.mult':'Multi','ui.gain':'Bank','ui.potLbl':'Bank','ui.turnsLeft':'hands<br>left','ui.you':'Your hand','ui.dealer':'Dealer','act.force':'PUSH LUCK','modern.table':'Table',
  'modern.club':'Blackjack roguelite','modern.private':'COLD DECK','modern.afterhours':'HIGH VOLTAGE',
  'modern.hero':'One more card.<br>And everything can change.','modern.tag1':'BIG COMBOS','modern.tag2':'BOLD MOVES','modern.goal':'Target','modern.loadout':'YOUR PERKS','modern.empty':'Your next great hand starts here.','modern.artCaption':'THE HOUSE IS WATCHING.','modern.motion':'ANIMATIONS','modern.punchy':'Punchy','modern.calm':'Gentle',
@@ -177,3 +179,26 @@ document.addEventListener('keydown',e=>{
  }
 });
 syncMenuFocus();
+
+// Fit complete panels after their content, fonts or available viewport changes.
+(()=>{
+ const screens=['upgradesScreen','tableBrief','shop','inspectScreen'].map(id=>$(id));
+ let pending=0;
+ function fit(){
+  pending=0;
+  for(const screen of screens){
+   if(!screen.classList.contains('show'))continue;
+   if(screen.id==='inspectScreen'&&!screen.classList.contains('table-details-view')){screen.querySelector('.ovpanel').style.removeProperty('--dialog-fit');continue;}
+   const panel=screen.querySelector('.ovpanel'),style=getComputedStyle(screen);
+   const height=screen.clientHeight-parseFloat(style.paddingTop)-parseFloat(style.paddingBottom)-4;
+   const width=screen.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight);
+   const scale=Math.min(1,height/panel.offsetHeight,width/panel.offsetWidth);
+   panel.style.setProperty('--dialog-fit',String(Math.max(0.1,scale)));
+  }
+ }
+ const schedule=()=>{if(!pending)pending=requestAnimationFrame(fit);};
+ const sizes=new ResizeObserver(schedule),visibility=new MutationObserver(schedule);
+ for(const screen of screens){sizes.observe(screen.querySelector('.ovpanel'));visibility.observe(screen,{attributes:true,attributeFilter:['class']});}
+ addEventListener('resize',schedule);window.visualViewport?.addEventListener('resize',schedule);
+ document.fonts?.ready.then(schedule);schedule();
+})();

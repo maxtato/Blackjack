@@ -2509,17 +2509,17 @@ function renderPlanque(){
     lb.innerHTML=t('planque.start')+'<small>'+sub+'</small>';}
   const z2=$('planqueZ2');if(z2)z2.style.display='none';   // remplacé par le sélecteur « REPRENDRE À » dès qu'une table 2+ est atteinte
   const rb2=$('repBal2');if(rb2)rb2.textContent=abbr(m.rep);
-  const lead=$('upgradesLead');if(lead)lead.innerHTML=t(inf?'planque.leadInf':'planque.leadCircuit');
+  const lead=$('upgradesLead');if(lead)lead.textContent=t('upg.subtitle');
   const box=$('unlockItems');box.innerHTML='';
   let affordable=0,allMax=true;
   unlocksFor(MODE).forEach(u=>{
     const lvl=uLvl(u.id),cost=unlockCost(u),maxed=cost===null;
     if(!maxed){allMax=false;if(m.rep>=cost)affordable++;}
     const d=document.createElement('div');d.className='shopItem'+(maxed?' bought':'');
-    const dots=u.max>1?` <span class="ulvl">${'●'.repeat(lvl)}${'○'.repeat(u.max-lvl)}</span>`:(lvl?' <span class="ulvl">●</span>':'');
+    const dots='<span class="ulvl" aria-label="'+lvl+'/'+u.max+'">'+Array.from({length:u.max},(_,i)=>'<span class="upgrade-level'+(i<lvl?' filled':'')+'" aria-hidden="true"></span>').join('')+'</span>';
     d.innerHTML=`<div class="shopTok">${effectMark(u.k,u.tc)}</div>`+
-      `<div class="sInfo"><div class="nm">${t('unlock.'+u.k+'.n')}${dots}</div><div class="ds">${t('unlock.'+u.k+'.d',lvl)}</div></div>`;
-    const b=document.createElement('button');b.className='btn b-gold';
+      `<div class="sInfo"><div class="nm">${ColdDeckArt.lettering(t('unlock.'+u.k+'.n'))}</div>${dots}<div class="ds">${t('unlock.'+u.k+'.d',lvl)}</div></div>`;
+    const b=document.createElement('button');b.className='btn b-blue';
     b.style.cssText='font-size:13px;padding:9px 11px';
     if(maxed){b.textContent=t('planque.max');b.disabled=true;}
     else{b.innerHTML=STAR+cost;if(m.rep<cost)b.disabled=true;b.onclick=()=>buyUnlock(u.id);}
