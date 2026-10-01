@@ -702,7 +702,7 @@ Object.assign(STR.fr,{
  'journey.hudBossIn':n=>'Boss dans '+n,'journey.bossStep':n=>'BOSS '+n,'journey.tableStep':n=>'TABLE '+n,
  'journey.toWin':'Reste à gagner','journey.currentAmount':'Montant actuel','journey.targetAmount':'Objectif à atteindre','journey.within':n=>'en '+n+' mains','journey.minBet':'Mise mini.',
  'journey.totalGoalLabel':'Objectif total',
- 'journey.prepare':'Prépare la prochaine table','journey.shopReputation':pot=>pot+' ★ de réputation',
+ 'journey.prepare':'Prépare la suite','journey.shopReputation':pot=>pot+' ★ de réputation',
  'journey.profitTarget':'Bénéfice requis','journey.totalGoal':goal=>'Objectif total : '+goal,'journey.enter':n=>'ENTRER À LA TABLE '+n,
  'journey.reserve':amount=>'À garder pour l’entrée et la première mise : '+amount,
  'journey.rating':n=>n+' étoiles sur 3','journey.tableReward':'Récompense de table','journey.inPocket':'En poche',
@@ -718,7 +718,7 @@ Object.assign(STR.en,{
  'journey.hudBossIn':n=>'Boss in '+n,'journey.bossStep':n=>'BOSS '+n,'journey.tableStep':n=>'TABLE '+n,
  'journey.toWin':'To earn','journey.currentAmount':'Current amount','journey.targetAmount':'Target amount','journey.within':n=>'within '+n+' hands','journey.minBet':'Min. bet',
  'journey.totalGoalLabel':'Total goal',
- 'journey.prepare':'Prepare for the next table','journey.shopReputation':pot=>pot+' ★ reputation',
+ 'journey.prepare':'Prepare what comes next','journey.shopReputation':pot=>pot+' ★ reputation',
  'journey.profitTarget':'Profit required','journey.totalGoal':goal=>'Total target: '+goal,'journey.enter':n=>'ENTER TABLE '+n,
  'journey.reserve':amount=>'Keep for entry and your first bet: '+amount,
  'journey.rating':n=>n+' stars out of 3','journey.tableReward':'Table reward','journey.inPocket':'In your pocket',
@@ -747,4 +747,15 @@ Object.assign(STR.en,{
  'ctr.help.csuite':'Win with at least 3 consecutive ranks and no duplicates. Suits may differ.',
  'ctr.help.ccoul':'Win with at least 3 cards of the same suit: all hearts, diamonds, clubs or spades.',
  'ctr.help.common':'This challenge is optional. Complete it once during this table to earn the displayed reputation. Viewing these details does not select the contract.'
+});
+
+Object.assign(STR.fr,{
+ 'shop.offerHeading':'Renforce tes atouts','shop.offerDetails':'Détails de cette offre',
+ 'shop.remaining':n=>'Reste '+n,'shop.reroll':n=>'Relancer les offres · '+n,
+ 'journey.toEarn':'À gagner'
+});
+Object.assign(STR.en,{
+ 'shop.offerHeading':'Strengthen your hand','shop.offerDetails':'Offer details',
+ 'shop.remaining':n=>'Left '+n,'shop.reroll':n=>'Reroll offers · '+n,
+ 'journey.toEarn':'To earn'
 });

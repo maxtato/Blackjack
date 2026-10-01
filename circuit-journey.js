@@ -85,11 +85,11 @@ const ColdDeckJourney=(()=>{
     label.dataset.readingLabel='';label.textContent=t('journey.table',String(tb.i+1).padStart(2,'0'),RUN_LEN)+' · '+bossNotice(tb);
     const title=document.createElement('h2');title.textContent=tableName(tb);
     const stats=document.createElement('div');stats.className='journey-next-stats';
-    stats.append(stat(t('journey.profitTarget'),cash(next.profit)),stat(t('circuit.handsLabel'),tb.mains),stat(t('journey.minBet'),cash(tb.min)));
+    stats.append(stat(t('journey.toEarn'),cash(next.profit)),stat(t('circuit.handsLabel'),tb.mains),stat(t('journey.minBet'),cash(tb.min)));
     const rule=document.createElement('p');rule.className='journey-next-rule';rule.textContent=tableRuleText(tb);
     const goal=document.createElement('p');goal.className='journey-next-goal';goal.textContent=t('journey.totalGoal',cash(tb.goal));
     node.append(label,title,stats,rule,goal);
-    $('shopNextBtn').innerHTML=t('journey.enter',tb.i+1)+'<small>'+tableName(tb)+'</small>';
+    $('shopNextBtn').innerHTML=ColdDeckArt.lettering(t('journey.enter',String(tb.i+1).padStart(2,'0')))+'<img class="nav-triangle" src="icons/nav-triangle.svg" width="20" height="20" alt="">';
   }
   function renderVictory(){
     const tb=G.table,last=G.tableIdx===RUN_LEN-1;

@@ -1209,7 +1209,7 @@ function openInspect(kind,i){
   mk(t('insp.sell',cash(sellValue(item))),sellItem,!['bet','shop'].includes(G.phase)||(kind==='relic'&&item.id==='portebonheur'&&G.consumables.length>=consumableSlots()));
   mk(t('insp.close'),closeInspect);$('inspectScreen').classList.add('show');
 }
-function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show','table-details-view','shop-sale-view','contract-info-view');inspectRef=null;GameClock.pause('inspect',false);if(typeof syncMenuFocus==='function')syncMenuFocus();}
+function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show','table-details-view','shop-sale-view','contract-info-view','shop-offer-info-view');inspectRef=null;GameClock.pause('inspect',false);if(typeof syncMenuFocus==='function')syncMenuFocus();}
 function sellItem(){
   if(!inspectRef||!['bet','shop'].includes(G.phase))return;
   const {kind,i}=inspectRef;
@@ -1770,6 +1770,16 @@ function rollShop(){
   else if(pool[3])shopOffer.push(pool[3]);
   renderShop();
 }
+function openShopOfferInfo(i){
+  const offer=shopOffer[i];if(!offer)return;
+  inspectRef=null;GameClock.pause('inspect',true);
+  const screen=$('inspectScreen');screen.classList.remove('table-details-view','shop-sale-view','contract-info-view');screen.classList.add('shop-offer-info-view');
+  const item=offer.data;
+  $('inspectBody').innerHTML='<div class="inspCard tag '+(offer.type==='tarot'?'tarot':'joker')+'">'+effectMark(item.id,tokFor(item.id).c)+'</div><h1>'+ColdDeckArt.lettering(iName(item))+'</h1><p data-reading-label>'+iDesc(item)+'</p>';
+  const close=document.createElement('button');close.className='btn b-blue';close.textContent=t('insp.close');close.onclick=closeInspect;
+  $('inspectActions').replaceChildren(close);screen.classList.add('show');
+  if(typeof syncMenuFocus==='function')syncMenuFocus();
+}
 function renderShop(){
   const box=$('shopItems');box.innerHTML='';
   if(!shopOffer.length){box.innerHTML='<p style="color:var(--muted)">'+t('shop.empty')+'</p>';}
@@ -1783,18 +1793,20 @@ function renderShop(){
       :'<span style="font-size:9px;color:var(--yellow)">'+t('shop.tagRelic')+'</span>';
     const tk=tokFor(r.id);
     const chipCls=isSvc?'svc':isTarot?'tarot':'joker';
-    d.innerHTML=`<div class="shopTok tag ${chipCls}">${effectMark(r.id,tk.c)}</div><div class="sInfo"><div class="nm">${iName(r)} ${tag}</div><div class="ds">${iDesc(r)}</div></div>`;
+    d.innerHTML=`<div class="shopTok tag ${chipCls}">${effectMark(r.id,tk.c)}</div><div class="sInfo"><div class="nm">${ColdDeckArt.lettering(iName(r))}</div><div class="shop-kind">${tag}</div><div class="shop-description"><div class="ds">${iDesc(r)}</div></div></div>`;
+    const info=document.createElement('button');info.type='button';info.className='shop-offer-info';info.dataset.readingLabel='';info.textContent='i';info.setAttribute('aria-label',t('shop.offerDetails')+' : '+iName(r));info.setAttribute('aria-haspopup','dialog');info.onclick=()=>openShopOfferInfo(i);d.querySelector('.shop-description').append(info);
     const cost=isSvc?serviceCost(r):itemCost(r);
     const b=document.createElement('button');b.className='btn '+(isSvc?'b-teal':isTarot?'b-purple':'b-gold');
     b.style.cssText='font-size:13px;padding:9px 11px';b.textContent=cash(cost);
     const slotFull=isSvc?false:isTarot?G.consumables.length>=consumableSlots():G.relics.length>=relicMax();
     const safe=G.bank-cost>=shopReserve()||(isSvc&&r.id==='soin'&&serviceAvailable(r));
     if(it.bought||G.bank<cost||slotFull||!safe||(isSvc&&!serviceAvailable(r)))b.disabled=true;
-    if(!it.bought)d.querySelector('.ds').insertAdjacentHTML('beforeend','<small class="shop-reserve">'+t('shop.after',cash(Math.max(0,G.bank-cost+(isSvc&&r.id==='soin'?advanceAmount(G.bank-cost):0)-shopTable().entry)))+'</small>');
+    const purchase=document.createElement('div');purchase.className='shop-purchase';purchase.append(b);
+    if(!it.bought)purchase.insertAdjacentHTML('beforeend','<small class="shop-reserve" data-reading-label>'+t('shop.remaining',cash(Math.max(0,G.bank-cost+(isSvc&&r.id==='soin'?advanceAmount(G.bank-cost):0)-shopTable().entry)))+'</small>');
     if(it.bought)b.textContent=t('shop.owned');
     else if(slotFull)b.textContent=t('shop.full');
     b.onclick=()=>buyShopItem(i,d,b);
-    d.appendChild(b);box.appendChild(d);
+    d.appendChild(purchase);box.appendChild(d);
   });
   scheduleFitChipText();
   renderShopInventory();
