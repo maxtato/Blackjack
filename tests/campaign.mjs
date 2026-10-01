@@ -12,7 +12,7 @@ for(let n=0;n<N;n++){
    const passed=tableAttempt(policy,stats);attempts.push({table:idx+1,passed,hands:stats.hands});
    if(passed){
     if(idx===23){a.cashOut();complete=true;break;}
-    shop(policy,{});h.w.__screen='';a.leaveShop();a.chooseContract(0);h.flush();
+    shop(policy,{});h.w.__screen='';a.leaveShop();a.startPreparedTable();h.flush();
    }else if(g.tokens>0){h.w.__screen='';a.retryTable();h.flush();}
    else break;
   }

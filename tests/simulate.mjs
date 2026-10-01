@@ -5,7 +5,7 @@ const h=engine(),a=h.api;
 const N=Number(process.env.CIRCUIT_SAMPLES||1000);
 const maxUnlocks={bank:5,pourboire:3,net:3,tarot:1,contact:1,relic2:1};
 const results={samples:N,method:'Original game rules and timer callbacks; rendering, audio, adverts and animation waits are stubbed. Policies use only visible cards, except a legal one-card peek with Lunettes. Probabilities describe these policies, not optimal human play.',profiles:[],isolated:[],marginal:[]};
-const zero=()=>({attempts:0,clears:0,failures:0,hands:0,wins:0,stars:[0,0,0,0],baraka3:0,baraka4:0,contracts:0,force:0,early:0});
+const zero=()=>({attempts:0,clears:0,failures:0,hands:0,wins:0,stars:[0,0,0,0],baraka3:0,baraka4:0,force:0,early:0});
 function basic(g,advanced=true){
   const {total:v,soft}=a.handValue(g.pHand),two=g.pHand.length===2;
   const up=g.table.rule==='mute'?10:g.dHand[0].r==='A'?11:Math.min(10,Number(g.dHand[0].r)||10);
@@ -61,11 +61,11 @@ function playHand(profile,stats){
 }
 function tableAttempt(profile,stats){
   stats.attempts++;
-  if(a.G.contractPending)a.chooseContract(0);
+  if(a.G.briefPending)a.startPreparedTable();
   while(!h.w.__screen&&a.G.phase!=='victory')playHand(profile,stats);
   const g=a.G;
   if(g.phase==='victory'){
-    stats.clears++;stats.stars[g.lastStars]++;if(g.hand<g.table.mains)stats.early++;if(g.contract?.done)stats.contracts++;
+    stats.clears++;stats.stars[g.lastStars]++;if(g.hand<g.table.mains)stats.early++;
     a.continueTableVictory();
     return true;
   }
@@ -105,7 +105,7 @@ for(const p of profiles){
       const passed=tableAttempt(p,stats[idx]);trace.push({table:idx+1,passed,hands:g.hand,bank:g.bank,relics:g.relics.map(r=>r.id),lives:g.tokens});
       if(passed){
         if(idx===23){completions++;a.cashOut();break;}
-        shop(p,hist);h.w.__screen='';a.leaveShop();a.chooseContract(0);h.flush();
+        shop(p,hist);h.w.__screen='';a.leaveShop();a.startPreparedTable();h.flush();
       }else if(g.tokens>0){h.w.__screen='';a.retryTable();h.flush();}
       else break;
     }

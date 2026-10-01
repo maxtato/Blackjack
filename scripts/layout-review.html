@@ -78,7 +78,7 @@ async function render(){
   chooseMode('nuit');startGame(visualScreen==='boss-brief'?23:0);
   if(visualScreen!=='draft')while(G.phase==='draft')chooseStarter(0);
   if(visualScreen==='circuit-shop'){
-   chooseContract(0);GameClock.clear();G.bank=350;G.phase='done';finishTable();
+   startPreparedTable();GameClock.clear();G.bank=350;G.phase='done';finishTable();
   }
  }
  else if(visualScreen.startsWith('numbers-')){
@@ -88,7 +88,7 @@ async function render(){
   else if(visualScreen==='numbers-tier'){
    chooseMode('infini');startEndless();G.bank=330;reachPalier();
   }else{
-   startGame(8);while(G.phase==='draft')chooseStarter(0);chooseContract(0);GameClock.clear();
+   startGame(8);while(G.phase==='draft')chooseStarter(0);startPreparedTable();GameClock.clear();
    if(visualScreen==='numbers-relic'){
     G.relics=[{...RELIC_POOL.find(r=>r.id==='diplomate')}];renderRelics();openInspect('relic',0);
    }else if(visualScreen==='numbers-results'){
@@ -104,17 +104,17 @@ async function render(){
   RECS={nuit:{gain:900},infini:{gain:1800}};
   openMenu();
   if(visualScreen==='test-pause'){
-   chooseMode('nuit');startGame(8);while(G.phase==='draft')chooseStarter(0);chooseContract(0);openPause();pauseSettings();
+   chooseMode('nuit');startGame(8);while(G.phase==='draft')chooseStarter(0);startPreparedTable();openPause();pauseSettings();
   }else openSettings();
  }
  else if(visualScreen==='home')openMenu();
  else if(visualScreen==='circuit'||visualScreen==='free')chooseMode(visualScreen==='free'?'infini':'nuit');
  else {
-  chooseMode('nuit');startGame(0);while(G.phase==='draft')chooseStarter(0);chooseContract(0);GameClock.clear();
+  chooseMode('nuit');startGame(0);while(G.phase==='draft')chooseStarter(0);startPreparedTable();GameClock.clear();
   const visualRanks=visualScreen.startsWith('flip-')?[5,6,7]:visualScreen==='tens'?[10,10]:visualScreen==='win-flow'?[10,9]:visualScreen==='combo-ready'?[5,6,4]:visualScreen==='double'?[5,6]:visualScreen==='no-special'?[3,4,5]:(visualScreen==='editions'||visualScreen.startsWith('inventory'))?[5,6,7]:visualScreen==='six'?[2,2,3,3,4,3]:visualScreen==='four'?[3,4,5,5]:[8,9];
   const visualSuits=['♣','♥','♠','♦','♣','♥'];
   const visualHand=visualRanks.map((r,i)=>({r:String(r),s:visualSuits[i],...((visualScreen==='editions'||visualScreen.startsWith('inventory'))?{ed:['foil','holo','poly'][i]}:{})}));
-  Object.assign(G,{phase:'play',bank:120,bet:10,betChosen:true,tokens:3,hand:2,pHand:visualHand,dHand:[{r:'K',s:'♣'},{r:'7',s:'♥'}],_dealing:false,insisted:false,contract:{id:'csuite',reward:10,done:false},table:{...G.table,goal:200},shoe:Array.from({length:50},()=>({r:'2',s:'♣'}))});
+  Object.assign(G,{phase:'play',bank:120,bet:10,betChosen:true,tokens:3,hand:2,pHand:visualHand,dHand:[{r:'K',s:'♣'},{r:'7',s:'♥'}],_dealing:false,insisted:false,table:{...G.table,goal:200},shoe:Array.from({length:50},()=>({r:'2',s:'♣'}))});
   if(visualScreen==='fx-flow'){
    G.pHand=[{r:'5',s:'♣'},{r:'6',s:'♥'}];G.shoe[G.shoe.length-1]={r:'7',s:'♠'};
    G.relics=['lunettes','jeton','as'].map(id=>({...RELIC_POOL.find(item=>item.id===id)}));
@@ -130,7 +130,7 @@ async function render(){
   }
   if(['fx-simple','fx-loss','fx-push','fx-bust','fx-combo','fx-jackpot','fx-record','fx-blackjack','fx-baraka-rise'].includes(visualScreen)){
    RECS.nuit={gain:visualScreen==='fx-record'?5:10000};
-   G.table={...G.table,goal:1000};G.contract=null;
+   G.table={...G.table,goal:1000};
    G.pHand=[{r:'10',s:'♣'},{r:'9',s:'♥'}];
    if(visualScreen==='fx-loss'||visualScreen==='fx-bust')G.pHand=[{r:'10',s:'♣'},{r:'6',s:'♥'}];
    if(visualScreen==='fx-push')G.pHand=[{r:'10',s:'♣'},{r:'7',s:'♥'}];
@@ -145,7 +145,7 @@ async function render(){
   }
   if(visualScreen.startsWith('fx-push-')){
    const tableIndex=visualScreen==='fx-push-accountant'?14:visualScreen==='fx-push-godfather'?23:8;
-   G.tableIdx=tableIndex;G.table={...RUN[tableIndex]};G.bet=G.table.min;G.contract=null;
+   G.tableIdx=tableIndex;G.table={...RUN[tableIndex]};G.bet=G.table.min;
    G.relics=[];G.consumables=[];G.baraka=4;G.stakeMult=visualScreen==='fx-push-double'?2:1;
    if(visualScreen==='fx-push-diplomate')G.relics=[{...RELIC_POOL.find(item=>item.id==='diplomate')}];
    G.pHand=[{r:'10',s:'♣'},{r:'8',s:'♥'}];G.dHand=[{r:'K',s:'♣'},{r:'8',s:'♦'}];

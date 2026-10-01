@@ -241,11 +241,11 @@ function openTableRules(){
     ['table.detailsMax',cash(tb.max)]
   ];
   const challenge=tb.challenge?'<section class="table-details-note table-boss-challenge"><h2 data-reading-label>'+t('table.detailsChallenge')+'</h2><p>'+bossProgress()+'</p></section>':'';
-  const contract=G.contract&&!G.endless?'<section class="table-details-note"><h2 data-reading-label>'+t('table.detailsContract')+'</h2><p>'+contractText(G.contract)+'</p><span class="table-details-status" data-reading-label>'+(G.contract.done?t('top.contractDone'):'+'+G.contract.reward+STAR)+'</span></section>':'';
+  const event=G.event?'<section class="table-details-note"><h2>'+ColdDeckArt.lettering(evtTitle(G.event))+'</h2><p data-reading-label>'+evtDesc(G.event)+'</p></section>':'';
   const totals=G.endless
     ?[t('top.record',cash(Math.max(G.peak||0,G.bank))),t('top.worth',STAR+abbr(endlessCashRep()))]
-    :[t('top.stars',G.runStars||0),...(G.pot>0?[t('top.pot',cash(G.pot))]:[])];
-  body.innerHTML='<div class="illustrated-heading table-brief-heading"><div class="table-heading-copy"><span class="table-brief-kicker" data-reading-label>'+context+'</span><h1>'+tableName(tb)+'</h1></div></div><div class="table-effect-card"></div><div class="brief-stats">'+stats.map(([label,value])=>'<div class="brief-stat"><span class="brief-stat-label" data-reading-label>'+t(label)+'</span><strong class="brief-stat-value">'+value+'</strong></div>').join('')+'</div>'+challenge+contract+'<div class="table-details-totals" data-reading-label>'+totals.map(value=>'<span>'+value+'</span>').join('')+'</div>';
+    :[t('top.stars',G.runStars||0),...(G.pot>0?[t('journey.shopReputation',abbr(G.pot))]:[])];
+  body.innerHTML='<div class="illustrated-heading table-brief-heading"><div class="table-heading-copy"><span class="table-brief-kicker" data-reading-label>'+context+'</span><h1>'+tableName(tb)+'</h1></div></div><div class="table-effect-card"></div><div class="brief-stats">'+stats.map(([label,value])=>'<div class="brief-stat"><span class="brief-stat-label" data-reading-label>'+t(label)+'</span><strong class="brief-stat-value">'+value+'</strong></div>').join('')+'</div>'+challenge+event+'<div class="table-details-totals" data-reading-label>'+totals.map(value=>'<span>'+value+'</span>').join('')+'</div>';
   renderTableEffect(body.querySelector('.table-effect-card'));
   $('inspectScreen').dataset.boss=String(!G.endless&&!!tb.boss);
   if(G.endless)for(const key of ['--table-accent','--table-tint'])body.closest('.ovpanel').style.removeProperty(key);
@@ -319,9 +319,8 @@ const BOONS=[
   {id:'baraplus',lock:'boon2'},
   {id:'evt3',lock:'boon2'},
 ];
-/* mini-événements du mode cagnotte : toutes les 5 mains, la main est SPÉCIALE —
-   ça casse la routine et crée des pics de tension/récompense */
-const ENDLESS_EVENTS=[
+/* Special hands: one temporary effect, announced before placing the bet. */
+const HAND_EVENTS=[
   {id:'doree',   ic:'doree'},
   {id:'forcee',  ic:'forcee'},
   {id:'pompette',ic:'glass'},
@@ -329,53 +328,15 @@ const ENDLESS_EVENTS=[
 ];
 function evtTitle(e){return t('evt.'+e.id+'.t');}
 function evtDesc(e){return t('evt.'+e.id+'.d');}
-/* CONTRATS (mode nuit) : un défi optionnel par table — le remplir rapporte des ★
-   bonus dans la cagnotte. Pousse à jouer AUTREMENT, pas juste à battre le croupier. */
-const CONTRACTS=[
-  {id:'c5', weight:3, chk:o=>o.n>=5},
-  {id:'c21', weight:1.5, chk:o=>o.pv===21&&o.n>2},
-  {id:'cpress',weight:1.5,chk:o=>o.level>=2},
-  {id:'cmult',weight:1, chk:o=>o.mult>=3},
-  {id:'cdbl', weight:1, chk:o=>o.dbl},
-  {id:'csuite',weight:2.5,chk:o=>o.suite},
-  {id:'ccoul',weight:2,chk:o=>o.coul},
-];
-function contractText(c){return c?t('ctr.'+c.id):'';}
-function openContractInfo(i){
-  const c=G.contractChoices?.[i];if(!c)return;
-  inspectRef=null;GameClock.pause('inspect',true);
-  const screen=$('inspectScreen');screen.classList.remove('table-details-view','shop-sale-view');
-  screen.classList.add('contract-info-view');
-  $('inspectBody').innerHTML='<h1>'+ColdDeckArt.lettering(contractText(c))+'</h1><p data-reading-label>'+t('ctr.help.'+c.id)+'</p><p data-reading-label>'+t('ctr.help.common')+'</p><div class="contract-info-reward">+'+c.reward+' '+STAR+'</div>';
-  const close=document.createElement('button');close.className='btn b-blue';close.textContent=t('insp.close');close.onclick=closeInspect;
-  $('inspectActions').replaceChildren(close);screen.classList.add('show');
-  if(typeof syncMenuFocus==='function')syncMenuFocus();
+/* One automatic effect per special hand. Free Play keeps its own cadence. */
+function rollHandEvent(){
+  const cadence=G.endless?(G.boons?.evt3?3:5):3;
+  G.event=G.hand%cadence===0?HAND_EVENTS[rndInt(HAND_EVENTS.length)]:null;
 }
-function rollContract(tb=G.table){
-  if(G.endless)return null;
-  const controlled=hasRelic('lunettes')||hasRelic('phare')||G.consumables.some(c=>c.id==='magicien');
-  const easy=CONTRACTS.filter(c=>['c21','cmult','cdbl'].includes(c.id));
-  const hard=CONTRACTS.filter(c=>['cpress','ccoul'].includes(c.id)||(controlled&&['c5','csuite'].includes(c.id)));
-  const make=c=>({id:c.id,reward:Math.round((6+tb.zone*2)*c.weight),done:false});
-  G.contractChoices=[make(easy[rndInt(easy.length)]),make(hard[rndInt(hard.length)])];
-  return G.contractChoices[0];
-}
-/* appelé sur chaque main GAGNÉE (mult = multiplicateur payé) */
-function checkContract(mult){
-  const c=G.contract;if(!c||c.done||G.endless)return;
-  const h=G.pHand,n=h.length,pv=handValue(h).total,suits=new Set(h.map(x=>x.s));
-  const o={n,pv,press:barakaPct(),level:barakaLevel(),mult:mult||1,dbl:(G.stakeMult||1)>=2,suite:isStraight(h),coul:n>=3&&suits.size===1};
-  const def=CONTRACTS.find(x=>x.id===c.id);
-  if(def&&def.chk(o)){
-    c.done=true;G.pot+=c.reward;
-    gameDelay(()=>{sfx.combo&&sfx.combo();coinBurst(8);popText(PXI('scroll')+' '+t('msg.contract'),'+'+c.reward+' '+STAR);renderTop();},1500);
-  }
-}
-/* étoiles : il FAUT atteindre l'objectif pour valider la table.
-   0★ = objectif manqué (table ratée) · 1★ objectif · 2★ confort · 3★ maîtrise */
+/* Reputation follows the table result, with no challenge to select. */
 function starsFor(tb,bank){
   if(bank<tb.goal||!bossReady())return 0;
-  return 1+(!G.tableRetried?1:0)+(G.contract?.done?1:0);
+  return 1+(!G.tableRetried?1:0)+(G.hand<=tb.mains-2?1:0);
 }
 /* réputation d'une table validée : indexée sur la zone, les étoiles, le boss —
    jamais sur le tas de jetons. Petit bonus de risque maîtrisé. */
@@ -539,7 +500,7 @@ function recommendedBet(tb=G.table,bank=G.bank,level=barakaLevel()){
 }
 function resetTableState(retry){
   const carry=retry?0:Math.min(2,Math.floor((G.baraka||0)/2));
-  Object.assign(G,{hand:1,phase:'bet',pressure:0,baraka:G.table.rule==='depart'?2:carry,tableMaxBaraka:0,dHand:[],pHand:[],forcedUsed:false,tableMaxPressure:0,objHit:false,_talismanUsed:false,_dealing:false,_settling:false,penduArmed:false,magicNext:false,smallNext:false,counterUsed:false,phareUsed:false,knownCard:null,splitActive:false,hands:null,hi:0,stakeMult:1,tarotThisHand:false,bossState:{wins:0,qualified:0,totals:[]}});
+  Object.assign(G,{hand:1,phase:'bet',event:null,briefPending:false,pressure:0,baraka:G.table.rule==='depart'?2:carry,tableMaxBaraka:0,dHand:[],pHand:[],forcedUsed:false,tableMaxPressure:0,objHit:false,_talismanUsed:false,_dealing:false,_settling:false,penduArmed:false,magicNext:false,smallNext:false,counterUsed:false,phareUsed:false,knownCard:null,splitActive:false,hands:null,hi:0,stakeMult:1,tarotThisHand:false,bossState:{wins:0,qualified:0,totals:[]}});
   if(!retry)G.tableRetried=false;
 }
 function nextTablePreview(){
@@ -555,7 +516,6 @@ function showTableBrief(){
   const chance=G.preparingNext?(tb.rule==='depart'?2:Math.min(2,Math.floor((G.baraka||0)/2))):G.baraka;
   $('briefTableLabel').textContent=tb.pal!=null?t('planque.tierLabel',tb.pal+1):t('planque.tableLabel',tb.i+1);
   $('briefTitle').innerHTML=ColdDeckArt.lettering(tableName(tb));
-  $('briefContractTitle').innerHTML=ColdDeckArt.lettering(t('circuit.contractTitle'));
   renderTableEffect($('briefEffect'),tb);
   $('briefRule').textContent=[tb.challenge?t('boss.'+tb.challenge):'',tb.entry?t('rtx.entry',cash(tb.entry)):''].filter(Boolean).join(' · ');
   $('briefRule').hidden=!$('briefRule').textContent;
@@ -566,19 +526,10 @@ function showTableBrief(){
     const amount=document.createElement('span');amount.className='brief-stat-value';amount.textContent=value;
     stat.append(label,amount);$('briefGoal').append(stat);
   }
-  $('briefContracts').replaceChildren();
-  G.contractChoices.forEach((c,i)=>{
-    const row=document.createElement('div');row.className='contract-option';
-    const b=document.createElement('button');b.className='btn b-blue contract-choice';
-    b.disabled=bank<tb.min;
-    b.innerHTML='<span class="contract-copy">'+contractText(c)+'</span><small class="contract-reward"><span class="contract-reward-value">+'+c.reward+' '+STAR+'</span></small><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
-    const info=document.createElement('button');info.type='button';info.className='contract-info';info.dataset.readingLabel='';info.textContent='i';info.setAttribute('aria-label',t('ctr.help.label')+' : '+contractText(c));info.setAttribute('aria-haspopup','dialog');info.onclick=()=>openContractInfo(i);
-    const copy=b.querySelector('.contract-copy'),reward=b.querySelector('.contract-reward'),arrow=b.querySelector('.nav-triangle');
-    copy.id='contractName'+i;reward.id='contractReward'+i;copy.innerHTML=ColdDeckArt.lettering(contractText(c));
-    const label=document.createElement('span');label.className='contract-label-group';label.append(copy,info);
-    b.setAttribute('aria-labelledby',copy.id+' '+reward.id);
-    b.onclick=()=>chooseContract(i);row.append(b,label,reward,arrow);$('briefContracts').append(row);
-  });
+  const enter=$('briefEnterBtn');
+  enter.innerHTML=ColdDeckArt.lettering(t('circuit.enterTable'));
+  enter.disabled=bank<tb.min;
+  enter.onclick=startPreparedTable;
   $('briefTools').hidden=!G.preparingNext;
   $('briefShopBtn').innerHTML=ColdDeckArt.illustration('tarot','brief-shop-icon')+'<span class="brief-shop-label">'+ColdDeckArt.lettering(t('shop.open'))+'</span><img class="nav-triangle" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
   const cashBtn=$('briefCashBtn');cashBtn.hidden=!G.preparingNext||!G.table.boss;
@@ -586,22 +537,24 @@ function showTableBrief(){
   screen.classList.add('show');
   window.ColdDeckJourney?.renderBrief();
 }
-function chooseContract(i){
-  if(!G.contractPending||!['bet','prepare'].includes(G.phase)||!G.contractChoices?.[i])return;
-  const selected=G.contractChoices[i];
+function startPreparedTable(){
+  if(!G.briefPending||!['bet','prepare'].includes(G.phase))return;
   if(G.preparingNext){
     const next=nextTablePreview();if(!next||G.bank<next.reserve)return;
-    const run=G,prevZone=G.table.zone,selection={contract:selected,choices:G.contractChoices};
-    G.contractPending=false;G.phase='transition';$('tableBrief').classList.remove('show');
+    const run=G,prevZone=G.table.zone;
+    G.briefPending=false;G.phase='transition';$('tableBrief').classList.remove('show');
     Ads.interstitial().then(()=>{
       if(G!==run||G.phase!=='transition')return;
-      G.tableIdx++;G.table=tableFor(G.tableIdx);enterTable(prevZone,selection);
+      G.tableIdx++;G.table=tableFor(G.tableIdx);enterTable(prevZone,false);
     });
     return;
   }
-  G.contractPending=false;G.contract=selected;$('tableBrief')?.classList.remove('show');
-  renderTop();window.ColdDeckJourney?.renderHud();checkBankGoal();
+  if(G.bank<G.table.min)return;
+  G.briefPending=false;$('tableBrief').classList.remove('show');
+  renderTop();window.ColdDeckJourney?.renderHud();
+  if(!checkBankGoal())announceTurn();
 }
+
 function renderCircuitStatus(){
   const el=$('circuitStatus');if(!el)return;
   const effect=tableEffectData(),protectedTie=effect.rule==='sec'&&hasRelic('diplomate');
@@ -661,7 +614,7 @@ function freshGame(){
   G={bank:startBank(),tableIdx:0,hand:1,shoe:[],dHand:[],pHand:[],bet:10,pressure:0,
      peekUsed:false,knownCard:null,penduArmed:false,smallNext:false,counterUsed:false,phareUsed:false,tableRetried:false,bossState:{wins:0,qualified:0,totals:[]},relics:startRelics(),consumables:[],magicNext:false,insisted:false,forced:false,forcedUsed:false,maxPressureReached:0,tableMaxPressure:0,baraka:0,barakaMax:0,insurance:false,objHit:false,
      phase:'bet',pot:0,tokens:startTokens(),runStars:0,tableStars:[],table:RUN[0],stakeMult:1,splitActive:false,hands:null,hi:0,
-     endless:false,palier:0,peak:0,boons:{relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0},streak:0,event:null,contract:null,contractPending:false,preparingNext:false,_shopReady:false,_talismanUsed:false,_palierCash:false,
+     endless:false,palier:0,peak:0,boons:{relic:0,tarot:0,mult:0,income:0,betmax:0,calm:0},streak:0,event:null,briefPending:false,preparingNext:false,_shopReady:false,_talismanUsed:false,_palierCash:false,
      stats:{won:0,played:0,bestGain:0,bestMult:1}};
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));   // valeur interne par défaut
   G.betChosen=false;                                       // il faut choisir une mise sur la 1re table
@@ -1234,7 +1187,7 @@ function openInspect(kind,i){
   mk(t('insp.sell',cash(sellValue(item))),sellItem,!['bet','shop'].includes(G.phase)||(kind==='relic'&&item.id==='portebonheur'&&G.consumables.length>=consumableSlots()));
   mk(t('insp.close'),closeInspect);$('inspectScreen').classList.add('show');
 }
-function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show','table-details-view','shop-sale-view','contract-info-view','shop-offer-info-view');inspectRef=null;GameClock.pause('inspect',false);if(typeof syncMenuFocus==='function')syncMenuFocus();}
+function closeInspect(){const s=$('inspectScreen');if(s)s.classList.remove('show','table-details-view','shop-sale-view','shop-offer-info-view');inspectRef=null;GameClock.pause('inspect',false);if(typeof syncMenuFocus==='function')syncMenuFocus();}
 function sellItem(){
   if(!inspectRef||!['bet','shop'].includes(G.phase))return;
   const {kind,i}=inspectRef;
@@ -1265,7 +1218,8 @@ function betChoices(t=curTable(),level=barakaLevel()){
   const span=maxB-t.min;
   const raw=span<=0?[t.min]:[t.min,roundBet(t.min+span/3),roundBet(t.min+2*span/3),maxB];
   const opts=[...new Set(raw)].sort((a,b)=>a-b);
-  if(G.endless&&G.event&&G.event.id==='forcee'){                 // MISE FORCÉE : un seul choix, le plus haut abordable
+  if(G.event?.id==='forcee'&&!G.preparingNext){                 // MISE FORCÉE : un seul choix, le plus haut abordable
+    if(G.phase!=='bet')return [G.bet];
     const aff=opts.filter(v=>v<=G.bank);
     return [aff.length?aff[aff.length-1]:opts[0]];
   }
@@ -1360,7 +1314,7 @@ function updateBustReadout(){
    DÉROULÉ
    ============================================================ */
 function deal(){
-  if(G.phase!=='bet'||GameClock.reasons.size)return;
+  if(G.phase!=='bet'||G.briefPending||GameClock.reasons.size)return;
   if(checkBankGoal())return;
   audioInit();if(!G.betChosen)return;clampBet();if(G.bank<curTable().min)return;
   window.ColdDeckFX?.clear();
@@ -1377,7 +1331,7 @@ function deal(){
   // on tire les 4 cartes mais on les distribue une par une, en animation
   const p1=draw(),d1=draw(),p2=draw(),d2=draw();
   if((hasRelic('maitresse')||(G.table.rule==='atelier'&&G.hand%3===1))&&!p1.ed)p1.ed='foil';
-  if(G.endless&&G.event&&G.event.id==='etoile'&&!p1.ed)p1.ed='poly';   // CARTE ÉTOILÉE
+  if(G.event?.id==='etoile'&&!p1.ed)p1.ed='poly';   // CARTE ÉTOILÉE
   [p1,p2,d1,d2].forEach(c=>{c._pending=true;});                 // pas encore arrivées
   G.pHand.push(p1,p2);G.dHand.push(d1,d2);
   G._dealing=true;
@@ -1502,7 +1456,7 @@ function dealerPlay(natural){
   renderHands(true);G.doFlip=false;
   const step=()=>{
     const v=handValue(G.dHand);
-    const goal=(G.endless&&G.event&&G.event.id==='pompette')?16:((G.table.rule==='gros')?18:17);
+    const goal=(G.event?.id==='pompette')?16:((G.table.rule==='gros')?18:17);
     const hitSoft17=(barakaLevel()>=2);
     const mustHit=v.total<goal||(goal===17&&v.total===17&&v.soft&&hitSoft17);
     if(mustHit){                                                // le croupier tire : même arrivée animée
@@ -1538,9 +1492,9 @@ function resolve(mode){
     const r=computeMult(mode);mult=r.mult;lines=r.lines;
     const base=stake+r.bonusChips;
     gain=Math.round(base*mult);
-    if(G.endless&&G.event&&G.event.id==='doree'){gain*=2;lines.push([PXI('doree')+' '+t('m.golden'),'×2']);}
+    if(G.event?.id==='doree'){gain*=2;lines.push([PXI('doree')+' '+t('m.golden'),'×2']);}
     window.ColdDeckFX?.holdBank();
-    G.bank+=stake+gain;checkContract(mult);recordBossWin(mult);
+    G.bank+=stake+gain;recordBossWin(mult);
     if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,gain);G.stats.bestMult=Math.max(G.stats.bestMult,mult);}
     if(lines.length){$('tip').innerHTML=lines.map(l=>l[0]+' '+l[1]).join('  ·  ');$('tip').style.color='var(--gold)';}
     // décompte animé (carte par carte + multiplicateurs), PUIS l'annonce du gain
@@ -1588,8 +1542,9 @@ function resolveSplit(){
     if(G.stats){G.stats.played++;}
     if(outcome==='win'){
       G.pHand=h;const r=computeMult('stand');const base=stake+r.bonusChips;
-      g=Math.round(base*r.mult);G.bank+=stake+g;
-      checkContract(r.mult);recordBossWin(r.mult);
+      g=Math.round(base*r.mult);
+      if(G.event?.id==='doree')g*=2;
+      G.bank+=stake+g;recordBossWin(r.mult);
       if(G.stats){G.stats.won++;G.stats.bestGain=Math.max(G.stats.bestGain,g);G.stats.bestMult=Math.max(G.stats.bestMult,r.mult);}
     }else if(outcome==='push'){
       tied++;
@@ -1626,8 +1581,7 @@ function nextHandOrEnd(){
     if(G.bank<G.table.min)return endlessBust();     // banqueroute = fin
     if(G.bank>=palierTarget(G.palier||0))return reachPalier();   // palier franchi → bonus + mises ↑
     G.hand++;G.phase='bet';G._settling=false;G.dHand=[];G.pHand=[];
-    const cadence=(G.boons&&G.boons.evt3)?3:5;                                   // « Mains spéciales ×2 » resserre le rythme
-    G.event=(G.hand%cadence===0)?ENDLESS_EVENTS[rndInt(ENDLESS_EVENTS.length)]:null;   // main spéciale régulière
+    rollHandEvent();
     clampBet();applyHandIncome();renderAll();renderHands();announceTurn();
     return;
   }
@@ -1635,13 +1589,14 @@ function nextHandOrEnd(){
   if(G.bank<G.table.min){return finishTable();}    // à sec : on ne peut plus miser le minimum
   if(G.hand>=G.table.mains){return finishTable();}  // toutes les mains jouées → validation
   G.hand++;G.phase='bet';G._settling=false;G.dHand=[];G.pHand=[];   // la mise garde la dernière valeur jouée
+  rollHandEvent();
   clampBet();
   applyHandIncome();
   if(checkBankGoal())return;
   renderAll();renderHands();
   announceTurn();
 }
-/* fin de table : 0★ = perdue · 1★ survie · 2★ objectif · 3★ maîtrise */
+/* Table clear: goal, no retry, and two hands to spare each earn a star. */
 function finishTable(){
   if(['victory','prepare','shop','transition','lost','ended'].includes(G.phase))return;
   const tb=G.table;
@@ -1660,9 +1615,9 @@ function continueTableVictory(){
   if(G.phase!=='victory')return;
   $('tableVictory').classList.remove('show');
   if(G.tableIdx>=RUN_LEN-1){cashOut();return;}
-  G.phase='prepare';G.preparingNext=true;G.contractPending=true;
+  G.phase='prepare';G.preparingNext=true;G.briefPending=true;
   G._shopReady=false;shopOffer=[];
-  rollContract(nextTablePreview().table);
+  G.event=null;
   Ads.countTable();
   showTableBrief();
 }
@@ -1781,7 +1736,7 @@ function rollShop(){
 function openShopOfferInfo(i){
   const offer=shopOffer[i];if(!offer)return;
   inspectRef=null;GameClock.pause('inspect',true);
-  const screen=$('inspectScreen');screen.classList.remove('table-details-view','shop-sale-view','contract-info-view');screen.classList.add('shop-offer-info-view');
+  const screen=$('inspectScreen');screen.classList.remove('table-details-view','shop-sale-view');screen.classList.add('shop-offer-info-view');
   const item=offer.data;
   $('inspectBody').innerHTML='<div class="inspCard tag '+(offer.type==='tarot'?'tarot':'joker')+'">'+effectMark(item.id,tokFor(item.id).c)+'</div><h1>'+ColdDeckArt.lettering(iName(item))+'</h1><p data-reading-label>'+iDesc(item)+'</p>';
   const close=document.createElement('button');close.className='btn b-blue';close.textContent=t('insp.close');close.onclick=closeInspect;
@@ -1848,28 +1803,26 @@ function rerollShop(){
   G.bank-=rerollCost;rerollCost=niceRound(rerollCost+3*shopScale());renderShopHead();sfx.card();
   rollShop();
 }
-/* La boutique est facultative : revenir au même choix de contrat, sans payer d'entrée. */
+/* La boutique est facultative : revenir à la préparation, sans payer d’entrée. */
 function leaveShop(){
   if(G.phase!=='shop'||!G.preparingNext)return;
   G.phase='prepare';
   $('shop').classList.remove('show');
   showTableBrief();
 }
-/* Mise en place une seule fois, après le choix du contrat. */
-function enterTable(prevZone,selection=null){
+/* Entry fees and setup happen once, after confirming the preparation. */
+function enterTable(prevZone,showBrief=true){
   G.preparingNext=false;
   if(G.table.entry){G.bank=Math.max(0,G.bank-G.table.entry);popText(t('msg.entryFee'),'−'+cash(G.table.entry));}
   const base=RUN[G.tableIdx];
   G.table={...base,goal:base.goal+Math.max(0,G.bank-base.cap)};
-  resetTableState(false);G.contractPending=!selection;
-  if(selection){G.contractChoices=selection.choices;G.contract=selection.contract;}
-  else G.contract=rollContract();
+  resetTableState(false);G.briefPending=showBrief;
   G.bet=recommendedBet();G.betChosen=true;clampBet();G.tableStartBank=G.bank;
   applyHandIncome();updateRecord(0);
   if(G.bank<G.table.min){onTableLost('lost.broke','lost.brokeTxt');return;}
   window.ColdDeckBackgrounds?.applyTable(G.table,false);
-  renderAll();renderHands();renderPressure();announceTurn();
-  if(G.contractPending)showTableBrief();else checkBankGoal();
+  renderAll();renderHands();renderPressure();
+  if(G.briefPending)showTableBrief();else if(!checkBankGoal())announceTurn();
 }
 /* ENCAISSER : on quitte la descente en banquant toute la cagnotte */
 function cashOut(){
@@ -1933,7 +1886,7 @@ function endRun(cashout){
   GameClock.clear();
   $('shop').classList.remove('show');$('loseScreen').classList.remove('show');
   $('tableVictory').classList.remove('show');$('tableBrief').classList.remove('show');
-  G.preparingNext=false;G.contractPending=false;
+  G.preparingNext=false;G.briefPending=false;
   document.body.classList.remove('inf');
   const baseGain=repOnEnd(cashout);
   const coffre=(cashout&&!G.endless)?coffreBonus(G.bank):0;   // coffre : mode nuit seulement (l'infini a sa conversion)
@@ -2019,7 +1972,7 @@ function showWord(kind,gain,mult,natural,bust,record=false,reason=''){
     const note=document.createElement('span');note.className='result-reason';note.textContent=t('w.tableTieReason');p.append(note);
   }
 }
-const RULE_KEYS=['rules.goal','rules.table','rules.moves','rules.stars','rules.streak','rules.combos','rules.bonus','rules.contracts','rules.circuit','rules.hideout','rules.endless'];
+const RULE_KEYS=['rules.goal','rules.table','rules.moves','rules.stars','rules.streak','rules.combos','rules.bonus','rules.events','rules.circuit','rules.hideout','rules.endless'];
 function renderRules(){const b=$('rulesBody');if(b)b.innerHTML=RULE_KEYS.map(k=>'<div>'+t(k)+'</div>').join('');}
 function openRules(){renderRules();$('rulesScreen').classList.add('show');}
 function closeRules(){$('rulesScreen').classList.remove('show');if(pauseReturn){pauseReturn=false;$('pauseScreen').classList.add('show');}}
@@ -2109,19 +2062,20 @@ function quitToMenu(){GameClock.clear();$('pauseScreen').classList.remove('show'
 let turnTimer;
 function announceTurn(){
   const el=$('turnPop');if(!el)return;
-  clearGameDelay(turnTimer);el.classList.remove('go');
+  clearGameDelay(turnTimer);el.classList.remove('go','event-ready');
   let h='';
   if(G._income){
     const lbl=G._income.parts.length===1?G._income.parts[0].replace(/\s*\+.*/,'').toUpperCase():t('msg.income');
     h+=`<div class="tp-coin"><b>+<span class="n">${abbr(G._income.amt)}</span><span class="cur">$</span></b><span>${lbl}</span></div>`;
   }
-  const event=G.endless&&G.event;
+  const event=G.event;
   if(event)h+=`<div class="tp-evt"><span class="tp-event-icon" aria-hidden="true">${PXI(G.event.ic)}</span><div class="tp-event-copy"><strong class="tp-event-title">${ColdDeckArt.lettering(evtTitle(G.event))}</strong><small>${evtDesc(G.event)}</small></div></div>`;
   el.innerHTML=h;
   if(!h)return;
   el.style.setProperty('--turn-duration',event?'3600ms':'1700ms');
   void el.offsetWidth;el.classList.add('go');
-  turnTimer=gameDelay(()=>el.classList.remove('go'),event?3600:1700);
+  if(event&&G.phase==='bet')el.classList.add('event-ready');
+  else turnTimer=gameDelay(()=>el.classList.remove('go'),event?3600:1700);
 }
 let textTimer;
 function popText(txt,sub){

@@ -71,7 +71,6 @@ en:{
 'rules.streak':'<span class="rt">STREAK</span>Your <span class="k">luck</span> bar rises with every win (<span class="k">gutsy play = +2</span>) and unlocks stronger and stronger <span class="k">multipliers</span>. Losing a hand <span class="d">wipes it out</span>.',
 'rules.combos':'<span class="rt">COMBOS</span>The real game: <span class="k">build</span> your hands, don’t just beat the dealer.<br><span class="k">PERFECT 21 ×3</span> · <span class="k">CHARLIE</span> (5 cards) ×2 · <span class="k">FLUSH</span> (3+ same suit) ×2 · <span class="k">STRAIGHT</span> (3+ ranks in a row) ×2 · BLACKJACK ×1.5 · PAIR OF 7s ×1.5 · RAINBOW (4 suits) ×1.5.<br>The pills on the felt show what you already have and what’s within reach.',
 'rules.bonus':'<span class="rt">SMALL BONUSES</span>Situational nudges to the multiplier: <span class="k">COURT</span> (2+ face cards) ×1.5 · <span class="k">LOWBALL</span> (win with ≤15) ×1.5 · <span class="k">BY ONE</span> (beat the dealer by a single point) ×1.5 · <span class="k">CLUTCH</span> (last hand) ×1.5 · <span class="k">COMEBACK</span> (started ≤11, finished ≥17) ×1.3.',
-'rules.contracts':'<span class="rt"><i class="pxi pxi-scroll"></i> CONTRACTS</span>Every table offers an <span class="k">optional challenge</span> (“win a 5-card hand”…) worth <span class="k">bonus ★</span>. Done or not, the table carries on as usual.',
 'rules.circuit':'<span class="rt">THE CIRCUIT</span><span class="k">24 tables · 8 zones · a boss every 3 levels</span>. After a boss: <span class="k">cash in</span> your reputation at the Hideout, or <span class="d">push on</span> for more. Reach <span class="k">zone 2</span> twice to unlock the <span class="k">shortcut</span>.',
 'rules.hideout':'<span class="rt">THE HIDEOUT</span>Spend your <span class="k">reputation <i class="pxstar"></i></span> on permanent perks (relics, tarots, editions) before heading out again.',
 'rules.endless':'<span class="rt">ENDLESS</span>No goal: grow your pot for as long as you can bet. Every <span class="k">tier</span> = a perk of your choice and higher bets · every 5 hands, a <span class="d">special hand</span>. <span class="k">CASH OUT</span> turns your pot into reputation — <span class="d">going bust</span> only keeps the tiers.',
@@ -124,7 +123,7 @@ en:{
 'msg.gutsy':'GUTSY!','msg.gutsySub':n=>'+'+n+' streak',
 'msg.entryFee':'ENTRY FEE','msg.boss':'BOSS','msg.miniboss':'MINI-BOSS',
 'msg.zone':(n,name)=>'ZONE '+n+(name?' — '+name:''),
-'msg.contract':'CONTRACT DONE','msg.income':'INCOME',
+'msg.income':'INCOME',
 'inc.patron':n=>'Patron +'+n,'inc.shark':n=>'Loan Shark +'+n,'inc.tip':n=>'Tip +'+n,'inc.tier':n=>'Tier +'+n,
 'msg.endlessStart':'ENDLESS','msg.endlessStartSub':'climb as high as you can',
 /* --- multiplicateur / combos --- */
@@ -142,7 +141,7 @@ en:{
 /* --- bandeau du haut --- */
 'top.mastery':m=>'mastery ≥'+m,'top.betRange':(a,b)=>'bet '+a+'–'+b,
 'top.stars':n=>n+' star'+(n>1?'s':''),'top.pot':p=>'pot '+p,
-'top.contractDone':'✓ contract done','top.record':v=>'best '+v,
+'top.record':v=>'best '+v,
 'top.worth':r=>'worth '+r+' if you stop',
 'top.metaCircuit':(z,zn,i,n)=>'zone '+z+' · '+zn+' · '+i+'/'+n,
 'top.metaInf':(p,a,b)=>'∞ ENDLESS · tier '+p+' · bet '+a+'–'+b,
@@ -255,15 +254,11 @@ en:{
 'boon.cash.t':'+20 % POT','boon.cash.d':'An immediate injection into your pot.',
 'boon.baraplus.t':'BOOSTED STREAK','boon.baraplus.d':'Gutsy plays give +1 extra STREAK.',
 'boon.evt3.t':'SPECIAL HANDS ×2','boon.evt3.d':'A special hand every 3 hands (instead of 5).',
-/* --- mains spéciales (infini) --- */
+/* --- mains spéciales --- */
 'evt.doree.t':'GOLDEN HAND','evt.doree.d':'payouts doubled on this hand',
-'evt.forcee.t':'FORCED BET','evt.forcee.d':'max bet required',
-'evt.pompette.t':'TIPSY DEALER','evt.pompette.d':'the dealer stands on 16',
-'evt.etoile.t':'STARRED CARD','evt.etoile.d':'your first unedited card receives Prism (×1.5)',
-/* --- contrats --- */
-'ctr.c5':'win a 5-card hand','ctr.c21':'win with a perfect 21','ctr.cpress':'win at streak ≥ 75 %',
-'ctr.cmult':'win a hand at ×3 or more','ctr.cdbl':'win a DOUBLED hand',
-'ctr.csuite':'win with a STRAIGHT','ctr.ccoul':'win with a FLUSH',
+'evt.forcee.t':'FORCED BET','evt.forcee.d':'your highest affordable bet, for this hand',
+'evt.pompette.t':'TIPSY DEALER','evt.pompette.d':'for this hand, the dealer stands on 16',
+'evt.etoile.t':'STARRED CARD','evt.etoile.d':'your first card receives Prism (×1.5) if unedited',
 },
 fr:{
 'ui.turnsLeft':'TOURS<br>RESTANTS','ui.hand':(a,b)=>'main '+a+'/'+b,
@@ -322,7 +317,6 @@ fr:{
 'rules.streak':'<span class="rt">CHANCE</span>Ta barre de <span class="k">veine</span> monte à chaque victoire (<span class="k">coup culotté = +2</span>) et débloque des <span class="k">multiplicateurs</span> de plus en plus forts. Perdre une main la <span class="d">remet à zéro</span>.',
 'rules.combos':'<span class="rt">COMBOS</span>Le vrai jeu : <span class="k">construis</span> tes mains, ne te contente pas de battre le croupier.<br><span class="k">21 PARFAIT ×3</span> · <span class="k">CHARLIE</span> (5 cartes) ×2 · <span class="k">COULEUR</span> (3+ même enseigne) ×2 · <span class="k">SUITE</span> (3+ rangs qui se suivent) ×2 · BLACKJACK ×1.5 · PAIRE DE 7 ×1.5 · ARC-EN-CIEL (4 enseignes) ×1.5.<br>Les pastilles sur le tapis montrent ce qui est acquis et à portée.',
 'rules.bonus':'<span class="rt">PETITS BONUS</span>Des coups de pouce au multiplicateur selon la situation : <span class="k">COUR</span> (2+ figures) ×1.5 · <span class="k">FILOU</span> (gagner avec ≤15) ×1.5 · <span class="k">AU POIL</span> (battre le croupier d\'un point) ×1.5 · <span class="k">CLUTCH</span> (dernière main) ×1.5 · <span class="k">REMONTADA</span> (parti ≤11, fini ≥17) ×1.3.',
-'rules.contracts':'<span class="rt"><i class="pxi pxi-scroll"></i> CONTRATS</span>Chaque table propose un <span class="k">défi optionnel</span> (« gagne une main de 5 cartes »…) qui rapporte des <span class="k">★ bonus</span>. Rempli ou non, la table continue normalement.',
 'rules.circuit':'<span class="rt">LA TOURNÉE</span><span class="k">24 tables · 8 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">continuer</span> pour plus gros. Atteins la <span class="k">zone 2</span> deux fois pour débloquer le <span class="k">raccourci</span>.',
 'rules.hideout':'<span class="rt">LA PLANQUE</span>Dépense ta <span class="k">réputation <i class="pxstar"></i></span> en avantages permanents (reliques, tarots, éditions) avant de repartir.',
 'rules.endless':'<span class="rt">SANS FIN</span>Pas d\'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · toutes les 5 mains, une <span class="d">main spéciale</span>. <span class="k">ENCAISSER</span> convertit ta cagnotte en réputation — la <span class="d">banqueroute</span> ne garde que les paliers.',
@@ -367,7 +361,7 @@ fr:{
 'msg.gutsy':'CULOTTÉ !','msg.gutsySub':n=>'+'+n+' chance',
 'msg.entryFee':'DROIT D\'ENTRÉE','msg.boss':'BOSS','msg.miniboss':'MINI-BOSS',
 'msg.zone':(n,name)=>'ZONE '+n+(name?' — '+name:''),
-'msg.contract':'CONTRAT REMPLI','msg.income':'REVENU',
+'msg.income':'REVENU',
 'inc.patron':n=>'Mécène +'+n,'inc.shark':n=>'Usurier +'+n,'inc.tip':n=>'Pourboire +'+n,'inc.tier':n=>'Palier +'+n,
 'msg.endlessStart':'SANS FIN','msg.endlessStartSub':'monte aussi haut que possible',
 'm.blackjack':'BLACKJACK','m.perfect':'21 PARFAIT','m.charlie':'CHARLIE','m.pair7':'PAIRE DE 7',
@@ -383,7 +377,7 @@ fr:{
 'cb.streak':(l,n)=>'CHANCE NIV '+l+' dans '+n,
 'top.mastery':m=>'maîtrise ≥'+m,'top.betRange':(a,b)=>'mise '+a+'–'+b,
 'top.stars':n=>n+' étoile'+(n>1?'s':''),'top.pot':p=>'cagnotte '+p,
-'top.contractDone':'✓ contrat rempli','top.record':v=>'record '+v,
+'top.record':v=>'record '+v,
 'top.worth':r=>'vaut '+r+' en pause',
 'top.metaCircuit':(z,zn,i,n)=>'zone '+z+' · '+zn+' · '+i+'/'+n,
 'top.metaInf':(p,a,b)=>'∞ SANS FIN · palier '+p+' · mise '+a+'–'+b,
@@ -488,12 +482,9 @@ fr:{
 'boon.baraplus.t':'CHANCE DOPÉE','boon.baraplus.d':'Les coups culottés donnent +1 CHANCE de plus.',
 'boon.evt3.t':'MAINS SPÉCIALES ×2','boon.evt3.d':'Une main spéciale toutes les 3 mains (au lieu de 5).',
 'evt.doree.t':'MAIN DORÉE','evt.doree.d':'gains doublés sur cette main',
-'evt.forcee.t':'MISE FORCÉE','evt.forcee.d':'mise max obligatoire',
-'evt.pompette.t':'CROUPIER POMPETTE','evt.pompette.d':'le croupier s’arrête à 16',
+'evt.forcee.t':'MISE FORCÉE','evt.forcee.d':'la plus grosse mise que tu peux payer, pour cette main',
+'evt.pompette.t':'CROUPIER POMPETTE','evt.pompette.d':'pour cette main, le croupier s’arrête à 16',
 'evt.etoile.t':'CARTE ÉTOILÉE','evt.etoile.d':'ta première carte reçoit Prisme (×1,5), si elle est sans édition',
-'ctr.c5':'gagne une main de 5 cartes','ctr.c21':'gagne avec un 21 parfait','ctr.cpress':'gagne à chance ≥ 75 %',
-'ctr.cmult':'gagne une main à ×3 ou plus','ctr.cdbl':'gagne une main DOUBLÉE',
-'ctr.csuite':'gagne avec une SUITE','ctr.ccoul':'gagne avec une COULEUR',
 }
 };
 let LANG=(()=>{try{const v=localStorage.getItem('t21lang');return STR[v]?v:'en';}catch(e){return 'en';}})();
@@ -514,7 +505,7 @@ Object.assign(STR.fr,{
  'test.adsEnabledNote':'Coupe toutes les publicités pour jouer et tester sans interruption. Ton choix est mémorisé.',
  'test.circuitTitle':'CIRCUIT À ZÉRO','test.resetCopy':'Repars à la table 1 avec une progression neuve : réputation, améliorations et records du circuit remis à zéro.',
  'test.reset':'RÉINITIALISER LE CIRCUIT','test.resetTitle':'EFFACER LE CIRCUIT ?',
- 'test.resetConfirmCopy':'La <b>réputation</b>, les <b>améliorations</b> et les <b>records du circuit</b> seront effacés. La partie en cours sera arrêtée.<br><br>Tu recommences à la <b>table 1</b> avec le choix de ta première relique.<br><br>La progression du mode Libre et tes réglages sont conservés.',
+ 'test.resetConfirmCopy':'La <b>réputation</b>, les <b>améliorations</b> et les <b>records du circuit</b> seront effacés. La partie en cours sera arrêtée.<br><br>Tu recommences à la <b>table 1</b>.<br><br>La progression du mode Libre et tes réglages sont conservés.',
  'test.resetConfirm':'EFFACER ET REJOUER','test.back':'RETOUR AUX RÉGLAGES','test.adPreviews':'TESTER LES PUBLICITÉS',
  'set.adFree':'RETIRER LES INTERSTITIELS','set.adsNote':'Aperçus de démonstration. Réactive les publicités pour les tester. « Retirer les interstitiels » conserve les vidéos récompensées. « Ignorer les plafonds » affiche un interstitiel à chaque occasion.',
  'circuit.tableEffect':'Règle de la table','rule.sec':'Égalité = défaite','rule.mute':'Les cartes et le total du croupier restent cachés',
@@ -538,9 +529,9 @@ Object.assign(STR.fr,{
  'effect.serein.description':'Après une défaite, tu conserves 75 % de ta Chance au lieu de 50 %. La mise perdue n’est pas remboursée.',
  'circuit.briefGoal':(goal,hands,bet)=>'Objectif '+goal+' · '+hands+' mains · mise conseillée '+bet,
  'circuit.goalLabel':'Objectif','circuit.handsLabel':'Mains','circuit.betLabel':'Mise conseillée',
- 'table.detailsHands':'Mains restantes','table.detailsMin':'Mise minimum','table.detailsMax':'Mise maximum','table.detailsChallenge':'Défi de la table','table.detailsContract':'Ton contrat',
+ 'table.detailsHands':'Mains restantes','table.detailsMin':'Mise minimum','table.detailsMax':'Mise maximum','table.detailsChallenge':'Défi de la table',
  'cards.preparing':'Préparation des cartes…','cards.retry':'Réessayer de préparer les cartes',
- 'circuit.chooseContract':'Choisir ce contrat','circuit.stars':'Étoiles : objectif · sans reprise · contrat',
+ 'circuit.enterTable':'ENTRER À LA TABLE','circuit.eventHint':'Un effet surprise toutes les 3 mains.','circuit.stars':'Étoiles : objectif · sans reprise · 2 mains d’avance',
  'circuit.seals':(n,total)=>'Sceaux '+n+'/'+total,'circuit.ready':'Défi rempli','circuit.bossUnfinished':'La banque suffit, mais les sceaux du boss ne sont pas tous brisés.',
  'circuit.saved':'Dépassement annulé. La carte est écartée.','circuit.penduReady':'Pendu armé',
  'circuit.noBlank':'Toutes tes cartes ont déjà une édition.','circuit.editionPreview':gain=>'si victoire : +'+gain,
@@ -588,10 +579,8 @@ Object.assign(STR.fr,{
  'unlock.pourboire.d':n=>'Au début de chaque main : '+(2*Math.min(3,n+1))+' % de la mise maximale de base',
  'unlock.contact.d':()=> 'Remise de 10 % sur les reliques achetées en boutique',
  'ed.foil':'+15 % de la mise avant multiplication','ed.poly':'Multiplicateur ×1,5, avant plafond',
- 'ctr.cpress':'Gagner à Chance niveau 2 ou plus',
  'rules.streak':'<span class="rt">CHANCE</span>Niveaux à <span class="k">2 / 4 / 7 / 10 points</span> : ×1,15 / ×1,3 / ×1,45 / ×1,6. Victoire +1, coup culotté +2. En circuit, une perte conserve la moitié ; jusqu’à 2 points passent à la table suivante. En libre, une perte remet à zéro, sauf bonus Filet.',
- 'rules.stars':'<span class="rt">ÉTOILES</span>Une étoile pour l’objectif et le défi du boss. Une de plus sans reprise de la table. Une de plus pour le contrat choisi. Le montant du dernier gain ne change pas ces critères.',
- 'rules.contracts':'<span class="rt">CONTRATS</span>Choisis parmi deux défis en arrivant à une table. Les plus rares rapportent davantage de réputation. Le contrat accompli reste acquis en cas de reprise.',
+ 'rules.stars':'<span class="rt">ÉTOILES</span>La réputation est gagnée automatiquement à chaque table remportée. Une étoile pour l’objectif et le défi du boss, une de plus sans reprise, une de plus avec au moins 2 mains restantes. Plus d’étoiles = plus de réputation ; les boss rapportent davantage.',
  'rules.bonus':'<span class="rt">BONUS</span>Une seule édition par carte. GOLD ajoute 15 % de la mise au gain de base, avant multiplication. PRISME multiplie le multiplicateur par 1,5, dans la limite du plafond de zone. Plusieurs cartes cumulent leurs bonus. Ces bonus sont appliqués en cas de victoire.',
  'ui.peekTitle':'Voir la prochaine carte · 1 fois par main','cb.charlie':'Charlie · 5 cartes',
  'ad.retrySub':n=>n+' reprises disponibles, sans vidéo',
@@ -605,7 +594,7 @@ Object.assign(STR.en,{
  'test.adsEnabledNote':'Turn off all ads to play and test without interruptions. Your choice is saved.',
  'test.circuitTitle':'FRESH CIRCUIT','test.resetCopy':'Start at table 1 with fresh progress: Circuit reputation, upgrades and records are reset.',
  'test.reset':'RESET THE CIRCUIT','test.resetTitle':'ERASE CIRCUIT PROGRESS?',
- 'test.resetConfirmCopy':'Circuit <b>reputation</b>, <b>upgrades</b> and <b>records</b> will be erased. Your current game will end.<br><br>You restart at <b>table 1</b> by choosing your first relic.<br><br>Free Play progress and your settings are kept.',
+ 'test.resetConfirmCopy':'Circuit <b>reputation</b>, <b>upgrades</b> and <b>records</b> will be erased. Your current game will end.<br><br>You restart at <b>table 1</b>.<br><br>Free Play progress and your settings are kept.',
  'test.resetConfirm':'ERASE AND PLAY','test.back':'BACK TO SETTINGS','test.adPreviews':'PREVIEW ADS',
  'set.adFree':'REMOVE INTERSTITIALS','set.adsNote':'Demo previews. Turn ads on to test them. “Remove interstitials” keeps rewarded videos. “Ignore caps” shows an interstitial at every opportunity.',
  'circuit.tableEffect':'Table rule','rule.sec':'Ties count as losses','rule.mute':'The dealer’s cards and total stay hidden',
@@ -629,9 +618,9 @@ Object.assign(STR.en,{
  'effect.serein.description':'After a loss, keep 75% of your streak instead of 50%. The lost stake is not refunded.',
  'circuit.briefGoal':(goal,hands,bet)=>'Goal '+goal+' · '+hands+' hands · suggested bet '+bet,
  'circuit.goalLabel':'Goal','circuit.handsLabel':'Hands','circuit.betLabel':'Suggested bet',
- 'table.detailsHands':'Hands remaining','table.detailsMin':'Minimum bet','table.detailsMax':'Maximum bet','table.detailsChallenge':'Table challenge','table.detailsContract':'Your contract',
+ 'table.detailsHands':'Hands remaining','table.detailsMin':'Minimum bet','table.detailsMax':'Maximum bet','table.detailsChallenge':'Table challenge',
  'cards.preparing':'Preparing the cards…','cards.retry':'Try preparing the cards again',
- 'circuit.chooseContract':'Choose this contract','circuit.stars':'Stars: goal · no retry · contract',
+ 'circuit.enterTable':'ENTER THE TABLE','circuit.eventHint':'A surprise effect every 3 hands.','circuit.stars':'Stars: goal · no retry · 2 hands to spare',
  'circuit.seals':(n,total)=>'Seals '+n+'/'+total,'circuit.ready':'Challenge complete','circuit.bossUnfinished':'Your bankroll is sufficient, but the boss still has unbroken seals.',
  'circuit.saved':'Bust cancelled. The drawn card is discarded.','circuit.penduReady':'Hanged Man armed',
  'circuit.noBlank':'All your cards already have an edition.','circuit.editionPreview':gain=>'on a win: +'+gain,
@@ -679,10 +668,8 @@ Object.assign(STR.en,{
  'unlock.pourboire.d':n=>'Each hand: '+(2*Math.min(3,n+1))+'% of the base maximum bet',
  'unlock.contact.d':()=> '10% off relic purchases in the shop',
  'ed.foil':'+15% of stake before multiplication','ed.poly':'Multiplier ×1.5 before the cap',
- 'ctr.cpress':'Win at streak level 2 or higher',
  'rules.streak':'<span class="rt">STREAK</span>Levels at <span class="k">2 / 4 / 7 / 10 points</span>: ×1.15 / ×1.3 / ×1.45 / ×1.6. Win +1, gutsy win +2. Circuit losses keep half your streak; up to 2 points carry to the next table. Free Play losses reset it unless you have Safety Net.',
- 'rules.stars':'<span class="rt">STARS</span>One star for reaching the goal and completing the boss challenge. One extra without retrying the table. One extra for your chosen contract.',
- 'rules.contracts':'<span class="rt">CONTRACTS</span>Choose one of two challenges when entering a table. Rarer ones award more reputation. A completed contract stays complete when you retry.',
+ 'rules.stars':'<span class="rt">STARS</span>Reputation is earned automatically when you clear a table. One star for the goal and boss challenge, one extra without a retry, one extra with at least 2 hands to spare. More stars mean more reputation; bosses pay extra.',
  'rules.bonus':'<span class="rt">BONUSES</span>One edition per card. GOLD adds 15% of the stake to the base winnings before multiplication. PRISM multiplies the multiplier by 1.5, up to the zone cap. Multiple cards stack their bonuses. These bonuses apply when you win.',
  'ui.peekTitle':'Reveal the next card · once per hand','cb.charlie':'Charlie · 5 cards',
  'ad.retrySub':n=>n+' retries available, no video required',
@@ -733,29 +720,6 @@ Object.assign(STR.en,{
 });
 
 Object.assign(STR.fr,{
- 'ctr.help.label':'Détails du contrat',
- 'ctr.help.c5':'Remporte une main avec au moins 5 cartes, sans dépasser 21.',
- 'ctr.help.c21':'Remporte une main à exactement 21 avec au moins 3 cartes. Un blackjack en 2 cartes ne valide pas ce contrat.',
- 'ctr.help.cpress':'Remporte une main lorsque ta Chance est au niveau 2 ou plus.',
- 'ctr.help.cmult':'Remporte une main dont le multiplicateur de gain final atteint ×3 ou plus.',
- 'ctr.help.cdbl':'Utilise Doubler, puis remporte cette main. Doubler la mise sans gagner ne suffit pas.',
- 'ctr.help.csuite':'Remporte une main avec au moins 3 cartes de valeurs consécutives, sans doublon. Les enseignes peuvent être différentes.',
- 'ctr.help.ccoul':'Remporte une main avec au moins 3 cartes de la même enseigne : toutes cœur, toutes carreau, toutes trèfle ou toutes pique.',
- 'ctr.help.common':'Le défi est facultatif. Il suffit de le réussir une fois pendant cette table pour gagner la réputation indiquée. Consulter ces détails ne sélectionne pas le contrat.'
-});
-Object.assign(STR.en,{
- 'ctr.help.label':'Contract details',
- 'ctr.help.c5':'Win a hand with at least 5 cards without exceeding 21.',
- 'ctr.help.c21':'Win with exactly 21 and at least 3 cards. A two-card blackjack does not complete this contract.',
- 'ctr.help.cpress':'Win a hand at Chance level 2 or higher.',
- 'ctr.help.cmult':'Win a hand with a final payout multiplier of ×3 or higher.',
- 'ctr.help.cdbl':'Use Double, then win that hand. Doubling without winning is not enough.',
- 'ctr.help.csuite':'Win with at least 3 consecutive ranks and no duplicates. Suits may differ.',
- 'ctr.help.ccoul':'Win with at least 3 cards of the same suit: all hearts, diamonds, clubs or spades.',
- 'ctr.help.common':'This challenge is optional. Complete it once during this table to earn the displayed reputation. Viewing these details does not select the contract.'
-});
-
-Object.assign(STR.fr,{
  'shop.offerHeading':'Renforce tes atouts','shop.offerDetails':'Détails de cette offre',
  'shop.remaining':n=>'Reste '+n,'shop.reroll':n=>'Relancer les offres · '+n,
  'journey.toEarn':'À gagner'
@@ -764,4 +728,11 @@ Object.assign(STR.en,{
  'shop.offerHeading':'Strengthen your hand','shop.offerDetails':'Offer details',
  'shop.remaining':n=>'Left '+n,'shop.reroll':n=>'Reroll offers · '+n,
  'journey.toEarn':'To earn'
+});
+
+Object.assign(STR.fr,{
+ 'rules.events':'<span class="rt">MAINS SPÉCIALES</span>Toutes les <span class="k">3 mains en circuit</span> (5 en libre), un effet aléatoire est annoncé avant la mise : gains doublés, plus grosse mise abordable imposée, croupier à 16 ou première carte Prisme si elle est sans édition. Il dure une seule main. Aucun choix supplémentaire.'
+});
+Object.assign(STR.en,{
+ 'rules.events':'<span class="rt">SPECIAL HANDS</span>Every <span class="k">3 hands in Circuit</span> (5 in Free Play), a random effect is announced before betting: doubled winnings, your highest affordable bet required, dealer standing on 16, or Prism on your first card if unedited. It lasts one hand. No extra choice.'
 });

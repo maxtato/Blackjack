@@ -4,19 +4,20 @@ const h=engine(),a=h.api,results=[];
 const check=(name,fn)=>{h.reset(123);fn();results.push(name);};
 const relic=id=>({...a.RELIC_POOL.find(r=>r.id===id),_paid:0});
 const tarot=id=>({...a.TAROT_POOL.find(r=>r.id===id),_paid:10});
-check('Circuit starts with a contract and no unearned bonus cards',()=>{
+check('Circuit starts with one entry action and no unearned bonus cards',()=>{
  for(const from of [0,8]){
   a.startGame(from);assert.equal(a.G.phase,'bet');assert.equal(a.G.tableIdx,from);
   assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
-  assert.equal(a.G.contractChoices.length,2);
-  a.chooseContract(1);assert.equal(a.G.contract,a.G.contractChoices[1]);
+  assert(a.G.briefPending);assert.equal(a.G.contract,undefined);
+  const bank=a.G.bank;a.deal();assert.equal(a.G.bank,bank);assert.equal(a.G.pHand.length,0);
+  a.startPreparedTable();assert(!a.G.briefPending);
  }
 });
 check('Every cleared Circuit table goes to preparation without granting cards',()=>{
  for(const contact of [0,1]){
   h.reset(123,{contact});
   for(let i=0;i<a.RUN_LEN;i++){
-   a.startGame(i);a.chooseContract(0);a.G.bank=a.G.table.goal;
+   a.startGame(i);a.startPreparedTable();a.G.bank=a.G.table.goal;
    a.G.bossState={wins:3,qualified:1,totals:[20,21]};
    assert(a.checkBankGoal());assert.equal(a.G.phase,'victory');
    assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
@@ -164,9 +165,12 @@ check('Gift resale is fixed and editions never overwrite',()=>{
  const free=relic('lunettes'),early=a.sellValue(free);a.setTable(23);assert.equal(a.sellValue(free),early);assert.equal(early,0);
  a.G.pHand=[card(7,'♠','poly'),card(5,'♥','foil')];assert.equal(a.addEditionToHand('foil'),false);assert.equal(a.G.pHand[0].ed,'poly');
 });
-check('Stars use decisions; reached and won records are distinct',()=>{
- a.G.tableRetried=false;a.G.contract.done=false;assert.equal(a.starsFor(a.G.table,a.G.table.goal),2);
- a.G.contract.done=true;assert.equal(a.starsFor(a.G.table,a.G.table.goal),3);a.G.tableRetried=true;assert.equal(a.starsFor(a.G.table,a.G.table.goal),2);
+check('Stars reward completion, no retry and two spare hands; records remain distinct',()=>{
+ a.G.tableRetried=false;a.G.hand=a.G.table.mains;assert.equal(a.starsFor(a.G.table,a.G.table.goal),2);
+ a.G.hand=a.G.table.mains-2;assert.equal(a.starsFor(a.G.table,a.G.table.goal),3);
+ a.G.tableRetried=true;assert.equal(a.starsFor(a.G.table,a.G.table.goal),2);
+ a.G.hand=a.G.table.mains-1;assert.equal(a.starsFor(a.G.table,a.G.table.goal),1);
+ assert.equal(a.starsFor(a.G.table,a.G.table.goal-1),0);
  a.updateRecord(0);assert.equal(a.META.nuit.record.depth,0);assert.equal(a.META.nuit.record.reached,1);
  const legacy=a.migrateCircuitRecord({depth:9,chips:200});assert.equal(legacy.depth,8);assert.equal(legacy.reached,9);
 });
@@ -234,7 +238,7 @@ check('First-card rules grant Gold or Prism without replacing an existing editio
  try{
   for(const [rule,relics,endless,event,existing,expected] of [
    ['atelier',[],false,null,undefined,'foil'],['normal',[relic('maitresse')],false,null,undefined,'foil'],
-   ['normal',[],true,{id:'etoile'},undefined,'poly'],['atelier',[],false,null,'poly','poly']
+   ['normal',[],true,{id:'etoile'},undefined,'poly'],['normal',[],false,{id:'etoile'},undefined,'poly'],['normal',[],false,{id:'etoile'},'foil','foil'],['atelier',[],false,null,'poly','poly']
   ]){
    a.setup([],[],{phase:'bet',betChosen:true,relics,endless,event,shoe:Array.from({length:60},()=>card(8,'♠',existing))});
    a.G.table={...a.G.table,rule};a.deal();assert.equal(a.G.pHand[0].ed,expected);

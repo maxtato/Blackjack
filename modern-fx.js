@@ -381,7 +381,7 @@
     const activeTotal=G.splitActive?handValue(G.hands[G.hi]).total:0;
     const dealerTotal=G.splitActive?handValue(G.dHand).total:0;
     const comboWon=G.splitActive?activeTotal<=21&&(dealerTotal>21||activeTotal>dealerTotal):kind==='win';
-    if(comboWon)$('comboRow').querySelectorAll('.combo-tile.on:not([data-combo-key="contract"])').forEach(markComboPaid);
+    if(comboWon)$('comboRow').querySelectorAll('.combo-tile.on').forEach(markComboPaid);
     if(!boardActive())return;
     $('felt').dataset.arcadeResult = kind;
     later(() => $('felt')?.removeAttribute('data-arcade-result'), 1550);

@@ -24,9 +24,8 @@ Object.assign(STR.fr,{
  'back.cb9':'Éclair','back.cb10':'Chance','back.cb11':'Cœur','back.cb12':'Lune','back.cb13':'Dés','back.cb14':'Couronne','back.cb15':'Œil','back.cb16':'Cerises','back.cb18':'Flamme','back.cb19':'Diamant','back.cb22':'Serpent','back.cb26':'Soleil',
  'set.open':'RÉGLAGES',
  'planque.avail':n=>n+' amélioration'+(n>1?'s disponibles':' disponible'),
- 'circuit.contractTitle':'Choisis un contrat bonus','circuit.contractHint':'Choisis un des deux contrats pour continuer.',
  'unlock.contact.d':()=> 'Remise de 10 % sur les reliques achetées en boutique',
- 'test.resetConfirmCopy':'La <b>réputation</b>, les <b>améliorations</b> et les <b>records du circuit</b> seront effacés. La partie en cours sera arrêtée.<br><br>Tu recommences à la <b>table 1</b>, en choisissant ton contrat.<br><br>La progression du mode Libre et tes réglages sont conservés.'
+ 'test.resetConfirmCopy':'La <b>réputation</b>, les <b>améliorations</b> et les <b>records du circuit</b> seront effacés. La partie en cours sera arrêtée.<br><br>Tu recommences à la <b>table 1</b>.<br><br>La progression du mode Libre et tes réglages sont conservés.'
 });
 Object.assign(STR.en,{
  'upg.subtitle':'Strengthen your perks',
@@ -52,9 +51,8 @@ Object.assign(STR.en,{
  'back.cb9':'Lightning','back.cb10':'Luck','back.cb11':'Heart','back.cb12':'Moon','back.cb13':'Dice','back.cb14':'Crown','back.cb15':'Eye','back.cb16':'Cherries','back.cb18':'Flame','back.cb19':'Diamond','back.cb22':'Snake','back.cb26':'Sun',
  'set.open':'SETTINGS',
  'planque.avail':n=>n+' upgrade'+(n>1?'s':'')+' available',
- 'circuit.contractTitle':'Choose a bonus contract','circuit.contractHint':'Choose one of these two contracts to continue.',
  'unlock.contact.d':()=> '10% off relic purchases in the shop',
- 'test.resetConfirmCopy':'Circuit <b>reputation</b>, <b>upgrades</b> and <b>records</b> will be erased. Your current game will end.<br><br>You restart at <b>table 1</b> by choosing a contract.<br><br>Free Play progress and your settings are kept.'
+ 'test.resetConfirmCopy':'Circuit <b>reputation</b>, <b>upgrades</b> and <b>records</b> will be erased. Your current game will end.<br><br>You restart at <b>table 1</b>.<br><br>Free Play progress and your settings are kept.'
 });
 for(const key of Object.keys(STR.fr))if(typeof STR.fr[key]==='string')STR.fr[key]=STR.fr[key].replaceAll('SANS FIN','LIBRE').replaceAll('LA TOURNÉE','CIRCUIT');
 for(const key of Object.keys(STR.en))if(typeof STR.en[key]==='string')STR.en[key]=STR.en[key].replaceAll('ENDLESS','FREE PLAY');
@@ -98,7 +96,7 @@ renderMenu=function(){
 };
 
 renderRules=function(){
- const groups=[['rules.basic',['rules.goal','rules.moves'],true],['rules.bonuses',['rules.streak','rules.combos','rules.bonus'],false],['rules.modes',['rules.endless','rules.circuit','rules.table','rules.stars','rules.contracts','rules.hideout'],false]];
+ const groups=[['rules.basic',['rules.goal','rules.moves'],true],['rules.bonuses',['rules.streak','rules.combos','rules.bonus'],false],['rules.modes',['rules.endless','rules.circuit','rules.table','rules.stars','rules.events','rules.hideout'],false]];
  $('rulesBody').innerHTML=groups.map(([label,keys,open])=>`<details ${open?'open':''}><summary>${t(label)}</summary><div>${keys.map(k=>`<div class="rule-entry">${t(k)}</div>`).join('')}</div></details>`).join('');
 };
 

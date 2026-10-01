@@ -756,19 +756,9 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .circuit-choices .draft-choice{display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:14px;width:100%;text-align:left;white-space:normal;padding:14px!important}
 .draft-choice>.effect-mark{flex:none;width:48px;height:68px}
 .draft-choice>span:last-child{flex:1;min-width:0;font:600 18px/1.2 var(--copy-font)}
-.draft-choice small,.contract-choice small{display:block;margin-top:7px;font:500 13px/1.4 var(--copy-font);letter-spacing:0;text-transform:none}
-.contract-choice{white-space:normal;padding:14px!important;font:600 17px/1.3 var(--copy-font)}
-.contract-choice small.contract-reward{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;column-gap:12px;row-gap:3px;margin-top:8px;color:#e4edf3}
-.contract-prompt{font:500 12px/1.2 var(--copy-font)}
+.draft-choice small{display:block;margin-top:7px;font:500 13px/1.4 var(--copy-font);letter-spacing:0;text-transform:none}
 .circuit-panel .choice-heading{margin:20px 0 4px;font:600 20px/1.2 var(--copy-font);color:#ffce3a}
 .circuit-panel .choice-hint{margin:0 0 12px;font-size:13px;color:#d1d9dc}
-#briefContracts{margin-top:12px;gap:8px}
-#briefContracts .contract-choice{display:grid;grid-template-columns:minmax(0,1fr) 16px;gap:5px 10px;align-items:center;text-align:left;padding:10px 14px!important;border-radius:0;clip-path:var(--frame-cut);box-shadow:none!important}
-#briefContracts .contract-copy{grid-column:1;grid-row:1;font:900 20px/1.15 var(--game-type);color:#fff7e6}
-#briefContracts .contract-reward{grid-column:1;grid-row:2;justify-content:flex-start;margin:0;column-gap:10px;row-gap:3px}
-#briefContracts .contract-reward-value{--number-ink:#ffce3a;--bonus-number-ink:#ffce3a;display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:5px 9px;background:#242a31;clip-path:var(--frame-cut);color:#ffce3a;font-size:11px;line-height:1.15}
-#briefContracts .contract-prompt{font-size:11px;color:#e1ecff}
-#briefContracts .contract-choice>.nav-triangle{grid-column:2;grid-row:1 / 3;width:16px;height:16px}
 .shop-reserve{display:block;margin-top:6px;font:500 11px/1.3 var(--copy-font);opacity:.75}
 /* Keep the original illustrated surface and corners, brightening only its artwork. */
 #shop .shopItem{position:relative;isolation:isolate;background:none;border:0}
@@ -872,14 +862,6 @@ body:has(#multPop.go) #tip{visibility:hidden}
 #tableBrief .table-rule-art{width:calc(14 * var(--brief-u));height:calc(14 * var(--brief-u));margin-left:calc(2.5 * var(--brief-u))}
 #tableBrief .choice-heading{margin:0 0 calc(1.5 * var(--brief-u));font:900 calc(6 * var(--brief-u))/1.15 var(--game-type)}
 #tableBrief .choice-hint{font-size:calc(3.3 * var(--brief-u));margin:0 0 calc(3 * var(--brief-u))}
-#tableBrief #briefContracts{margin:0;gap:calc(2.2 * var(--brief-u))}
-#tableBrief #briefContracts .contract-choice{grid-template-columns:minmax(0,1fr) auto calc(3 * var(--brief-u));gap:calc(2 * var(--brief-u));min-height:calc(15 * var(--brief-u));padding:calc(3 * var(--brief-u))!important}
-#tableBrief #briefContracts .contract-copy{grid-column:1;grid-row:1;font-size:calc(4.3 * var(--brief-u));line-height:1.2}
-#tableBrief #briefContracts .contract-reward{grid-column:2;grid-row:1;margin:0}
-#tableBrief #briefContracts .contract-reward-value{gap:4px;padding:calc(2 * var(--brief-u));font-size:calc(4 * var(--brief-u));white-space:nowrap}
-#tableBrief #briefContracts .contract-reward-value .game-number{font-size:inherit!important}
-#tableBrief #briefContracts .contract-reward-value .raster-suit{width:calc(4.5 * var(--brief-u))!important;height:calc(4.5 * var(--brief-u))!important}
-#tableBrief #briefContracts .nav-triangle{grid-column:3;grid-row:1;width:calc(3 * var(--brief-u));height:calc(3 * var(--brief-u))}
 
 /* Each complete shop and briefing panel fits the visible phone screen. */
 :is(#upgradesScreen,#tableBrief,#shop,#inspectScreen.table-details-view){height:var(--viewport-height);overflow:hidden;align-items:center;justify-content:center;padding:max(10px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom))}
@@ -970,7 +952,6 @@ body:has(#multPop.go) #tip{visibility:hidden}
 .rep-value .game-number{vertical-align:middle;margin:0}
 .rep-star{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical-align:middle;transform:translateY(-1px);flex:none}
 .rep-value>.rep-star{width:1.25em;height:1.25em;align-self:center}
-.contract-reward .rep-value{position:relative;top:2px}
 :is(.b-gold,.b-teal,.b-red,.chip,.mode-card){--number-ink:#282a2e;--bonus-number-ink:#183434}
 :is(.b-blue,.b-purple){--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
 button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
@@ -1001,7 +982,7 @@ button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
 #tip .game-number,#drawReadout .game-number{font-size:calc(1.6em * var(--value-scale))!important}
 #recBox>span{white-space:normal!important}
 #recBox .game-number{font-size:calc(1.6em * var(--value-scale))!important}
-@media(max-width:350px){.brief-stats{gap:6px}.brief-stats .game-number{font-size:calc(26px * var(--value-scale))!important}.table-effect-card{padding:14px}.table-effect-card>strong{font-size:22px}.contract-prompt{font-size:11px}}
+@media(max-width:350px){.brief-stats{gap:6px}.brief-stats .game-number{font-size:calc(26px * var(--value-scale))!important}.table-effect-card{padding:14px}.table-effect-card>strong{font-size:22px}}
 
 /* Equipment keeps the selected paper palette. */
 .effect-card{--effect-paper:#adbeb3;position:relative;isolation:isolate;display:grid;place-items:center;width:100%;height:100%;padding:10% 7%;background:none!important;border:0;border-radius:0;box-shadow:none}
@@ -1166,11 +1147,9 @@ button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
 :root[data-motion="gentle"] :is(#tableBrief.show .circuit-panel,#tableVictory.show .victory-star.earned){animation:none!important}
 
 /* Reputation keeps its original yellow illustration on dark reward surfaces. */
-:is(.contract-reward-value,.victory-rewards,.tp-coin,button:enabled) .rep-star{filter:none}
+:is(.victory-rewards,.tp-coin,button:enabled) .rep-star{filter:none}
 button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-button-graphite)!important;--button-ink:#fff7e6!important;--number-ink:#ffce3a;--bonus-number-ink:#ffce3a}
 #turnPop .tp-coin:has(.rep-star){background:#242a31;--number-ink:#ffce3a;--bonus-number-ink:#ffce3a;color:#ffce3a}
-#briefContracts .contract-reward-value .rep-star{width:16px;height:16px;transform:none}
-#briefContracts .contract-reward .rep-value{gap:5px;top:0}
 .background-check{--number-ink:currentColor;--bonus-number-ink:currentColor}
 /* Unavailable stakes use neutral chips while their amount remains readable. */
 .chip:is(:disabled,.locked){opacity:1;cursor:not-allowed;box-shadow:none}
@@ -1178,9 +1157,6 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 .chip:is(:disabled,.locked)>.chip-value{color:#23272b!important}
 
 /* Shared hierarchy: dark rewards, blue choices, mauve rules, red bosses. */
-#briefContracts .contract-reward-value{min-height:26px;padding:4px 8px;font-size:12px}
-#briefContracts .contract-reward-value .game-number{font-size:15px!important}
-#briefContracts .contract-prompt{color:#fff7e6}
 #shop{--grape:#d1b5ef;--teal:#88e2cf;--yellow:#ffce3a}
 #shop .shopItem{border-radius:0;clip-path:var(--frame-cut)}
 #shop .shopItem .sInfo{min-width:0}
@@ -1223,29 +1199,11 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 #tableBrief .table-rule-art{width:calc(12 * var(--brief-u));height:calc(12 * var(--brief-u))}
 #tableBrief .choice-heading{color:#fff7e6;font-size:calc(4 * var(--brief-u));margin-bottom:calc(2.5 * var(--brief-u))}
 #tableBrief .choice-hint{display:none}
-#tableBrief #briefContracts{gap:calc(2 * var(--brief-u))}
-#tableBrief #briefContracts .contract-choice{min-height:calc(12 * var(--brief-u));padding:calc(2.6 * var(--brief-u))!important}
-#tableBrief #briefContracts .contract-copy{font-size:calc(3.6 * var(--brief-u))}
-#tableBrief #briefContracts .contract-reward-value{padding:calc(1.5 * var(--brief-u)) calc(2 * var(--brief-u));font-size:calc(3.8 * var(--brief-u))}
-#tableBrief #briefContracts .contract-reward-value .game-number{font-size:inherit!important}
 
 /* Cleaner briefing sheet and clearly separated route milestones. */
 #tableBrief .circuit-panel{clip-path:polygon(2% 0,98% 0,100% 2%,100% 98%,98% 100%,2% 100%,0 98%,0 2%);background-image:linear-gradient(125deg,var(--table-tint,transparent),transparent 65%);background-color:#343d47}
 #tableBrief .journey-step:not(.current):not(.boss){background:#224345;color:#9de0d3}
 #tableBrief .journey-step.past{background:#1b3d3e;color:#9de0d3}
-#tableBrief #briefContracts .contract-reward-value{background:#596674;color:#ffce3a}
-#tableBrief #briefContracts .contract-option{display:grid;grid-template-columns:minmax(0,1fr) 22px calc(16 * var(--brief-u)) calc(3 * var(--brief-u));gap:calc(2 * var(--brief-u));align-items:center;padding:calc(2.6 * var(--brief-u));background:#205dcc var(--art-button-blue) center/100% 100%;clip-path:var(--frame-cut)}
-#tableBrief #briefContracts .contract-choice{grid-column:1/-1;grid-row:1;display:grid;grid-template-columns:subgrid;background:none!important;box-shadow:none!important;clip-path:none;padding:0!important;width:100%;margin:0;min-height:calc(7 * var(--brief-u))}
-#tableBrief #briefContracts .contract-reward{grid-column:3}
-#tableBrief #briefContracts .nav-triangle{grid-column:4}
-#tableBrief #briefContracts .contract-reward-value{justify-content:center;width:100%;box-sizing:border-box}
-#tableBrief #briefContracts .contract-info{grid-column:2;grid-row:1;z-index:1;display:grid;place-items:center;width:22px;height:22px;border:1px solid #fff7e6!important;border-radius:50%;padding:0;background:none!important;color:#fff7e6!important;box-shadow:none!important;font:700 14px/1 var(--copy-font);cursor:pointer}
-#tableBrief #briefContracts .contract-info:focus-visible{outline:2px solid #ffce3a;outline-offset:3px}
-#inspectScreen.contract-info-view .ovpanel{background:#343d47;max-width:380px!important;padding:22px;clip-path:polygon(2% 0,98% 0,100% 2%,100% 98%,98% 100%,2% 100%,0 98%,0 2%)}
-#inspectScreen.contract-info-view h1{color:#fff7e6;font-size:24px!important;line-height:1.2}
-#inspectScreen.contract-info-view p{color:#e1e6ec;font:500 15px/1.45 var(--copy-font);text-align:left}
-#inspectScreen.contract-info-view .contract-info-reward{background:#596674;color:#ffce3a;padding:10px;margin:16px 0;clip-path:var(--frame-cut)}
-#inspectScreen.contract-info-view #inspectActions .btn{width:100%}
 
 /* Bankroll flows toward the goal; the remaining profit leads the amount panel. */
 #tableBrief .brief-balance{display:grid;grid-template-columns:minmax(0,1fr) calc(15 * var(--brief-u)) minmax(0,1fr);align-items:center;gap:calc(2 * var(--brief-u));padding-bottom:calc(3 * var(--brief-u));border-bottom:1px solid #62707a;margin-bottom:calc(3 * var(--brief-u))}
@@ -1266,14 +1224,6 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 
 /* Contract details sit beside their name; the full blue row advances. */
 #tableBrief .choice-hint{display:block;color:#d8e0e6;font-size:calc(3 * var(--brief-u));line-height:1.3;margin:calc(-1 * var(--brief-u)) 0 calc(2.5 * var(--brief-u))}
-#tableBrief #briefContracts .contract-option{position:relative;grid-template-columns:minmax(0,1fr) calc(16 * var(--brief-u)) calc(4.5 * var(--brief-u));min-height:calc(12 * var(--brief-u));box-sizing:border-box}
-#tableBrief #briefContracts .contract-choice{position:absolute;inset:0;display:block;height:100%;width:100%;min-height:0;z-index:0}
-#tableBrief #briefContracts .contract-label-group{grid-column:1;display:flex;align-items:center;gap:6px;min-width:0;pointer-events:none;z-index:1}
-#tableBrief #briefContracts .contract-copy{flex:0 1 auto;min-width:0;line-height:1.2}
-#tableBrief #briefContracts .contract-info{flex:none;pointer-events:auto;font:700 14px/1 var(--copy-font)}
-#tableBrief #briefContracts .contract-reward{grid-column:2;z-index:1;pointer-events:none}
-#tableBrief #briefContracts .nav-triangle{grid-column:3;z-index:1;pointer-events:none;width:calc(4.5 * var(--brief-u));height:calc(4.5 * var(--brief-u));opacity:1;filter:none}
-#tableBrief #briefContracts .contract-option:has(.contract-choice:focus-visible){outline:2px solid #ffce3a;outline-offset:-3px}
 /* Upcoming boss text shares the centered boss label position. */
 #topbar>.journey-hud{left:50%;right:auto;top:0;translate:-50% 0;max-width:none;white-space:nowrap}
 
@@ -1323,7 +1273,7 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 #inspectScreen.shop-offer-info-view p{font:500 15px/1.4 var(--copy-font);color:#e0e7ee;text-align:left}
 #inspectScreen.shop-offer-info-view #inspectActions .btn{width:100%}
 
-/* One preparation page; the optional shop returns to these same contracts. */
+/* One preparation page, optional shopping, one entry action. */
 #tableBrief .brief-tools{display:flex;flex-direction:column;gap:4px;margin:0 0 calc(3.5 * var(--brief-u))}
 #tableBrief .brief-tools[hidden],#tableBrief #briefCashBtn[hidden]{display:none}
 #tableBrief #briefShopBtn{display:flex;align-items:center;justify-content:space-between;gap:9px;width:100%;min-height:44px;margin:0;padding:8px 12px;font-size:calc(4 * var(--brief-u));background:#45646a!important;color:#fff7e6!important;box-shadow:none!important;clip-path:var(--frame-cut);transform-origin:center}
@@ -1338,7 +1288,6 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 @media(prefers-reduced-motion:reduce){#tableBrief #briefShopBtn,#tableBrief #briefShopBtn .brief-shop-icon{animation:none!important}}
 :root[data-motion="gentle"] #tableBrief #briefShopBtn,:root[data-motion="gentle"] #tableBrief #briefShopBtn .brief-shop-icon{animation:none!important}
 #tableBrief #briefCashBtn{align-self:center;min-height:30px;padding:5px 10px;color:#ffce3a;font:600 calc(3 * var(--brief-u))/1.2 var(--copy-font)}
-#tableBrief .contract-option:has(.contract-choice:disabled){background:#515963;opacity:.6}
 #shop #shopNextBtn{background:#45646a!important;color:#fff7e6!important;box-shadow:none!important}
 #shop .shop-offers-heading{margin-top:14px}
 
@@ -1357,3 +1306,10 @@ button:is(.b-gold,.b-teal,.b-red):enabled:has(.rep-star){--button-art:var(--art-
 #topbar #pauseBtn{flex:none;width:var(--header-line);height:var(--header-line);align-self:center}
 #topbar .tstats{grid-column:1 / -1;grid-row:2;min-height:calc(16.5 * var(--ui-u));height:auto}
 #topbar #objWrap{grid-column:1 / -1;grid-row:3;top:0}
+
+/* The preparation ends with one clear action. Keep the existing printed cuts. */
+#tableBrief .brief-event-note{margin:0 0 12px;color:#d8e0e6;font:500 14px/1.3 var(--copy-font);text-align:center}
+#tableBrief #briefEnterBtn{display:block;width:100%;min-height:54px;margin:0;padding:12px 16px;font-size:calc(6 * var(--brief-u));line-height:1.15;clip-path:var(--frame-cut)}
+#tableBrief #briefEnterBtn:disabled{background:#515963!important;color:#c3cbd2!important;opacity:.65}
+/* The special-hand announcement stays readable until the player places a bet. */
+#turnPop.go.event-ready{animation:none!important;opacity:1;translate:none;scale:1}
