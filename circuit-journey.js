@@ -34,6 +34,7 @@ const ColdDeckJourney=(()=>{
       if(table.i===tb.i)step.setAttribute('aria-current','step');
       const title=t(table.boss?'journey.bossStep':'journey.tableStep','').trim();
       step.innerHTML='<span class="journey-step-label">'+ColdDeckArt.lettering(title)+'</span> <strong class="journey-step-number">'+ColdDeckArt.lettering(String(table.i+1).padStart(2,'0'))+'</strong>';
+      if(table.i<tb.i){const tick=document.createElement('span');tick.className='journey-step-check';tick.setAttribute('aria-hidden','true');step.append(tick);}
       steps.append(step);
     });
     node.append(label,steps);
@@ -53,11 +54,12 @@ const ColdDeckJourney=(()=>{
   function renderBrief(){
     if(G.endless||!G.table)return;
     const tb=G.table;$('tableBrief').dataset.boss=String(tb.boss);
+    const badge=$('briefBossBadge');badge.hidden=!tb.boss;badge.innerHTML=tb.boss?ColdDeckArt.lettering(t('journey.bossStep','').trim()):'';
     $('briefTableLabel').textContent=t('journey.table',String(tb.i+1).padStart(2,'0'),RUN_LEN);
     renderRoute($('briefRoute'),tb);
     const target=stat(t('journey.toWin'),cash(Math.max(0,tb.goal-G.bank)));
     const hands=document.createElement('small');hands.textContent=t('journey.within',tb.mains);target.append(hands);
-    $('briefPressure').replaceChildren(target,stat(t('journey.minBet'),cash(tb.min)));
+    $('briefPressure').replaceChildren(target);
     renderHud();
   }
   function renderShop(){

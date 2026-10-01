@@ -536,11 +536,12 @@ function showTableBrief(){
   const screen=$('tableBrief');if(!screen)return;
   $('briefTableLabel').textContent=G.table.pal!=null?t('planque.tierLabel',G.table.pal+1):t('planque.tableLabel',G.tableIdx+1);
   $('briefTitle').textContent=tableName(G.table);
+  $('briefContractTitle').innerHTML=ColdDeckArt.lettering(t('circuit.contractTitle'));
   renderTableEffect($('briefEffect'));
   $('briefRule').textContent=[G.table.challenge?t('boss.'+G.table.challenge):'',G.table.entry?t('rtx.entry',cash(G.table.entry)):''].filter(Boolean).join(' · ');
   $('briefRule').hidden=!$('briefRule').textContent;
   $('briefGoal').replaceChildren();
-  for(const [key,value] of [['circuit.goalLabel',cash(G.table.goal)],['circuit.handsLabel',G.table.mains],['circuit.betLabel',cash(recommendedBet())]]){
+  for(const [key,value] of [['journey.totalGoalLabel',cash(G.table.goal)],['journey.minBet',cash(G.table.min)],['circuit.betLabel',cash(recommendedBet())]]){
     const stat=document.createElement('div');stat.className='brief-stat';
     const label=document.createElement('span');label.className='brief-stat-label';label.textContent=t(key);
     const amount=document.createElement('span');amount.className='brief-stat-value';amount.textContent=value;
@@ -549,7 +550,7 @@ function showTableBrief(){
   $('briefContracts').replaceChildren();
   G.contractChoices.forEach((c,i)=>{
     const b=document.createElement('button');b.className='btn b-blue contract-choice';
-    b.innerHTML='<span class="contract-copy">'+contractText(c)+'</span><small class="contract-reward"><span class="contract-reward-value">+'+c.reward+' '+STAR+'</span><span class="contract-prompt">'+t('circuit.chooseContract')+'</span></small><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
+    b.innerHTML='<span class="contract-copy">'+contractText(c)+'</span><small class="contract-reward"><span class="contract-reward-value">+'+c.reward+' '+STAR+'</span></small><img class="nav-triangle" data-direction="right" src="icons/nav-triangle.svg" width="18" height="18" alt="">';
     b.onclick=()=>chooseContract(i);$('briefContracts').append(b);
   });
   screen.classList.add('show');

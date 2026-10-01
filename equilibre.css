@@ -818,6 +818,56 @@ body:has(#multPop.go) #tip{visibility:hidden}
 #topbar #gainVal .raster-copy{display:block;line-height:0}
 #topbar #gainVal .raster-word{vertical-align:top;transform:translateY(-.2em)}
 #topbar .gainstat{gap:2px}
+
+/* Table introduction follows the compact illustrated briefing mockup. */
+#tableBrief{padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
+#tableBrief .circuit-panel{--brief-u:min(1vw,4.6px);width:100%;max-width:460px;max-height:calc(100dvh - max(12px,env(safe-area-inset-top)) - max(12px,env(safe-area-inset-bottom)));padding:calc(5 * var(--brief-u)) calc(4 * var(--brief-u));text-align:left;overflow-y:auto;clip-path:polygon(3% 0,97% 0,100% 3%,100% 97%,97% 100%,3% 100%,0 97%,0 3%)}
+#tableBrief .journey-route{margin-bottom:calc(5 * var(--brief-u))}
+#tableBrief .journey-zone{margin-bottom:calc(3 * var(--brief-u))!important;font-size:calc(3.2 * var(--brief-u))!important}
+#tableBrief .journey-boss-notice{display:none}
+#tableBrief .journey-steps{width:91%;margin:0 auto;gap:calc(6 * var(--brief-u))}
+#tableBrief .journey-step{min-height:calc(8.6 * var(--brief-u));padding:calc(1.5 * var(--brief-u));gap:calc(2 * var(--brief-u))}
+#tableBrief .journey-step:not(.boss) .journey-step-label{display:none}
+#tableBrief .journey-step.boss .journey-step-label{order:2;font-size:calc(3.4 * var(--brief-u))}
+#tableBrief .journey-step-number{font-size:calc(5.2 * var(--brief-u))}
+.journey-step-check{display:block;width:10px;height:6px;border-left:2px solid #fff7e6;border-bottom:2px solid #fff7e6;transform:rotate(-45deg);flex:none}
+#tableBrief .table-brief-heading{padding-left:calc(3 * var(--brief-u));margin-bottom:calc(4 * var(--brief-u))}
+#tableBrief .table-brief-heading::before{width:calc(1.3 * var(--brief-u))}
+#tableBrief .brief-heading-meta{display:flex;align-items:center;gap:10px;margin-bottom:calc(2 * var(--brief-u))}
+#tableBrief .table-brief-kicker{margin:0;font-size:calc(3.8 * var(--brief-u))}
+#briefBossBadge{display:inline-block;padding:4px 10px;background:#ed8b7b;color:#291d26;font:900 calc(4 * var(--brief-u))/1 var(--game-type);clip-path:var(--frame-cut)}
+#briefBossBadge[hidden]{display:none}
+#tableBrief .table-brief-heading h1{margin:0!important;color:#fff7e6;font-size:calc(9 * var(--brief-u))!important;line-height:1.08}
+#tableBrief #briefRule,#tableBrief[data-boss="true"] #briefRule{--number-ink:currentColor;--bonus-number-ink:currentColor;margin:calc(2.5 * var(--brief-u)) 0 0;padding:0;border:0;background:none;clip-path:none;color:var(--table-accent);font:600 calc(3.8 * var(--brief-u))/1.3 var(--copy-font)}
+#tableBrief .brief-metrics{padding:calc(3.8 * var(--brief-u));margin-bottom:calc(4 * var(--brief-u));background:#242a30;clip-path:var(--frame-cut)}
+#tableBrief .journey-pressure{display:block;margin:0;padding:0}
+#tableBrief .journey-pressure>div{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto;align-items:center;gap:calc(2 * var(--brief-u)) calc(4 * var(--brief-u));padding:0;background:none;clip-path:none}
+#tableBrief .journey-pressure>div>span{grid-column:1 / 3;font-size:calc(3.5 * var(--brief-u))}
+#tableBrief .journey-pressure>div>strong{margin:0;color:#ffce3a;font:900 calc(11 * var(--brief-u))/1 var(--game-type)}
+#tableBrief .journey-pressure>div>strong .game-number{font-size:inherit!important}
+#tableBrief .journey-pressure>div>small{padding-left:calc(3.5 * var(--brief-u));border-left:1px solid #62707a;font-size:calc(3.6 * var(--brief-u));line-height:1.3}
+#tableBrief .journey-pressure>div>small .game-number{font-size:1.15em!important}
+#tableBrief .brief-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:calc(3.5 * var(--brief-u)) 0 0;padding:calc(3.3 * var(--brief-u)) 0 0;border-top:1px solid #62707a}
+#tableBrief .brief-stat{gap:calc(1.8 * var(--brief-u));padding:0 calc(1.2 * var(--brief-u));background:none;clip-path:none}
+#tableBrief .brief-stat+.brief-stat{border-left:1px solid #62707a}
+#tableBrief .brief-stat-value{color:#ffce3a;font-size:calc(5 * var(--brief-u))}
+#tableBrief .brief-stat-value .game-number{font-size:inherit!important}
+#tableBrief .brief-stat-label{font-size:calc(2.9 * var(--brief-u));white-space:nowrap}
+#tableBrief .table-effect-card{padding:calc(3.8 * var(--brief-u));margin:0 0 calc(5 * var(--brief-u))}
+#tableBrief .table-effect-label{font-size:calc(2.7 * var(--brief-u));margin-bottom:calc(2.5 * var(--brief-u))}
+#tableBrief .table-effect-card>strong{font-size:calc(5.7 * var(--brief-u));line-height:1.15}
+#tableBrief .table-effect-card p{font-size:calc(3.5 * var(--brief-u))!important;line-height:1.4!important;margin-top:calc(3 * var(--brief-u))!important}
+#tableBrief .table-rule-art{width:calc(14 * var(--brief-u));height:calc(14 * var(--brief-u));margin-left:calc(2.5 * var(--brief-u))}
+#tableBrief .choice-heading{margin:0 0 calc(1.5 * var(--brief-u));font:900 calc(6 * var(--brief-u))/1.15 var(--game-type)}
+#tableBrief .choice-hint{font-size:calc(3.3 * var(--brief-u));margin:0 0 calc(3 * var(--brief-u))}
+#tableBrief #briefContracts{margin:0;gap:calc(2.2 * var(--brief-u))}
+#tableBrief #briefContracts .contract-choice{grid-template-columns:minmax(0,1fr) auto calc(3 * var(--brief-u));gap:calc(2 * var(--brief-u));min-height:calc(15 * var(--brief-u));padding:calc(3 * var(--brief-u))!important}
+#tableBrief #briefContracts .contract-copy{grid-column:1;grid-row:1;font-size:calc(4.3 * var(--brief-u));line-height:1.2}
+#tableBrief #briefContracts .contract-reward{grid-column:2;grid-row:1;margin:0}
+#tableBrief #briefContracts .contract-reward-value{gap:4px;padding:calc(2 * var(--brief-u));font-size:calc(4 * var(--brief-u));white-space:nowrap}
+#tableBrief #briefContracts .contract-reward-value .game-number{font-size:inherit!important}
+#tableBrief #briefContracts .contract-reward-value .raster-suit{width:calc(4.5 * var(--brief-u))!important;height:calc(4.5 * var(--brief-u))!important}
+#tableBrief #briefContracts .nav-triangle{grid-column:3;grid-row:1;width:calc(3 * var(--brief-u));height:calc(3 * var(--brief-u))}
 #topbar .gainstat .lbl{line-height:1}
 #topbar .tt{display:block;line-height:.95}
 #topbar .table-context-body :is(#tableMeta,#ruleText){line-height:1.3}
