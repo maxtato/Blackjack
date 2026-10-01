@@ -22,6 +22,8 @@ html,body{height:var(--viewport-height);min-height:var(--viewport-height)}
 #modeMenu .hero-burst,#modeMenu .hero-art::before,#modeMenu .hero-art::after{display:none}
 #modeMenu .menu-hand{--card-w:calc(31 * var(--home-u));width:100%;height:100%;min-height:calc(44 * var(--home-u));position:relative}
 #modeMenu .menu-hand .card{position:absolute;left:50%;top:50%;width:var(--card-w);height:calc(var(--card-w)*1.42);opacity:1;animation:none!important;will-change:auto;filter:drop-shadow(0 4px 3px #0003) drop-shadow(0 12px 10px #0003)}
+/* Home cards keep their bevel from first paint, without relying on a bitmap mask. */
+#modeMenu .menu-hand .card>.card-surface{-webkit-mask:none;mask:none;clip-path:polygon(10% 0,90% 0,100% 6.67%,100% 93.33%,90% 100%,10% 100%,0 93.33%,0 6.67%)}
 #modeMenu .menu-hand .card:nth-child(1){transform:translate(-139%,-44%) rotate(-14deg);z-index:1}
 #modeMenu .menu-hand .card:nth-child(2){transform:translate(-50%,-53%) rotate(-2deg);z-index:3}
 #modeMenu .menu-hand .card:nth-child(3){--card-w:calc(31 * var(--home-u));transform:translate(34%,-44%) rotate(13deg);z-index:2}
