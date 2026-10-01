@@ -71,19 +71,26 @@ const ColdDeckJourney=(()=>{
   function renderVictory(){
     const tb=G.table,last=G.tableIdx===RUN_LEN-1;
     $('tableVictory').dataset.boss=String(tb.boss);
-    $('victoryTitle').textContent=t('journey.bravo');
-    $('victoryLabel').textContent=t(last?'shop.titleLast':tb.boss?'shop.titleBoss':'journey.tableWon');
-    $('victoryTable').textContent=tableName(tb);
-    const stars=$('victoryStars');stars.replaceChildren();stars.setAttribute('role','img');
+    $('victoryTitle').innerHTML=ColdDeckArt.lettering(t('journey.bravo'));
+    $('victoryLabel').textContent=t(tb.boss?'journey.bossWonNumber':'journey.tableWonNumber',String(tb.i+1).padStart(2,'0'));
+    $('victoryTable').innerHTML=ColdDeckArt.lettering(tableName(tb));
+    const stars=$('victoryStars');stars.replaceChildren();stars.setAttribute('role','list');
     stars.setAttribute('aria-label',t('journey.rating',G.lastStars));
-    for(let i=0;i<3;i++){
-      const star=document.createElement('span');star.className='victory-star'+(i<G.lastStars?' earned':'');
-      star.style.setProperty('--star-delay',i*90+'ms');star.setAttribute('aria-hidden','true');
-      star.innerHTML=STAR;stars.append(star);
-    }
-    const reward=stat(t('journey.tableReward'),'+'+abbr(G.lastReward));
+    const achievements=[['journey.starGoal',G.lastStars>0],['journey.starNoRetry',!G.tableRetried],['journey.starEarly',G.hand<=tb.mains-2]];
+    achievements.forEach(([key,earned],i)=>{
+      const star=document.createElement('div');star.className='victory-star'+(earned?' earned':'');star.setAttribute('role','listitem');
+      star.style.setProperty('--star-delay',i*90+'ms');
+      const mark=document.createElement('span');mark.className='victory-star-art';mark.setAttribute('aria-hidden','true');mark.innerHTML=STAR;
+      const label=document.createElement('span');label.className='victory-star-label';label.dataset.readingLabel='';label.textContent=t(key);
+      const status=document.createElement('span');status.className='sr-only';status.textContent=' · '+t(earned?'journey.starEarned':'journey.starMissing');
+      star.append(mark,label,status);stars.append(star);
+    });
+    const reward=stat(t('journey.reputationWon'),'+ '+abbr(G.lastReward));
     const mark=document.createElement('span');mark.innerHTML=STAR;reward.querySelector('strong').append(mark);
     $('victoryRewards').replaceChildren(reward,stat(t('journey.inPocket'),cash(G.bank)));
+    for(const amount of $('victoryRewards').querySelectorAll('strong')){
+      const value=amount.firstChild;const ink=document.createElement('span');ink.className='victory-amount';ink.innerHTML=ColdDeckArt.lettering(value.textContent);value.replaceWith(ink);
+    }
     $('victoryNext').hidden=!last;
     $('victoryNext').textContent=last?t('journey.circuitDone'):'';
     $('victoryContinue').textContent=t(last?'journey.bankRun':'journey.continue');

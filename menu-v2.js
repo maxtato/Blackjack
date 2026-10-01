@@ -180,7 +180,7 @@ syncMenuFocus();
 
 // Fit complete panels after their content, fonts or available viewport changes.
 (()=>{
- const screens=['upgradesScreen','tableBrief','shop','inspectScreen','endScreen'].map(id=>$(id));
+ const screens=['upgradesScreen','tableBrief','tableVictory','shop','inspectScreen','endScreen'].map(id=>$(id));
  let pending=0;
  function fit(){
   pending=0;
@@ -210,6 +210,19 @@ syncMenuFocus();
     const inks=[...title.querySelectorAll('.raster-ink')];
     const widest=Math.max(1,...inks.map(ink=>ink.scrollWidth));
     title.style.setProperty('--end-title-size',(parseFloat(getComputedStyle(title).fontSize)*Math.min(1,(title.clientWidth-2)/widest))+'px');
+   }
+   if(screen.id==='tableVictory'){
+    for(const [id,property] of [['victoryTitle','--victory-title-size'],['victoryTable','--victory-name-size']]){
+     const title=$(id);title.style.removeProperty(property);
+     const ink=title.querySelector('.raster-ink');
+     if(ink&&title.clientWidth)title.style.setProperty(property,(parseFloat(getComputedStyle(title).fontSize)*Math.min(1,(title.clientWidth-2)/Math.max(1,ink.scrollWidth)))+'px');
+    }
+    for(const amount of screen.querySelectorAll('.victory-rewards strong')){
+     amount.style.removeProperty('--victory-value-size');
+     const value=amount.querySelector('.victory-amount'),mark=amount.querySelector('.rep-star');
+     const used=(value?.scrollWidth||0)+(mark?.offsetWidth||0)+(mark?6:0);
+     if(used&&amount.clientWidth)amount.style.setProperty('--victory-value-size',(parseFloat(getComputedStyle(amount).fontSize)*Math.min(1,(amount.clientWidth-2)/used))+'px');
+    }
    }
    const height=screen.clientHeight-parseFloat(style.paddingTop)-parseFloat(style.paddingBottom)-4;
    const width=screen.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight);

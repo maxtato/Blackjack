@@ -3,6 +3,30 @@ import {engine,card} from './engine.mjs';
 const h=engine({journeyUI:true,shopUI:true}),a=h.api,d=h.w.document,passed=[];
 const check=(name,fn)=>{h.reset(432);fn();passed.push(name);};
 const visible=id=>!!d.getElementById(id)?.classList.contains('show');
+const content=node=>{const copy=node.cloneNode(true);copy.querySelectorAll('[aria-hidden="true"]').forEach(el=>el.remove());return copy.textContent.replace(/\s+/g,' ').trim();};
+
+check('Victory explains each earned star independently, including an early win after a retry',()=>{
+ for(const [retried,hand,earned] of [[false,8,[true,true,true]],[true,8,[true,false,true]],[false,9,[true,true,false]],[true,10,[true,false,false]]]){
+  a.startGame(0);a.startPreparedTable();a.G.tableRetried=retried;a.G.hand=hand;a.G.bank=a.G.table.goal;a.finishTable();
+  const stars=[...d.querySelectorAll('#victoryStars .victory-star')];
+  assert.deepEqual(stars.map(star=>star.classList.contains('earned')),earned);
+  assert.equal(earned.filter(Boolean).length,a.G.lastStars);
+  assert.deepEqual(stars.map(star=>star.querySelector('.victory-star-label').textContent),['Objectif\natteint','Sans\nreprise','2 mains\nd’avance']);
+  assert.equal(d.getElementById('victoryStars').getAttribute('role'),'list');
+ }
+});
+check('Victory uses the live table, bank and reputation without awarding again on translation',()=>{
+ a.startPreparedTable();a.G.bank=146;a.finishTable();
+ assert.equal(d.getElementById('victoryLabel').textContent,'TABLE 01 REMPORTÉE');
+ assert.equal(content(d.getElementById('victoryTitle')),'BRAVO !');
+ assert.equal(content(d.getElementById('victoryTable')),'Arrière-salle');
+ assert.deepEqual([...d.querySelectorAll('#victoryRewards strong')].map(content),['+ '+a.G.lastReward,'146 $']);
+ assert(d.querySelector('.victory-heading .victory-art'));assert(d.getElementById('victoryNext').hidden);
+ const pot=a.G.pot;a.setLang('en');
+ assert.equal(d.getElementById('victoryLabel').textContent,'TABLE 01 CLEARED');
+ assert(content(d.getElementById('victoryRewards')).includes('Reputation earned'));assert.equal(a.G.pot,pot);
+ a.setLang('fr');
+});
 
 check('Victory opens one preparation; one button starts the next table without visiting the shop',()=>{
  assert(d.getElementById('briefTools').hidden);
@@ -156,8 +180,8 @@ check('Entry and translated milestones reflect the live bankroll and reset acros
  assert.equal(d.querySelector('.journey-step[aria-current="step"]').textContent,'TABLE 05');
  assert.equal(d.getElementById('briefTableLabel').textContent,'TABLE 05/24');
  a.setLang('en');assert(d.getElementById('briefPressure').textContent.includes('To earn'));
- a.startPreparedTable();a.G.bank=a.G.table.goal;a.finishTable();assert.equal(d.getElementById('victoryTitle').textContent,'WELL DONE!');
- a.setLang('fr');assert.equal(d.getElementById('victoryTitle').textContent,'BRAVO !');
+ a.startPreparedTable();a.G.bank=a.G.table.goal;a.finishTable();assert.equal(content(d.getElementById('victoryTitle')),'WELL DONE!');
+ a.setLang('fr');assert.equal(content(d.getElementById('victoryTitle')),'BRAVO !');
  a.startEndless();assert(!visible('tableVictory'));assert(!visible('tableBrief'));assert(d.getElementById('circuitProgress').hidden);
  a.setup([card(10),card(7)],[card(10),card(6)],{phase:'victory',bank:100});a.resolve('stand');assert.equal(a.G.bank,100);
 });
