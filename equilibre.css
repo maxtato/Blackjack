@@ -885,6 +885,12 @@ button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
 .draft-choice>.effect-card{width:48px;height:71px;padding:6px 3px}
 @media(max-width:430px){.shopTok:has(>.effect-card){width:47px;height:70px}}
 
+/* Phone play fills the visible height while keeping controls outside the safe areas. */
+@media(max-width:600px) and (orientation:portrait){
+ #shaker{height:100dvh;align-items:start}
+ #app{height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));padding-top:4px}
+}
+
 /* Status and active tickets keep a fixed band between the two hands. */
 @media (min-height:601px), (orientation:portrait){
  #app{--base-card-w:calc(21 * var(--ui-u));--dock-secondary:max(42px,calc(10.8 * var(--ui-u)))}
