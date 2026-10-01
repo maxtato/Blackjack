@@ -710,7 +710,8 @@ body:has(#multPop.go) #tip{visibility:hidden}
 #tableBrief .table-effect-card{margin:12px 0;padding:14px 16px}
 .table-effect-card{display:flow-root}
 .table-effect-card .table-rule-art{float:right;display:block;width:64px;height:64px;margin:0 0 8px 12px;pointer-events:none}
-.table-rule-art>.effect-illustration{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;filter:none}
+/* Muted printed ink for every table rule, including the three blue lightning bolts. */
+.table-rule-art>.effect-illustration{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;filter:saturate(.68) brightness(.94) contrast(.94)}
 .font-settings{display:grid;gap:8px;text-align:left;margin:14px 0;padding:14px 0;border-top:1px solid #61707c;border-bottom:1px solid #61707c}
 .font-settings .setLbl,#fontScopeNote,#fontStatus{font:500 13px/1.35 var(--reading-font,var(--copy-font))!important;color:#e5e9ec}
 #fontScopeNote{margin:0!important;color:#c6d0d8}
@@ -1011,6 +1012,11 @@ button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
  #shaker{height:var(--viewport-height);align-items:start}
  #modeMenu .ovpanel{height:var(--eq-height)}
  #app{height:var(--eq-height);padding-top:4px;padding-bottom:max(12px,calc(3 * var(--game-u)))}
+ /* Equal side tracks center the chips themselves, independently of the label. */
+ #bottombar #betRow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);column-gap:calc(2 * var(--ui-u));position:relative;top:6px}
+ #betRow>.lbl:not(.spacer){grid-column:1;grid-row:1;justify-self:end;white-space:nowrap;font-size:max(11px,calc(3 * var(--ui-u)))}
+ #chips{grid-column:2;grid-row:1;justify-self:center}
+ #chips .chip{width:max(48px,calc(13.4 * var(--ui-u)));height:max(48px,calc(13.4 * var(--ui-u)));font-size:max(20px,calc(5.7 * var(--ui-u)))}
 }
 /* Keep the play header below the iPhone's translucent status-bar transition.
    The background remains full-height; the flexible card area absorbs this gap. */
