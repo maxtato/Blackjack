@@ -73,7 +73,7 @@ en:{
 'rules.bonus':'<span class="rt">SMALL BONUSES</span>Situational nudges to the multiplier: <span class="k">COURT</span> (2+ face cards) ×1.5 · <span class="k">LOWBALL</span> (win with ≤15) ×1.5 · <span class="k">BY ONE</span> (beat the dealer by a single point) ×1.5 · <span class="k">CLUTCH</span> (last hand) ×1.5 · <span class="k">COMEBACK</span> (started ≤11, finished ≥17) ×1.3.',
 'rules.circuit':'<span class="rt">THE CIRCUIT</span><span class="k">24 tables · 8 zones · a boss every 3 levels</span>. After a boss: <span class="k">cash in</span> your reputation at the Hideout, or <span class="d">push on</span> for more. Reach <span class="k">zone 2</span> twice to unlock the <span class="k">shortcut</span>.',
 'rules.hideout':'<span class="rt">THE HIDEOUT</span>Spend your <span class="k">reputation <i class="pxstar"></i></span> on permanent perks (relics, tarots, editions) before heading out again.',
-'rules.endless':'<span class="rt">ENDLESS</span>No goal: grow your pot for as long as you can bet. Every <span class="k">tier</span> = a perk of your choice and higher bets · every 5 hands, a <span class="d">special hand</span>. <span class="k">CASH OUT</span> turns your pot into reputation — <span class="d">going bust</span> only keeps the tiers.',
+'rules.endless':'<span class="rt">ENDLESS</span>No goal: grow your pot for as long as you can bet. Every <span class="k">tier</span> = a perk of your choice and higher bets · every 3 to 8 hands, a random <span class="d">special rule</span>. <span class="k">CASH OUT</span> turns your pot into reputation — <span class="d">going bust</span> only keeps the tiers.',
 /* --- améliorations / galerie --- */
 'upg.title':'UPGRADES','backs.title':'CARD BACK',
 /* --- recommencer --- */
@@ -253,8 +253,14 @@ en:{
 'boon.filet.t':'STREAK NET','boon.filet.d':'On a loss, the STREAK does not drop to zero: it only loses one level.',
 'boon.cash.t':'+20 % POT','boon.cash.d':'An immediate injection into your pot.',
 'boon.baraplus.t':'BOOSTED STREAK','boon.baraplus.d':'Gutsy plays give +1 extra STREAK.',
-'boon.evt3.t':'SPECIAL HANDS ×2','boon.evt3.d':'A special hand every 3 hands (instead of 5).',
+'boon.evt3.t':'FREQUENT RULES','boon.evt3.d':'A special rule every 3 to 5 hands, at random.',
 /* --- mains spéciales --- */
+'evt.ouvert.t':"OPEN GAME",'evt.ouvert.d':"both dealer cards are visible from the start",
+'evt.patron.t':"THE BOSS’S FAVOR",'evt.patron.d':"your first card is always an Ace",
+'evt.trois.t':"THREE TO START",'evt.trois.d':"you start with 3 cards; going over 21 loses the hand",
+'evt.brouillard.t':"IN THE FOG",'evt.brouillard.d':"the dealer’s cards and total stay hidden while you decide",
+'evt.express.t':"QUICK DUEL",'evt.express.d':"2 cards for you: no hit, double, split or forced draw",
+'evt.petite.t':"SMALL BET",'evt.petite.d':"the minimum bet is required for this hand",
 'evt.doree.t':'GOLDEN HAND','evt.doree.d':'payouts doubled on this hand',
 'evt.forcee.t':'FORCED BET','evt.forcee.d':'your highest affordable bet, for this hand',
 'evt.pompette.t':'TIPSY DEALER','evt.pompette.d':'for this hand, the dealer stands on 16',
@@ -319,7 +325,7 @@ fr:{
 'rules.bonus':'<span class="rt">PETITS BONUS</span>Des coups de pouce au multiplicateur selon la situation : <span class="k">COUR</span> (2+ figures) ×1.5 · <span class="k">FILOU</span> (gagner avec ≤15) ×1.5 · <span class="k">AU POIL</span> (battre le croupier d\'un point) ×1.5 · <span class="k">CLUTCH</span> (dernière main) ×1.5 · <span class="k">REMONTADA</span> (parti ≤11, fini ≥17) ×1.3.',
 'rules.circuit':'<span class="rt">LA TOURNÉE</span><span class="k">24 tables · 8 zones · un boss tous les 3 niveaux</span>. Après un boss : <span class="k">encaisser</span> ta réputation à La Planque, ou <span class="d">continuer</span> pour plus gros. Atteins la <span class="k">zone 2</span> deux fois pour débloquer le <span class="k">raccourci</span>.',
 'rules.hideout':'<span class="rt">LA PLANQUE</span>Dépense ta <span class="k">réputation <i class="pxstar"></i></span> en avantages permanents (reliques, tarots, éditions) avant de repartir.',
-'rules.endless':'<span class="rt">SANS FIN</span>Pas d\'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · toutes les 5 mains, une <span class="d">main spéciale</span>. <span class="k">ENCAISSER</span> convertit ta cagnotte en réputation — la <span class="d">banqueroute</span> ne garde que les paliers.',
+'rules.endless':'<span class="rt">SANS FIN</span>Pas d\'objectif : fais grimper ta cagnotte tant que tu peux miser. Chaque <span class="k">palier</span> = un bonus au choix et des mises plus hautes · toutes les 3 à 8 mains, une <span class="d">règle spéciale</span> aléatoire. <span class="k">ENCAISSER</span> convertit ta cagnotte en réputation — la <span class="d">banqueroute</span> ne garde que les paliers.',
 'upg.title':'AMÉLIORATIONS','backs.title':'DOS DE CARTE',
 'rst.title':'RECOMMENCER ?','rst.text':'Êtes-vous sûr de vouloir <b>recommencer la progression de ce mode</b> ?<br>Tu perds la <b>réputation</b>, les <b>déblocages</b> et le <b>record</b> de ce mode uniquement.',
 'rst.cancel':'ANNULER','rst.ok':'RECOMMENCER',
@@ -480,7 +486,13 @@ fr:{
 'boon.filet.t':'FILET CHANCE','boon.filet.d':'À la défaite, la CHANCE ne retombe pas à zéro : elle perd juste un niveau.',
 'boon.cash.t':'+20 % CAGNOTTE','boon.cash.d':'Injection immédiate dans ta cagnotte.',
 'boon.baraplus.t':'CHANCE DOPÉE','boon.baraplus.d':'Les coups culottés donnent +1 CHANCE de plus.',
-'boon.evt3.t':'MAINS SPÉCIALES ×2','boon.evt3.d':'Une main spéciale toutes les 3 mains (au lieu de 5).',
+'boon.evt3.t':'RÈGLES FRÉQUENTES','boon.evt3.d':'Une règle spéciale toutes les 3 à 5 mains, au hasard.',
+'evt.ouvert.t':"JEU OUVERT",'evt.ouvert.d':"les deux cartes du croupier sont visibles dès le départ",
+'evt.patron.t':"COUP DU PATRON",'evt.patron.d':"ta première carte est obligatoirement un As",
+'evt.trois.t':"TROIS D’ENTRÉE",'evt.trois.d':"tu reçois 3 cartes au départ ; au-delà de 21, la main est perdue",
+'evt.brouillard.t':"DANS LE BROUILLARD",'evt.brouillard.d':"les cartes et le total du croupier restent cachés pendant tes choix",
+'evt.express.t':"DUEL EXPRESS",'evt.express.d':"2 cartes pour toi, sans tirer, doubler, séparer ou forcer",
+'evt.petite.t':"PETITE MISE",'evt.petite.d':"la mise minimale est imposée pour cette main",
 'evt.doree.t':'MAIN DORÉE','evt.doree.d':'gains doublés sur cette main',
 'evt.forcee.t':'MISE FORCÉE','evt.forcee.d':'la plus grosse mise que tu peux payer, pour cette main',
 'evt.pompette.t':'CROUPIER POMPETTE','evt.pompette.d':'pour cette main, le croupier s’arrête à 16',
@@ -737,10 +749,10 @@ Object.assign(STR.en,{
 });
 
 Object.assign(STR.fr,{
- 'rules.events':'<span class="rt">MAINS SPÉCIALES</span>Toutes les <span class="k">3 mains en circuit</span> (5 en libre), un effet aléatoire est annoncé avant la mise : gains doublés, plus grosse mise abordable imposée, croupier à 16 ou première carte Prisme si elle est sans édition. Il dure une seule main. Aucun choix supplémentaire.'
+ 'rules.events':"<span class=\"rt\">RÈGLES SPÉCIALES</span>Toutes les <span class=\"k\">3 à 8 mains</span>, au hasard, une règle est annoncée avant la mise : jeu ouvert, premier As, trois cartes au départ, croupier caché, duel à deux cartes, mise minimale ou maximale abordable, ou croupier qui s’arrête à 16. Une seule règle, pour une main."
 });
 Object.assign(STR.en,{
- 'rules.events':'<span class="rt">SPECIAL HANDS</span>Every <span class="k">3 hands in Circuit</span> (5 in Free Play), a random effect is announced before betting: doubled winnings, your highest affordable bet required, dealer standing on 16, or Prism on your first card if unedited. It lasts one hand. No extra choice.'
+ 'rules.events':"<span class=\"rt\">SPECIAL RULES</span>Every <span class=\"k\">3 to 8 hands</span>, a random rule is announced before betting: open dealer cards, an opening Ace, three starting cards, hidden dealer cards, a two-card duel, a minimum or maximum affordable bet, or a dealer who stands on 16. One rule lasts one hand."
 });
 
 Object.assign(STR.fr,{

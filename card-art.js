@@ -67,7 +67,7 @@ const ColdDeckArt = (() => {
   const effectAliases={bankI:'bank',pourboireI:'pourboire',income:'pourboire',betmax:'plafond',filet:'net',cash:'soin'};
   const interfaceArt={star:'etoile',flag:'phare',trophy:'ui-trophy',scroll:'boon2',forcee:'event-forcee',glass:'event-pompette',arc:'lune',suite:'elan',couleur:'tarot',doree:'event-doree',diamond:'relic2'};
   // Temporary hand events have their own drawings, separate from cards and upgrades.
-  const handEventArt={doree:'event-doree',forcee:'event-forcee',pompette:'event-pompette',etoile:'event-etoile'};
+  const handEventArt={doree:'event-doree',forcee:'event-forcee',pompette:'event-pompette',etoile:'event-etoile',ouvert:'event-ouvert',patron:'event-patron',trois:'event-trois',brouillard:'event-brouillard',express:'event-express',petite:'event-petite'};
   const image=key=>embeddedCardImages?.[key]||`assets/illustrations/${key}.webp`;
   const backKeys={cb9:'back-lightning',cb10:'back-luck',cb11:'back-heart',cb12:'back-moon',cb13:'back-dice',cb14:'back-crown',cb15:'back-eye',cb16:'back-cherry',cb18:'back-flame',cb19:'back-diamond',cb22:'back-snake',cb26:'back-sun'};
   const backKey=id=>backKeys[id]||backKeys.cb9;

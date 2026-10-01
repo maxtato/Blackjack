@@ -2,26 +2,38 @@ import assert from 'node:assert/strict';
 import {engine,card} from './engine.mjs';
 const h=engine({eventUI:true}),a=h.api,d=h.w.document,passed=[];
 const check=(name,fn)=>{h.reset(123);fn();passed.push(name);};
-const event=id=>a.HAND_EVENTS.find(e=>e.id===id);
+const event=id=>a.HAND_EVENTS.find(e=>e.id===id)||{id};
 
-check('Circuit events occur on hands 3, 6 and 9, then clear; Free Play retains its cadence',()=>{
- for(const [endless,boost,cadence] of [[false,false,3],[true,false,5],[true,true,3]]){
-  a.freshGame();a.G.endless=endless;a.G.boons.evt3=boost;
-  for(let hand=1;hand<=10;hand++){
-   a.G.hand=hand;a.rollHandEvent();assert.equal(!!a.G.event,hand%cadence===0);
+check('Special rules appear at random intervals of 3 to 8 rounds across tables',()=>{
+ for(const endless of [false,true]){
+  a.freshGame();a.G.endless=endless;
+  let last=0,previous=null;const intervals=new Set();
+  for(let round=1;round<=500;round++){
+   a.G.tableIdx=Math.floor((round-1)/10);a.G.hand=(round-1)%10+1;
+   a.rollHandEvent();const selected=a.G.event,countdown=a.G.eventCountdown;
+   a.rollHandEvent();assert.equal(a.G.event,selected);assert.equal(a.G.eventCountdown,countdown);
+   if(selected){
+    const gap=round-last;assert(gap>=3&&gap<=8,`gap ${gap}`);intervals.add(gap);
+    assert.notEqual(selected.id,previous);previous=selected.id;last=round;
+   }
   }
+  assert.equal(intervals.size,6);assert(500-last<8);
  }
- const original=h.w.Math.random;
- try{
-  a.G.hand=3;a.G.endless=false;
-  for(let i=0;i<a.HAND_EVENTS.length;i++){
-   h.w.Math.random=()=>(i+.5)/a.HAND_EVENTS.length;
-   a.rollHandEvent();assert.equal(a.G.event.id,a.HAND_EVENTS[i].id);
-  }
- }finally{h.w.Math.random=original;}
- a.setup([],[],{phase:'done',hand:2,bank:80});a.nextHandOrEnd();
- assert.equal(a.G.hand,3);assert(a.G.event);
- a.G.phase='done';a.nextHandOrEnd();assert.equal(a.G.hand,4);assert.equal(a.G.event,null);
+ assert(!a.HAND_EVENTS.some(e=>['doree','etoile'].includes(e.id)));
+ assert.equal(a.HAND_EVENTS.length,8);
+});
+check('The frequent-rules perk stays between three and five rounds',()=>{
+ a.freshGame();a.G.endless=true;a.G.boons.evt3=true;
+ let last=0;
+ for(let hand=1;hand<=150;hand++){
+  a.G.hand=hand;a.rollHandEvent();
+  if(a.G.event){assert(hand-last>=3&&hand-last<=5);last=hand;}
+ }
+});
+check('A Free Play tier transition counts the next hand for the special rule',()=>{
+ a.startEndless();a.G.eventCountdown=1;a.G.bank=a.palierTarget(a.G.palier);
+ a.reachPalier();const id=a.G.boonChoices[0].id;a.applyBoon(id);
+ assert(a.G.event);assert.equal(a.G.hand,2);
 });
 check('Forced bets always use the highest affordable amount and keep the committed stake',()=>{
  for(const bank of [5,9,10,24,25,100]){

@@ -34,6 +34,60 @@
       "width": 512,
       "height": 512,
       "prompt": "Use case: stylized-concept.\nAsset type: an original compact raster illustration for a special-hand notification in the Cold Deck game, legible at approximately 30 pixels.\nCreate a genuinely new drawing. Square 1024x1024 canvas. Isolated subject on a genuinely transparent alpha background; all space around the object is transparent, including every corner.\nStyle: minimal flat cut-paper polygon graphic with lightly irregular, chamfered angular edges and flat painted color planes. Quiet matte ink colors, faint printed-paper grain only. Maximum three or four flat inks. Large clear shapes, no outline, no surrounding shadow, no glow, no specular highlights, no metallic or glass reflections, no gradients. Do not paint checkerboard transparency.\nComposition: centered, large compact silhouette occupying 80–85% of the canvas. Simple enough to read instantly at tiny size on a violet notification panel. Use only the requested one or two elements. No decorative background, framing or extra objects.\nConstraints: no text, letters, numbers, marks, badges, frames, UI, watermark, cards, playing cards, coin piles, potion bottles, jewelry boxes, boots, wings, broken chips, or five-point stars.\nSubject: A SINGLE thick angular FOUR-POINT PRISM STAR, with exactly four substantial tapering points in the cardinal directions (top, right, bottom, left), cut into only THREE large matte colored facets: warm cream #F3E7CC, subdued teal #70BEB4, dusty coral #D7797C. The four-point star itself is one compact geometric object and the whole icon. Make the concave corners between the four broad points unambiguous, not a diamond or gemstone. It is NOT a five-point reputation star, not a jewel, not a jewelry box, not an actual playing card. NO separate sparkles, rays, halo, surrounding points, or extra object."
+    },
+    {
+      "event": "ouvert",
+      "path": "assets/illustrations/event-ouvert.webp",
+      "width": 512,
+      "height": 512,
+      "source_image": "exec-f852eeaf-ea89-4aad-8d7e-264d0a6cc6c4.png",
+      "description": "JEU OUVERT",
+      "generator": "built-in image_gen, existing project artwork"
+    },
+    {
+      "event": "patron",
+      "path": "assets/illustrations/event-patron.webp",
+      "width": 512,
+      "height": 512,
+      "source_image": "exec-877dfce9-bae4-4013-b63d-1e16033c8f89.png",
+      "description": "COUP DU PATRON",
+      "generator": "built-in image_gen, existing project artwork"
+    },
+    {
+      "event": "trois",
+      "path": "assets/illustrations/event-trois.webp",
+      "width": 512,
+      "height": 512,
+      "source_image": "exec-bfc3fb8d-3bfb-4f37-828e-c5593b796b7e.png",
+      "description": "TROIS D’ENTRÉE",
+      "generator": "built-in image_gen, existing project artwork"
+    },
+    {
+      "event": "brouillard",
+      "path": "assets/illustrations/event-brouillard.webp",
+      "width": 512,
+      "height": 512,
+      "source_image": "exec-840020d0-f2d7-4b68-82ad-f124a6fd801b.png",
+      "description": "DANS LE BROUILLARD",
+      "generator": "built-in image_gen, existing project artwork"
+    },
+    {
+      "event": "express",
+      "path": "assets/illustrations/event-express.webp",
+      "width": 512,
+      "height": 512,
+      "source_image": "exec-fddd7d58-b5f9-42e5-a225-8132c7f92de1.png",
+      "description": "DUEL EXPRESS",
+      "generator": "built-in image_gen, existing project artwork"
+    },
+    {
+      "event": "petite",
+      "path": "assets/illustrations/event-petite.webp",
+      "width": 512,
+      "height": 512,
+      "source_image": "exec-8181f47f-5555-4d03-a9fa-4945e3347f96.png",
+      "description": "PETITE MISE",
+      "generator": "built-in image_gen, existing project artwork"
     }
   ]
 }

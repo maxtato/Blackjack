@@ -5,7 +5,7 @@ import {Window} from 'happy-dom';
 import FakeTimers from '@sinonjs/fake-timers';
 
 export const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-export function engine({realAds=false,persist=false,storage={},journeyUI=false,shopUI=false,eventUI=false,endUI=false}={}){
+export function engine({realAds=false,persist=false,storage={},journeyUI=false,shopUI=false,eventUI=false,endUI=false,handUI=false}={}){
   const w=new Window({url:'http://localhost:8000',settings:{disableJavaScriptFileLoading:true,disableCSSFileLoading:true,enableJavaScriptEvaluation:true,suppressInsecureJavaScriptEnvironmentWarning:true}});
   for(const [key,value] of Object.entries(storage))w.localStorage.setItem(key,value);
   w.document.write(fs.readFileSync(root+'/index.html','utf8').replace(/<script[\s\S]*?<\/script>/g,''));
@@ -15,13 +15,13 @@ export function engine({realAds=false,persist=false,storage={},journeyUI=false,s
   const expose=['RUN','RUN_LEN','ZONE_MULTCAP','RELIC_POOL','TAROT_POOL','SERVICE_POOL','UNLOCKS_NUIT','HAND_EVENTS','BARAKA_STEPS','BARAKA_MULT','STR','Ads','startGame','freshGame','enterTable','retryTable','deal','playerHit','playerStand','playerDouble','playerSplit','forcerChance','usePeek','useConsumable','handValue','computeMult','barakaLevel','barakaPct','addBaraka','hasRelic','drawIdeal','buildShoe','resolve','resolveSplit','betChoices','clampBet','itemCost','serviceCost','niceRound','roundBet','starsFor','GameClock','startPreparedTable','bossReady','bossProgress','lossRefund','checkBankGoal','recommendedBet','relicPower','resetTableState','shopReserve','serviceAvailable','advanceAmount','openPause','resumeGame','openInspect','closeInspect','migrateCircuitRecord','extraLife','tableRep','repOnEnd','coffreBonus','buyShopItem','leaveShop','cashOut','endRun','updateRecord','addEditionToHand','consumableSlots','relicMax','applyHandIncome','rollHandEvent','dealerPlay','announceTurn','openTableRules','t','bustChance','sellValue','sellItem'];
   let code=['game-data.js','card-art.js','game.js','backgrounds.js','circuit-journey.js'].map(f=>fs.readFileSync(root+'/'+f,'utf8')).join('\n');
   expose.push('openSettings','closeSettings','pauseSettings','openTestTools','closeTestTools','requestCircuitReset','closeRestart','doRestart','restartAll','startEndless');
-  expose.push('maybeEdition','cardEl');
+  expose.push('maybeEdition','cardEl','renderHands','renderHandTotals','renderActions');
   expose.push('reachPalier','applyBoon','palierTarget');
   expose.push('ColdDeckBackgrounds','setLang');
   expose.push('ColdDeckJourney','continueTableVictory','finishTable','nextHandOrEnd','showTableBrief','renderShopHead','cash','renderEndScreen','adDoubleRep');
   expose.push('openShopSale','renderShopInventory','setLang','openShop','rerollShop','tablePreparation');
   code=code.replace('freshGame();buildShoe();applyI18n();renderHands();tick();','');
-  code+='\n'+noops.filter(n=>(!eventUI||n!=='announceTurn')&&(!persist||!['saveMeta','saveRecs'].includes(n))&&(!journeyUI||!['showTableBrief','renderShopHead'].includes(n))&&(!shopUI||n!=='renderShopInventory')).map(n=>n+'=()=>{};').join('\n');
+  code+='\n'+noops.filter(n=>(!handUI||!['renderHands','renderHandTotals','renderActions'].includes(n))&&(!eventUI||n!=='announceTurn')&&(!persist||!['saveMeta','saveRecs'].includes(n))&&(!journeyUI||!['showTableBrief','renderShopHead'].includes(n))&&(!shopUI||n!=='renderShopInventory')).map(n=>n+'=()=>{};').join('\n');
   code+=`\nLANG='fr';
     renderChips=()=>clampBet();renderAll=()=>clampBet();
     showWord=(kind,gain,mult,natural,bust,record,reason='')=>{window.__result={kind,gain,mult,natural,bust,record,reason};};

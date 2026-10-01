@@ -321,18 +321,36 @@ const BOONS=[
 ];
 /* Special hands: one temporary effect, announced before placing the bet. */
 const HAND_EVENTS=[
-  {id:'doree'},
   {id:'forcee'},
   {id:'pompette'},
-  {id:'etoile'},
+  {id:'ouvert'},
+  {id:'patron'},
+  {id:'trois'},
+  {id:'brouillard'},
+  {id:'express'},
+  {id:'petite'},
 ];
 function evtTitle(e){return t('evt.'+e.id+'.t');}
 function evtDesc(e){return t('evt.'+e.id+'.d');}
-/* One automatic effect per special hand. Free Play keeps its own cadence. */
+/* Count rounds across tables, including Free Play tier changes. */
+function handEventInterval(){return 3+rndInt(G.endless&&G.boons?.evt3?3:6);}
 function rollHandEvent(){
-  const cadence=G.endless?(G.boons?.evt3?3:5):3;
-  G.event=G.hand%cadence===0?HAND_EVENTS[rndInt(HAND_EVENTS.length)]:null;
+  const key=[G.endless,G.tableIdx,G.hand].join(':');
+  if(G.eventTurnKey===key)return;
+  G.eventTurnKey=key;
+  if(!Number.isInteger(G.eventCountdown))G.eventCountdown=handEventInterval();
+  G.event=null;
+  if(--G.eventCountdown>0)return;
+  const pool=HAND_EVENTS.filter(e=>e.id!==G.lastHandEvent);
+  G.event=pool[rndInt(pool.length)];G.lastHandEvent=G.event.id;
+  G.eventCountdown=handEventInterval();
 }
+function dealerCardHidden(index){
+  if(G.revealed||G.phase==='done')return false;
+  if(G.event?.id==='ouvert')return false;
+  return G.event?.id==='brouillard'||G.table.rule==='mute'||index===1;
+}
+function handDrawLocked(){return G.event?.id==='express';}
 /* Reputation follows the table result, with no challenge to select. */
 function starsFor(tb,bank){
   if(bank<tb.goal||!bossReady())return 0;
@@ -501,6 +519,8 @@ function recommendedBet(tb=G.table,bank=G.bank,level=barakaLevel()){
 function resetTableState(retry){
   const carry=retry?0:Math.min(2,Math.floor((G.baraka||0)/2));
   Object.assign(G,{hand:1,phase:'bet',event:null,briefPending:false,pressure:0,baraka:G.table.rule==='depart'?2:carry,tableMaxBaraka:0,dHand:[],pHand:[],forcedUsed:false,tableMaxPressure:0,objHit:false,_talismanUsed:false,_dealing:false,_settling:false,penduArmed:false,magicNext:false,smallNext:false,counterUsed:false,phareUsed:false,knownCard:null,splitActive:false,hands:null,hi:0,stakeMult:1,tarotThisHand:false,bossState:{wins:0,qualified:0,totals:[]}});
+  G.eventTurnKey=null;
+  rollHandEvent();
   if(!retry)G.tableRetried=false;
 }
 function nextTablePreview(){
@@ -636,6 +656,12 @@ function maybeEdition(c){
   return c;
 }
 function draw(){if(G.shoe.length<15)buildShoe();return maybeEdition(G.shoe.pop());}
+function drawOpeningAce(){
+  if(G.shoe.length<15)buildShoe();
+  const index=G.shoe.findLastIndex(c=>c.r==='A');
+  if(index>=0)return maybeEdition(G.shoe.splice(index,1)[0]);
+  const card=draw();card.r='A';return card;
+}
 function drawIdeal(){
   if(G.shoe.length<15)buildShoe();
   const top=0;let bestIdx=-1,bestVal=-1;
@@ -834,14 +860,13 @@ function renderHands(reveal=false){
   ph.style.setProperty('--split-count',G.splitActive?Math.max(4,G.hands.reduce((n,h)=>n+h.length,0)):4);
   G.dHand.forEach((c,i)=>{
     if(c._pending)return;                                         // pas encore distribuée
-    if(G.doFlip&&reveal&&(G.table.rule==='mute'||i===1)&&!dealerFaceTurns.has(c)){
+    if(G.doFlip&&reveal&&((G.event?.id!=='ouvert')&&(G.event?.id==='brouillard'||G.table.rule==='mute'||i===1))&&!dealerFaceTurns.has(c)){
       const turnState=G;dealerFaceTurns.set(c,false);
       gameDelay(()=>{if(G===turnState&&dealerFaceTurns.has(c)){dealerFaceTurns.set(c,true);renderHandTotals(true);window.ColdDeckFX?.onCard(c);}},window.ColdDeckFX?.reduced?0:CARD_FACE_AT);
       gameDelay(()=>{dealerFaceTurns.delete(c);if(G===turnState)renderHands(true);},CARD_FLIP);
     }
-    const hideMute=(G.table.rule==='mute'&&!reveal);
-    const hideHole=(i===1&&!reveal&&G.phase!=='done');
-    const back=(c._fd!=null)?c._fd:(hideMute||hideHole);          // _fd : pilotage par la distribution
+    const hidden=!reveal&&dealerCardHidden(i);
+    const back=hidden||((c._fd!=null)?c._fd:false);          // _fd : pilotage par la distribution
     const arrive=!!c._arr;
     const flip=c._flip||dealerFaceTurns.has(c);
     dealerSlots.push(fannedCard(c,i,dShown.length,{back,dealer:true,arrive,flip,placed:!arrive&&!flip}));
@@ -886,8 +911,9 @@ function renderHandTotals(reveal=false){
     const up=hand.filter(cardFaceVisible),badge=$('pHand').querySelectorAll('.shval')[i];
     if(badge)setReadout(badge,up.length?handValue(up).total:'—');
   });
-  const dealer=G.dHand.filter(cardFaceVisible);
-  setReadout($('dVal'),reveal?(dealer.length?handValue(dealer).total:'—'):G.table.rule==='mute'?'?':dealer.length?handValue([dealer[0]]).total:'—');
+  const dealer=G.dHand.filter((c,i)=>cardFaceVisible(c)&&(reveal||!dealerCardHidden(i)));
+  const allHidden=!reveal&&dealerCardHidden(0);
+  setReadout($('dVal'),allHidden?'?':dealer.length?handValue(dealer).total:'—');
 }
 function renderPressure(){   // (barre BARAKA — on garde le nom pour tous les appels)
   const pct=barakaPct(),lvl=barakaLevel();
@@ -1218,6 +1244,7 @@ function betChoices(t=curTable(),level=barakaLevel()){
   const span=maxB-t.min;
   const raw=span<=0?[t.min]:[t.min,roundBet(t.min+span/3),roundBet(t.min+2*span/3),maxB];
   const opts=[...new Set(raw)].sort((a,b)=>a-b);
+  if(G.event?.id==='petite'&&!G.preparingNext)return [G.phase==='bet'?t.min:G.bet];
   if(G.event?.id==='forcee'&&!G.preparingNext){                 // MISE FORCÉE : un seul choix, le plus haut abordable
     if(G.phase!=='bet')return [G.bet];
     const aff=opts.filter(v=>v<=G.bank);
@@ -1279,6 +1306,10 @@ function renderActions(){
   const live=(G.phase==='play'&&!G._dealing&&!G._settling);
   if(!live){renderCombos();return;}
   const v=G.pHand.length?handValue(G.pHand).total:0;
+  if(handDrawLocked()){
+    add(main,t('act.stand'),'b-blue',playerStand,t('act.standSub'),v>21);
+    if(main.childElementCount)a.appendChild(main);return;
+  }
   const flirt=v>=17&&v<=20;
   if(flirt){
     const hit=add(main,t('act.hit'),'b-gold',()=>{G.insisted=true;playerHit();},t('act.hitSub'),!live);
@@ -1329,14 +1360,15 @@ function deal(){
   G.phase='play';G.pressure=Math.min(100,p0);G.peekUsed=false;G.insisted=false;G.forced=false;G.magicNext=false;G.maxPressureReached=G.pressure;G.revealed=false;G.doFlip=false;
   G.dHand=[];G.pHand=[];$('tip').textContent='';$('tip').style.color='';
   // on tire les 4 cartes mais on les distribue une par une, en animation
-  const p1=draw(),d1=draw(),p2=draw(),d2=draw();
+  const p1=G.event?.id==='patron'?drawOpeningAce():draw(),d1=draw(),p2=draw(),d2=draw();
+  const p3=G.event?.id==='trois'?draw():null;
   if((hasRelic('maitresse')||(G.table.rule==='atelier'&&G.hand%3===1))&&!p1.ed)p1.ed='foil';
   if(G.event?.id==='etoile'&&!p1.ed)p1.ed='poly';   // CARTE ÉTOILÉE
-  [p1,p2,d1,d2].forEach(c=>{c._pending=true;});                 // pas encore arrivées
-  G.pHand.push(p1,p2);G.dHand.push(d1,d2);
+  [p1,p2,d1,d2,p3].filter(Boolean).forEach(c=>{c._pending=true;});                 // pas encore arrivées
+  G.pHand.push(p1,p2);if(p3)G.pHand.push(p3);G.dHand.push(d1,d2);
   G._dealing=true;
   renderAll();renderHands();                                     // tapis vide, actions masquées
-  dealSequence([p1,d1,p2,d2]);
+  dealSequence([p1,d1,p2,d2,p3].filter(Boolean));
 }
 // The total updates as soon as the front is visible; input unlocks after settling.
 const CARD_HOLD=260,CARD_FLIP=520;
@@ -1363,20 +1395,25 @@ function dealCardIn(c,opts,done){
 }
 // distribution initiale : mes 2 cartes + 2 du croupier, une par une. La 2e du croupier reste dos.
 function dealSequence(order){
-  const [p1,d1,p2,d2]=order;
-  dealCardIn(p1,{},()=>{ dealCardIn(d1,{},()=>{ dealCardIn(p2,{},()=>{ dealCardIn(d2,{stayDown:true},finishDeal); }); }); });
+  const next=index=>{
+    if(index===order.length){finishDeal();return;}
+    const c=order[index],dealerIndex=G.dHand.indexOf(c);
+    dealCardIn(c,{stayDown:dealerIndex>=0&&dealerCardHidden(dealerIndex)},()=>next(index+1));
+  };
+  next(0);
 }
 function finishDeal(){
   G._dealing=false;
   // on retire les drapeaux transitoires : le jeu reprend son rendu normal
   [...G.pHand,...G.dHand].forEach(c=>{delete c._pending;delete c._fd;delete c._flip;delete c._arr;delete c._faceVisible;});
-  renderActions();renderMult();
+  renderHands();renderActions();renderMult();
   const ec=G.pHand.find(c=>c.ed);if(ec)announceEd(ec);
   updateBustReadout();
-  if(handValue(G.pHand).total===21){G._settling=true;renderActions();gameDelay(()=>{G._settling=false;playerStand(true);},420);}
+  const value=handValue(G.pHand).total;
+  if(value>=21){G._settling=true;renderActions();gameDelay(()=>{G._settling=false;if(value>21)handBusted();else playerStand(G.pHand.length===2);},420);}
 }
 function playerHit(forced){
-  if(!canDecide())return;
+  if(!canDecide()||handDrawLocked())return;
   const before=handValue(G.pHand).total;
   if(before>=21)return;
   if(before>=17)G.insisted=true;
@@ -1396,7 +1433,7 @@ function handBusted(){
 }
 /* SÉPARER : une paire (même rang) devient deux mains, chacune reçoit une 2e carte et se joue à tour de rôle */
 function playerSplit(){
-  if(!canDecide()||G.splitActive||G.pHand.length!==2||G.bank<G.bet)return;
+  if(!canDecide()||handDrawLocked()||G.splitActive||G.pHand.length!==2||G.bank<G.bet)return;
   const [a,b]=G.pHand;if(a.r!==b.r)return;
   G.bank-=G.bet;                                   // 2e mise
   G.splitActive=true;G.splitAces=(a.r==='A');
@@ -1429,7 +1466,7 @@ function nextSplitHand(){
 }
 /* DOUBLER : sur les 2 premières cartes, double la mise, tire UNE carte, puis reste d'office */
 function playerDouble(){
-  if(!canDecide()||G.splitActive||G.pHand.length!==2||G.bank<G.bet||handValue(G.pHand).total>=17)return;
+  if(!canDecide()||handDrawLocked()||G.splitActive||G.pHand.length!==2||G.bank<G.bet||handValue(G.pHand).total>=17)return;
   const before=handValue(G.pHand).total;
   G.bank-=G.bet;G.stakeMult=2;sfx.buy();shake(10);popText(t('msg.doubled'),t('msg.doubledSub'));
   renderTop();renderChips();renderMult();
@@ -1438,7 +1475,7 @@ function playerDouble(){
 }
 function forcerChance(){
   const before=handValue(G.pHand).total;
-  if(!canDecide()||G.forcedUsed||before<17||before>20)return;
+  if(!canDecide()||handDrawLocked()||G.forcedUsed||before<17||before>20)return;
   G.forcedUsed=true;G.forced=true;G.knownCard=null;
   const c1=playerDraw(),c2=draw(),value=c=>{const v=handValue(G.pHand.concat(c)).total;return v>21?-100:v;};
   const keep=value(c1)>=value(c2)?c1:c2;G.insisted=true;sfx.danger();shake(22);
@@ -2575,7 +2612,7 @@ function startEndless(){
   G.peak=G.bank;
   G.bet=Math.max(G.table.min,Math.min(G.table.max,10));G.tableStartBank=G.bank;
   document.body.classList.add('inf');
-  buildShoe();
+  buildShoe();rollHandEvent();
   applyHandIncome();renderAll();renderHands();
   window.ColdDeckBackgrounds?.applyTable(G.table,true);window.ColdDeckJourney?.renderHud();
   announceTurn();
@@ -2642,7 +2679,7 @@ function applyBoon(id){
   G.table=endlessTier(G.tableIdx);                        // reflète le bonus (ex. mise max)
   G.event=null;G.forcedUsed=false;G.counterUsed=false;G.phareUsed=false;G._talismanUsed=false;
   G.hand++;G.phase='bet';G._settling=false;G.dHand=[];G.pHand=[];
-  clampBet();applyHandIncome();renderAll();renderHands();announceTurn();
+  rollHandEvent();clampBet();applyHandIncome();renderAll();renderHands();announceTurn();
 }
 /* banqueroute : plus de quoi miser le minimum → fin de la plongée */
 function endlessBust(){
