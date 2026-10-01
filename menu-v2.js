@@ -190,6 +190,15 @@ syncMenuFocus();
    if(!screen.classList.contains('show'))continue;
    if(screen.id==='inspectScreen'&&!screen.classList.contains('table-details-view')){screen.querySelector('.ovpanel').style.removeProperty('--dialog-fit');continue;}
    const panel=screen.querySelector('.ovpanel'),style=getComputedStyle(screen);
+   if(screen.id==='tableBrief'){
+    const title=$('briefTitle'),ink=title.querySelector('.raster-ink');
+    title.style.removeProperty('--table-title-size');
+    if(ink){
+     const size=parseFloat(getComputedStyle(title).fontSize);
+     const ratio=Math.min(1,(title.clientWidth-2)/Math.max(1,ink.scrollWidth));
+     title.style.setProperty('--table-title-size',(size*ratio)+'px');
+    }
+   }
    const height=screen.clientHeight-parseFloat(style.paddingTop)-parseFloat(style.paddingBottom)-4;
    const width=screen.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight);
    const scale=Math.min(1,height/panel.offsetHeight,width/panel.offsetWidth);

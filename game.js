@@ -535,7 +535,7 @@ function resetTableState(retry){
 function showTableBrief(){
   const screen=$('tableBrief');if(!screen)return;
   $('briefTableLabel').textContent=G.table.pal!=null?t('planque.tierLabel',G.table.pal+1):t('planque.tableLabel',G.tableIdx+1);
-  $('briefTitle').textContent=tableName(G.table);
+  $('briefTitle').innerHTML=ColdDeckArt.lettering(tableName(G.table));
   $('briefContractTitle').innerHTML=ColdDeckArt.lettering(t('circuit.contractTitle'));
   renderTableEffect($('briefEffect'));
   $('briefRule').textContent=[G.table.challenge?t('boss.'+G.table.challenge):'',G.table.entry?t('rtx.entry',cash(G.table.entry)):''].filter(Boolean).join(' · ');
