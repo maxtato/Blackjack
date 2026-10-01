@@ -36,7 +36,8 @@ const ColdDeckJourney=(()=>{
   }
   function renderHud(){
     const node=$('circuitProgress');if(!node)return;
-    if(node.parentElement!==$('topbar'))$('topbar').append(node);
+    const context=$('tableDetailsButton').parentElement;
+    if(node.parentElement!==context)context.append(node);
     node.hidden=!!G.endless||!G.table;if(node.hidden)return;
     const distance=bossDistance(G.table);node.dataset.boss=String(distance===0);
     node.toggleAttribute('data-reading-label',distance!==0);
