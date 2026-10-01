@@ -60,7 +60,7 @@ for(const key of Object.keys(STR.en))if(typeof STR.en[key]==='string')STR.en[key
 for(const [name,key] of [['chip','ui-chip'],['burst','ui-burst'],['star','etoile']]){
  document.documentElement.style.setProperty('--art-'+name,`url("${ColdDeckArt.image(key)}")`);
 }
-for(const [id,key] of Object.entries({rulesScreen:'boon2',upgradesScreen:'relic2',backPickScreen:'as',confirmRestart:'roue',pauseScreen:'ui-pause',palierScreen:'elan',shop:'ui-trophy',loseScreen:'net',endScreen:'ui-trophy',settingsScreen:'ui-settings',testScreen:'ui-settings'})){
+for(const [id,key] of Object.entries({rulesScreen:'boon2',upgradesScreen:'ui-upgrades',backPickScreen:'as',confirmRestart:'roue',pauseScreen:'ui-pause',palierScreen:'elan',shop:'ui-trophy',loseScreen:'net',endScreen:'ui-trophy',settingsScreen:'ui-settings',testScreen:'ui-settings'})){
  const heading=$(id)?.querySelector('h1');if(!heading)continue;
  const header=document.createElement('div');header.className='illustrated-heading';
  heading.before(header);header.innerHTML=ColdDeckArt.illustration(key,'dialog-art',true);header.append(heading);
@@ -70,7 +70,7 @@ document.querySelectorAll('.hero-chip').forEach(el=>{
 });
 document.querySelectorAll('.hero-star').forEach(el=>el.innerHTML=ColdDeckArt.illustration('etoile','scene-art'));
 document.querySelector('.hero-art')?.insertAdjacentHTML('afterbegin',ColdDeckArt.illustration('ui-burst','hero-burst'));
-document.querySelector('#upgradesBtn')?.insertAdjacentHTML('afterbegin',ColdDeckArt.illustration('relic2','prep-art',true));
+document.querySelector('#upgradesBtn')?.insertAdjacentHTML('afterbegin',ColdDeckArt.illustration('ui-upgrades','prep-art',true));
 const demoArt=document.querySelector('.adCube');if(demoArt)demoArt.innerHTML=ColdDeckArt.illustration('as','scene-art',true);
 const originalEndRender=renderEndScreen;
 renderEndScreen=function(){

@@ -711,5 +711,13 @@
     "prompt": "User-selected original Baraka proposal 1: BAR on the first line, AKA on the second, ivory cut-paper letters, a lightning-shaped counter in the R and a separate yellow bolt. Existing generated proposal reused without regeneration.",
     "generator": "built-in image_gen",
     "notes": "Original two-line proposal encoded as WebP, quality 90. An SVG display filter makes its dark backdrop transparent while preserving the ivory lettering and yellow bolt. Fixed logo container and loading fallback preserved."
+  },
+  {
+    "id": "ui-upgrades",
+    "file": "ui-upgrades.webp",
+    "width": 512,
+    "height": 512,
+    "prompt": "Approved option 1: matte cream angular card with a turquoise upward arrow and a thin golden left facet. Match the relic and tarot cut-paper style. Transparent background, no lettering, no cast shadow.",
+    "generator": "BuiltinImagegen"
   }
 ]
