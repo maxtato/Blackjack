@@ -1029,6 +1029,13 @@ button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
  #modeMenu .ovpanel{height:var(--eq-height)}
  #app{height:var(--eq-height);padding-top:4px;padding-bottom:max(12px,calc(3 * var(--game-u)))}
 }
+/* Keep the play header below the iPhone's translucent status-bar transition.
+   The background remains full-height; the flexible card area absorbs this gap. */
+@supports (-webkit-touch-callout:none){
+ @media(display-mode:standalone) and (max-width:600px) and (orientation:portrait){
+  #app{padding-top:40px}
+ }
+}
 
 /* Status and active tickets keep a fixed band between the two hands. */
 @media (min-height:601px), (orientation:portrait){
