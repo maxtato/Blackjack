@@ -4047,45 +4047,13 @@ const ColdDeckBackgrounds=(() => {
   const automaticKey='colddeck-circuit-backgrounds';
   let automaticCircuit=true,lastPaint='';
   try{automaticCircuit=localStorage.getItem(automaticKey)!=='0';}catch(e){}
-  const circuitPalettes=[
-    ['#24282b','#444d53','#323b40','#8d9a9f','#65717a'],
-    ['#292130','#554163','#3a2c44','#9881af','#725889'],
-    ['#1d2a31','#405868','#2c3e48','#8caab9','#607f92'],
-    ['#2d2028','#624152','#422d39','#bb93a9','#875b72'],
-    ['#252931','#4d5564','#353b46','#a0aab8','#737f91'],
-    ['#2b241f','#624838','#3f3027','#bd9377','#8b6550'],
-    ['#29271e','#59513a','#3e392b','#bca777','#817653'],
-    ['#24202d','#51435f','#382e43','#b7a0cb','#776287']
-  ];
-  // Distinct silhouettes make each step visible while preserving zone colors.
-  const circuitMotifs=[
-    'dunes','eclairs','facettes',
-    'mosaique','plis','losanges',
-    'eclats','piles','cristaux',
-    'tissage','rubans','diagonales',
-    'vagues','prismes','triangles',
-    'paves','cometes','falaises',
-    'croissants','eventail','cascades',
-    'spirales','tresses','ailes'
-  ];
-  function mixColor(from,to,amount){
-    const channel=(color,i)=>parseInt(color.slice(1+i*2,3+i*2),16);
-    return '#'+[0,1,2].map(i=>Math.round(channel(from,i)*(1-amount)+channel(to,i)*amount).toString(16).padStart(2,'0')).join('');
-  }
+  // Reuse the original collection, including Classic, with its exact artwork.
+  // A stable rotation keeps retries consistent without touching deck randomness.
+  const circuitThemes=themes.slice(0,palettes.length+1);
   function circuitTheme(table){
     const index=Math.max(0,Math.min(23,table.i|0));
-    const zone=Math.max(0,Math.min(7,(table.zone||1)-1));
-    let [base,edge,fold,accent,second]=table.boss
-      ?['#351d25','#873c4b','#592c39','#ef938b','#ae5867']
-      :circuitPalettes[zone];
-    if(table.boss){
-      base=mixColor(base,'#200f17',zone*.025);
-    }else if(index%3===1){
-      base=mixColor(base,'#101219',.24);
-      fold=mixColor(fold,edge,.12);
-      edge=mixColor(edge,second,.15);
-    }
-    return {id:'circuit-'+index,base,edge,fold,accent,second,motif:circuitMotifs[index],boss:!!table.boss};
+    const theme=circuitThemes[index%circuitThemes.length];
+    return {...theme,id:'circuit-'+index,sourceId:theme.id,boss:!!table.boss};
   }
   function name(theme){return LANG==='fr'?theme.fr:theme.en;}
   function scenery(theme){
@@ -4172,7 +4140,7 @@ const ColdDeckBackgrounds=(() => {
   function paint(theme,id){
     if(lastPaint===id)return;
     lastPaint=id;
-    const bg=$('bg');bg.dataset.background=id;bg.style.setProperty('--selected-bg-base',theme.base);
+    const bg=$('bg');bg.dataset.background=theme.classic?'classic':id;bg.style.setProperty('--selected-bg-base',theme.base);
     bg.dataset.circuitBoss=String(!!theme.boss);
     $('tableBackdrop').replaceChildren(...(theme.classic?[]:[scenery(theme)]));
     document.documentElement.style.setProperty('--circuit-color',theme.accent||'#d1b5ef');

@@ -144,31 +144,25 @@ check('Delayed transitions cannot charge twice or enter a table after a new run 
   a.startGame(0);const newBank=a.G.bank;resume();assert.equal(a.G.tableIdx,0);assert.equal(a.G.bank,newBank);
  }finally{a.Ads.interstitial=interstitial;}
 });
-check('All 24 automatic scenes are distinct, stable and do not consume game randomness',()=>{
- const b=a.ColdDeckBackgrounds;b.setAutomatic(true);const scenes=new Set(),shapes=new Set(),motifs=new Set();let calls=0;
+check('Automatic scenes reuse the first collection unchanged, stay stable and do not consume game randomness',()=>{
+ const b=a.ColdDeckBackgrounds;b.setAutomatic(true);const scenes=new Set(),sources=new Set();let calls=0;
+ const originalIds=['classic','minuit','obsidienne','prune','sapin','bordeaux','petrole','ardoise','cuivre','indigo','aubergine','emeraude','doree','acier','terre','lagune','grenat','lilas','carbone','bouteille','crepuscule'];
  const random=h.w.Math.random;h.w.Math.random=()=>{calls++;return random();};
  try{
   for(const tb of a.RUN){
    b.applyTable(tb,false);const scene=d.getElementById('tableBackdrop').innerHTML;
    scenes.add(scene);b.applyTable(tb,false);assert.equal(d.getElementById('tableBackdrop').innerHTML,scene);
-   motifs.add(b.circuitTheme(tb).motif);
-   const shards=[...d.querySelectorAll('#tableBackdrop .background-shard')];
-   shapes.add(shards.map(shard=>shard.style.clipPath).join('|'));
-   for(const shard of shards){
-    const x=[...shard.style.clipPath.matchAll(/(\d+(?:\.\d+)?)% \d+(?:\.\d+)?%/g)].map(match=>Number(match[1]));
-    assert(x.length>=3);assert(x.every(v=>v<=18)||x.every(v=>v>=82));
-   }
-   assert.equal(d.getElementById('bg').dataset.background,'circuit-'+tb.i);
+   const theme=b.circuitTheme(tb),original=b.themes.find(item=>item.id===theme.sourceId);
+   assert(originalIds.includes(theme.sourceId));sources.add(theme.sourceId);
+   for(const key of ['base','edge','fold','accent','second','index','classic'])assert.equal(theme[key],original[key]);
+   const preview=d.querySelector('[data-background-id="'+theme.sourceId+'"] .background-preview');
+   assert.equal(scene,original.classic?'':preview.innerHTML);
+   assert.equal(d.getElementById('bg').dataset.background,original.classic?'classic':'circuit-'+tb.i);
    assert.equal(d.getElementById('bg').dataset.circuitBoss,String(tb.boss));
    assert.equal(a.ColdDeckJourney.bossDistance(tb),2-tb.i%3);
   }
  }finally{h.w.Math.random=random;}
- assert.equal(scenes.size,24);assert.equal(shapes.size,24);assert.equal(motifs.size,24);assert(!motifs.has(undefined));
- for(let i=0;i<24;i+=3){
-  const [first,second,boss]=a.RUN.slice(i,i+3).map(tb=>b.circuitTheme(tb));
-  assert.equal(first.accent,second.accent);assert.notEqual(first.base,second.base);
-  assert.equal(boss.edge,'#873c4b');assert.notEqual(boss.base,second.base);
- }
+ assert.equal(scenes.size,originalIds.length);assert.equal(sources.size,originalIds.length);
  assert.equal(calls,0);assert.equal(h.w.localStorage.getItem('colddeck-background'),null);
  b.select('minuit');assert.equal(b.automaticCircuit,false);b.setAutomatic(true);
  a.startEndless();assert.equal(d.getElementById('bg').dataset.background,'minuit');assert(d.getElementById('circuitProgress').hidden);

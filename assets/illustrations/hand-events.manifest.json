@@ -40,54 +40,96 @@
       "path": "assets/illustrations/event-ouvert.webp",
       "width": 512,
       "height": 512,
-      "source_image": "exec-f852eeaf-ea89-4aad-8d7e-264d0a6cc6c4.png",
+      "source_image": "exec-832f852a-fe6f-4881-a661-3faf0d752279.png",
       "description": "JEU OUVERT",
-      "generator": "built-in image_gen, existing project artwork"
+      "generator": "built-in image_gen",
+      "approved_at": "2026-10-02",
+      "finish": "User-approved simplified matte cut-paper illustration, bright colors matched to the existing relics",
+      "style_references": [
+        "assets/illustrations/jeton.webp",
+        "assets/illustrations/as.webp",
+        "assets/illustrations/lunettes.webp"
+      ]
     },
     {
       "event": "patron",
       "path": "assets/illustrations/event-patron.webp",
       "width": 512,
       "height": 512,
-      "source_image": "exec-877dfce9-bae4-4013-b63d-1e16033c8f89.png",
+      "source_image": "exec-2746cb20-fce4-4203-8afb-980916e49c8a.png",
       "description": "COUP DU PATRON",
-      "generator": "built-in image_gen, existing project artwork"
+      "generator": "built-in image_gen",
+      "approved_at": "2026-10-02",
+      "finish": "User-approved simplified matte cut-paper illustration, bright colors matched to the existing relics",
+      "style_references": [
+        "assets/illustrations/jeton.webp",
+        "assets/illustrations/as.webp",
+        "assets/illustrations/lunettes.webp"
+      ]
     },
     {
       "event": "trois",
       "path": "assets/illustrations/event-trois.webp",
       "width": 512,
       "height": 512,
-      "source_image": "exec-bfc3fb8d-3bfb-4f37-828e-c5593b796b7e.png",
+      "source_image": "exec-c5e4a6aa-8ea4-44c6-9728-742658de6cc5.png",
       "description": "TROIS D’ENTRÉE",
-      "generator": "built-in image_gen, existing project artwork"
+      "generator": "built-in image_gen",
+      "approved_at": "2026-10-02",
+      "finish": "User-approved simplified matte cut-paper illustration, bright colors matched to the existing relics",
+      "style_references": [
+        "assets/illustrations/jeton.webp",
+        "assets/illustrations/as.webp",
+        "assets/illustrations/lunettes.webp"
+      ]
     },
     {
       "event": "brouillard",
       "path": "assets/illustrations/event-brouillard.webp",
       "width": 512,
       "height": 512,
-      "source_image": "exec-840020d0-f2d7-4b68-82ad-f124a6fd801b.png",
+      "source_image": "exec-fdc7cd1d-79ae-451e-8d31-e0bce406fbd4.png",
       "description": "DANS LE BROUILLARD",
-      "generator": "built-in image_gen, existing project artwork"
+      "generator": "built-in image_gen",
+      "approved_at": "2026-10-02",
+      "finish": "User-approved simplified matte cut-paper illustration, bright colors matched to the existing relics",
+      "style_references": [
+        "assets/illustrations/jeton.webp",
+        "assets/illustrations/as.webp",
+        "assets/illustrations/lunettes.webp"
+      ]
     },
     {
       "event": "express",
       "path": "assets/illustrations/event-express.webp",
       "width": 512,
       "height": 512,
-      "source_image": "exec-fddd7d58-b5f9-42e5-a225-8132c7f92de1.png",
+      "source_image": "exec-96bfeb1c-8538-4836-861e-b10da7fa6087.png",
       "description": "DUEL EXPRESS",
-      "generator": "built-in image_gen, existing project artwork"
+      "generator": "built-in image_gen",
+      "approved_at": "2026-10-02",
+      "finish": "User-approved simplified matte cut-paper illustration, bright colors matched to the existing relics",
+      "style_references": [
+        "assets/illustrations/jeton.webp",
+        "assets/illustrations/as.webp",
+        "assets/illustrations/lunettes.webp"
+      ]
     },
     {
       "event": "petite",
       "path": "assets/illustrations/event-petite.webp",
       "width": 512,
       "height": 512,
-      "source_image": "exec-8181f47f-5555-4d03-a9fa-4945e3347f96.png",
+      "source_image": "exec-371e3d77-a5f8-452d-babd-a64c1eaea9c2.png",
       "description": "PETITE MISE",
-      "generator": "built-in image_gen, existing project artwork"
+      "generator": "built-in image_gen",
+      "approved_at": "2026-10-02",
+      "finish": "User-approved simplified matte cut-paper illustration, bright colors matched to the existing relics",
+      "style_references": [
+        "assets/illustrations/jeton.webp",
+        "assets/illustrations/as.webp",
+        "assets/illustrations/lunettes.webp"
+      ]
     }
   ]
 }
