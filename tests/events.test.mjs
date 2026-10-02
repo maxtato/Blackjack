@@ -80,6 +80,7 @@ check('Tipsy dealer temporarily stands at 16 even on a dealer-18 table',()=>{
 check('An event remains announced before betting and can be inspected during the hand',()=>{
  a.setup([],[],{phase:'bet',betChosen:true,event:event('forcee'),bank:80});
  a.announceTurn();const popup=d.getElementById('turnPop');
+ const picture=popup.querySelector('.hand-event-illustration');picture.decode=undefined;picture.onload();
  assert(popup.classList.contains('event-ready'));assert(popup.textContent.includes(a.t('evt.forcee.d')));
  h.clock.tick(8000);assert(popup.classList.contains('go'));
  a.deal();assert(!popup.classList.contains('go'));assert.equal(a.G.bank,80-a.G.bet);

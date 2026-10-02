@@ -893,7 +893,8 @@ const ColdDeckArt = (() => {
   const tableRule=rule=>illustration('rule-'+(['standard','sec','gros','mute','nervous','depart','atelier','serein'].includes(rule)?rule:'standard'),'effect-illustration table-rule-illustration');
   const handEvent=id=>handEventArt[id]?illustration(handEventArt[id],'hand-event-illustration'):'';
   const icon=n=>`<img class="pxi raster-icon" src="${image(interfaceArt[n]||'etoile')}" width="1024" height="1024" alt="" aria-hidden="true" decoding="async" draggable="false">`;
-  return {suit,face,icon,effect,tableRule,handEvent,image,illustration,back,backKey,surface,lettering,cardImageKeys,prepareCards};
+  const prepareImages=keys=>Promise.allSettled(keys.map(prepareImage));
+  return {suit,face,icon,effect,tableRule,handEvent,image,illustration,back,backKey,surface,lettering,cardImageKeys,prepareCards,prepareImages};
 })();
 
 
@@ -3010,9 +3011,10 @@ function quitToMenu(){GameClock.clear();$('pauseScreen').classList.remove('show'
 // annonce du nombre de tours restants, en gros, au début de chaque main
 // le nombre de tours est désormais permanent dans la barre du haut :
 // on ne garde qu'un petit jeton de revenu (pourboire/mécène) au début de la main
-let turnTimer;
+let turnTimer,turnNoticeId=0;
 function announceTurn(){
   const el=$('turnPop');if(!el)return;
+  const noticeId=++turnNoticeId,state=G,hand=G.hand,table=G.tableIdx,phase=G.phase;
   clearGameDelay(turnTimer);el.classList.remove('go','event-ready');
   let h='';
   if(G._income){
@@ -3024,9 +3026,27 @@ function announceTurn(){
   el.innerHTML=h;
   if(!h)return;
   el.style.setProperty('--turn-duration',event?'3600ms':'1700ms');
-  void el.offsetWidth;el.classList.add('go');
-  if(event&&G.phase==='bet')el.classList.add('event-ready');
-  else turnTimer=gameDelay(()=>el.classList.remove('go'),event?3600:1700);
+  const reveal=()=>{
+    // A slow image must never revive a notice after dealing or changing hands.
+    if(noticeId!==turnNoticeId||G!==state||G.hand!==hand||G.tableIdx!==table||G.phase!==phase||G.event!==event)return;
+    void el.offsetWidth;el.classList.add('go');
+    if(event&&G.phase==='bet')el.classList.add('event-ready');
+    else turnTimer=gameDelay(()=>el.classList.remove('go'),event?3600:1700);
+  };
+  const picture=el.querySelector('.hand-event-illustration');
+  if(!picture){reveal();return;}
+  // Decode before starting the ticket's shared entrance animation.
+  let settled=false;
+  const finish=failed=>{
+    if(settled)return;settled=true;clearTimeout(imageTimeout);
+    picture.onload=null;picture.onerror=null;
+    if(failed)picture.remove();
+    reveal();
+  };
+  const imageTimeout=setTimeout(()=>finish(true),3000);
+  const decode=()=>picture.decode?picture.decode().then(()=>finish(false),()=>finish(true)):finish(false);
+  picture.onload=decode;picture.onerror=()=>finish(true);
+  if(picture.complete&&picture.naturalWidth)decode();
 }
 let textTimer;
 function popText(txt,sub){
@@ -4587,7 +4607,7 @@ syncMenuFocus();
     prepareAlphaMask('type-letters','raster-letters-ready'),
     prepareAlphaMask('type-numbers','raster-numbers-ready')
   ]);
-  const ready=cardsReady;
+  const ready=Promise.all([cardsReady,ColdDeckArt.prepareImages(assets).catch(()=>{})]);
   // Reserve illustrated glyphs for display labels, not reading-sized copy.
   const labelSelector='button,h1:not(.menuTitle),#tableName,#victoryTable,#shopNextObj h2,.table-effect-card>strong,.mode-card strong,.chip-value,#menuBestGain,#gainVal,#chipsVal,#multVal,#pVal,#dVal,.tnum,.repNum';
   const copySelector='[data-reading-label],.menu-record-label,.planqueMode,#recBox,small,p,.ds,.mode-description,.mode-topline,.mode-bottom,.hero-copy,.hero-tags,.menu-record-note,.rules .rule-entry,.rules .rt,#tip,#comboRow,#tableMeta,#ruleText,#pBar .pmeta,.zlbl>[data-i18n],.tstats .k,.tstats .lbl,.tstats .tt,.tstats .ts,.inventory-label,.objective-label,.section-label,.eyebrow,.setLbl,.back-name,.repLbl,.mrl,.mrv,#slotc,#consumeSlots';
@@ -4677,6 +4697,78 @@ syncMenuFocus();
   decorate();
   // Deterministic entry point for renders and tests, without any game-state writes.
   window.ColdDeckRaster={refresh:decorate,ready,cardsReady};
+})();
+
+
+/* art-readiness.js */
+/* Reveal each illustrated surface as one unit, after its bitmaps decode. */
+(() => {
+  const pictures=new WeakMap(),surfaces=new WeakMap();
+  function preparePicture(picture){
+    const src=picture.getAttribute('src')||picture.currentSrc||'';
+    const previous=pictures.get(picture);
+    if(previous?.src===src)return previous.promise;
+    picture.loading='eager';
+    if(previous){picture.style.removeProperty('visibility');picture.removeAttribute('data-art-failed');}
+    const entry={src,promise:null};
+    entry.promise=new Promise(resolve=>{
+      let finished=false;
+      const finish=failed=>{
+        if(finished)return;finished=true;clearTimeout(timeout);
+        picture.removeEventListener('load',decode);picture.removeEventListener('error',error);
+        if(failed&&pictures.get(picture)===entry){
+          picture.style.visibility='hidden';picture.setAttribute('data-art-failed','');
+        }
+        resolve();
+      };
+      const error=()=>finish(true);
+      const decode=()=>{
+        if(picture.decode)picture.decode().then(()=>finish(false),error);
+        else finish(!picture.naturalWidth);
+      };
+      const timeout=setTimeout(error,5000);
+      picture.addEventListener('load',decode);picture.addEventListener('error',error);
+      if(picture.complete&&picture.naturalWidth)decode();
+    });
+    pictures.set(picture,entry);return entry.promise;
+  }
+  function prepare(surface){
+    const images=[...surface.querySelectorAll('img[src]')].filter(image=>!image.hidden&&image.style.display!=='none'&&!image.closest('#turnPop,.card,[hidden]'));
+    if(!images.length){surface.classList.remove('art-pending');surfaces.delete(surface);return;}
+    const signature=images.map(image=>image.getAttribute('src'));
+    const previous=surfaces.get(surface);
+    if(previous&&images.length===previous.images.length&&images.every((image,i)=>image===previous.images[i]&&signature[i]===previous.signature[i]))return;
+    const state={images,signature};surfaces.set(surface,state);
+    surface.classList.add('art-pending');
+    Promise.all([window.ColdDeckRaster?.ready,...images.map(preparePicture)]).then(()=>{
+      if(surfaces.get(surface)===state)surface.classList.remove('art-pending');
+    });
+  }
+  function surfaceFor(image){
+    if(image.hidden||image.style.display==='none'||image.closest('#turnPop,.card,[hidden]'))return null;
+    return image.closest('.ovpanel')||image.closest('.shopItem,.boon-choice,.mode-card,.table-effect-card,.back-choice')||image.closest('.effect-card,.illustrated-heading,.brand-image,button')||image.parentElement;
+  }
+  function collect(root,targets){
+    if(root.nodeType!==1)return;
+    const images=[...(root.matches('img[src]')?[root]:[]),...root.querySelectorAll('img[src]')];
+    for(const image of images){const surface=surfaceFor(image);if(surface)targets.add(surface);}
+  }
+  const observer=new MutationObserver(records=>{
+    const targets=new Set();
+    for(const record of records){
+      if(record.type==='childList'){
+        for(const node of record.addedNodes)collect(node,targets);
+        // Replacements without artwork must also cancel an older pending reveal.
+        const surface=record.target.closest?.('.ovpanel,.effect-card,.shopItem,.boon-choice');
+        if(surface?.classList.contains('art-pending'))targets.add(surface);
+      }else if(record.attributeName==='src')collect(record.target,targets);
+      else if(record.target.matches('.overlay.show'))collect(record.target,targets);
+    }
+    targets.forEach(prepare);
+  });
+  observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['src','class']});
+  const initial=new Set();collect(document.body,initial);initial.forEach(prepare);
+  window.ColdDeckReadiness={prepare};
 })();
 
 

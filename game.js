@@ -2110,9 +2110,10 @@ function quitToMenu(){GameClock.clear();$('pauseScreen').classList.remove('show'
 // annonce du nombre de tours restants, en gros, au début de chaque main
 // le nombre de tours est désormais permanent dans la barre du haut :
 // on ne garde qu'un petit jeton de revenu (pourboire/mécène) au début de la main
-let turnTimer;
+let turnTimer,turnNoticeId=0;
 function announceTurn(){
   const el=$('turnPop');if(!el)return;
+  const noticeId=++turnNoticeId,state=G,hand=G.hand,table=G.tableIdx,phase=G.phase;
   clearGameDelay(turnTimer);el.classList.remove('go','event-ready');
   let h='';
   if(G._income){
@@ -2124,9 +2125,27 @@ function announceTurn(){
   el.innerHTML=h;
   if(!h)return;
   el.style.setProperty('--turn-duration',event?'3600ms':'1700ms');
-  void el.offsetWidth;el.classList.add('go');
-  if(event&&G.phase==='bet')el.classList.add('event-ready');
-  else turnTimer=gameDelay(()=>el.classList.remove('go'),event?3600:1700);
+  const reveal=()=>{
+    // A slow image must never revive a notice after dealing or changing hands.
+    if(noticeId!==turnNoticeId||G!==state||G.hand!==hand||G.tableIdx!==table||G.phase!==phase||G.event!==event)return;
+    void el.offsetWidth;el.classList.add('go');
+    if(event&&G.phase==='bet')el.classList.add('event-ready');
+    else turnTimer=gameDelay(()=>el.classList.remove('go'),event?3600:1700);
+  };
+  const picture=el.querySelector('.hand-event-illustration');
+  if(!picture){reveal();return;}
+  // Decode before starting the ticket's shared entrance animation.
+  let settled=false;
+  const finish=failed=>{
+    if(settled)return;settled=true;clearTimeout(imageTimeout);
+    picture.onload=null;picture.onerror=null;
+    if(failed)picture.remove();
+    reveal();
+  };
+  const imageTimeout=setTimeout(()=>finish(true),3000);
+  const decode=()=>picture.decode?picture.decode().then(()=>finish(false),()=>finish(true)):finish(false);
+  picture.onload=decode;picture.onerror=()=>finish(true);
+  if(picture.complete&&picture.naturalWidth)decode();
 }
 let textTimer;
 function popText(txt,sub){

@@ -113,5 +113,6 @@ const ColdDeckArt = (() => {
   const tableRule=rule=>illustration('rule-'+(['standard','sec','gros','mute','nervous','depart','atelier','serein'].includes(rule)?rule:'standard'),'effect-illustration table-rule-illustration');
   const handEvent=id=>handEventArt[id]?illustration(handEventArt[id],'hand-event-illustration'):'';
   const icon=n=>`<img class="pxi raster-icon" src="${image(interfaceArt[n]||'etoile')}" width="1024" height="1024" alt="" aria-hidden="true" decoding="async" draggable="false">`;
-  return {suit,face,icon,effect,tableRule,handEvent,image,illustration,back,backKey,surface,lettering,cardImageKeys,prepareCards};
+  const prepareImages=keys=>Promise.allSettled(keys.map(prepareImage));
+  return {suit,face,icon,effect,tableRule,handEvent,image,illustration,back,backKey,surface,lettering,cardImageKeys,prepareCards,prepareImages};
 })();

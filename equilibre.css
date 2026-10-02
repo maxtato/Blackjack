@@ -1048,6 +1048,10 @@ button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
  #actions .btn,#actions .actWide .btn,#app[data-phase="bet"] #actions .btn{font-size:calc(7.2 * var(--ui-u))!important}
 }
 
+/* Keep artwork attached to its surface, including during entrance animations. */
+.art-pending{visibility:hidden!important;pointer-events:none!important}
+.art-pending,.art-pending *,.art-pending::before,.art-pending::after{animation-play-state:paused!important}
+.art-pending *{visibility:hidden!important}
 /* Hand notices share the illustrated tickets and stay between the cards. */
 #center{position:relative}
 #center #turnPop{left:50%;top:50%;width:calc(100% - 12px);max-width:350px;transform:translate(-50%,-50%);z-index:12}
