@@ -21,7 +21,14 @@
     "width": 1254,
     "height": 1254,
     "prompt": "Production high-definition raster illustration for Cold Deck, modern minimalist arcade videogame. STRICT FLAT 2D CUT-PAPER STYLE. Five to eight large geometric shapes maximum. Solid opaque colors only: charcoal #20252a, warm ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. Slightly wonky angular proportions, fun grown-up graphic design. one blue shield with a big yellow check mark Single centered isolated object fills 78% of square canvas, transparent background and ample empty margin. NO gradients, NO textures, NO 3D, NO realism, NO metallic gold, NO reflections, NO bevels, NO ornate details, NO thin outline icon, NO decorative borders or badges. No writing. Bold shapes readable at 32 pixels.",
-    "generator": "built-in image_gen"
+    "generator": "built-in image_gen",
+    "correction": {
+      "date": "2026-10-02",
+      "generator": "built-in image_gen",
+      "source": "exec-02e6823d-70ad-4936-8223-02a94d70d70b.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the EDIT TARGET: the existing Assurance shield illustration from Cold Deck. Repair only the dark blurry blemish and the damaged transparency in the upper central turquoise shield, above the yellow checkmark. Replace the entire blemished patch with the same clean bright turquoise flat opaque color as the surrounding shield. Preserve the exact shield silhouette, proportions, placement, scale, slightly angular cut-paper shape, vivid turquoise field, and large yellow checkmark with its exact form, angle, position and yellow color. The full shield interior and checkmark must be solid opaque flat ink, no transparency holes or darker smudges. Background outside the shield must remain genuinely transparent, clean antialiased outer contour, no stray pixels. This is a faithful defect repair, not a redesign. No gradients, shadows, highlights, texture, blur, stains, outlines, extra objects, letters or text. Square game sprite.",
+      "rendering": "Transparent raster with repaired turquoise fill."
+    }
   },
   {
     "id": "back-cherry",
@@ -361,7 +368,14 @@
     "width": 1254,
     "height": 1254,
     "prompt": "Production high-definition raster illustration for Cold Deck, modern minimalist arcade videogame. STRICT FLAT 2D CUT-PAPER STYLE. Five to eight large geometric shapes maximum. Solid opaque colors only: charcoal #20252a, warm ivory #fff7e6, yellow #ffce3a, turquoise #1fd1c8, violet #a64dff, coral #ff5470. Slightly wonky angular proportions, fun grown-up graphic design. a turquoise ice cube with just three flat colored faces Single centered isolated object fills 78% of square canvas, transparent background and ample empty margin. NO gradients, NO textures, NO 3D, NO realism, NO metallic gold, NO reflections, NO bevels, NO ornate details, NO thin outline icon, NO decorative borders or badges. No writing. Bold shapes readable at 32 pixels.",
-    "generator": "built-in image_gen"
+    "generator": "built-in image_gen",
+    "correction": {
+      "date": "2026-10-02",
+      "generator": "built-in image_gen",
+      "source": "exec-ad87cebc-ca72-46e4-9b47-9c717f23e0fb.png",
+      "prompt": "Edit target: the attached cube game illustration. Place this exact cube on a fully opaque pure white background and repaint the ENTIRE turquoise front face as a single completely uniform flat bright turquoise color. Fill all damaged darkened regions with the same turquoise pigment as the unblemished edge area. Preserve the original cube silhouette, its angled irregular polygon geometry, scale and arrangement of the three faces exactly. Top face solid ivory, front face solid bright turquoise, right face solid darker teal. Three perfectly uniform color fills with clean edges. All pixels within the cube are fully opaque and evenly colored within their face. No lighting effects, no tonal variation or smudges. This temporary white background will be removed afterward. Keep the original design.",
+      "rendering": "Opaque repaired raster, isolated at display time by the original cube silhouette in equilibre.css. Prevents damaged generated alpha from reintroducing the central dark patch."
+    }
   },
   {
     "id": "jeton",

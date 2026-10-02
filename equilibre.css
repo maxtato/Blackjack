@@ -994,6 +994,14 @@ button:disabled{--number-ink:#ffce3a;--bonus-number-ink:#a4f3de}
 .effect-card[data-effect-kind="service"]{--effect-paper:#9bbdb3}
 .effect-card::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:var(--effect-paper) var(--art-card-stock,none) center/100% 100% no-repeat;background-blend-mode:multiply;-webkit-mask:var(--art-card-shape) center/108% 106% no-repeat;mask:var(--art-card-shape) center/108% 106% no-repeat;mask-mode:luminance}
 .effect-card>.effect-illustration{position:relative;z-index:1;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;filter:saturate(.92) drop-shadow(0 1px 1px #2223)}
+/* The clean Sang-froid raster stays opaque; a separate silhouette prevents
+   faulty generated transparency from darkening the center of its front face.
+   Contain sizing matches the illustration in both square and portrait slots. */
+.effect-illustration[data-effect-symbol="froid"]{
+  --froid-silhouette:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1254 1254'%3E%3Cpath fill='white' d='M600 128 435 187 138 423 188 730 140 935 287 1025 769 1151 1108 881 1110 773 1146 503 1123 280Z'/%3E%3C/svg%3E");
+  -webkit-mask:var(--froid-silhouette) center/contain no-repeat;
+  mask:var(--froid-silhouette) center/contain no-repeat;
+}
 #effects .joker::before,#effects .tarot::before{content:none}
 #effects .effect-card{padding:4px 2px 6px}
 #effects .effect-card>.effect-illustration{filter:saturate(.95) drop-shadow(0 1px 0 #2222)}
