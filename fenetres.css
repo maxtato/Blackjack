@@ -98,3 +98,7 @@
 .overlay:not(.menu-page) .illustrated-heading h1,.overlay:not(.menu-page) .ovpanel>h1{color:var(--win-accent)!important}
 #tableBrief[data-boss="true"] #briefTitle{color:var(--win-coral)!important}
 #loseScreen .illustrated-heading h1,#endScreen:has(h1.dead) .illustrated-heading h1{color:var(--win-coral)!important}
+
+/* Collection de dos : le cadre de sélection suit les coins coupés des cartes */
+#bpRow .bpCard.sel{outline:none!important;box-shadow:none!important;
+  filter:drop-shadow(3px 0 0 #ffce3a) drop-shadow(-3px 0 0 #ffce3a) drop-shadow(0 3px 0 #ffce3a) drop-shadow(0 -3px 0 #ffce3a)!important}
