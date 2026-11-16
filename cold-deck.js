@@ -782,7 +782,7 @@ Object.assign(STR.fr,{
  'tcard.free':'Offerte','tcard.chosen':'Choisie','tcard.second':p=>'+ '+p,'tcard.bought':p=>'Achetée · '+p,
  'tcard.charges':n=>n+' utilisations.','tcard.owned':'ACQUISE',
  'tcard.deckTitle':'TES CARTES','tcard.deckButton':'CARTES','tcard.deckLead':'Ta réputation ajoute des cartes au paquet. Avant chaque table, tu en choisis une parmi trois.',
- 'tcard.deckSub':(n,total)=>n+' / '+total+' dans le paquet','tcard.deckFull':'paquet complet',
+ 'tcard.deckSub':(n,total)=>n+' / '+total+' dans le paquet','tcard.deckFull':'paquet complet','tcard.deckAvail':n=>n+(n>1?' cartes à débloquer':' carte à débloquer'),
  'planque.subCircuit':'Choisis une <b>carte</b> avant chaque table, puis tente la traversée du casino.',
  'relic.compteur.d':'Une fois par table, écarte la prochaine carte du sabot et révèle celle qui la suit.',
  'relic.lunettes.d':'Une fois par main, révèle la prochaine carte du sabot avant de décider.',
@@ -801,7 +801,7 @@ Object.assign(STR.en,{
  'tcard.free':'Free','tcard.chosen':'Chosen','tcard.second':p=>'+ '+p,'tcard.bought':p=>'Bought · '+p,
  'tcard.charges':n=>n+' uses.','tcard.owned':'OWNED',
  'tcard.deckTitle':'YOUR CARDS','tcard.deckButton':'CARDS','tcard.deckLead':'Reputation adds cards to the deck. Before each table, you pick one out of three.',
- 'tcard.deckSub':(n,total)=>n+' / '+total+' in the deck','tcard.deckFull':'full deck',
+ 'tcard.deckSub':(n,total)=>n+' / '+total+' in the deck','tcard.deckFull':'full deck','tcard.deckAvail':n=>n+(n>1?' cards to unlock':' card to unlock'),
  'planque.subCircuit':'Pick a <b>card</b> before each table, then try to cross the casino.',
  'relic.compteur.d':'Once per table, discard the next card in the shoe and reveal the one after it.',
  'relic.lunettes.d':'Once per hand, reveal the next card in the shoe before you decide.',
@@ -3641,7 +3641,7 @@ function renderPlanque(){
   });
   // sous-titre du bouton d'ouverture : indique ce qui est achetable maintenant
   const sub=$('upgradesSub');if(sub)sub.textContent=allMax?t(inf?'planque.allMax':'tcard.deckFull')
-    :affordable?t('planque.avail',affordable):t(inf?'planque.upgradesSub':'tcard.deckSub',TABLE_DECK.filter(cardUnlocked).length,TABLE_DECK.length);
+    :affordable?t(inf?'planque.avail':'tcard.deckAvail',affordable):t(inf?'planque.upgradesSub':'tcard.deckSub',TABLE_DECK.filter(cardUnlocked).length,TABLE_DECK.length);
   $('upgradesBtn')?.classList.toggle('has-upgrades',affordable>0);
 }
 function buyUnlock(id){

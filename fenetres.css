@@ -1,0 +1,95 @@
+/* Fenêtres : une seule famille de panneaux, une seule hiérarchie de boutons.
+   Chargée en dernier. Ne touche ni au menu ni à la Planque (pages pleines). */
+.overlay:not(.menu-page){
+  --win-ink:#1a1f26;--win-raise:#262d37;--win-line:#3a4450;--win-text:#fff4dd;--win-soft:#c5cfd8;
+  --win-gold:#ffce3a;--win-teal:#35d3c3;--win-coral:#ff5d78;--win-accent:var(--win-teal);
+  --win-cut:16px;--btn-cut:9px;
+  background:rgba(8,10,14,.84)!important;
+}
+#tableBrief,#tableVictory,#upgradesScreen,#palierScreen{--win-accent:var(--win-gold)}
+#loseScreen,#confirmRestart,#endScreen:has(h1.dead){--win-accent:var(--win-coral)}
+#endScreen{--win-accent:var(--win-gold)}
+#endScreen:has(h1.dead){--win-accent:var(--win-coral)}
+
+/* Panneau : encre sombre, coins coupés comme les boutons du menu, bandeau de couleur selon le type */
+.overlay:not(.menu-page) .ovpanel{
+  background:linear-gradient(var(--win-accent),var(--win-accent)) top/100% 6px no-repeat,var(--win-ink)!important;
+  border:0!important;border-radius:0!important;box-shadow:none!important;
+  clip-path:polygon(var(--win-cut) 0,calc(100% - var(--win-cut)) 0,100% var(--win-cut),100% calc(100% - var(--win-cut)),calc(100% - var(--win-cut)) 100%,var(--win-cut) 100%,0 calc(100% - var(--win-cut)),0 var(--win-cut))!important;
+  color:var(--win-text)!important;
+}
+
+/* En-tête : titre à gauche, illustration à droite, même taille partout */
+.overlay:not(.menu-page) .illustrated-heading{display:flex!important;flex-direction:row-reverse!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;margin:6px 0 10px!important;text-align:left!important}
+.overlay:not(.menu-page) .illustrated-heading .dialog-art{width:58px!important;height:58px!important;flex:none!important;margin:0!important}
+.overlay:not(.menu-page) .illustrated-heading h1{font-size:30px!important;line-height:1.05!important;margin:0!important;text-align:left!important;color:var(--win-text)!important}
+.overlay:not(.menu-page) .dialog-kicker{color:var(--win-accent)!important;letter-spacing:.12em!important}
+#loseScreen .illustrated-heading h1,#endScreen:has(h1.dead) .illustrated-heading h1{color:var(--win-coral)!important}
+
+/* Texte courant : plus grand, plus contrasté */
+.overlay:not(.menu-page) .ovpanel>p,.overlay:not(.menu-page) #inspectBody p,.overlay:not(.menu-page) #loseText{color:var(--win-soft)!important;font-size:15px!important;line-height:1.45!important;text-align:left!important}
+
+/* Boutons : un seul bouton jaune par fenêtre, le reste en retrait */
+.overlay:not(.menu-page) .btn{
+  background:linear-gradient(#0000 calc(100% - 4px),#0005 0),var(--win-raise)!important;
+  color:var(--win-text)!important;border:0!important;border-radius:0!important;box-shadow:none!important;min-height:52px!important;
+  clip-path:polygon(var(--btn-cut) 0,calc(100% - var(--btn-cut)) 0,100% var(--btn-cut),100% calc(100% - var(--btn-cut)),calc(100% - var(--btn-cut)) 100%,var(--btn-cut) 100%,0 calc(100% - var(--btn-cut)),0 var(--btn-cut))!important;
+}
+.overlay:not(.menu-page) .btn small{color:var(--win-soft)!important}
+.overlay:not(.menu-page) .btn.b-gold,
+.overlay:not(.menu-page) .btn.on,
+.overlay:not(.menu-page) .btn[data-action="resumeGame"],
+.overlay:not(.menu-page) #inspectActions .btn:first-child:not(:last-child):not(:disabled){
+  background:linear-gradient(#0000 calc(100% - 5px),#c9961f 0),var(--win-gold)!important;color:#20252a!important;min-height:58px!important;
+}
+.overlay:not(.menu-page) .btn.b-gold small,.overlay:not(.menu-page) .btn.b-gold small *{color:#3b3320!important}
+.overlay:not(.menu-page) .btn:disabled{opacity:.4!important}
+.overlay:not(.menu-page) .btn[data-action="quitToMenu"],.overlay:not(.menu-page) #giveupBtn,.overlay:not(.menu-page) .btn.b-red{color:#ff8fa1!important}
+
+/* Pause : actions secondaires plus compactes */
+#pauseScreen .shopBtns{gap:8px!important}
+#pauseScreen .btn:not([data-action="resumeGame"]){min-height:48px!important}
+#pauseScreen .btn[data-action="resumeGame"]{margin-bottom:6px!important}
+
+/* Réglages : interrupteurs à deux états lisibles */
+#settingsScreen .setOpts{gap:6px!important}
+#settingsScreen .setOpts .btn{min-height:44px!important}
+#settingsScreen .setRow,#settingsScreen .font-settings{border-color:var(--win-line)!important}
+
+/* Inspection : la carte, son nom, son effet lisible */
+#inspectScreen .inspCard{width:104px!important;height:auto!important;aspect-ratio:3/4!important;margin:4px auto 12px!important}
+#inspectScreen #inspectBody h1{font-size:26px!important;color:var(--win-text)!important}
+#inspectScreen #inspectBody p{text-align:center!important}
+#inspectScreen .relic-state{color:var(--win-accent)!important;font-size:13px!important}
+
+/* Préparation : la règle de table devient une carte sombre avec un filet, plus de pavé violet */
+#tableBrief .table-effect-card,#inspectScreen .table-effect-card{background:var(--win-raise)!important;box-shadow:inset 5px 0 0 #b79cf0!important;clip-path:none!important;border-radius:6px!important}
+#tableBrief .table-effect-card,#tableBrief .table-effect-card *,#inspectScreen .table-effect-card,#inspectScreen .table-effect-card *{color:var(--win-soft)!important}
+#tableBrief .table-effect-card h2,#tableBrief .table-effect-card strong,#inspectScreen .table-effect-card h2,#inspectScreen .table-effect-card strong{color:#cdb6ff!important}
+#inspectScreen .table-effect-card p{text-align:left!important;font-size:14px!important}
+#tableBrief[data-boss="true"] .table-effect-card{box-shadow:inset 5px 0 0 var(--win-coral)!important}
+.brief-card{background:var(--win-raise)!important}
+.brief-card.picked{background:#3a3a24!important}
+
+/* Victoire : les étoiles deviennent le centre de la fenêtre */
+#tableVictory .victory-stars{margin:10px 0 12px!important}
+#tableVictory .victory-star{gap:6px!important}
+#tableVictory .victory-star-art{width:46px!important;height:46px!important;display:grid!important;place-items:center!important}
+#tableVictory .victory-star-art img{width:46px!important;height:46px!important}
+#tableVictory .victory-star:not(.earned){opacity:.3!important}
+#tableVictory .victory-rewards{background:var(--win-raise)!important;border-radius:6px!important}
+
+/* Fin de partie et défaite */
+#endScreen .rs,#endScreen .end-reputation{background:var(--win-raise)!important;border-radius:6px!important}
+
+/* Paquet de cartes : texte lisible */
+#upgradesScreen .shopItem{background:var(--win-raise)!important;border-radius:6px!important}
+#upgradesScreen .shopItem .ds{font-size:12.5px!important;line-height:1.35!important;color:var(--win-soft)!important}
+
+/* Titres hors en-tête illustré : même alignement, même taille */
+.overlay:not(.menu-page) .ovpanel>h1{text-align:left!important;font-size:28px!important;color:var(--win-text)!important;margin:6px 0 8px!important}
+#backgroundScreen .ovpanel>p{text-align:left!important}
+
+/* Paquet : on fait défiler plutôt que de réduire toute la fenêtre */
+#upgradesScreen .ovpanel{scale:1!important;transform:none!important;max-height:calc(var(--viewport-height,100vh) - 24px)!important;overflow-y:auto!important}
+#upgradesScreen .shopItem .nm{font-size:15px!important}

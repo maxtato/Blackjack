@@ -2700,7 +2700,7 @@ function renderPlanque(){
   });
   // sous-titre du bouton d'ouverture : indique ce qui est achetable maintenant
   const sub=$('upgradesSub');if(sub)sub.textContent=allMax?t(inf?'planque.allMax':'tcard.deckFull')
-    :affordable?t('planque.avail',affordable):t(inf?'planque.upgradesSub':'tcard.deckSub',TABLE_DECK.filter(cardUnlocked).length,TABLE_DECK.length);
+    :affordable?t(inf?'planque.avail':'tcard.deckAvail',affordable):t(inf?'planque.upgradesSub':'tcard.deckSub',TABLE_DECK.filter(cardUnlocked).length,TABLE_DECK.length);
   $('upgradesBtn')?.classList.toggle('has-upgrades',affordable>0);
 }
 function buyUnlock(id){
