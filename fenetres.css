@@ -11,9 +11,9 @@
 #endScreen{--win-accent:var(--win-gold)}
 #endScreen:has(h1.dead){--win-accent:var(--win-coral)}
 
-/* Panneau : encre sombre, coins coupés comme les boutons du menu, bandeau de couleur selon le type */
+/* Panneau : encre sombre, coins coupés comme les boutons du menu */
 .overlay:not(.menu-page) .ovpanel{
-  background:linear-gradient(var(--win-accent),var(--win-accent)) top/100% 6px no-repeat,var(--win-ink)!important;
+  background:var(--win-ink)!important;
   border:0!important;border-radius:0!important;box-shadow:none!important;
   clip-path:polygon(var(--win-cut) 0,calc(100% - var(--win-cut)) 0,100% var(--win-cut),100% calc(100% - var(--win-cut)),calc(100% - var(--win-cut)) 100%,var(--win-cut) 100%,0 calc(100% - var(--win-cut)),0 var(--win-cut))!important;
   color:var(--win-text)!important;
@@ -62,12 +62,11 @@
 #inspectScreen #inspectBody p{text-align:center!important}
 #inspectScreen .relic-state{color:var(--win-accent)!important;font-size:13px!important}
 
-/* Préparation : la règle de table devient une carte sombre avec un filet, plus de pavé violet */
-#tableBrief .table-effect-card,#inspectScreen .table-effect-card{background:var(--win-raise)!important;box-shadow:inset 5px 0 0 #b79cf0!important;clip-path:none!important;border-radius:6px!important}
+/* Préparation : la règle de table devient une carte sombre plus de pavé violet */
+#tableBrief .table-effect-card,#inspectScreen .table-effect-card{background:var(--win-raise)!important;box-shadow:none!important;clip-path:none!important;border-radius:6px!important}
 #tableBrief .table-effect-card,#tableBrief .table-effect-card *,#inspectScreen .table-effect-card,#inspectScreen .table-effect-card *{color:var(--win-soft)!important}
 #tableBrief .table-effect-card h2,#tableBrief .table-effect-card strong,#inspectScreen .table-effect-card h2,#inspectScreen .table-effect-card strong{color:#cdb6ff!important}
 #inspectScreen .table-effect-card p{text-align:left!important;font-size:14px!important}
-#tableBrief[data-boss="true"] .table-effect-card{box-shadow:inset 5px 0 0 var(--win-coral)!important}
 .brief-card{background:var(--win-raise)!important}
 .brief-card.picked{background:#3a3a24!important}
 
