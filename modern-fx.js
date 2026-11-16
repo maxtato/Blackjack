@@ -451,25 +451,25 @@
     const el=cardNode(card),p=rect(el?.closest('.cardslot')||el);if(!p)return;
     const colors=['#c9bda2','#ece0c7','#a6ab91'];
     // Dry paper dust travels across the felt, with no border around the card.
-    for(let i=0;i<12;i++){
+    for(let i=0;i<7;i++){
       const side=i%2?1:-1,angle=(random()-.5)*1.3;
       const x=side*p.width*.3,y=p.height*.25;
       const dust=piece('card-dust paper-ink',p.x+x,p.y+y,colors[i%3]);if(!dust)break;
-      const size=3+random()*7;dust.style.width=size+'px';dust.style.height=(size*.6)+'px';
-      const dx=side*(16+random()*p.width*.6),dy=Math.sin(angle)*(10+random()*14);
+      const size=3+random()*5;dust.style.width=size+'px';dust.style.height=(size*.6)+'px';
+      const dx=side*(12+random()*p.width*.42),dy=Math.sin(angle)*(8+random()*10);
       animate(dust,[
         {transform:place(0,0,i*37,.2),opacity:0},
-        {transform:place(dx*.2,dy*.2,i*37,1),opacity:.7,offset:.12},
-        {transform:place(dx*.8,dy-7,i*37+25,1.1),opacity:.4,offset:.55},
+        {transform:place(dx*.2,dy*.2,i*37,1),opacity:.5,offset:.12},
+        {transform:place(dx*.8,dy-7,i*37+25,1.1),opacity:.28,offset:.55},
         {transform:place(dx,dy-11,i*37+50,.5),opacity:0}
       ],{duration:450+random()*170,easing:'cubic-bezier(.15,.7,.3,1)'},true);
     }
     const shadow=piece('card-impact-shadow',p.x,p.y+p.height*.34,'#111c23');
-    if(shadow){shadow.style.width=p.width*1.04+'px';animate(shadow,[{transform:place(0,0,0,.65),opacity:.1},{transform:place(0,0,0,1.12),opacity:.23,offset:.18},{transform:place(0,0,0,1.22),opacity:0}],{duration:330},true);}
+    if(shadow){shadow.style.width=p.width*1.04+'px';animate(shadow,[{transform:place(0,0,0,.65),opacity:.1},{transform:place(0,0,0,1.08),opacity:.15,offset:.18},{transform:place(0,0,0,1.14),opacity:0}],{duration:330},true);}
   }
   function revealImpact(el,color=graphic.cream){
     const flash=piece('card-reveal-flash',0,0,color,el);
-    if(flash)animate(flash,[{opacity:0},{opacity:.16,offset:.2},{opacity:0}],{duration:120},true);
+    if(flash)animate(flash,[{opacity:0},{opacity:.11,offset:.2},{opacity:0}],{duration:120},true);
   }
   function onCard(card) {
     if(document.hidden||document.querySelector('.overlay.show,#adOverlay.show'))return;
