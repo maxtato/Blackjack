@@ -92,3 +92,16 @@
 /* Paquet : on fait défiler plutôt que de réduire toute la fenêtre */
 #upgradesScreen .ovpanel{scale:1!important;transform:none!important;max-height:calc(var(--viewport-height,100vh) - 24px)!important;overflow-y:auto!important}
 #upgradesScreen .shopItem .nm{font-size:15px!important}
+
+/* Plus de filet à côté du nom de la table */
+#tableBrief .table-brief-heading::before,.table-details-view .table-brief-heading::before{content:none!important;display:none!important}
+#tableBrief .table-brief-heading,.table-details-view .table-brief-heading{padding-left:0!important}
+
+/* Un peu de couleur, sur deux éléments seulement : le titre de la fenêtre et la règle de table */
+#tableBrief #briefTitle,.table-details-view .table-brief-heading h1,
+.overlay:not(.menu-page) .illustrated-heading h1,.overlay:not(.menu-page) .ovpanel>h1{color:var(--win-accent)!important}
+#tableBrief[data-boss="true"] #briefTitle{color:var(--win-coral)!important}
+#loseScreen .illustrated-heading h1,#endScreen:has(h1.dead) .illustrated-heading h1{color:var(--win-coral)!important}
+#tableBrief .table-effect-card,#inspectScreen .table-effect-card{background:#322b4d!important}
+#tableBrief .table-effect-card,#tableBrief .table-effect-card *,#inspectScreen .table-effect-card,#inspectScreen .table-effect-card *{color:#e3d9ff!important}
+#tableBrief .table-effect-card h2,#tableBrief .table-effect-card strong,#inspectScreen .table-effect-card h2,#inspectScreen .table-effect-card strong{color:#cdb6ff!important}
