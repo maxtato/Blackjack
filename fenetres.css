@@ -63,10 +63,6 @@
 #inspectScreen .relic-state{color:var(--win-accent)!important;font-size:13px!important}
 
 /* Préparation : la règle de table devient une carte sombre plus de pavé violet */
-#tableBrief .table-effect-card,#inspectScreen .table-effect-card{background:var(--win-raise)!important;box-shadow:none!important;clip-path:none!important;border-radius:6px!important}
-#tableBrief .table-effect-card,#tableBrief .table-effect-card *,#inspectScreen .table-effect-card,#inspectScreen .table-effect-card *{color:var(--win-soft)!important}
-#tableBrief .table-effect-card h2,#tableBrief .table-effect-card strong,#inspectScreen .table-effect-card h2,#inspectScreen .table-effect-card strong{color:#cdb6ff!important}
-#inspectScreen .table-effect-card p{text-align:left!important;font-size:14px!important}
 .brief-card{background:var(--win-raise)!important}
 .brief-card.picked{background:#3a3a24!important}
 
@@ -97,11 +93,8 @@
 #tableBrief .table-brief-heading::before,.table-details-view .table-brief-heading::before{content:none!important;display:none!important}
 #tableBrief .table-brief-heading,.table-details-view .table-brief-heading{padding-left:0!important}
 
-/* Un peu de couleur, sur deux éléments seulement : le titre de la fenêtre et la règle de table */
+/* Un peu de couleur, sur le titre de la fenêtre */
 #tableBrief #briefTitle,.table-details-view .table-brief-heading h1,
 .overlay:not(.menu-page) .illustrated-heading h1,.overlay:not(.menu-page) .ovpanel>h1{color:var(--win-accent)!important}
 #tableBrief[data-boss="true"] #briefTitle{color:var(--win-coral)!important}
 #loseScreen .illustrated-heading h1,#endScreen:has(h1.dead) .illustrated-heading h1{color:var(--win-coral)!important}
-#tableBrief .table-effect-card,#inspectScreen .table-effect-card{background:#322b4d!important}
-#tableBrief .table-effect-card,#tableBrief .table-effect-card *,#inspectScreen .table-effect-card,#inspectScreen .table-effect-card *{color:#e3d9ff!important}
-#tableBrief .table-effect-card h2,#tableBrief .table-effect-card strong,#inspectScreen .table-effect-card h2,#inspectScreen .table-effect-card strong{color:#cdb6ff!important}
