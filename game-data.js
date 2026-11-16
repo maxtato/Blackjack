@@ -771,3 +771,43 @@ Object.assign(STR.en,{
  'end.summaryStopped':'The table challenge remains unfinished.',
  'end.summaryWon':'Hands won','end.remainingCash':'Cash remaining','end.summaryBestGain':'Best win','end.summaryBestMult':'Best multi'
 });
+
+/* Cartes de table : choisies à la préparation, valables une seule table. */
+Object.assign(STR.fr,{
+ 'tcard.title':'Choisis ta carte','tcard.titleSecond':'Une deuxième ?','tcard.titleDone':'Tes cartes','tcard.sub':'Valable pour cette table uniquement.',
+ 'tcard.free':'Offerte','tcard.chosen':'Choisie','tcard.second':p=>'+ '+p,'tcard.bought':p=>'Achetée · '+p,
+ 'tcard.charges':n=>n+' utilisations.','tcard.owned':'ACQUISE',
+ 'tcard.deckTitle':'TES CARTES','tcard.deckButton':'CARTES','tcard.deckLead':'Ta réputation ajoute des cartes au paquet. Avant chaque table, tu en choisis une parmi trois.',
+ 'tcard.deckSub':(n,total)=>n+' / '+total+' dans le paquet','tcard.deckFull':'paquet complet',
+ 'planque.subCircuit':'Choisis une <b>carte</b> avant chaque table, puis tente la traversée du casino.',
+ 'relic.compteur.d':'Une fois par table, écarte la prochaine carte du sabot et révèle celle qui la suit.',
+ 'relic.lunettes.d':'Une fois par main, révèle la prochaine carte du sabot avant de décider.',
+ 'relic.jeton.d':'Si tu perds avec un total de 19 ou 20, tu récupères la moitié de ta mise.',
+ 'relic.clope.d':'Ta Chance monte 30 % plus vite.',
+ 'relic.as.d':'Si tu gagnes avec un As en main : +1 au multiplicateur.',
+ 'relic.talisman.d':'Ta première main perdue de la table est entièrement remboursée.',
+ 'tarot.etoile.d':'À jouer quand tu veux : +2 points de Chance immédiatement.',
+ 'tarot.magicien.d':'À jouer pendant la main : ta prochaine carte est la meilleure possible pour ta main.',
+ 'tarot.diable.d':'À jouer sur ta main : une de tes cartes devient PRISME, gain de la main ×1,5.',
+ 'rules.hideout':'<span class="rt">LA PLANQUE</span>Ta <span class="k">réputation</span> ajoute de nouvelles cartes à ton paquet. Elle ne donne aucun bonus permanent.',
+ 'rules.circuit':'<span class="rt">LE CIRCUIT</span><span class="k">24 tables · 8 zones · un boss toutes les 3 tables</span>. Avant chaque table, choisis <span class="k">une carte parmi trois</span> : elle ne vaut que pour cette table. Une deuxième carte s’achète avec ta banque. La <span class="k">réputation</span> ajoute de nouvelles cartes au paquet.',
+});
+Object.assign(STR.en,{
+ 'tcard.title':'Pick your card','tcard.titleSecond':'A second one?','tcard.titleDone':'Your cards','tcard.sub':'Lasts for this table only.',
+ 'tcard.free':'Free','tcard.chosen':'Chosen','tcard.second':p=>'+ '+p,'tcard.bought':p=>'Bought · '+p,
+ 'tcard.charges':n=>n+' uses.','tcard.owned':'OWNED',
+ 'tcard.deckTitle':'YOUR CARDS','tcard.deckButton':'CARDS','tcard.deckLead':'Reputation adds cards to the deck. Before each table, you pick one out of three.',
+ 'tcard.deckSub':(n,total)=>n+' / '+total+' in the deck','tcard.deckFull':'full deck',
+ 'planque.subCircuit':'Pick a <b>card</b> before each table, then try to cross the casino.',
+ 'relic.compteur.d':'Once per table, discard the next card in the shoe and reveal the one after it.',
+ 'relic.lunettes.d':'Once per hand, reveal the next card in the shoe before you decide.',
+ 'relic.jeton.d':'Lose with a total of 19 or 20 and get half your bet back.',
+ 'relic.clope.d':'Your streak builds 30% faster.',
+ 'relic.as.d':'Win with an Ace in hand: +1 to the multiplier.',
+ 'relic.talisman.d':'Your first lost hand at this table is fully refunded.',
+ 'tarot.etoile.d':'Play any time: +2 streak points right away.',
+ 'tarot.magicien.d':'Play during the hand: your next card is the best possible one for your hand.',
+ 'tarot.diable.d':'Play on your hand: one of your cards turns PRISM, hand payout ×1.5.',
+ 'rules.hideout':'<span class="rt">THE HIDEOUT</span>Your <span class="k">reputation</span> adds new cards to your deck. It grants no permanent bonus.',
+ 'rules.circuit':'<span class="rt">THE CIRCUIT</span><span class="k">24 tables · 8 zones · a boss every 3 tables</span>. Before each table, pick <span class="k">one card out of three</span>: it lasts for that table only. A second card can be bought from your bank. <span class="k">Reputation</span> adds new cards to the deck.',
+});

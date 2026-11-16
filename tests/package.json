@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node circuit.test.mjs && node settings.test.mjs && node backgrounds.test.mjs && node journey.test.mjs && node events.test.mjs && node special-rules.test.mjs && node end-screen.test.mjs && node printed-cards.test.mjs && node shop-sale.test.mjs",
-    "simulate": "node simulate.mjs",
-    "campaign": "node campaign.mjs"
+    "test": "node circuit.test.mjs && node settings.test.mjs && node backgrounds.test.mjs && node journey.test.mjs && node events.test.mjs && node special-rules.test.mjs && node end-screen.test.mjs && node printed-cards.test.mjs",
+    "calibrate": "node calibrate.mjs",
+    "expedition": "node expedition.mjs"
   },
   "devDependencies": {
     "happy-dom": "20.14.5",

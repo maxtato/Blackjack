@@ -30,7 +30,7 @@ check('Victory uses the live table, bank and reputation without awarding again o
  a.setLang('fr');
 });
 
-check('Victory opens one preparation; one button starts the next table without visiting the shop',()=>{
+check('Victory opens one preparation; one card and one button start the next table',()=>{
  assert(d.getElementById('briefTools').hidden);
  a.startPreparedTable();a.G.bank=a.G.table.goal;a.finishTable();
  assert.equal(a.G.phase,'victory');assert(visible('tableVictory'));assert(!visible('shop'));assert(!visible('draftScreen'));
@@ -45,50 +45,41 @@ check('Victory opens one preparation; one button starts the next table without v
  assert.equal(a.G.tableIdx,0);assert.equal(a.G.bank,bank);
  assert.equal(d.getElementById('briefTableLabel').textContent,'TABLE 02/24');
  assert.equal(d.getElementById('briefEffect').dataset.rule,a.RUN[1].rule||'standard');
- assert(!d.getElementById('briefTools').hidden);assert(d.getElementById('briefCashBtn').hidden);
+ assert(d.getElementById('briefTools').hidden);assert(d.getElementById('briefShopBtn').hidden);assert(d.getElementById('briefCashBtn').hidden);
+ assert.equal(d.querySelectorAll('#briefCards .brief-card').length,3);assert(d.getElementById('briefEnterBtn').disabled);
  a.nextHandOrEnd();a.finishTable();a.resolve('stand');a.resolveSplit();a.deal();a.playerHit();a.playerStand();
  assert.equal(a.G.phase,'prepare');assert.equal(a.G.bank,bank);assert.equal(a.G.pot,pot);
  a.continueTableVictory();assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);assert.equal(a.G.pot,pot);
  assert.equal(d.querySelector('.contract-choice'),null);
+ d.querySelector('#briefCards .brief-card').click();
+ assert.equal(d.querySelectorAll('#briefCards .brief-card.picked').length,1);assert(!d.getElementById('briefEnterBtn').disabled);
  d.getElementById('briefEnterBtn').click();
- assert.equal(a.G.tableIdx,1);assert.equal(a.G.phase,'bet');assert(!visible('tableBrief'));assert(!visible('shop'));
+ assert.equal(a.G.tableIdx,1);assert.equal(a.G.phase,'bet');assert.equal(a.G.tableCards.length,1);assert(!visible('tableBrief'));assert(!visible('shop'));
  assert.equal(a.G.bank,bank-a.RUN[1].entry);
  a.startPreparedTable();assert.equal(a.G.tableIdx,1);
  a.G.bank=a.G.table.goal;a.finishTable();a.continueTableVictory();
  assert.equal(a.G.phase,'prepare');assert.equal(a.G.relics.length,0);assert.equal(a.G.consumables.length,0);
 });
-check('Optional shop keeps offers, purchases, reroll cost across returns',()=>{
+check('Preparation offers three cards; a second card is projected, charged once and never opens a shop',()=>{
  a.startGame(2);a.startPreparedTable();a.G.bank=a.G.table.goal+200;
  a.G.bossState={wins:3,qualified:1,totals:[20,21]};a.finishTable();a.continueTableVictory();
- const before=a.G.bank;
- assert(!d.getElementById('briefCashBtn').hidden);
- a.openShop();assert(visible('shop'));assert(!visible('tableBrief'));assert.equal(a.G.bank,before);
- assert.equal(d.getElementById('shopNextObj'),null);
- assert.equal(d.getElementById('shopNextBtn').textContent.trim(),'Retour à la préparation');
- a.setOffers([{type:'tarot',data:a.TAROT_POOL.find(item=>item.id==='etoile')}]);
- a.leaveShop();assert.equal(a.G.phase,'prepare');assert.equal(a.G.tableIdx,2);assert.equal(a.G.bank,before);
- a.openShop();const offers=a.offers,cost=a.itemCost(offers[0].data);
- assert.equal(d.querySelector('#shopItems .shop-kind .rep-star').getAttribute('src'),'assets/illustrations/etoile.webp');
- d.querySelector('.shop-offer-info').click();assert(visible('inspectScreen'));assert.equal(a.G.bank,before);a.closeInspect();
- d.querySelector('.shop-purchase button').click();assert.equal(a.G.bank,before-cost);assert.equal(a.G.consumables.length,1);
- a.G._advanceUsed=true;a.G._adReroll=true;
- const reroll=a.rerollCost;
- a.leaveShop();assert(a.G.briefPending);
- assert(d.getElementById('briefBalance').textContent.includes(a.cash(a.G.bank-a.RUN[3].entry)));
- assert.equal(d.getElementById('briefBalance').querySelector('span').textContent,'Après droit d’entrée');
- a.openShop();assert.equal(a.offers,offers);assert(a.offers[0].bought);
- assert.equal(a.rerollCost,reroll);assert(a.G._advanceUsed);assert(a.G._adReroll);
- d.querySelector('.shop-purchase button').click();assert.equal(a.G.bank,before-cost);
- a.rerollShop();assert.equal(a.G.bank,before-cost-reroll);
- const newOffers=a.offers,newReroll=a.rerollCost;assert(newReroll>reroll);
- a.leaveShop();a.openShop();assert.equal(a.offers,newOffers);assert.equal(a.rerollCost,newReroll);
- const sale=a.sellValue(a.G.consumables[0]);a.openShopSale();d.querySelector('.shop-sale-card').click();
- assert.equal(a.G.bank,before-cost-reroll+sale);assert.equal(a.G.consumables.length,0);
- a.leaveShop();const preview=a.ColdDeckJourney.previewNext();
- assert(d.getElementById('briefBalance').textContent.includes(a.cash(preview.table.goal)));
+ const before=a.G.bank,cards=()=>[...d.querySelectorAll('#briefCards .brief-card')];
+ assert(!d.getElementById('briefCashBtn').hidden);assert(d.getElementById('briefShopBtn').hidden);
+ a.openShop();assert(!visible('shop'));assert(visible('tableBrief'));assert.equal(a.G.phase,'prepare');
+ assert.equal(cards().length,3);assert(d.getElementById('briefEnterBtn').disabled);
+ const offer=JSON.stringify(a.G.cardOffer.map(c=>c.id));a.showTableBrief();assert.equal(JSON.stringify(a.G.cardOffer.map(c=>c.id)),offer);
+ const plain=a.ColdDeckJourney.previewNext(),price=a.tableCardPrice();
+ cards()[0].click();assert.equal(a.G.bank,before);assert.equal(cards()[0].dataset.state,'free');
+ cards()[1].click();assert.equal(cards()[1].dataset.state,'paid');assert.equal(a.G.bank,before);
+ assert(cards()[2].classList.contains('locked'));cards()[2].click();assert.equal(cards()[2].dataset.state,'');
+ const preview=a.ColdDeckJourney.previewNext();
+ assert.equal(preview.bank,plain.bank-price);assert.equal(preview.table.goal,plain.table.goal);
+ assert(d.getElementById('briefBalance').textContent.includes(a.cash(preview.bank)));
  assert(d.getElementById('briefPressure').textContent.includes(a.cash(preview.profit)));
+ cards()[1].click();assert.equal(a.ColdDeckJourney.previewNext().bank,plain.bank);cards()[1].click();
  a.startPreparedTable();assert.equal(a.G.tableIdx,3);assert.equal(a.G.bank,preview.bank);
- assert.equal(a.G.table.goal,preview.table.goal);assert(!visible('tableBrief'));
+ assert.equal(a.G.table.goal,preview.table.goal);assert(!visible('tableBrief'));assert.equal(a.G.tableCards.length,2);
+ a.startPreparedTable();assert.equal(a.G.bank,preview.bank);
 });
 check('All upcoming tables show their own rule, boss state before direct entry',()=>{
  for(let i=0;i<a.RUN_LEN-1;i++){
@@ -123,11 +114,12 @@ check('Preparation projections use actual fees and capital, and block an unaffor
   assert.equal(nx.bank,Math.max(0,bank-base.entry));
   assert.equal(nx.table.goal,base.goal+Math.max(0,nx.bank-base.cap));
   assert.equal(nx.profit,nx.table.goal-nx.bank);assert.equal(nx.reserve,base.entry+base.min);
+  assert(d.getElementById('briefEnterBtn').disabled);d.querySelector('#briefCards .brief-card').click();
   assert.equal(d.getElementById('briefEnterBtn').disabled,bank<nx.reserve);
   assert(d.getElementById('briefBalance').textContent.includes(a.cash(nx.table.goal)));
   a.startPreparedTable();
   if(bank>=nx.reserve){assert.equal(a.G.tableIdx,3);assert.equal(a.G.table.goal,nx.table.goal);assert.equal(a.G.bank,nx.bank);}
-  else{assert.equal(a.G.phase,'prepare');assert.equal(a.G.bank,bank);a.openShop();assert(!d.getElementById('shopNextBtn').disabled);a.leaveShop();}
+  else{assert.equal(a.G.phase,'prepare');assert.equal(a.G.bank,bank);}
  }
 });
 check('Delayed transitions cannot charge twice or enter a table after a new run starts',()=>{

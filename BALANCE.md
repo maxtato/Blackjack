@@ -1,49 +1,31 @@
-# Circuit — rééquilibrage du 27 septembre 2026
+# Circuit — cartes de table (16 novembre 2026)
 
-Le circuit conserve ses 24 tables. L’entrée est plus accessible, chaque zone a des paramètres définis, et les huit boss demandent des victoires et un défi spécifique. Une réserve supérieure au capital conseillé augmente l’objectif de la même somme : les jetons accumulés sécurisent les mises sans supprimer le bénéfice à produire à la table suivante.
+Le circuit garde ses 24 tables, ses 8 zones et un boss toutes les 3 tables. Les améliorations permanentes, la boutique, la revente et les services sont retirés du circuit. Le mode Libre n’est pas modifié.
 
-## Économie et décisions
+## Cartes
 
-Une relique est choisie parmi trois au départ. Contact donne un deuxième choix. Chaque nouvelle zone offre un tarot ; si les emplacements sont pleins, il attend qu’une place se libère. Les tarifs utilisent la mise maximale de la prochaine table. Les reliques sont moins chères en fin de circuit, quand il reste moins de temps pour les exploiter. Les tarots coûtent généralement 0,25–0,65 mise maximale ; Magicien en coûte une.
+Avant chaque table, trois cartes du paquet sont proposées. Une est offerte. Une deuxième peut être achetée pour 60 % de la mise maximale de la table. Son prix est retiré après le calcul de l’objectif : elle doit donc se rembourser. Les cartes quittent le joueur à la fin de la table ; une reprise rend les mêmes cartes sans rembourser la deuxième.
 
-FOIL ajoute 15 % de la mise avant multiplication. Les revenus de Mécène, Usurier, Aimant et Pourboire suivent les mises. Mécène aide une réserve faible ; Usurier rémunère l’épargne. Soleil échange deux points de Baraka contre des jetons. Porte-bonheur offre un emplacement et une réduction. La boutique permet de vendre sur place et affiche la réserve après achat et droit d’entrée. Elle préserve de quoi payer l’entrée et une mise minimale.
+Le paquet compte douze cartes. Six sont disponibles dès le départ : Lunettes, Compteur, Jeton fendu, Cigarette, L’Étoile, Le Pendu. Six se débloquent avec la réputation : Diplomate (40), As truqué (60), Le Magicien (80), Talisman (100), Le Diable (120), Le Phare (150). Les cartes à jouer (Étoile, Pendu, Magicien, Diable) s’utilisent deux fois par table. Le tirage favorise les cartes utiles à la règle ou au boss de la table.
 
-Le risque de dépassement est une aide de base. Compteur permet une défausse suivie d’une révélation. Phare prépare un petit rang et récompense les mains de quatre et cinq cartes. Pendu s’arme avant le risque et annule le prochain dépassement. Les éditions ciblent les cartes vierges ; la Roue garantit une édition. Magicien examine le sabot restant et ne promet une carte sûre que s’il en existe une.
+La réputation dépensée dans les anciennes améliorations est rendue au premier chargement.
 
-Les seuils de Baraka sont 2, 4, 7 et 10 points. Les multiplicateurs sont 1,15 / 1,3 / 1,45 / 1,6. Une perte en circuit conserve la moitié des points, ou 75 % avec Sang-froid. Jusqu’à deux points passent à la table suivante. Les tarots donnent leur quantité exacte, sans amplification cachée. Le multiplicateur a un plafond explicite ; la réduction cachée au-delà de ×3 est retirée. Cour, Remontada, Au poil et Dernier souffle ne multiplient plus les gains automatiquement.
+## Objectifs
 
-Deux contrats sont proposés par table, avec des récompenses liées à leur difficulté. Les étoiles récompensent l’objectif, l’absence de reprise et le contrat. Le record distingue la table atteinte des tables remportées. Les vies gagnées ou achetées s’utilisent sans publicité ; une vidéo peut donner une reprise supplémentaire facultative par expédition.
+Les objectifs sont réglés par `tests/calib-search.mjs`, pour un joueur en stratégie de base, mise maximale, une seule carte, paquet complet. Le bénéfice demandé ne descend pas sous 1,4 mise maximale, pour qu’une table ne se gagne pas en une main.
 
-## Corrections
+Mesure du 16 novembre, 400 tentatives par table, sans reprise (`tests/calibrate.mjs`) :
 
-Les règles spéciales sont conservées : aux tables 9, 15 et 24, les égalités sont perdues sans Diplomate. Depuis le 28 septembre, chaque effet est expliqué avant le choix du contrat, puis reste visible dans un bandeau cliquable pendant la partie. Le message « ÉGALITÉ PERDUE » précise que le croupier gagne les égalités ici. Diplomate rend la mise sur ces tables, sans son bonus habituel de 25 %. Ailleurs, une égalité à 21 ou moins rend toute la mise, y compris après Doubler et pour chaque main séparée ; elle ne réduit pas la Baraka et ne consomme ni Assurance ni Talisman. Un dépassement de 21 reste une défaite, même si le croupier a le même total.
+| Tables | Paquet complet | Paquet de départ | Avec deuxième carte |
+| --- | ---: | ---: | ---: |
+| 1 à 3 | 78 / 81 / 77 % | 77 / 76 / 68 % | 76 / 75 / 75 % |
+| 10 à 12 | 80 / 73 / 58 % | 76 / 71 / 61 % | 78 / 75 / 61 % |
+| 22 à 24 | 56 / 58 / 45 % | 49 / 58 / 47 % | 57 / 59 / 54 % |
 
-Assurance persiste entre les tables. Talisman protège aussi une main séparée. Le calcul de risque réévalue les As souples. FORCER applique sa limite d’un usage par table. Les tarots ne peuvent plus modifier une résolution déjà engagée. La pause et l’inspection suspendent réellement les délais du moteur. Les mises engagées ne sont plus recalculées pendant la main. Tout apport de banque entre les mains vérifie l’objectif. La revente des objets offerts ne s’apprécie plus avec la profondeur. Les services sans bénéfice sont écartés. Le raccourci de zone 2 obsolète est retiré.
+Expéditions complètes depuis la table 1, trois vies (`tests/expedition.mjs`, 200 expéditions) : table médiane atteinte 12 avec le paquet de départ, 13 avec le paquet complet ; 0 et 3 circuits terminés d’une traite. Avec reprise à la table atteinte et déblocage des cartes (60 campagnes) : 4 expéditions et 224 mains en médiane, 7 expéditions et 349 mains au maximum.
 
-## Animations
+Ces automates ne sont ni un jeu optimal ni des essais humains. Ils misent toujours le maximum et n’utilisent pas les pouvoirs du Compteur et du Phare.
 
-L’arrivée des cartes utilise un zoom, un contact bref avec le tapis et des particules de poussière dans la palette papier du jeu, puis le retournement. Le contour de révélation est supprimé. Toutes les issues de main s’annoncent au centre : victoire (1,90 à 2,15 secondes), défaite ou dépassement de 21 (1,90 seconde), égalité (1,75 seconde). La victoire comporte un double rebond des cartes et une seconde salve d’éclairs ; la défaite, un choc et des éclats corail ; l’égalité, un balancement. Les délais du tour suivant restent inchangés. Au repos, les cartes oscillent sur 2,8 à 3,9 secondes, avec une amplitude réduite de moitié, et les grandes lettres reprennent le petit tressautement indépendant du menu, sans vague. Les cases, les petits textes et l’inventaire restent fixes. Les effets conservent leur générateur aléatoire distinct de celui du jeu et respectent les animations réduites.
+## Reste à faire
 
-La palette D validée utilise un rose poudré très clair pour les reliques et un vert amande très clair pour les tarots, avec le grain du papier. Les services/améliorations utilisent un vert grisé et les cartes de jeu leur ivoire. Le même traitement apparaît dans l’inventaire, les achats et les détails.
-
-## Vérification
-
-Les réglages donnent accès au Mode test. La coupure de toutes les publicités est mémorisée et bloque aussi les vidéos récompensées, sans attribuer leurs bonus. Le circuit peut être réinitialisé après confirmation : réputation, améliorations et records sont effacés, puis une nouvelle expédition commence à la table 1. Le mode Libre et les préférences sont conservés. Six contrôles supplémentaires vérifient la persistance, la pause, l’annulation, les publicités et la portée exacte de la remise à zéro.
-
-Vingt-deux contrôles reproductibles couvrent notamment les égalités ordinaires et les trois exceptions annoncées, les mises doublées, les mains séparées, Diplomate, les As souples, Assurance, Talisman, FORCER, Pendu, la pause, les mises engagées, Soleil, les éditions, la boutique, les records et le boss final. Les commandes sont dans `tests/README.md`.
-
-La passe d’équilibrage du 27 septembre utilise 600 expéditions pour chacune de cinq politiques, 600 essais par table dans deux équipements fixes, et 200 campagnes avec réputation et reprises : **78 281 tentatives de table et 500 447 mains**. Les effets de table de cette simulation sont conservés ; leur annonce est renforcée le 28 septembre.
-
-| Politique depuis la table 1 | Table médiane atteinte | Circuit terminé dans l’expédition |
-| --- | ---: | ---: |
-| Débutant, mise conseillée, tire jusqu’à 17 | 4 | 0 % |
-| Stratégie de base, mises maximales, sans achat | 7 | 0 % |
-| Stratégie de base, mises moyennes, sans achat | 4 | 0 % |
-| Stratégie de base, achats ciblés | 17 | 9,2 % |
-| Améliorations maximales, achats ciblés | 24 | 41,7 % |
-
-Le profil débutant réussit 62,8 % des tentatives de première table et la franchit dans 97,8 % des expéditions, reprises comprises. Il choisit ici les Lunettes sans utiliser leur pouvoir ni le tarot offert : les résultats dépendent fortement des décisions modélisées. L’ancien audit mesurait 9,4 % par tentative et 32,4 % avec reprises pour sa politique débutante.
-
-Les 200 campagnes de la nouvelle simulation finissent le circuit, avec une médiane de 2 expéditions et 192 mains ; le maximum observé est de 6 expéditions et 368 mains. Les achats ciblés et la reprise à la dernière table atteinte expliquent cette durée. Dans la grille sans tarot offert, la réussite de la Faucheuse est de 42,5 % sans relique et 78,5 % avec l’équipement de référence ; le Parrain atteint 18 % et 49,8 %.
-
-Les automates utilisent les fonctions réelles, des graines fixes et les informations visibles, avec consultation légale de la prochaine carte après les Lunettes. Rendu, audio, publicités et temps visuels sont neutralisés. Ils ne représentent ni une stratégie optimale ni des essais humains. Leurs achats n’exploitent ni les reventes, ni les publicités, ni tous les pouvoirs actifs. Les prochaines observations utiles sont les objets réellement choisis, l’usage des tarots et la compréhension des sceaux de boss.
+Le code de la boutique est encore présent mais inaccessible. La troisième étoile (« deux mains d’avance ») est obtenue dans environ 90 % des victoires et ne distingue rien.

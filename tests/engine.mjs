@@ -19,6 +19,7 @@ export function engine({realAds=false,persist=false,storage={},journeyUI=false,s
   expose.push('reachPalier','applyBoon','palierTarget');
   expose.push('ColdDeckBackgrounds','setLang');
   expose.push('ColdDeckJourney','continueTableVictory','finishTable','nextHandOrEnd','showTableBrief','renderShopHead','cash','renderEndScreen','adDoubleRep');
+  expose.push('refundLegacyUnlocks','tablePreparation','UNLOCKS_NUIT','TABLE_DECK','rollTableCards','toggleTableCard','commitTableCards','tableCardPrice','grantTableCards','cardUnlocked','deckSource','canBuySecondCard','nextTablePreview','retryTable');
   expose.push('openShopSale','renderShopInventory','setLang','openShop','rerollShop','tablePreparation');
   code=code.replace('freshGame();buildShoe();applyI18n();renderHands();tick();','');
   code+='\n'+noops.filter(n=>(!handUI||!['renderHands','renderHandTotals','renderActions'].includes(n))&&(!eventUI||n!=='announceTurn')&&(!persist||!['saveMeta','saveRecs'].includes(n))&&(!journeyUI||!['showTableBrief','renderShopHead'].includes(n))&&(!shopUI||n!=='renderShopInventory')).map(n=>n+'=()=>{};').join('\n');

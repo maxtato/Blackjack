@@ -32,12 +32,4 @@ check('A full Circuit shows a completion title and Free Play retains its own res
  assert(d.getElementById('endCircuitSummary').hidden);assert(d.getElementById('endRecord').hidden);assert(!d.getElementById('endText').hidden);
  assert.equal(d.querySelectorAll('#endStats .rs').length,3);
 });
-check('The preparation shop keeps one label with a forward arrow and opens the same optional shop',()=>{
- a.startPreparedTable();a.G.bank=a.G.table.goal;a.finishTable();a.continueTableVictory();
- const button=d.getElementById('briefShopBtn');
- assert.equal(button.children.length,3);assert(button.firstElementChild.classList.contains('brief-shop-icon'));
- assert.equal(content(button.querySelector('.brief-shop-label')),a.t('shop.open'));
- assert.equal(button.lastElementChild.dataset.direction,'right');
- a.openShop();assert.equal(a.G.phase,'shop');a.leaveShop();assert.equal(a.G.phase,'prepare');
-});
 console.log(JSON.stringify({passed:passed.length,checks:passed},null,2));h.close();
